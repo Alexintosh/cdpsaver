@@ -1,0 +1,104 @@
+{
+  "contractName": "CdpSaver",
+  "abi": [],
+  "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3006080604052600080fd00a165627a7a72305820e3d568de3900b67a376a7f049a5a4da35c317923a31918752b72d083a48117af0029",
+  "deployedBytecode": "0x6080604052600080fd00a165627a7a72305820e3d568de3900b67a376a7f049a5a4da35c317923a31918752b72d083a48117af0029",
+  "sourceMap": "26:23:0:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;26:23:0;;;;;;;",
+  "deployedSourceMap": "26:23:0:-;;;;;",
+  "source": "pragma solidity ^0.4.24;\n\ncontract CdpSaver {\n\n\n}",
+  "sourcePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/CdpSaver.sol",
+  "ast": {
+    "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/CdpSaver.sol",
+    "exportedSymbols": {
+      "CdpSaver": [
+        2
+      ]
+    },
+    "id": 3,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".24"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:0"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 2,
+        "linearizedBaseContracts": [
+          2
+        ],
+        "name": "CdpSaver",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 3,
+        "src": "26:23:0"
+      }
+    ],
+    "src": "0:49:0"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/CdpSaver.sol",
+    "exportedSymbols": {
+      "CdpSaver": [
+        2
+      ]
+    },
+    "id": 3,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".24"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:0"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 2,
+        "linearizedBaseContracts": [
+          2
+        ],
+        "name": "CdpSaver",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 3,
+        "src": "26:23:0"
+      }
+    ],
+    "src": "0:49:0"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+  },
+  "networks": {
+    "4447": {
+      "events": {},
+      "links": {},
+      "address": "0x2c2b9c9a4a25e24b174f26114e8926a9f2128fe4",
+      "transactionHash": "0xff37489e1c8d3e65859744c8a2f4e6d630f8d417df8d0275cd2a40bfbb710e13"
+    }
+  },
+  "schemaVersion": "2.0.0",
+  "updatedAt": "2018-12-13T07:39:52.763Z"
+}
