@@ -34,7 +34,15 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h1 className="text-header">Good to Go!</h1>
+        <div className="header">
+          <h1 className="text-header">Cdp Saver!</h1>
+        </div>
+
+        <div className="content">
+          {
+            this.props.children
+          }
+        </div>
       </div>
     );
   }

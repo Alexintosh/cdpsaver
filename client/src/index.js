@@ -9,7 +9,10 @@ import store from './store';
 
 import './index.css';
 import App from './App';
-import Home from './Homepage/Home'
+import Home from './Homepage/Home';
+import Marketplace from './Marketplace/Marketplace';
+import CdpSaver from './CdpSaver/CdpSaver';
+import CdpNotifier from './CdpNotifier/CdpNotifier';
 
 import Page404 from './Page404';
 
@@ -20,6 +23,10 @@ ReactDOM.render((
       <Router history={history}>
         <Route path="/" component={App}>
           <IndexRoute component={Home} />
+          <Route path="/home" component={Home} />
+          <Route path="/marketplace" component={Marketplace} />
+          <Route path="/cdpsaver" component={CdpSaver} />
+          <Route path="/cdpnotifier" component={CdpNotifier} />
         </Route>
         <Route path='*' exact={true} component={Page404} />
       </Router>
@@ -27,5 +34,3 @@ ReactDOM.render((
   ),
   document.getElementById('root')
 );
-
-ReactDOM.render(<App />, document.getElementById('root'));
