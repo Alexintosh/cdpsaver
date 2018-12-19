@@ -5,7 +5,7 @@ import './Header.scss';
 
 const Header = () => (
   <div className="header-wrapper">
-    <div className=" width-container">
+    <div className="width-container">
       <Link className="logo-wrapper" to="/">
         <span>CDP</span>
         Saver

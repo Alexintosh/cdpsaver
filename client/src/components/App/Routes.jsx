@@ -3,7 +3,7 @@ import { connect, Provider } from 'react-redux';
 import PropTypes from 'prop-types';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Header from '../Header/Header';
-import Homepage from '../HomePage/Homepage';
+import HomePage from '../HomePage/HomePage';
 import MarketplacePage from '../MarketplacePage/MarketplacePage';
 import SaverPage from '../SaverPage/SaverPage';
 import NotifierPage from '../NotifierPage/NotifierPage';
@@ -22,7 +22,7 @@ class RoutesWrapper extends Component {
             <Header />
 
             <Switch>
-              <Route exact path="/" component={Homepage} />
+              <Route exact path="/" component={HomePage} />
               <Route path="/marketplace" component={MarketplacePage} />
               <Route path="/saver" component={SaverPage} />
               <Route path="/notifier" component={NotifierPage} />

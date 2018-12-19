@@ -1,0 +1,67 @@
+@import "../../common/colors";
+@import "../../common/text";
+@import "../../common/variables";
+@import "../../common/buttons";
+
+.homepage-wrapper {
+  .section {
+    background: $very-dark-gray;
+    padding: 110px 0;
+
+    .section-title {
+      color: white;
+      font-size: $font-size-title;
+      text-align: center;
+
+      span {
+        text-transform: uppercase;
+        font-weight: $font-weight-bold;
+        margin: 0 9px;
+      }
+    }
+
+    .section-text {
+      text-align: center;
+      color: $gray;
+      line-height: 24px;
+    }
+
+    .button {
+      text-transform: uppercase;
+    }
+
+    &.first-section {
+
+      .width-container {
+        @include flex-center;
+        flex-direction: column;
+      }
+
+      .section-title {
+        margin-bottom: 19px;
+      }
+
+      .section-text {
+        max-width: 534px;
+        margin-bottom: 55px;
+      }
+    }
+
+    &.features-section {
+      background: $darker-gray;
+
+      .width-container {
+        @include flex-center;
+        justify-content: space-between;
+      }
+
+      .section-box {
+        max-width: 250px;
+
+        .section-title {
+          margin-bottom: 25px;
+        }
+      }
+    }
+  }
+}
