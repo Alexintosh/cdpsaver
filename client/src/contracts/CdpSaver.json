@@ -1,11 +1,11 @@
 {
   "contractName": "CdpSaver",
   "abi": [],
-  "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3006080604052600080fd00a165627a7a72305820e3d568de3900b67a376a7f049a5a4da35c317923a31918752b72d083a48117af0029",
-  "deployedBytecode": "0x6080604052600080fd00a165627a7a72305820e3d568de3900b67a376a7f049a5a4da35c317923a31918752b72d083a48117af0029",
-  "sourceMap": "26:23:0:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;26:23:0;;;;;;;",
-  "deployedSourceMap": "26:23:0:-;;;;;",
-  "source": "pragma solidity ^0.4.24;\n\ncontract CdpSaver {\n\n\n}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3fe6080604052600080fdfea165627a7a723058200cce3093e61f4d3a255b20a1dc70d6b4edaaf9554560d912657961f1aecec87f0029",
+  "deployedBytecode": "0x6080604052600080fdfea165627a7a723058200cce3093e61f4d3a255b20a1dc70d6b4edaaf9554560d912657961f1aecec87f0029",
+  "sourceMap": "25:23:0:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;25:23:0;;;;;;;",
+  "deployedSourceMap": "25:23:0:-;;;;;",
+  "source": "pragma solidity ^0.5.0;\n\ncontract CdpSaver {\n\n\n}",
   "sourcePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/CdpSaver.sol",
   "ast": {
     "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/CdpSaver.sol",
@@ -22,11 +22,11 @@
         "literals": [
           "solidity",
           "^",
-          "0.4",
-          ".24"
+          "0.5",
+          ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:0"
+        "src": "0:23:0"
       },
       {
         "baseContracts": [],
@@ -42,10 +42,10 @@
         "nodeType": "ContractDefinition",
         "nodes": [],
         "scope": 3,
-        "src": "26:23:0"
+        "src": "25:23:0"
       }
     ],
-    "src": "0:49:0"
+    "src": "0:48:0"
   },
   "legacyAST": {
     "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/CdpSaver.sol",
@@ -62,11 +62,11 @@
         "literals": [
           "solidity",
           "^",
-          "0.4",
-          ".24"
+          "0.5",
+          ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:0"
+        "src": "0:23:0"
       },
       {
         "baseContracts": [],
@@ -82,14 +82,14 @@
         "nodeType": "ContractDefinition",
         "nodes": [],
         "scope": 3,
-        "src": "26:23:0"
+        "src": "25:23:0"
       }
     ],
-    "src": "0:49:0"
+    "src": "0:48:0"
   },
   "compiler": {
     "name": "solc",
-    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+    "version": "0.5.0+commit.1d4f565a.Emscripten.clang"
   },
   "networks": {
     "4447": {
@@ -99,6 +99,12 @@
       "transactionHash": "0xff37489e1c8d3e65859744c8a2f4e6d630f8d417df8d0275cd2a40bfbb710e13"
     }
   },
-  "schemaVersion": "2.0.0",
-  "updatedAt": "2018-12-13T07:39:52.763Z"
+  "schemaVersion": "3.0.0",
+  "updatedAt": "2018-12-19T10:32:27.668Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
 }
