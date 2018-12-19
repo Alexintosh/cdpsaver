@@ -1,0 +1,93 @@
+@import "../common/text";
+@import "../common/colors";
+@import "../common/variables";
+
+.button {
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  color: black;
+  padding: 15px 30px;
+  font-size: $font-size-regular;
+  transition: all 0.2s;
+  background: none;
+  text-decoration: underline;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:focus {
+    outline: 0;
+    box-shadow: 0 0 0 1px #2684FF;
+  }
+
+  &:disabled, &:disabled.danger {
+    cursor: not-allowed;
+    color: $darker-gray;
+
+    &:hover {
+      cursor: not-allowed;
+      color: $darker-gray;
+      background-color: inherit;
+    }
+  }
+
+  &.button-submit {
+    background-color: $yellow;
+    text-decoration: none;
+
+    &:disabled {
+      opacity: 0.6;
+      color: black;
+
+      &:hover { background-color: $yellow }
+    }
+
+    &:hover:not(:disabled) {
+      color: black;
+      background-color: lighten($yellow, 10);
+    }
+  }
+
+  &.danger {
+    background-color: #f34949;
+
+    &:hover {
+      background-color: lighten(#f34949, 10);
+    }
+  }
+
+  &.white {
+    text-decoration: none;
+    background-color: white;
+    border-bottom: 1px solid $gray;
+  }
+
+  &:hover {
+    color: lighten(black, 70);
+  }
+
+  &.submit-secondary {
+    text-decoration: none;
+    border: 1px solid $yellow;
+  }
+
+  &.button-round {
+    font-size: 25px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: $yellow;
+    color: black;
+    box-shadow: 0 20px 20px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    @include flex-center;
+    @include hover-transition;
+
+    &:hover:not(:disabled) {
+      color: black;
+      background-color: lighten($yellow, 10);
+    }
+  }
+}
