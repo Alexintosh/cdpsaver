@@ -1,0 +1,33 @@
+@import "../../common/colors";
+@import "../../common/variables";
+@import "../../common/text";
+
+.header-wrapper {
+  padding: 23px 0;
+  background: $very-dark-gray;
+  color: #fff;
+
+  a {
+    @include hover-transition;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+  .width-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo-wrapper span {
+    text-transform: uppercase;
+    font-weight: $font-weight-bold;
+    margin-right: 2px;
+  }
+
+  .links-wrapper a:not(:last-child) {
+    margin-right: 41px;
+  }
+}
