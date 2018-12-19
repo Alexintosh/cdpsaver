@@ -26,6 +26,10 @@ const HomePage = () => (
     <div className="section features-section">
       <div className="width-container">
         <div className="section-box">
+          <div className="section-box-icon-wrapper">
+            <i className="icon-laptop-gear" />
+          </div>
+
           <div className="section-title">Marketplace</div>
 
           <div className="section-text">
@@ -35,6 +39,10 @@ const HomePage = () => (
         </div>
 
         <div className="section-box">
+          <div className="section-box-icon-wrapper">
+            <i className="icon-laptop-gear" />
+          </div>
+
           <div className="section-title">Monitoring</div>
 
           <div className="section-text">
@@ -44,6 +52,10 @@ const HomePage = () => (
         </div>
 
         <div className="section-box">
+          <div className="section-box-icon-wrapper">
+            <i className="icon-laptop-gear" />
+          </div>
+
           <div className="section-title">Saver</div>
 
           <div className="section-text">

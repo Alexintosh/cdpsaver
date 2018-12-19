@@ -6,8 +6,10 @@ import Header from '../Header/Header';
 import HomePage from '../HomePage/HomePage';
 import MarketplacePage from '../MarketplacePage/MarketplacePage';
 import SaverPage from '../SaverPage/SaverPage';
-import NotifierPage from '../NotifierPage/NotifierPage';
+import MonitoringPage from '../MonitoringPage/MonitoringPage';
 import Page404 from '../Page404/Page404';
+
+import '../../common/icons/icons.scss';
 
 class RoutesWrapper extends Component {
   componentWillMount() {}
@@ -24,8 +26,8 @@ class RoutesWrapper extends Component {
             <Switch>
               <Route exact path="/" component={HomePage} />
               <Route path="/marketplace" component={MarketplacePage} />
+              <Route path="/monitoring" component={MonitoringPage} />
               <Route path="/saver" component={SaverPage} />
-              <Route path="/notifier" component={NotifierPage} />
               <Route path="*" component={Page404} />
             </Switch>
           </div>

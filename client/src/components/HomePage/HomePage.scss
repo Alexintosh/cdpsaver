@@ -58,6 +58,15 @@
       .section-box {
         max-width: 250px;
 
+        .section-box-icon-wrapper {
+          @include flex-center;
+          margin-bottom: 25px;
+
+          i {
+            font-size: 48px;
+          }
+        }
+
         .section-title {
           margin-bottom: 25px;
         }

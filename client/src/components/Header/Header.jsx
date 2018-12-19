@@ -13,7 +13,7 @@ const Header = () => (
 
       <div className="links-wrapper">
         <Link to="/marketplace">Marketplace</Link>
-        <Link to="/notifier">Monitoring</Link>
+        <Link to="/monitoring">Monitoring</Link>
         <Link to="/saver">Saver</Link>
       </div>
     </div>
