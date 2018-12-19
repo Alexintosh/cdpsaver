@@ -1,0 +1,21 @@
+@import "../common/text";
+@import "../common/colors";
+@import "../common/variables";
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  padding: 14px 32px;
+  font-size: $font-size-regular;
+  @include hover-transition;
+  background: $dark-gray;
+  color: $gray;
+  text-align: center;
+
+  &:hover {
+    background: lighten($dark-gray, 10);
+  }
+}
