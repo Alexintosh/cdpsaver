@@ -1,58 +1,60 @@
-pragma solidity ^0.4.24; //TODO: new version 
+pragma solidity ^0.5.0;
 
-//NOTICE: prototype to test out different ideas of handling cdps
+import "./DSProxy.sol";
+import "./CDPInterface.sol";
 
-contract CDPInterface {
-    function open() public returns (bytes32 cup);
-    function give(bytes32 cup, address guy) public;
-    function lock(bytes32 cup, uint wad) public;
-    function free(bytes32 cup, uint wad) public;
-    function draw(bytes32 cup, uint wad) public;
-    function wipe(bytes32 cup, uint wad) public;
-    function shut(bytes32 cup) public;
-    function bite(bytes32 cup) public;
-}
-
-
-//TODO: some sort of fancy proxy factory patter to avoid high gas cost
-//NOTICE: can we group this into 1 call, transfer cdp to the contract and then deploy it?
-contract UserProxyContract {
-    address owner;
-    bytes32 cdpId;
-
-    CDPInterface cdp = CDPInterface(0x448a5065aebb8e423f0896e6c5d525c040f59af3);
-
-    constructor(bytes32 _cdpId) public {
-        owner = msg.sender;
-        cdpId = _cdpId;
-
-    }
-
-    function transfer(address _to) public {
-        require(owner == msg.sender);
-
-        cdp.give(cdpId, _to);
-    }
-
-}
-
-contract Marketplace {
+contract Marketplace is DSAuth {
 
     struct SaleItem {
         uint price;
         uint time;
-        address owner;
+        address payable lad;
+        bool active;
     }
 
-    mapping (uint => SaleItem) public items;
-    uint[] public itemsArr;
+    mapping (bytes32 => SaleItem) public items;
+    bytes32[] public itemsArr;
 
-    function putOnSale(uint cdpId, uint price) public {
+    // address constant TUB_ADDRESS = 0x448a5065aebb8e423f0896e6c5d525c040f59af3;
+    address constant TUB_ADDRESS = 0xa71937147b55Deb8a530C7229C442Fd3F31b7db2; //KOVAN
+
+    CDPInterface cdp = CDPInterface(TUB_ADDRESS);
+
+    event OnSale(bytes32 indexed cup, address indexed lad, uint price);
+    event Bought(bytes32 indexed cup, address indexed newLad, address indexed oldLad, uint price);
+
+    function putOnSale(bytes32 _cup, uint _price) public {
+        require(cdp.lad(_cup) == msg.sender, "msg.sender must be cup owner");
+
+        items[_cup] = SaleItem({
+            price: _price,
+            time: now,
+            lad: msg.sender,
+            active: true
+        });
+
+        itemsArr.push(_cup);
+
+        emit OnSale(_cup, msg.sender, _price);
 
     }
 
-    function buy(uint cdpId) public {
+    function buy(bytes32 _cup) public payable {
+        require(items[_cup].active == true, "Check if cup is on sale");
+        require(msg.value >= items[_cup].price, "Check if enough ether is sent for this cup");
 
+        DSProxy usersProxy =  DSProxy(items[_cup].lad);
+
+        // give the cup to the buyer, him becoming the lad that owns the cup
+        usersProxy.execute(TUB_ADDRESS, 
+            abi.encodeWithSignature("give(bytes32, address)", _cup, msg.sender));
+
+        //TODO: take a fee?
+
+        items[_cup].lad.transfer(items[_cup].price); // transfer money to the seller
+
+        //TODO: delete the sales item
+        items[_cup].active = false;
     }
 
     function cancel(uint cdpId) public {
