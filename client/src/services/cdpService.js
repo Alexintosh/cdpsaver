@@ -2,27 +2,49 @@ import Maker from '@makerdao/dai';
 
 const maker = Maker.create('browser');
 
-export const getCdpInfo = async (id) => {
-  await maker.authenticate();
+/**
+ * Fetches multiple Cdp data for a cdp id from the Maker library  and formats them
+ * @param id {Number}
+ * @param useAuth {Boolean}
+ *
+ * @return {Promise<{id: number, owner: string, depositedPETH: *, depositedETH: string, depositedUSD: string, generatedDAI: number, liquidationPrice: string, isSafe: bool, ratio: *}>}
+ */
+export const getCdpInfo = (id, useAuth = true) => new Promise(async (resolve, reject) => {
+  try {
+    if (useAuth) await maker.authenticate();
 
-  const cdp = await maker.getCdp(id);
+    const cdp = await maker.getCdp(id);
+    const info = await cdp.getInfo();
 
-  const info = await cdp.getInfo();
-  const depositedETH = await cdp.getCollateralValue();
-  const depositedUSD = await cdp.getCollateralValue(Maker.USD);
-  const liquidationPrice = await cdp.getLiquidationPrice();
-  const ratio = await cdp.getCollateralizationRatio();
+    resolve({
+      id,
+      owner: info[0].toString(),
+      depositedPETH: info[1].toString(),
+      generatedDAI: info[2].toString(),
+      depositedETH: (await cdp.getCollateralValue())._amount.toString(),
+      depositedUSD: (await cdp.getCollateralValue(Maker.USD))._amount.toString(),
+      liquidationPrice: (await cdp.getLiquidationPrice())._amount.toString(),
+      isSafe: await cdp.isSafe(),
+      ratio: await cdp.getCollateralizationRatio(),
+    });
+  } catch (err) {
+    reject(err);
+  }
+});
 
-  const isSafe = await cdp.isSafe();
+/**
+ * Gets Cdp info for an array of ids and returns a Promise
+ * @param ids {Array}
+ *
+ * @return {Promise<any>}
+ */
+export const getCdpInfos = ids => new Promise(async (resolve, reject) => {
+  try {
+    await maker.authenticate();
 
-  return {
-    owner: info[0].toString(),
-    depositedPETH: info[1].toString(),
-    depositedETH: depositedETH._amount.toString(),
-    depositedUSD: depositedUSD._amount.toString(),
-    generatedDAI: info[2].toString(),
-    liquidationPrice: liquidationPrice._amount.toString(),
-    isSafe,
-    ratio,
-  };
-};
+    const res = await Promise.all(ids.map(id => getCdpInfo(id, false)));
+    resolve(res);
+  } catch (err) {
+    reject(err);
+  }
+});
