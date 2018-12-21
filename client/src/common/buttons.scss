@@ -18,4 +18,13 @@
   &:hover {
     background: lighten($dark-gray, 10);
   }
+
+  &.green {
+    background: $green;
+    color: white;
+
+    &:hover {
+      background: lighten($green, 10);
+    }
+  }
 }

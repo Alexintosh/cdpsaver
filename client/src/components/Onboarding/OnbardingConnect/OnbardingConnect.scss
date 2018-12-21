@@ -1,0 +1,18 @@
+@import "../../../common/text";
+@import "../../../common/colors";
+
+.onboarding-connect-wrapper {
+  margin-top: 200px;
+  text-align: center;
+  color: white;
+
+  .connect-heading {
+    font-size: $font-size-extra-large;
+    margin-bottom: 20px;
+  }
+
+  .connect-text {
+    margin-bottom: 25px;
+    color: $gray;
+  }
+}

@@ -19,7 +19,7 @@ const HomePage = () => (
           ea commodo consequat.
         </div>
 
-        <div className="button">Start monitoring</div>
+        <div className="button green">Start monitoring</div>
       </div>
     </div>
 
