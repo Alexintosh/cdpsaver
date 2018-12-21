@@ -1,24 +1,34 @@
 {
   "contractName": "CdpSaver",
-  "abi": [],
-  "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3fe6080604052600080fdfea165627a7a723058200cce3093e61f4d3a255b20a1dc70d6b4edaaf9554560d912657961f1aecec87f0029",
-  "deployedBytecode": "0x6080604052600080fdfea165627a7a723058200cce3093e61f4d3a255b20a1dc70d6b4edaaf9554560d912657961f1aecec87f0029",
-  "sourceMap": "25:23:0:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;25:23:0;;;;;;;",
-  "deployedSourceMap": "25:23:0:-;;;;;",
-  "source": "pragma solidity ^0.5.0;\n\ncontract CdpSaver {\n\n\n}",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "payBack",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x6080604052348015600f57600080fd5b5060868061001e6000396000f3fe608060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063019f64cc146044575b600080fd5b348015604f57600080fd5b5060566058565b005b56fea165627a7a7230582076f2aed67713681a95fe7b5c2363f26611ea40ec288b2208a4f947128bc36a150029",
+  "deployedBytecode": "0x608060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063019f64cc146044575b600080fd5b348015604f57600080fd5b5060566058565b005b56fea165627a7a7230582076f2aed67713681a95fe7b5c2363f26611ea40ec288b2208a4f947128bc36a150029",
+  "sourceMap": "25:69:1:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;25:69:1;;;;;;;",
+  "deployedSourceMap": "25:69:1:-;;;;;;;;;;;;;;;;;;;;;;;;49:42;;8:9:-1;5:2;;;30:1;27;20:12;5:2;49:42:1;;;;;;;:::o",
+  "source": "pragma solidity ^0.5.0;\n\ncontract CdpSaver {\n    function payBack() public {\n        \n    }\n\n}",
   "sourcePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/CdpSaver.sol",
   "ast": {
     "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/CdpSaver.sol",
     "exportedSymbols": {
       "CdpSaver": [
-        2
+        66
       ]
     },
-    "id": 3,
+    "id": 67,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1,
+        "id": 61,
         "literals": [
           "solidity",
           "^",
@@ -26,7 +36,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:0"
+        "src": "0:23:1"
       },
       {
         "baseContracts": [],
@@ -34,31 +44,64 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 2,
+        "id": 66,
         "linearizedBaseContracts": [
-          2
+          66
         ],
         "name": "CdpSaver",
         "nodeType": "ContractDefinition",
-        "nodes": [],
-        "scope": 3,
-        "src": "25:23:0"
+        "nodes": [
+          {
+            "body": {
+              "id": 64,
+              "nodeType": "Block",
+              "src": "75:16:1",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 65,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "payBack",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 62,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "65:2:1"
+            },
+            "returnParameters": {
+              "id": 63,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "75:0:1"
+            },
+            "scope": 66,
+            "src": "49:42:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 67,
+        "src": "25:69:1"
       }
     ],
-    "src": "0:48:0"
+    "src": "0:94:1"
   },
   "legacyAST": {
     "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/CdpSaver.sol",
     "exportedSymbols": {
       "CdpSaver": [
-        2
+        66
       ]
     },
-    "id": 3,
+    "id": 67,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1,
+        "id": 61,
         "literals": [
           "solidity",
           "^",
@@ -66,7 +109,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:0"
+        "src": "0:23:1"
       },
       {
         "baseContracts": [],
@@ -74,18 +117,51 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 2,
+        "id": 66,
         "linearizedBaseContracts": [
-          2
+          66
         ],
         "name": "CdpSaver",
         "nodeType": "ContractDefinition",
-        "nodes": [],
-        "scope": 3,
-        "src": "25:23:0"
+        "nodes": [
+          {
+            "body": {
+              "id": 64,
+              "nodeType": "Block",
+              "src": "75:16:1",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 65,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "payBack",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 62,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "65:2:1"
+            },
+            "returnParameters": {
+              "id": 63,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "75:0:1"
+            },
+            "scope": 66,
+            "src": "49:42:1",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 67,
+        "src": "25:69:1"
       }
     ],
-    "src": "0:48:0"
+    "src": "0:94:1"
   },
   "compiler": {
     "name": "solc",
@@ -100,7 +176,7 @@
     }
   },
   "schemaVersion": "3.0.0",
-  "updatedAt": "2018-12-19T10:32:27.668Z",
+  "updatedAt": "2018-12-21T13:49:09.616Z",
   "devdoc": {
     "methods": {}
   },

@@ -15,7 +15,7 @@ contract MarketplaceProxy {
     }
     
     function marketSale(uint _cupId, uint _price) public {
-        marketplace.putOnSale(_cupId, _price);
+        marketplace.putOnSale(bytes32(_cupId), _price);
     }
     
     function transfer(uint _cupId, address _newOwner) public {

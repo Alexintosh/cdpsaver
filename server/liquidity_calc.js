@@ -1,7 +1,7 @@
 
 const PETH_ETH_RATIO = 1.040;
 const LIQUIDATION_RATIO = 1.5;
-const ETH_PRICE = 92.832;
+const ETH_PRICE = 106.485;
 
 function getLiquidationPrice(daiDebt, collateral) {
     return (daiDebt * LIQUIDATION_RATIO) / (collateral * PETH_ETH_RATIO);
@@ -19,18 +19,27 @@ function getMaxDai(daiDebt, collateral) {
     return (collateral* ETH_PRICE * PETH_ETH_RATIO / (150/100)) - daiDebt;
 }
 
-function payBack(daiDebt, collateral) {
+function payBack(daiDebt, collateral, ratio) {
     const max_col = getMaxCollateral(daiDebt, collateral);
     const converted_dai = max_col * (ETH_PRICE - (ETH_PRICE/100)*3);
 
-    console.log(getLiquidationPrice(daiDebt - converted_dai, collateral - max_col), getMaxCollateral(daiDebt - converted_dai, collateral - max_col));
+    cdpInfo(daiDebt - converted_dai, collateral - max_col);
+
+    console.log("   ");
+
+    if (getRatio(daiDebt - converted_dai, collateral - max_col) < ratio) {
+        payBack(daiDebt - converted_dai, collateral - max_col, ratio);
+    }
 }
 
 function cdpInfo(daiDebt, collateral) {
+    console.log('Debt left: ' + daiDebt + "  Collateral: " + collateral);
+    console.log('Ratio: ', getRatio(daiDebt, collateral));
     console.log('getLiquidationPrice: ', getLiquidationPrice(daiDebt, collateral));
     console.log('getMaxCollateral: ', getMaxCollateral(daiDebt, collateral));
     console.log('getMaxDai: ', getMaxDai(daiDebt, collateral));
 }
 
-cdpInfo(20830, 333.78823);
-payBack(20830, 333.78823);
+cdpInfo(6663, 102.52);
+console.log("   ");
+payBack(6663, 102.52, 300);
