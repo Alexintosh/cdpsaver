@@ -1,0 +1,15 @@
+.connect-wallet-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .button {
+    max-width: 188px;
+    width: 100%;
+
+    &:not(:last-child) {
+      margin-bottom: 20px;
+    }
+  }
+}
