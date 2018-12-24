@@ -39,6 +39,7 @@ module.exports = {
     'no-shadow': 0,
     'prefer-promise-reject-errors': 0,
     'function-paren-newline': 0,
+    'react/destructuring-assignment': 0
   },
   globals: {
     web3: true,

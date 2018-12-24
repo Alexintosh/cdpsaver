@@ -2,20 +2,8 @@
 @import "../../../common/colors";
 
 .onboarding-connect-wrapper {
-  text-align: center;
-  color: white;
 
   .onboarding-content-wrapper {
     padding: 80px 0;
-  }
-
-  .connect-heading {
-    font-size: $font-size-extra-large;
-    margin-bottom: 20px;
-  }
-
-  .connect-text {
-    margin-bottom: 25px;
-    color: $gray;
   }
 }

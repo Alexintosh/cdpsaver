@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 import OnboardingRedirect from './OnboardingRedirect';
 import OnbardingConnect from './OnbardingConnect/OnbardingConnect';
+import OnbardingWizardRoutes from './OnbardingWizard/OnboardingWizardRoutes';
 
 import './Onboarding.scss';
 
@@ -10,6 +11,7 @@ const OnboardingRoutes = ({ match }) => (
   <React.Fragment>
     <Route exact path={`${match.path}`} component={OnboardingRedirect} />
     <Route path={`${match.path}/connect`} component={OnbardingConnect} />
+    <Route path={`${match.path}/wizard`} component={OnbardingWizardRoutes} />
   </React.Fragment>
 );
 
