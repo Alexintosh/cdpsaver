@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { resetOnboardingWizard } from '../../../actions/onboardingActions';
+import SubHeaderRoutes from '../../SubHeaderRoutes/SubHeaderRoutes';
 import OnboardingWizardRedirect from './OnboardingWizardRedirect';
 import OnboardingWizardCreateCdp from './OnboardingWizardCreateCdp/OnboardingWizardCreateCdp';
-import SubHeaderRoutes from '../../SubHeaderRoutes/SubHeaderRoutes';
+import OnboardingWizardInfo from './OnboardingWizardInfo/OnboardingWizardInfo';
 
 import './OnboardingWizard.scss';
 
@@ -17,6 +18,11 @@ const ONBOARDING_WIZARD_LINKS = [
 ];
 
 class OnboardingWizardRoutes extends Component {
+  componentWillMount() {
+    this.onboardingWizardLinks = ONBOARDING_WIZARD_LINKS;
+    if (this.props.hasCdp) this.onboardingWizardLinks.splice(0, 1);
+  }
+
   componentWillUnmount() {
     this.props.resetOnboardingWizard();
   }
@@ -24,12 +30,9 @@ class OnboardingWizardRoutes extends Component {
   render() {
     const { match, hasCdp } = this.props;
 
-    const onboardingWizardLinks = ONBOARDING_WIZARD_LINKS;
-    if (hasCdp) onboardingWizardLinks.splice(0, 1);
-
     return (
       <div className="onboarding-wizard-wrapper">
-        <SubHeaderRoutes data={onboardingWizardLinks} />
+        <SubHeaderRoutes data={this.onboardingWizardLinks} />
 
         <React.Fragment>
           <Route path={match.path} exact component={props => <OnboardingWizardRedirect hasCdp={hasCdp} {...props} />} />
@@ -37,6 +40,7 @@ class OnboardingWizardRoutes extends Component {
             path={`${match.path}/create-cdp`}
             component={props => <OnboardingWizardCreateCdp hasCdp={hasCdp} {...props} />}
           />
+          <Route path={`${match.path}/info`} component={OnboardingWizardInfo} />
         </React.Fragment>
       </div>
     );

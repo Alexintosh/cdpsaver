@@ -21,7 +21,7 @@
     cursor: not-allowed;
   }
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: lighten($dark-gray, 10);
   }
 
@@ -29,7 +29,7 @@
     background: $green;
     color: white;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: lighten($green, 10);
     }
   }

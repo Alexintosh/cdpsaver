@@ -1,0 +1,49 @@
+@import "../../../../common/colors";
+@import "../../../../common/text";
+
+.onboarding-wizard-info-wrapper {
+
+  .onboarding-content-wrapper {
+    padding: 100px 0;
+  }
+
+  .info-row-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+
+    .info-item-wrapper {
+      width: 200px;
+
+      .info-label {
+        color: $gray;
+        margin-bottom: 5px;
+      }
+
+      .info-value {
+        font-size: 58px;
+        color: white;
+      }
+    }
+  }
+
+  .info-row-small-wrapper {
+    display: flex;
+    justify-content: center;
+    font-size: $font-size-extra-large;
+
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+
+    .info-label {
+      color: $gray;
+      margin-right: 8px;
+    }
+
+    .info-value {
+      color: white;
+    }
+  }
+}
