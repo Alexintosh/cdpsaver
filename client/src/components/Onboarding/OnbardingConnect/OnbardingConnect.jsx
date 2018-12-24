@@ -5,13 +5,27 @@ import ConnectWalletButtons from '../../ConnectWalletButtons/ConnectWalletButton
 import './OnbardingConnect.scss';
 
 const OnbardingConnect = () => (
-  <div className="onboarding-connect-wrapper">
-    <div className="connect-heading">Connect your wallet</div>
-    <div className="connect-text">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+  <div className="onboarding-connect-wrapper onboarding-page-wrapper">
+    <div className="sub-heading-wrapper">
+      <div className="width-container">
+        <div className="sub-title">Connect your wallet</div>
+        <div className="sub-text">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+        </div>
+      </div>
     </div>
 
-    <ConnectWalletButtons />
+    <div className="onboarding-content-bg">
+      <div className="onboarding-content-wrapper width-container">
+
+        <div className="connect-heading">Connect your wallet</div>
+        <div className="connect-text">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+        </div>
+
+        <ConnectWalletButtons />
+      </div>
+    </div>
   </div>
 );
 

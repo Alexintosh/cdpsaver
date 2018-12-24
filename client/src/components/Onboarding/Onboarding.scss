@@ -1,9 +1,18 @@
 @import "../../common/colors";
 
-.onboarding-wrapper {
-  height: 100%;
-  background: $darker-gray;
+.onboarding-page-wrapper {
+  flex-grow: 1;
   display: flex;
-  justify-content: center;
-  overflow: auto;
+  flex-direction: column;
+
+  .onboarding-content-bg {
+    flex-grow: 1;
+    background: $gray-6;
+
+    .onboarding-content-wrapper {
+      margin-bottom: 50px;
+      background: $gray-5;
+      border-bottom: 1px solid $green;
+    }
+  }
 }

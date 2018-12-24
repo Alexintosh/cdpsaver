@@ -8,19 +8,8 @@ import './Onboarding.scss';
 
 const OnboardingRoutes = ({ match }) => (
   <React.Fragment>
-    <div className="sub-heading-wrapper">
-      <div className="width-container">
-        <div className="sub-title">Onboarding</div>
-        <div className="sub-text">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-        </div>
-      </div>
-    </div>
-
-    <div className="onboarding-wrapper">
-      <Route exact path={`${match.path}`} component={OnboardingRedirect} />
-      <Route path={`${match.path}/connect`} component={OnbardingConnect} />
-    </div>
+    <Route exact path={`${match.path}`} component={OnboardingRedirect} />
+    <Route path={`${match.path}/connect`} component={OnbardingConnect} />
   </React.Fragment>
 );
 
