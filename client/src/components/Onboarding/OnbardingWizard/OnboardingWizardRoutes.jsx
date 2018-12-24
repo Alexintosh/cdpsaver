@@ -5,8 +5,16 @@ import { connect } from 'react-redux';
 import { resetOnboardingWizard } from '../../../actions/onboardingActions';
 import OnboardingWizardRedirect from './OnboardingWizardRedirect';
 import OnboardingWizardCreateCdp from './OnboardingWizardCreateCdp/OnboardingWizardCreateCdp';
+import SubHeaderRoutes from '../../SubHeaderRoutes/SubHeaderRoutes';
 
 import './OnboardingWizard.scss';
+
+const ONBOARDING_WIZARD_LINKS = [
+  { lebel: 'Create CDP', pathname: '/onboarding/wizard/create-cdp' },
+  { lebel: 'Info', pathname: '/onboarding/wizard/info' },
+  { lebel: 'Monitoring', pathname: '/onboarding/wizard/monitoring' },
+  { lebel: 'Transfer', pathname: '/onboarding/wizard/transfer' },
+];
 
 class OnboardingWizardRoutes extends Component {
   componentWillUnmount() {
@@ -15,8 +23,14 @@ class OnboardingWizardRoutes extends Component {
 
   render() {
     const { match, hasCdp } = this.props;
+
+    const onboardingWizardLinks = ONBOARDING_WIZARD_LINKS;
+    if (hasCdp) onboardingWizardLinks.splice(0, 1);
+
     return (
       <div className="onboarding-wizard-wrapper">
+        <SubHeaderRoutes data={onboardingWizardLinks} />
+
         <React.Fragment>
           <Route path={match.path} exact component={props => <OnboardingWizardRedirect hasCdp={hasCdp} {...props} />} />
           <Route
@@ -40,7 +54,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = ({ general }) => ({
-  hasCdp: general.hascCdp,
+  hasCdp: general.hasCdp,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OnboardingWizardRoutes);

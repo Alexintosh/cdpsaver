@@ -1,7 +1,7 @@
 // import {} from '../actionTypes/generalActionTypes';
 
 const INITIAL_STATE = {
-  hascCdp: true,
+  hasCdp: false,
 };
 
 export default (state = INITIAL_STATE, action) => {

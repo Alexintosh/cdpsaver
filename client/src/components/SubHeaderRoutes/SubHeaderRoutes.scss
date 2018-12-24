@@ -1,0 +1,25 @@
+@import "../../common/colors";
+@import "../../common/variables";
+@import "../../common/text";
+
+.sub-header-routes-wrapper {
+
+  .sub-header-item {
+    display: flex;
+    align-items: center;
+    color: $gray;
+    font-size: $font-size-medium;
+
+    &:not(:last-child) {
+      margin-right: 15px;
+
+      .label {
+        margin-right: 15px;
+      }
+    }
+
+    &.active {
+      color: white;
+    }
+  }
+}
