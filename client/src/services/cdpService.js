@@ -48,3 +48,23 @@ export const getCdpInfos = ids => new Promise(async (resolve, reject) => {
     reject(err);
   }
 });
+
+/**
+ * * Creates a CDP on the blockchain with ethAmount and daiAmountInfo
+ * TODO IMPLEMENT LATE
+ *
+ * @param ethAmount
+ * @param daiAmount
+ *
+ * @return {Promise<{id: number, owner: string, depositedPETH: *, depositedETH: string, depositedUSD: string, generatedDAI: number, liquidationPrice: string, isSafe: bool, ratio: *}>}
+ */
+export const createCdp = async (ethAmount, daiAmount) => {
+  try {
+    // create logic here
+    console.log('ETH', ethAmount, 'DAI', daiAmount);
+    const cdpInfo = await getCdpInfo(3613);
+    return cdpInfo;
+  } catch (err) {
+    throw new Error(err);
+  }
+};

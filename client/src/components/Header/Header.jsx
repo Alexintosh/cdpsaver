@@ -12,9 +12,8 @@ const Header = () => (
       </Link>
 
       <div className="links-wrapper">
+        <Link to="/marketplace">Marketplace</Link>
         <Link to="/onboarding">Onboarding</Link>
-        <Link to="/marketplace">Marketplace</Link>
-        <Link to="/marketplace">Marketplace</Link>
         <Link to="/monitoring">Monitoring</Link>
         <Link to="/saver">Saver</Link>
         <Link to="/onboarding/wizard">Onboarding wizard</Link>

@@ -15,6 +15,12 @@
   color: $gray;
   text-align: center;
 
+  &:disabled {
+    opacity: 0.5;
+    user-select: none;
+    cursor: not-allowed;
+  }
+
   &:hover {
     background: lighten($dark-gray, 10);
   }

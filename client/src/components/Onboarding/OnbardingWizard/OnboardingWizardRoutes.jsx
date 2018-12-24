@@ -54,7 +54,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = ({ general }) => ({
-  hasCdp: general.hasCdp,
+  hasCdp: !!general.cdp,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OnboardingWizardRoutes);

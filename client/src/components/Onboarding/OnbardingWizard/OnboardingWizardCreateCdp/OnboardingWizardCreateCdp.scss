@@ -1,6 +1,18 @@
+@import "../../../../common/variables";
+
 .onboarding-wizard-create-cdp-wrapper {
 
   .onboarding-content-wrapper {
+    @include flex-center;
+    flex-direction: column;
     padding: 60px 0 80px 0;
+  }
+
+  .form-wrapper {
+    max-width: 290px;
+
+    .form-item-wrapper .form-item {
+      width: 85px;
+    }
   }
 }

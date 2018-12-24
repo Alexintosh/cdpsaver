@@ -15,7 +15,6 @@ export const getMarketplaceCdpsData = () => async (dispatch) => {
 
   try {
     const payload = await getCdpInfos(mockCdpIds);
-    console.log('payload', payload);
 
     dispatch({ type: GET_MARKETPLACE_CDP_DATA_SUCCESS, payload });
   } catch (err) {

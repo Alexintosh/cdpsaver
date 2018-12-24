@@ -17,6 +17,10 @@
       background: $gray-5;
       border-bottom: 1px solid $green;
 
+      &.no-margin {
+        margin-bottom: 0;
+      }
+
       .connect-heading {
         font-size: $font-size-extra-large;
         margin-bottom: 20px;
@@ -30,6 +34,17 @@
       .connect-text {
         margin-bottom: 25px;
         color: $gray;
+      }
+    }
+
+    .onboardin-controls {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-bottom: 50px;
+
+      .info-text {
+        margin-right: 13px;
       }
     }
   }
