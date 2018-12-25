@@ -14,7 +14,7 @@ const MOCK_CDP = {
 };
 
 const INITIAL_STATE = {
-  cdp: null,
+  cdp: MOCK_CDP,
 };
 
 export default (state = INITIAL_STATE, action) => {

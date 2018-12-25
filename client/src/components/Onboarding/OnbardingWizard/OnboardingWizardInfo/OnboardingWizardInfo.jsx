@@ -42,7 +42,7 @@ const OnboardingWizardInfo = ({ cdp }) => {
         </div>
 
         <div className="onboardin-controls width-container">
-          <Link to="/onboarding/wizard/monitoring" className="button green">
+          <Link to="/onboarding/wizard/monitoring" className="button green uppercase">
             Next
           </Link>
         </div>
@@ -63,8 +63,4 @@ const mapStateToProps = ({ general }) => ({
   cdp: general.cdp,
 });
 
-const mapDispatchToProps = {
-  onboardingWizardSubmitInfo: () => {},
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(OnboardingWizardInfo);
+export default connect(mapStateToProps)(OnboardingWizardInfo);

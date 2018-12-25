@@ -17,7 +17,7 @@ let OnboardingWizardCreateCdp = ({
       <div className="onboarding-content-bg">
         <div className="onboarding-content-wrapper no-margin width-container">
 
-          <div className="connect-heading">
+          <div className="content-heading">
             Create
             <span>CDP</span>
           </div>
@@ -33,7 +33,7 @@ let OnboardingWizardCreateCdp = ({
           <button
             type="submit"
             disabled={pristine || invalid || submittingForm}
-            className="button green"
+            className="button green uppercase"
             form="onboarding-wizard-create-cdp-form"
           >
             { submittingForm ? 'Creating' : 'Create' }

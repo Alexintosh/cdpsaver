@@ -7,10 +7,14 @@
     @include flex-center;
     flex-direction: column;
     padding: 60px 0 80px 0;
+
+    .content-heading {
+      margin-bottom: 20px;
+    }
   }
 
   .form-wrapper {
-    max-width: 290px;
+    max-width: 300px;
 
     .form-item-wrapper .form-item {
       width: 85px;

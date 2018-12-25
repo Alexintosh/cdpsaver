@@ -25,12 +25,25 @@
     background: lighten($dark-gray, 10);
   }
 
+  &.uppercase {
+    text-transform: uppercase;
+  }
+
   &.green {
     background: $green;
     color: white;
 
     &:hover:not(:disabled) {
       background: lighten($green, 10);
+    }
+  }
+
+  &.gray {
+    background: $gray-7;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background: lighten($gray-7, 10);
     }
   }
 }

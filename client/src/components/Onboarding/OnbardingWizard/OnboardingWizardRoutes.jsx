@@ -7,6 +7,7 @@ import SubHeaderRoutes from '../../SubHeaderRoutes/SubHeaderRoutes';
 import OnboardingWizardRedirect from './OnboardingWizardRedirect';
 import OnboardingWizardCreateCdp from './OnboardingWizardCreateCdp/OnboardingWizardCreateCdp';
 import OnboardingWizardInfo from './OnboardingWizardInfo/OnboardingWizardInfo';
+import OnboardingWizardMonitoring from './OnboardingWizardMonitoring/OnboardingWizardMonitoring';
 
 import './OnboardingWizard.scss';
 
@@ -41,6 +42,7 @@ class OnboardingWizardRoutes extends Component {
             component={props => <OnboardingWizardCreateCdp hasCdp={hasCdp} {...props} />}
           />
           <Route path={`${match.path}/info`} component={OnboardingWizardInfo} />
+          <Route path={`${match.path}/monitoring`} component={OnboardingWizardMonitoring} />
         </React.Fragment>
       </div>
     );

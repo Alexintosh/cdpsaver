@@ -37,3 +37,16 @@ export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dis
     dispatch({ type: CREATE_CDP_ERROR, payload: err });
   }
 };
+
+/**
+ * Sends form values via API request to the server. Subscribes user to monitoring features
+ *
+ * @param email {String}
+ * @param rationPercent {String}
+ * @param history {Object}
+ *
+ * @return {Function}
+ */
+export const submitOnboardingMonitoringForm = ({ email, rationPercent }, history) => async (dispatch) => {
+  console.log('TEST');
+};
