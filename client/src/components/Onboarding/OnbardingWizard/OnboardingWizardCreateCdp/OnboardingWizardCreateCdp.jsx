@@ -21,7 +21,7 @@ let OnboardingWizardCreateCdp = ({
             Create
             <span>CDP</span>
           </div>
-          <div className="connect-text">
+          <div className="content-text">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
           </div>
 

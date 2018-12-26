@@ -6,18 +6,40 @@ import OnboardingWizardMonitoringForm from './OnboardingWizardMonitoringForm/Onb
 
 import './OnboardingWizardMonitoring.scss';
 
-const OnboardingWizardMonitoring = ({ cdp, history }) => {
+const OnboardingWizardMonitoring = ({ cdp, subscribingToMonitoringSuccess }) => {
   if (!cdp) return (<Redirect to="/onboarding/wizard/create-cdp" />);
 
   return (
     <div className="onboarding-wizard-monitoring-wrapper onboarding-page-wrapper">
       <div className="onboarding-content-bg">
         <div className="onboarding-content-wrapper no-margin width-container">
-          <div className="content-heading">
-            Get notified right away!
-          </div>
+          {
+            !subscribingToMonitoringSuccess && (
+              <div className="content-heading">
+                Get notified right away!
+              </div>
+            )
+          }
 
-          <OnboardingWizardMonitoringForm history={history} />
+          {
+            subscribingToMonitoringSuccess && (
+              <div className="content-heading">
+                Successfully subscribed!
+              </div>
+            )
+          }
+
+          { !subscribingToMonitoringSuccess && <OnboardingWizardMonitoringForm /> }
+
+          {
+            subscribingToMonitoringSuccess && (
+              <div className="content-text">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu
+                pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id.
+                Sed rhoncus, tortor sed eleifend tristique, tortor mauris molestie elit, et lacinia ipsum quam.
+              </div>
+            )
+          }
         </div>
 
         <div className="onboardin-controls width-container">
@@ -40,11 +62,12 @@ OnboardingWizardMonitoring.defaultProps = {
 
 OnboardingWizardMonitoring.propTypes = {
   cdp: PropTypes.object,
-  history: PropTypes.object.isRequired,
+  subscribingToMonitoringSuccess: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = ({ general }) => ({
+const mapStateToProps = ({ general, onboarding }) => ({
   cdp: general.cdp,
+  subscribingToMonitoringSuccess: onboarding.subscribingToMonitoringSuccess,
 });
 
 export default connect(mapStateToProps)(OnboardingWizardMonitoring);

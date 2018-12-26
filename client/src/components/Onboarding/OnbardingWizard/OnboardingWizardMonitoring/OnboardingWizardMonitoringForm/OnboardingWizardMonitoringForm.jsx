@@ -5,13 +5,14 @@ import { Field, reduxForm } from 'redux-form';
 import onboardingWizardMonitoringFormValidator from './onboardingWizardMonitoringFormValidator';
 import { submitOnboardingMonitoringForm } from '../../../../../actions/onboardingActions';
 import InputComponent from '../../../../Forms/InputComponent';
+import CheckboxComponent from '../../../../Forms/CheckboxComponent/CheckboxComponent';
 
 let OnboardingWizardMonitoringForm = ({
-  handleSubmit, onSubmit, history, pristine, invalid, submittingForm,
+  handleSubmit, onSubmit, pristine, invalid, submittingForm,
 }) => (
   <form
     id="onboarding-wizard-monitoring-form"
-    onSubmit={handleSubmit((e) => { onSubmit(e, history); })}
+    onSubmit={handleSubmit((e) => { onSubmit(e); })}
     className="form-wrapper"
   >
     <Field
@@ -25,7 +26,7 @@ let OnboardingWizardMonitoringForm = ({
     />
 
     <Field
-      id="onboarding-create-cdp-dai-amount"
+      id="onboarding-monitoring-ratio-percent"
       name="ratioPercent"
       placeholder="150"
       type="number"
@@ -34,6 +35,14 @@ let OnboardingWizardMonitoringForm = ({
       additional={{ min: 1 }}
       component={InputComponent}
       showErrorText
+    />
+
+    <Field
+      id="onboarding-monitoring-weekly-info"
+      name="weeklyInfo"
+      type="checkbox"
+      labelText="Weekly info"
+      component={CheckboxComponent}
     />
 
     <button
@@ -49,7 +58,6 @@ let OnboardingWizardMonitoringForm = ({
 OnboardingWizardMonitoringForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
   pristine: PropTypes.bool.isRequired,
   invalid: PropTypes.bool.isRequired,
   submittingForm: PropTypes.bool.isRequired,
@@ -60,8 +68,8 @@ OnboardingWizardMonitoringForm = reduxForm({
   validate: onboardingWizardMonitoringFormValidator,
 })(OnboardingWizardMonitoringForm);
 
-const mapStateToProps = ({ onbooarding }) => ({
-  submittingForm: false, // subscribingToMonitoring
+const mapStateToProps = ({ onboarding }) => ({
+  submittingForm: onboarding.subscribingToMonitoring,
 });
 
 const mapDispatchToProps = {

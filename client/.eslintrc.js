@@ -41,6 +41,7 @@ module.exports = {
     'function-paren-newline': 0,
     'react/destructuring-assignment': 0,
     'react/jsx-one-expression-per-line': 0,
+    'operator-linebreak': 0,
   },
   globals: {
     web3: true,

@@ -19,7 +19,7 @@ const OnbardingConnect = () => (
       <div className="onboarding-content-wrapper width-container">
 
         <div className="connect-heading">Connect your wallet</div>
-        <div className="connect-text">
+        <div className="content-text">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
         </div>
 

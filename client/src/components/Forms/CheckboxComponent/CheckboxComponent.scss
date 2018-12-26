@@ -1,0 +1,48 @@
+@import "../../../common/colors";
+@import "../../../common/variables";
+
+.form-item-wrapper.checkbox {
+  border: none;
+  padding: 0;
+  flex-direction: row;
+  justify-content: flex-start;
+
+  .form-item {
+    display: none;
+
+    &:checked + .label-wrapper .checkbox-wrapper .box {
+      background: $green;
+    }
+  }
+
+  .label-wrapper {
+    display: flex;
+    align-items: center;
+    @include hover-transition;
+    cursor: pointer;
+
+    &:hover .label-text {
+      opacity: 0.7;
+    }
+
+    .checkbox-wrapper {
+      width: 19px;
+      height: 19px;
+      padding: 4px;
+      border: 1px solid #61717E;
+      cursor: pointer;
+      margin-right: 8px;
+
+      .box {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .label-text {
+      @include hover-transition;
+      color: white;
+      font-size: 13px;
+    }
+  }
+}

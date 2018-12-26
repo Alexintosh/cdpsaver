@@ -3,9 +3,14 @@ import {
   CREATE_CDP_SUCCESS,
   CREATE_CDP_ERROR,
 
+  MONITORING_SUBSCRIBE_REQUEST,
+  MONITORING_SUBSCRIBE_SUCCESS,
+  MONITORING_SUBSCRIBE_FAILURE,
+
   RESET_ONBOARDING_WIZARD,
 } from '../actionTypes/onboardingActionTypes';
 import { createCdp } from '../services/cdpService';
+import { subscribeToMonitoringApiRequest } from '../services/apiService';
 
 /**
  * Resets the state of the onboarding reducer
@@ -41,12 +46,18 @@ export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dis
 /**
  * Sends form values via API request to the server. Subscribes user to monitoring features
  *
- * @param email {String}
- * @param rationPercent {String}
- * @param history {Object}
+ * @param formData {Object}
  *
  * @return {Function}
  */
-export const submitOnboardingMonitoringForm = ({ email, rationPercent }, history) => async (dispatch) => {
-  console.log('TEST');
+export const submitOnboardingMonitoringForm = formData => async (dispatch) => {
+  dispatch({ type: MONITORING_SUBSCRIBE_REQUEST });
+
+  try {
+    await subscribeToMonitoringApiRequest(formData);
+
+    dispatch({ type: MONITORING_SUBSCRIBE_SUCCESS });
+  } catch (err) {
+    dispatch({ type: MONITORING_SUBSCRIBE_FAILURE, payload: err });
+  }
 };
