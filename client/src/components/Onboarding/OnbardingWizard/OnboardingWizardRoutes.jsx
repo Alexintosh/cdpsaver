@@ -8,6 +8,7 @@ import OnboardingWizardRedirect from './OnboardingWizardRedirect';
 import OnboardingWizardCreateCdp from './OnboardingWizardCreateCdp/OnboardingWizardCreateCdp';
 import OnboardingWizardInfo from './OnboardingWizardInfo/OnboardingWizardInfo';
 import OnboardingWizardMonitoring from './OnboardingWizardMonitoring/OnboardingWizardMonitoring';
+import OnboardingWizardTransfer from './OnboardingWizardTransfer/OnboardingWizardTransfer';
 
 import './OnboardingWizard.scss';
 
@@ -43,6 +44,7 @@ class OnboardingWizardRoutes extends Component {
           />
           <Route path={`${match.path}/info`} component={OnboardingWizardInfo} />
           <Route path={`${match.path}/monitoring`} component={OnboardingWizardMonitoring} />
+          <Route path={`${match.path}/transfer`} component={OnboardingWizardTransfer} />
         </React.Fragment>
       </div>
     );

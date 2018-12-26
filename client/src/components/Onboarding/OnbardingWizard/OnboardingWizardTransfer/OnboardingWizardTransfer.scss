@@ -1,0 +1,15 @@
+@import "../../../../common/variables";
+
+.onboarding-wizard-transfer-wrapper {
+
+  .onboarding-content-wrapper {
+    @include flex-center;
+    flex-direction: column;
+    padding: 95px 0;
+
+    .content-text {
+      line-height: 21px;
+      max-width: 550px;
+    }
+  }
+}
