@@ -1,0 +1,109 @@
+@import "../../common/colors";
+@import "../../common/text";
+
+.marketplace-page-wrapper {
+
+  .content-wrapper {
+    display: flex;
+
+    .width-container {
+      flex-grow: 1;
+    }
+  }
+
+  .filters-wrapper {
+    height: 44px;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .filters {
+      height: 100%;
+      display: flex;
+      align-items: center;
+
+      .search-wrapper {
+        height: 100%;
+        padding-right: 20px;
+        margin-right: 20px;
+        border-right: 1px solid $dark-gray;
+
+        input {
+          padding-left: 10px;
+          background: transparent;
+          border: none;
+          color: white;
+          width: 200px;
+          height: 100%;
+          margin-right: 20px;
+          font-size: $font-size-small + 0.1;
+
+          &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: $gray;
+            opacity: 1; /* Firefox */
+          }
+        }
+      }
+
+      .order-wrapper {
+        height: 100%;
+        border-right: 1px solid $dark-gray;
+        align-items: center;
+        display: flex;
+
+        .select-label {
+          margin-right: 20px;
+          display: flex;
+          align-items: center;
+          height: 100%;
+          color: $gray;
+          font-size: $font-size-small + 0.1;
+        }
+
+        .select {
+          margin-right: 11px;
+
+          .select__control {
+            cursor: pointer;
+            border-radius: 0;
+            width: 180px;
+            border: none;
+            background: none;
+
+            .select__dropdown-indicator {
+              color: $gray;
+
+              &:hover {
+                color: lighten($gray, 20);
+              }
+            }
+
+            .select__placeholder {
+              font-size: $font-size-small + 0.1;
+              color: $gray
+            }
+
+            .select__single-value {
+              font-size: $font-size-small + 0.1;
+              color: white;
+            }
+
+            .select__indicator-separator {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+
+    .button {
+      width: 124px;
+
+      span {
+        margin-left: 4px;
+        font-weight: bold;
+      }
+    }
+  }
+}

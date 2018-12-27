@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
 import './Header.scss';
 
@@ -18,11 +18,11 @@ const Header = () => (
       </Link>
 
       <div className="links-wrapper">
-        <Link to="/dashboard/marketplace">Marketplace</Link>
-        <Link to="/onboarding">Onboarding</Link>
-        <Link to="/dashboard/monitoring">Monitoring</Link>
-        <Link to="/dashboard/saver">Saver</Link>
-        <Link to="/onboarding/wizard">Onboarding wizard</Link>
+        <NavLink activeClassName="active" to="/dashboard/marketplace">Marketplace</NavLink>
+        <NavLink activeClassName="active" to="/onboarding">Onboarding</NavLink>
+        <NavLink activeClassName="active" to="/dashboard/monitoring">Monitoring</NavLink>
+        <NavLink activeClassName="active" to="/dashboard/saver">Saver</NavLink>
+        <NavLink activeClassName="active" to="/onboarding/wizard">Onboarding wizard</NavLink>
       </div>
     </div>
   </div>

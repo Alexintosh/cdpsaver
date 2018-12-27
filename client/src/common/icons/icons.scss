@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?la2ks6');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?la2ks6#iefix') format('embedded-opentype'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?la2ks6') format('truetype'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?la2ks6') format('woff'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?la2ks6##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?p01tk6');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?p01tk6#iefix') format('embedded-opentype'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?p01tk6') format('truetype'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?p01tk6') format('woff'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?p01tk6##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -26,6 +26,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-magnifying-glass {
+  &:before {
+    content: $icon-magnifying-glass;
+    color: #999;
+  }
+}
 .icon-chevron-right {
   &:before {
     content: $icon-chevron-right;

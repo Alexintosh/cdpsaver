@@ -7,6 +7,8 @@ import SaverPage from '../SaverPage/SaverPage';
 import ManagerPage from '../ManagerPage/ManagerPage';
 import DashboardRedirect from './DashboardRedirect';
 
+import './Dashboard.scss';
+
 const DashboardRoutes = ({ match }) => (
   <React.Fragment>
     <Route exact path={`${match.path}`} component={DashboardRedirect} />

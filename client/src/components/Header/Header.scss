@@ -48,6 +48,12 @@
 
   .links-wrapper a {
     font-size: $font-size-small-regular;
+    color: $gray;
+
+    &.active {
+      color: white;
+      text-decoration: underline;
+    }
 
     &:not(:last-child) {
       margin-right: 41px;
