@@ -12,17 +12,22 @@ import OnboardingWizardTransfer from './OnboardingWizardTransfer/OnboardingWizar
 
 import './OnboardingWizard.scss';
 
-const ONBOARDING_WIZARD_LINKS = [
-  { lebel: 'Create CDP', pathname: '/onboarding/wizard/create-cdp' },
-  { lebel: 'Info', pathname: '/onboarding/wizard/info' },
-  { lebel: 'Monitoring', pathname: '/onboarding/wizard/monitoring' },
-  { lebel: 'Transfer', pathname: '/onboarding/wizard/transfer' },
-];
-
 class OnboardingWizardRoutes extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onboardingWizardLinks = [
+      { lebel: 'Create CDP', pathname: '/onboarding/wizard/create-cdp' },
+      { lebel: 'Info', pathname: '/onboarding/wizard/info' },
+      { lebel: 'Monitoring', pathname: '/onboarding/wizard/monitoring' },
+      { lebel: 'Transfer', pathname: '/onboarding/wizard/transfer' },
+    ];
+  }
+
   componentWillMount() {
-    this.onboardingWizardLinks = ONBOARDING_WIZARD_LINKS;
-    if (this.props.hasCdp) this.onboardingWizardLinks.splice(0, 1);
+    if (!this.props.hasCdp) return;
+
+    this.onboardingWizardLinks.splice(0, 1);
   }
 
   componentWillUnmount() {
