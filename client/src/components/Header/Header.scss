@@ -7,6 +7,20 @@
   background: $very-dark-gray;
   color: #fff;
 
+  &.homepage, &.onboarding {
+
+    .links-wrapper {
+      display: none;
+    }
+  }
+
+  &.homepage {
+    background: transparent;
+    position: absolute;
+    width: 100%;
+    z-index: 2;
+  }
+
   a {
     @include hover-transition;
 

@@ -1,11 +1,16 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import './HomePage.scss';
+import sectionBg from './sectionBg.png';
 
 const HomePage = () => (
   <div className="homepage-wrapper">
 
     <div className="section first-section">
+
+      <img src={sectionBg} className="first-section-bg" alt="background" />
+
       <div className="width-container">
         <div className="section-title">
           What is
@@ -19,7 +24,7 @@ const HomePage = () => (
           ea commodo consequat.
         </div>
 
-        <div className="button green">Start monitoring</div>
+        <Link to="/dashboard" className="button green">Start monitoring</Link>
       </div>
     </div>
 

@@ -4,6 +4,8 @@
 @import "../../common/buttons";
 
 .homepage-wrapper {
+  position: relative;
+
   .section {
     background: $very-dark-gray;
     padding: 110px 0;
@@ -31,19 +33,35 @@
     }
 
     &.first-section {
+      padding: 0;
+      position: relative;
+
+      .first-section-bg {
+        position: absolute;
+        object-fit: cover;
+        object-position: top;
+        width: 100%;
+        height: 100%;
+      }
 
       .width-container {
+        position: relative;
         @include flex-center;
         flex-direction: column;
       }
 
       .section-title {
+        margin-top: 175px;
         margin-bottom: 19px;
       }
 
       .section-text {
         max-width: 534px;
         margin-bottom: 55px;
+      }
+
+      .button {
+        margin-bottom: 110px;
       }
     }
 
@@ -64,6 +82,10 @@
 
           i {
             font-size: 48px;
+
+            &:before {
+              color: $green;
+            }
           }
         }
 

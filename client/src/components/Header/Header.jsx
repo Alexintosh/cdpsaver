@@ -4,7 +4,13 @@ import { Link } from 'react-router-dom';
 import './Header.scss';
 
 const Header = () => (
-  <div className="header-wrapper">
+  <div
+    className={`
+      header-wrapper
+      ${window.location.pathname === '/' ? 'homepage' : ''}
+      ${window.location.pathname.includes('onboarding') ? 'onboarding' : ''}
+    `}
+  >
     <div className="width-container">
       <Link className="logo-wrapper" to="/">
         <span>CDP</span>
