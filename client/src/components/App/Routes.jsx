@@ -4,13 +4,11 @@ import PropTypes from 'prop-types';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Header from '../Header/Header';
 import HomePage from '../HomePage/HomePage';
-import MarketplacePage from '../MarketplacePage/MarketplacePage';
-import SaverPage from '../SaverPage/SaverPage';
-import MonitoringPage from '../MonitoringPage/MonitoringPage';
 import OnboardingRoutes from '../Onboarding/OnboardingRoutes';
 import Page404 from '../Page404/Page404';
 
 import '../../common/icons/icons.scss';
+import DashboardRoutes from '../Dashboard/DashboardRoutes';
 
 class RoutesWrapper extends Component {
   componentWillMount() {}
@@ -26,10 +24,8 @@ class RoutesWrapper extends Component {
 
             <Switch>
               <Route exact path="/" component={HomePage} />
-              <Route path="/marketplace" component={MarketplacePage} />
               <Route path="/onboarding" component={OnboardingRoutes} />
-              <Route path="/monitoring" component={MonitoringPage} />
-              <Route path="/saver" component={SaverPage} />
+              <Route path="/dashboard" component={DashboardRoutes} />
               <Route path="*" component={Page404} />
             </Switch>
           </div>
