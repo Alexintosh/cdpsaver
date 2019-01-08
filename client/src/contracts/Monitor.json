@@ -1,0 +1,238 @@
+{
+  "contractName": "Monitor",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_cupId",
+          "type": "uint256"
+        }
+      ],
+      "name": "saveUser",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b5060aa8061001f6000396000f3fe608060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063e3c124da146044575b600080fd5b348015604f57600080fd5b50607960048036036020811015606457600080fd5b8101908080359060200190929190505050607b565b005b5056fea165627a7a723058209fa7fd7e5e8337a91ef05d3ea8b133be842de9b44bda39a02d820af6d755d6ac0029",
+  "deployedBytecode": "0x608060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063e3c124da146044575b600080fd5b348015604f57600080fd5b50607960048036036020811015606457600080fd5b8101908080359060200190929190505050607b565b005b5056fea165627a7a723058209fa7fd7e5e8337a91ef05d3ea8b133be842de9b44bda39a02d820af6d755d6ac0029",
+  "sourceMap": "25:171:6:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;25:171:6;;;;;;;",
+  "deployedSourceMap": "25:171:6:-;;;;;;;;;;;;;;;;;;;;;;;;147:46;;8:9:-1;5:2;;;30:1;27;20:12;5:2;147:46:6;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;147:46:6;;;;;;;;;;;;;;;;;;;;;;:::o",
+  "source": "pragma solidity ^0.5.0;\n\ncontract Monitor {\n\n    //TODO: called by the bots, to trigger a function to repay the users cdp to avoid liquidation\n    function saveUser(uint _cupId) public {\n\n    }\n\n}",
+  "sourcePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/Monitor.sol",
+  "ast": {
+    "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/Monitor.sol",
+    "exportedSymbols": {
+      "Monitor": [
+        573
+      ]
+    },
+    "id": 574,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 566,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:6"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 573,
+        "linearizedBaseContracts": [
+          573
+        ],
+        "name": "Monitor",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 571,
+              "nodeType": "Block",
+              "src": "185:8:6",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 572,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "saveUser",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 569,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 568,
+                  "name": "_cupId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 572,
+                  "src": "165:11:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 567,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "165:4:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "164:13:6"
+            },
+            "returnParameters": {
+              "id": 570,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "185:0:6"
+            },
+            "scope": 573,
+            "src": "147:46:6",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 574,
+        "src": "25:171:6"
+      }
+    ],
+    "src": "0:196:6"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/Monitor.sol",
+    "exportedSymbols": {
+      "Monitor": [
+        573
+      ]
+    },
+    "id": 574,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 566,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:6"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 573,
+        "linearizedBaseContracts": [
+          573
+        ],
+        "name": "Monitor",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 571,
+              "nodeType": "Block",
+              "src": "185:8:6",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 572,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "saveUser",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 569,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 568,
+                  "name": "_cupId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 572,
+                  "src": "165:11:6",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 567,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "165:4:6",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "164:13:6"
+            },
+            "returnParameters": {
+              "id": 570,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "185:0:6"
+            },
+            "scope": 573,
+            "src": "147:46:6",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 574,
+        "src": "25:171:6"
+      }
+    ],
+    "src": "0:196:6"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.0+commit.1d4f565a.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.0.0",
+  "updatedAt": "2019-01-08T08:34:23.712Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

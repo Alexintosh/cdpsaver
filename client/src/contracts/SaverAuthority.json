@@ -1,5 +1,5 @@
 {
-  "contractName": "DSAuthority",
+  "contractName": "SaverAuthority",
   "abi": [
     {
       "constant": true,
@@ -29,24 +29,24 @@
       "type": "function"
     }
   ],
-  "bytecode": "0x",
-  "deployedBytecode": "0x",
-  "sourceMap": "",
-  "deployedSourceMap": "",
-  "source": "pragma solidity ^0.5.0;\n\ncontract DSAuthority {\n    function canCall(\n        address src, address dst, bytes4 sig\n    ) public view returns (bool);\n}",
-  "sourcePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/DS/DSAuthority.sol",
+  "bytecode": "0x608060405234801561001057600080fd5b50610131806100206000396000f3fe608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063b700961314610046575b600080fd5b34801561005257600080fd5b506100de6004803603606081101561006957600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080357bffffffffffffffffffffffffffffffffffffffffffffffffffffffff191690602001909291905050506100f8565b604051808215151515815260200191505060405180910390f35b600060019050939250505056fea165627a7a72305820dc99f5dfebeca2f4a06b5d51456ad9822aebd7b3aee00ae7fbe950812c35c4520029",
+  "deployedBytecode": "0x608060405260043610610041576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063b700961314610046575b600080fd5b34801561005257600080fd5b506100de6004803603606081101561006957600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080357bffffffffffffffffffffffffffffffffffffffffffffffffffffffff191690602001909291905050506100f8565b604051808215151515815260200191505060405180910390f35b600060019050939250505056fea165627a7a72305820dc99f5dfebeca2f4a06b5d51456ad9822aebd7b3aee00ae7fbe950812c35c4520029",
+  "sourceMap": "57:212:9:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;57:212:9;;;;;;;",
+  "deployedSourceMap": "57:212:9:-;;;;;;;;;;;;;;;;;;;;;;;;157:110;;8:9:-1;5:2;;;30:1;27;20:12;5:2;157:110:9;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;157:110:9;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;233:4;256;249:11;;157:110;;;;;:::o",
+  "source": "pragma solidity ^0.5.0;\n\nimport \"./DS/DSAuthority.sol\";\n\ncontract SaverAuthority is DSAuthority {\n\n    //TODO: implement logic on who is allowed to call\n    function canCall(address src, address dst, bytes4 sig) public view returns (bool) {\n        return true;\n    }\n}",
+  "sourcePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/SaverAuthority.sol",
   "ast": {
-    "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/DS/DSAuthority.sol",
+    "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/SaverAuthority.sol",
     "exportedSymbols": {
-      "DSAuthority": [
-        138
+      "SaverAuthority": [
+        1639
       ]
     },
-    "id": 139,
+    "id": 1640,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 126,
+        "id": 1621,
         "literals": [
           "solidity",
           "^",
@@ -54,41 +54,104 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:1"
+        "src": "0:23:9"
       },
       {
-        "baseContracts": [],
-        "contractDependencies": [],
-        "contractKind": "contract",
-        "documentation": null,
-        "fullyImplemented": false,
-        "id": 138,
-        "linearizedBaseContracts": [
+        "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/DS/DSAuthority.sol",
+        "file": "./DS/DSAuthority.sol",
+        "id": 1622,
+        "nodeType": "ImportDirective",
+        "scope": 1640,
+        "sourceUnit": 139,
+        "src": "25:30:9",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 1623,
+              "name": "DSAuthority",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 138,
+              "src": "84:11:9",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_DSAuthority_$138",
+                "typeString": "contract DSAuthority"
+              }
+            },
+            "id": 1624,
+            "nodeType": "InheritanceSpecifier",
+            "src": "84:11:9"
+          }
+        ],
+        "contractDependencies": [
           138
         ],
-        "name": "DSAuthority",
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 1639,
+        "linearizedBaseContracts": [
+          1639,
+          138
+        ],
+        "name": "SaverAuthority",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "body": null,
+            "body": {
+              "id": 1637,
+              "nodeType": "Block",
+              "src": "239:28:9",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "74727565",
+                    "id": 1635,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "256:4:9",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "true"
+                  },
+                  "functionReturnParameters": 1634,
+                  "id": 1636,
+                  "nodeType": "Return",
+                  "src": "249:11:9"
+                }
+              ]
+            },
             "documentation": null,
-            "id": 137,
-            "implemented": false,
+            "id": 1638,
+            "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "canCall",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 133,
+              "id": 1631,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 128,
+                  "id": 1626,
                   "name": "src",
                   "nodeType": "VariableDeclaration",
-                  "scope": 137,
-                  "src": "78:11:1",
+                  "scope": 1638,
+                  "src": "174:11:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -96,10 +159,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 127,
+                    "id": 1625,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "78:7:1",
+                    "src": "174:7:9",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -111,11 +174,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 130,
+                  "id": 1628,
                   "name": "dst",
                   "nodeType": "VariableDeclaration",
-                  "scope": 137,
-                  "src": "91:11:1",
+                  "scope": 1638,
+                  "src": "187:11:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -123,10 +186,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 129,
+                    "id": 1627,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "91:7:1",
+                    "src": "187:7:9",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -138,11 +201,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 132,
+                  "id": 1630,
                   "name": "sig",
                   "nodeType": "VariableDeclaration",
-                  "scope": 137,
-                  "src": "104:10:1",
+                  "scope": 1638,
+                  "src": "200:10:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -150,10 +213,10 @@
                     "typeString": "bytes4"
                   },
                   "typeName": {
-                    "id": 131,
+                    "id": 1629,
                     "name": "bytes4",
                     "nodeType": "ElementaryTypeName",
-                    "src": "104:6:1",
+                    "src": "200:6:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes4",
                       "typeString": "bytes4"
@@ -163,19 +226,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "68:52:1"
+              "src": "173:38:9"
             },
             "returnParameters": {
-              "id": 136,
+              "id": 1634,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 135,
+                  "id": 1633,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 137,
-                  "src": "142:4:1",
+                  "scope": 1638,
+                  "src": "233:4:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -183,10 +246,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 134,
+                    "id": 1632,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "142:4:1",
+                    "src": "233:4:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -196,33 +259,33 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "141:6:1"
+              "src": "232:6:9"
             },
-            "scope": 138,
-            "src": "52:96:1",
+            "scope": 1639,
+            "src": "157:110:9",
             "stateMutability": "view",
-            "superFunction": null,
+            "superFunction": 137,
             "visibility": "public"
           }
         ],
-        "scope": 139,
-        "src": "25:125:1"
+        "scope": 1640,
+        "src": "57:212:9"
       }
     ],
-    "src": "0:150:1"
+    "src": "0:269:9"
   },
   "legacyAST": {
-    "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/DS/DSAuthority.sol",
+    "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/SaverAuthority.sol",
     "exportedSymbols": {
-      "DSAuthority": [
-        138
+      "SaverAuthority": [
+        1639
       ]
     },
-    "id": 139,
+    "id": 1640,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 126,
+        "id": 1621,
         "literals": [
           "solidity",
           "^",
@@ -230,41 +293,104 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:1"
+        "src": "0:23:9"
       },
       {
-        "baseContracts": [],
-        "contractDependencies": [],
-        "contractKind": "contract",
-        "documentation": null,
-        "fullyImplemented": false,
-        "id": 138,
-        "linearizedBaseContracts": [
+        "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/DS/DSAuthority.sol",
+        "file": "./DS/DSAuthority.sol",
+        "id": 1622,
+        "nodeType": "ImportDirective",
+        "scope": 1640,
+        "sourceUnit": 139,
+        "src": "25:30:9",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 1623,
+              "name": "DSAuthority",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 138,
+              "src": "84:11:9",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_DSAuthority_$138",
+                "typeString": "contract DSAuthority"
+              }
+            },
+            "id": 1624,
+            "nodeType": "InheritanceSpecifier",
+            "src": "84:11:9"
+          }
+        ],
+        "contractDependencies": [
           138
         ],
-        "name": "DSAuthority",
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 1639,
+        "linearizedBaseContracts": [
+          1639,
+          138
+        ],
+        "name": "SaverAuthority",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "body": null,
+            "body": {
+              "id": 1637,
+              "nodeType": "Block",
+              "src": "239:28:9",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "hexValue": "74727565",
+                    "id": 1635,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "bool",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "256:4:9",
+                    "subdenomination": null,
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    },
+                    "value": "true"
+                  },
+                  "functionReturnParameters": 1634,
+                  "id": 1636,
+                  "nodeType": "Return",
+                  "src": "249:11:9"
+                }
+              ]
+            },
             "documentation": null,
-            "id": 137,
-            "implemented": false,
+            "id": 1638,
+            "implemented": true,
             "kind": "function",
             "modifiers": [],
             "name": "canCall",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 133,
+              "id": 1631,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 128,
+                  "id": 1626,
                   "name": "src",
                   "nodeType": "VariableDeclaration",
-                  "scope": 137,
-                  "src": "78:11:1",
+                  "scope": 1638,
+                  "src": "174:11:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -272,10 +398,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 127,
+                    "id": 1625,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "78:7:1",
+                    "src": "174:7:9",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -287,11 +413,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 130,
+                  "id": 1628,
                   "name": "dst",
                   "nodeType": "VariableDeclaration",
-                  "scope": 137,
-                  "src": "91:11:1",
+                  "scope": 1638,
+                  "src": "187:11:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -299,10 +425,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 129,
+                    "id": 1627,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "91:7:1",
+                    "src": "187:7:9",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -314,11 +440,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 132,
+                  "id": 1630,
                   "name": "sig",
                   "nodeType": "VariableDeclaration",
-                  "scope": 137,
-                  "src": "104:10:1",
+                  "scope": 1638,
+                  "src": "200:10:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -326,10 +452,10 @@
                     "typeString": "bytes4"
                   },
                   "typeName": {
-                    "id": 131,
+                    "id": 1629,
                     "name": "bytes4",
                     "nodeType": "ElementaryTypeName",
-                    "src": "104:6:1",
+                    "src": "200:6:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bytes4",
                       "typeString": "bytes4"
@@ -339,19 +465,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "68:52:1"
+              "src": "173:38:9"
             },
             "returnParameters": {
-              "id": 136,
+              "id": 1634,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 135,
+                  "id": 1633,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 137,
-                  "src": "142:4:1",
+                  "scope": 1638,
+                  "src": "233:4:9",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -359,10 +485,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 134,
+                    "id": 1632,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "142:4:1",
+                    "src": "233:4:9",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -372,20 +498,20 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "141:6:1"
+              "src": "232:6:9"
             },
-            "scope": 138,
-            "src": "52:96:1",
+            "scope": 1639,
+            "src": "157:110:9",
             "stateMutability": "view",
-            "superFunction": null,
+            "superFunction": 137,
             "visibility": "public"
           }
         ],
-        "scope": 139,
-        "src": "25:125:1"
+        "scope": 1640,
+        "src": "57:212:9"
       }
     ],
-    "src": "0:150:1"
+    "src": "0:269:9"
   },
   "compiler": {
     "name": "solc",
@@ -393,7 +519,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.0",
-  "updatedAt": "2019-01-08T09:27:20.681Z",
+  "updatedAt": "2019-01-08T09:27:20.688Z",
   "devdoc": {
     "methods": {}
   },

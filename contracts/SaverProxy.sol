@@ -1,13 +1,13 @@
 pragma solidity ^0.5.0;
 
-import "./interfaces/CDPInterface.sol";
+import "./interfaces/TubInterface.sol";
 import "./interfaces/ERC20.sol";
 import "./interfaces/KyberNetworkProxyInterface.sol";
-import "./DS/DSProxy.sol";
+import "./SaiProxy.sol";
 
-contract SaverProxy {
+contract SaverProxy is SaiProxy {
     function unwind(address _tub, uint _cdpId) public {
-        CDPInterface cdp = CDPInterface(_tub);
+        TubInterface cdp = TubInterface(_tub);
 
         uint maxCollateral = getMaxFreeCollateral();
 
@@ -41,14 +41,4 @@ contract SaverProxy {
         return 10000;
     }
 
-    ///@notice Creates a new UserProxy and transfer and existing cdp to it
-    function createUserProxyAndTransfer(address _tub, uint _cdpId, address _marketplace) public {
-        CDPInterface cdp = CDPInterface(_tub);
-
-        require(msg.sender == cdp.lad(bytes32(_cdpId)), "The caller must be the cdp owner");
-
-        DSProxy newProxy = new DSProxy(address(0)); //TODO: should we set a cache address?
-
-        cdp.give(bytes32(_cdpId), address(newProxy));
-    }
 }
