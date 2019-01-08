@@ -1,7 +1,7 @@
 pragma solidity ^0.5.0;
 
 import "./DS/DSProxy.sol";
-import "./interfaces/CDPInterface.sol";
+import "./interfaces/TubInterface.sol";
 
 contract Marketplace is DSAuth {
 
@@ -18,7 +18,7 @@ contract Marketplace is DSAuth {
     // address constant TUB_ADDRESS = 0x448a5065aebb8e423f0896e6c5d525c040f59af3;
     address constant TUB_ADDRESS = 0xa71937147b55Deb8a530C7229C442Fd3F31b7db2; //KOVAN
 
-    CDPInterface cdp = CDPInterface(TUB_ADDRESS);
+    TubInterface cdp = TubInterface(TUB_ADDRESS);
 
     event OnSale(bytes32 indexed cup, address indexed lad, uint price);
     event Bought(bytes32 indexed cup, address indexed newLad, address indexed oldLad, uint price);
