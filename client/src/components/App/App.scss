@@ -17,7 +17,7 @@ body {
   font-family: $main-font;
 }
 
-#root .app-wrapper .app {
+.app {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
