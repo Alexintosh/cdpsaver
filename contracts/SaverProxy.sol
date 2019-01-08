@@ -1,9 +1,9 @@
 pragma solidity ^0.5.0;
 
-import "./CDPInterface.sol";
-import "./ERC20.sol";
-import "./KyberNetworkProxyInterface.sol";
-import "./UserProxy.sol";
+import "./interfaces/CDPInterface.sol";
+import "./interfaces/ERC20.sol";
+import "./interfaces/KyberNetworkProxyInterface.sol";
+import "./DS/DSProxy.sol";
 
 contract SaverProxy {
     function unwind(address _tub, uint _cdpId) public {
@@ -47,7 +47,7 @@ contract SaverProxy {
 
         require(msg.sender == cdp.lad(bytes32(_cdpId)), "The caller must be the cdp owner");
 
-        UserProxy newProxy = new UserProxy(_cdpId, _marketplace, address(this), msg.sender);
+        DSProxy newProxy = new DSProxy(address(0)); //TODO: should we set a cache address?
 
         cdp.give(bytes32(_cdpId), address(newProxy));
     }
