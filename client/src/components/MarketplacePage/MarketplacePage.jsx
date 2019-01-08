@@ -35,50 +35,50 @@ const MarketplacePage = ({
       </div>
 
       <div className="content-wrapper">
-        <div className="width-container">
-          <div className="filters-wrapper">
-            <div className="filters">
-              <div className="search-wrapper">
-                <input placeholder="Search by ID" />
+        <div className="filters-wrapper">
+          <div className="filters">
+            <div className="search-wrapper">
+              <input placeholder="Search by ID" />
 
-                <i className="icon-magnifying-glass" />
-              </div>
-
-              <div className="order-wrapper">
-                <div className="select-label">Order by</div>
-
-                <Select
-                  className="select main-select main-select-small"
-                  classNamePrefix="select"
-                  value={orderBy}
-                  onChange={setOrderBy}
-                  options={MARKETPLACE_SORT_OPTIONS}
-                />
-              </div>
+              <i className="icon-magnifying-glass" />
             </div>
 
-            <button className="button green uppercase" type="button">
-              Sell
-              <span>Cdp</span>
-            </button>
+            <div className="order-wrapper">
+              <div className="select-label">Order by</div>
+
+              <Select
+                className="select main-select main-select-small"
+                classNamePrefix="select"
+                value={orderBy}
+                onChange={setOrderBy}
+                options={MARKETPLACE_SORT_OPTIONS}
+              />
+            </div>
           </div>
 
-          {
-            fetchingCdps && (
-              <div className="loader-page-wrapper">
-                <Loader />
-              </div>
-            )
-          }
+          <button className="button green uppercase" type="button">
+            Sell
+            <span>Cdp</span>
+          </button>
+        </div>
 
-          {
-            !fetchingCdps && !fetchingCdpsError && (
-              <div className="cdp-list-wrapper">
+        {
+          fetchingCdps && (
+            <div className="loader-page-wrapper">
+              <Loader />
+            </div>
+          )
+        }
+
+        {
+          !fetchingCdps && !fetchingCdpsError && (
+            <div className="cdp-list-wrapper">
+              <div className="cdp-list">
                 { cdps.map(cdp => (<CdpBox data={cdp} key={cdp.id} />)) }
               </div>
-            )
-          }
-        </div>
+            </div>
+          )
+        }
       </div>
     </div>
   );
