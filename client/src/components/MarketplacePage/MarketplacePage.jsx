@@ -4,10 +4,14 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { getMarketplaceCdpsData } from '../../actions/marketplaceActions';
 import { MARKETPLACE_SORT_OPTIONS } from '../../constants/general';
+import CdpBox from './CdpBox/CdpBox';
+import Loader from '../Loader/Loader';
 
 import './MarketplacePage.scss';
 
-const MarketplacePage = ({ cdps, fetchingCdps, getMarketplaceCdpsData }) => {
+const MarketplacePage = ({
+  cdps, fetchingCdpsError, fetchingCdps, getMarketplaceCdpsData,
+}) => {
   const [mounted, setMounted] = useState(false);
   const [orderBy, setOrderBy] = useState(null);
 
@@ -59,9 +63,21 @@ const MarketplacePage = ({ cdps, fetchingCdps, getMarketplaceCdpsData }) => {
             </button>
           </div>
 
-          <div className="cdp-list-wrapper">
-            CDPS
-          </div>
+          {
+            fetchingCdps && (
+              <div className="loader-page-wrapper">
+                <Loader />
+              </div>
+            )
+          }
+
+          {
+            !fetchingCdps && !fetchingCdpsError && (
+              <div className="cdp-list-wrapper">
+                { cdps.map(cdp => (<CdpBox data={cdp} key={cdp.id} />)) }
+              </div>
+            )
+          }
         </div>
       </div>
     </div>
@@ -70,13 +86,15 @@ const MarketplacePage = ({ cdps, fetchingCdps, getMarketplaceCdpsData }) => {
 
 MarketplacePage.propTypes = {
   cdps: PropTypes.array.isRequired,
-  fetchingCdps: PropTypes.bool.isRequired,
   getMarketplaceCdpsData: PropTypes.func.isRequired,
+  fetchingCdps: PropTypes.bool.isRequired,
+  fetchingCdpsError: PropTypes.any.isRequired,
 };
 
 const mapStateToProps = (({ marketplace }) => ({
   cdps: marketplace.cdps,
   fetchingCdps: marketplace.fetchingCdps,
+  fetchingCdpsError: marketplace.fetchingCdpsError,
 }));
 
 const mapDispatchToProps = {

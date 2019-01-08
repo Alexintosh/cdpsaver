@@ -13,18 +13,18 @@ export default (state = INITIAL_STATE, action) => {
 
   switch (type) {
     case GET_MARKETPLACE_CDP_DATA_REQUEST:
-      return { ...state, fetcingCdps: true };
+      return { ...state, fetchingCdps: true };
 
     case GET_MARKETPLACE_CDP_DATA_SUCCESS:
       return {
         ...state,
-        fetcingCdps: true,
+        fetchingCdps: false,
         fetchingCdpsError: '',
         cdps: payload,
       };
 
     case GET_MARKETPLACE_CDP_DATA_FAILURE:
-      return { ...state, fetcingCdps: false, fetchingCdpsError: payload };
+      return { ...state, fetchingCdps: false, fetchingCdpsError: payload };
 
     default:
       return state;
