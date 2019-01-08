@@ -1,4 +1,5 @@
 import Maker from '@makerdao/dai';
+import web3 from 'web3';
 
 const maker = Maker.create('browser');
 
@@ -18,13 +19,13 @@ export const getCdpInfo = (id, useAuth = true) => new Promise(async (resolve, re
 
     resolve({
       id,
-      owner: info[0].toString(),
-      depositedPETH: info[1].toString(),
-      generatedDAI: info[2].toString(),
+      owner: info[0],
+      depositedPETH: parseFloat(web3.utils.fromWei(info[1].toString(), 'ether')),
+      generatedDAI: parseFloat(web3.utils.fromWei(info[2].toString(), 'ether')),
       debtDai: await cdp.getDebtValue(),
-      depositedETH: (await cdp.getCollateralValue())._amount.toString(),
-      depositedUSD: (await cdp.getCollateralValue(Maker.USD))._amount.toString(),
-      liquidationPrice: (await cdp.getLiquidationPrice())._amount.toString(),
+      depositedETH: (await cdp.getCollateralValue())._amount,
+      depositedUSD: (await cdp.getCollateralValue(Maker.USD))._amount,
+      liquidationPrice: (await cdp.getLiquidationPrice())._amount,
       isSafe: await cdp.isSafe(),
       ratio: await cdp.getCollateralizationRatio(), // cdp.getCollateralizationRatio() returns the USD value of the collateral in the CDP divided by the USD value of the Dai debt for the CDP, e.g. 2.5.
     });
