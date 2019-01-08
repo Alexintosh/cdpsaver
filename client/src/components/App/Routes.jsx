@@ -6,9 +6,10 @@ import Header from '../Header/Header';
 import HomePage from '../HomePage/HomePage';
 import OnboardingRoutes from '../Onboarding/OnboardingRoutes';
 import Page404 from '../Page404/Page404';
+import DashboardRoutes from '../Dashboard/DashboardRoutes';
+import ModalRoot from '../Modals/ModalRoot';
 
 import '../../common/icons/icons.scss';
-import DashboardRoutes from '../Dashboard/DashboardRoutes';
 
 class RoutesWrapper extends Component {
   componentWillMount() {}
@@ -28,6 +29,8 @@ class RoutesWrapper extends Component {
               <Route path="/dashboard" component={DashboardRoutes} />
               <Route path="*" component={Page404} />
             </Switch>
+
+            <ModalRoot />
           </div>
         </BrowserRouter>
       </Provider>
