@@ -77,9 +77,18 @@ const MarketplacePage = ({
           }
 
           {
-            !fetchingCdps && !fetchingCdpsError && (
+            !fetchingCdps && !fetchingCdpsError && cdps.length > 0 && (
               <div className="cdp-list-wrapper">
                 { cdps.map(cdp => (<CdpBox data={cdp} key={cdp.id} />)) }
+              </div>
+            )
+          }
+
+          {
+            !fetchingCdps && !fetchingCdpsError && cdps.length === 0 && (
+              <div className="empty-page-wrapper">
+                <i className="icon-empty" />
+                <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit</span>
               </div>
             )
           }
