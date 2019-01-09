@@ -1,0 +1,291 @@
+{
+  "contractName": "ProxyRegistryInterface",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_owner",
+          "type": "address"
+        }
+      ],
+      "name": "proxies",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.5.0;\n\ncontract ProxyRegistryInterface {\n    function proxies(address _owner) public view returns(address);\n}",
+  "sourcePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/interfaces/ProxyRegistryInterface.sol",
+  "ast": {
+    "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/interfaces/ProxyRegistryInterface.sol",
+    "exportedSymbols": {
+      "ProxyRegistryInterface": [
+        2321
+      ]
+    },
+    "id": 2322,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2313,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:14"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 2321,
+        "linearizedBaseContracts": [
+          2321
+        ],
+        "name": "ProxyRegistryInterface",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2320,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "proxies",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2316,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2315,
+                  "name": "_owner",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2320,
+                  "src": "80:14:14",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2314,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "80:7:14",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "79:16:14"
+            },
+            "returnParameters": {
+              "id": 2319,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2318,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2320,
+                  "src": "116:7:14",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2317,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "116:7:14",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "115:9:14"
+            },
+            "scope": 2321,
+            "src": "63:62:14",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 2322,
+        "src": "25:102:14"
+      }
+    ],
+    "src": "0:127:14"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/interfaces/ProxyRegistryInterface.sol",
+    "exportedSymbols": {
+      "ProxyRegistryInterface": [
+        2321
+      ]
+    },
+    "id": 2322,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2313,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:14"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 2321,
+        "linearizedBaseContracts": [
+          2321
+        ],
+        "name": "ProxyRegistryInterface",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "id": 2320,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "proxies",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2316,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2315,
+                  "name": "_owner",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2320,
+                  "src": "80:14:14",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2314,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "80:7:14",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "79:16:14"
+            },
+            "returnParameters": {
+              "id": 2319,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2318,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2320,
+                  "src": "116:7:14",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2317,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "116:7:14",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "115:9:14"
+            },
+            "scope": 2321,
+            "src": "63:62:14",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 2322,
+        "src": "25:102:14"
+      }
+    ],
+    "src": "0:127:14"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.0+commit.1d4f565a.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.0.0",
+  "updatedAt": "2019-01-09T14:14:25.600Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

@@ -51,7 +51,10 @@ contract SaiProxy is DSMath {
                 if (tub.sai().allowance(address(this), otc_) != uint(-1)) {
                     tub.sai().approve(otc_, uint(-1));
                 }
+          
                 tub.sai().transferFrom(msg.sender, address(this), saiGovAmt);
+                
+                
                 OtcInterface(otc_).buyAllAmount(address(tub.gov()), govAmt, address(tub.sai()), saiGovAmt);
             } else {
                 tub.gov().transferFrom(msg.sender, address(this), govAmt);
@@ -59,11 +62,14 @@ contract SaiProxy is DSMath {
         }
     }
 
-    function wipe(address tub_, bytes32 cup, uint wad, address otc_) public {
+    function wipe(address tub_, bytes32 cup, uint wad, address otc_, bool fromContract) public {
         if (wad > 0) {
             TubInterface tub = TubInterface(tub_);
 
-            tub.sai().transferFrom(msg.sender, address(this), wad);
+            if(!fromContract) {
+                tub.sai().transferFrom(msg.sender, address(this), wad);
+            }
+            
             handleGovFee(tub, rmul(wad, rdiv(tub.rap(cup), tub.tab(cup))), otc_);
 
             if (tub.sai().allowance(address(this), address(tub)) != uint(-1)) {
@@ -76,11 +82,11 @@ contract SaiProxy is DSMath {
         }
     }
 
-    function wipe(address tub_, bytes32 cup, uint wad) public {
-        wipe(tub_, cup, wad, address(0));
+    function wipe(address tub_, bytes32 cup, uint wad, bool fromContract) public {
+        wipe(tub_, cup, wad, address(0), fromContract);
     }
 
-    function free(address tub_, bytes32 cup, uint jam) public {
+    function free(address tub_, bytes32 cup, uint jam, bool fromContract) public {
         if (jam > 0) {
             TubInterface tub = TubInterface(tub_);
             uint ink = rdiv(jam, tub.per());
@@ -90,7 +96,10 @@ contract SaiProxy is DSMath {
             }
             tub.exit(ink);
             tub.gem().withdraw(jam);
-            address(msg.sender).transfer(jam);
+            
+            if(!fromContract) {
+                address(msg.sender).transfer(jam);
+            }
         }
     }
 
@@ -105,13 +114,13 @@ contract SaiProxy is DSMath {
     }
 
     function wipeAndFree(address tub_, bytes32 cup, uint jam, uint wad) public payable {
-        wipe(tub_, cup, wad);
-        free(tub_, cup, jam);
+        wipe(tub_, cup, wad, false);
+        free(tub_, cup, jam, false);
     }
 
     function wipeAndFree(address tub_, bytes32 cup, uint jam, uint wad, address otc_) public payable {
-        wipe(tub_, cup, wad, otc_);
-        free(tub_, cup, jam);
+        wipe(tub_, cup, wad, otc_, false);
+        free(tub_, cup, jam, false);
     }
 
     function shut(address tub_, bytes32 cup) public {
