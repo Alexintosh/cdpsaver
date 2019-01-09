@@ -63,7 +63,7 @@ Modal.defaultProps = {
 
 Modal.propTypes = {
   closeModal: PropTypes.func.isRequired,
-  width: PropTypes.string,
+  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   className: PropTypes.string,
 };
 

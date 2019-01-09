@@ -1,11 +1,22 @@
 import {
-  GET_MARKETPLACE_CDP_DATA_REQUEST, GET_MARKETPLACE_CDP_DATA_SUCCESS, GET_MARKETPLACE_CDP_DATA_FAILURE,
+  GET_MARKETPLACE_CDP_DATA_REQUEST,
+  GET_MARKETPLACE_CDP_DATA_SUCCESS,
+  GET_MARKETPLACE_CDP_DATA_FAILURE,
+
+  SELL_CDP_REQUEST,
+  SELL_CDP_SUCCESS,
+  SELL_CDP_FAILURE,
+  RESET_SELL_CDP_FORM,
 } from '../actionTypes/marketplaceActionTypes';
 
 const INITIAL_STATE = {
   cdps: [],
   fetchingCdps: false,
   fetchingCdpsError: '',
+
+  sellingCdp: false,
+  sellingCdpError: '',
+  sellingCdpSuccess: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -25,6 +36,33 @@ export default (state = INITIAL_STATE, action) => {
 
     case GET_MARKETPLACE_CDP_DATA_FAILURE:
       return { ...state, fetchingCdps: false, fetchingCdpsError: payload };
+
+    case SELL_CDP_REQUEST:
+      return { ...state, sellingCdp: true };
+
+    case SELL_CDP_SUCCESS:
+      return {
+        ...state,
+        sellingCdp: false,
+        sellingCdpError: '',
+        sellingCdpSuccess: true,
+      };
+
+    case SELL_CDP_FAILURE:
+      return {
+        ...state,
+        sellingCdp: false,
+        sellingCdpSuccess: false,
+        sellingCdpError: payload,
+      };
+
+    case RESET_SELL_CDP_FORM:
+      return {
+        ...state,
+        sellingCdp: false,
+        sellingCdpError: '',
+        sellingCdpSuccess: false,
+      };
 
     default:
       return state;

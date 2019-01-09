@@ -1,3 +1,58 @@
+@import "../../../common/colors";
+
 .sell-cdp-modal-wrapper {
 
+  .modal-body {
+    display: flex;
+    align-items: center;
+  }
+
+  .modal-content {
+    max-width: 300px;
+    color: $gray;
+  }
+
+  .info-wrapper {
+
+    .value-wrapper {
+      margin-bottom: 9px;
+      font-size: 20px;
+
+      .value {
+        margin-left: 4px;
+        color: white;
+      }
+    }
+
+    .equation {
+      color: $gray;
+      margin-bottom: 31px;
+    }
+  }
+
+  .form-wrapper {
+    margin-bottom: 11px;
+
+    .form-item-wrapper label {
+      white-space: nowrap;
+    }
+  }
+
+  .form-under-label {
+    margin-bottom: 11px;
+  }
+
+  .current-sale-price-wrapper {
+    font-size: 20px;
+    margin-bottom: 88px;
+
+    .value {
+      margin-left: 4px;
+      color: white;
+    }
+  }
+
+  .modal-controls .button {
+    width: 124px;
+  }
 }
