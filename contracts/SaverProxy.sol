@@ -49,7 +49,7 @@ contract SaverProxy is SaiProxy {
     }
 
     function maxFreeCollateral(TubInterface _tub, address _vox, bytes32 _cdpID) public returns (uint) {
-        return sub(_tub.ink(_cdpID), wdiv(wmul(wmul(_tub.tab(_cdpID), _tub.mat()), IVox(_vox).par()), _tub.tag()));
+        return sub(_tub.ink(_cdpID), wdiv(wmul(wmul(_tub.tab(_cdpID), rmul(_tub.mat(), WAD)), IVox(_vox).par()), _tub.tag()));
     }
 
 
