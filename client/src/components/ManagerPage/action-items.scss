@@ -1,0 +1,31 @@
+@import "../../common/text";
+
+.action-items-wrapper {
+
+  .item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    max-width: 310px;
+
+    .button {
+      width: 124px;
+
+      &.variable-width { width: auto; }
+    }
+
+    .form-item-wrapper {
+      border-left-width: 9px;
+      margin-bottom: 0;
+
+      .input-values label {
+        font-size: $font-size-medium;
+        color: white;
+      }
+
+      &.generate, &.payback { border-left-color: #9B51E0 }
+      &.withdraw, &.collateral{ border-left-color: #F2C94C }
+      &.repay, &.boost { border-left-color: #56CCF2 }
+    }
+  }
+}

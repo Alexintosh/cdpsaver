@@ -47,4 +47,22 @@
   .bottom-controls {
     margin-bottom: 32px;
   }
+
+  .actions-section-wrapper {
+
+    .tab-content {
+      padding: 60px 60px 17px 60px;
+
+      .action-items-wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 22px;
+      }
+
+      .info-text {
+        text-align: right;
+        color: white;
+      }
+    }
+  }
 }

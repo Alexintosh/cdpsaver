@@ -1,7 +1,11 @@
 import React from 'react';
 import PieChart from '../PieChart/PieChart';
+import Tabs from '../Tabs/Tabs';
+import ManagerBorrowForm from './ManagerBorrowForm/ManagerBorrowForm';
+import ManagerPaybackFrom from './ManagerPaybackFrom/ManagerPaybackFrom';
 
 import './ManagerPage.scss';
+import './action-items.scss';
 
 const ManagerPage = () => (
   <div className="manager-page-wrapper dashboard-page-wrapper">
@@ -60,6 +64,25 @@ const ManagerPage = () => (
           <button type="button" className="button green uppercase">Transfer</button>
         </div>
 
+        <div className="actions-section-wrapper">
+          <Tabs>
+            <div label="Borrow">
+              <ManagerBorrowForm />
+
+              <div className="info-text">
+                *Repay will draw ETH from cdp and repay in DAI, lowering the liq. price
+              </div>
+            </div>
+
+            <div label="Payback">
+              <ManagerPaybackFrom />
+
+              <div className="info-text">
+                *Boost will draw DAI and buy ETH, increasing the amount ETH in the cdp
+              </div>
+            </div>
+          </Tabs>
+        </div>
       </div>
     </div>
   </div>
