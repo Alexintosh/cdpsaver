@@ -2,6 +2,7 @@ import React from 'react';
 import PieChart from '../PieChart/PieChart';
 import Tabs from '../Tabs/Tabs';
 import ManagerBorrowForm from './ManagerBorrowForm/ManagerBorrowForm';
+import ManagerPaybackFrom from './ManagerPaybackFrom/ManagerPaybackFrom';
 
 import './ManagerPage.scss';
 import './action-items.scss';
@@ -74,7 +75,11 @@ const ManagerPage = () => (
             </div>
 
             <div label="Payback">
-              content
+              <ManagerPaybackFrom />
+
+              <div className="info-text">
+                *Boost will draw DAI and buy ETH, increasing the amount ETH in the cdp
+              </div>
             </div>
           </Tabs>
         </div>
