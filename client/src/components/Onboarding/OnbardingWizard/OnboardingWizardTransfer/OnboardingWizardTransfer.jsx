@@ -21,7 +21,7 @@ const OnboardingWizardTransfer = ({ cdp }) => {
           <button type="button" className="button green uppercase">Transfer</button>
         </div>
 
-        <div className="onboardin-controls width-container">
+        <div className="bottom-controls width-container">
           <Link to="/onboarding/wizard/monitoring" className="button gray uppercase">
             Previous
           </Link>

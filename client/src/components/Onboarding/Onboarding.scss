@@ -36,21 +36,5 @@
         color: $gray;
       }
     }
-
-    .onboardin-controls {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      margin-bottom: 50px;
-      background: linear-gradient(180deg, rgba(55, 176, 111, 0.2) 1.28%, rgba(41, 76, 115, 0.2) 100%);
-
-      .button {
-        width: 124px;
-      }
-
-      .info-text {
-        margin-right: 13px;
-      }
-    }
   }
 }

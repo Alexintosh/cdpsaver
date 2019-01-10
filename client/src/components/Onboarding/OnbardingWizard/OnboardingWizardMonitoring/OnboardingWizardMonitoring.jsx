@@ -42,7 +42,7 @@ const OnboardingWizardMonitoring = ({ cdp, subscribingToMonitoringSuccess }) => 
           }
         </div>
 
-        <div className="onboardin-controls width-container">
+        <div className="bottom-controls width-container">
           <Link to="/onboarding/wizard/info" className="button gray uppercase">
             Previous
           </Link>

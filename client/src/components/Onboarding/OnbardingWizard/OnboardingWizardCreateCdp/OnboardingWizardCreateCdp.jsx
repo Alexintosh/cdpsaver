@@ -28,7 +28,7 @@ let OnboardingWizardCreateCdp = ({
           <OnboardingWizardCreateCdpForm history={history} />
         </div>
 
-        <div className="onboardin-controls width-container">
+        <div className="bottom-controls width-container">
           <div className="info-text">If you have a cdp and we didn&apos;t detect it, contact us</div>
           <button
             type="submit"

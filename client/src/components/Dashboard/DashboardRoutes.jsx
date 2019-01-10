@@ -13,7 +13,7 @@ const DashboardRoutes = ({ match }) => (
   <React.Fragment>
     <Route exact path={`${match.path}`} component={DashboardRedirect} />
     <Route path={`${match.path}/saver`} component={SaverPage} />
-    <Route path={`${match.path}/manager`} component={ManagerPage} />
+    <Route path={`${match.path}/manage`} component={ManagerPage} />
     <Route path={`${match.path}/monitoring`} component={MonitoringPage} />
     <Route path={`${match.path}/marketplace`} component={MarketplacePage} />
   </React.Fragment>

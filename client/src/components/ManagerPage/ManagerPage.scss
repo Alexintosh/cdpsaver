@@ -1,0 +1,50 @@
+@import "../../common/colors";
+@import "../../common/text";
+
+.manager-page-wrapper {
+
+  .main-section-wrapper {
+    display: flex;
+    background: linear-gradient(180deg, #2B3943 0%, rgba(43, 57, 67, 0.46) 92.86%);
+
+    .main-subsection {
+      flex-grow: 1;
+      padding: 40px;
+
+      .info-wrapper-main {
+        display: flex;
+        margin-bottom: 48px;
+
+        .item {
+          color: $gray;
+
+          &:not(:last-child) { margin-right: 45px; }
+
+          .label { margin-bottom: 1px; }
+
+          .value {
+            font-size: 58px;
+            color: white;
+          }
+        }
+      }
+
+      .row-item-wrapper {
+        display: flex;
+        font-size: $font-size-extra-large;
+        color: $gray;
+
+        &:not(:last-child) { margin-bottom: 8px; }
+
+        .value {
+          margin-left: 3px;
+          color: white;
+        }
+      }
+    }
+  }
+
+  .bottom-controls {
+    margin-bottom: 32px;
+  }
+}

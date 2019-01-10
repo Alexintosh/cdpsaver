@@ -67,3 +67,25 @@ a {
     margin-bottom: 27px;
   }
 }
+
+.bottom-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 50px;
+  background: linear-gradient(180deg, rgba(55, 176, 111, 0.2) 1.28%, rgba(41, 76, 115, 0.2) 100%);
+
+  .button {
+    width: 124px;
+  }
+
+  .info-text {
+    margin-right: 13px;
+  }
+}
+
+.separator {
+  height: 212px;
+  width: 1px;
+  background: linear-gradient(135deg, #37B06F 0%, rgba(147, 157, 167, 0) 100%);
+}
