@@ -19,30 +19,32 @@ contract SaverProxy is SaiProxy {
     address constant WETH_ADDRESS = 0xd0A1E359811322d97991E03f863a0C30C2cF029C;
     address constant DAI_ADDRESS = 0xC4375B7De8af5a38a93548eb8453a498222C4fF2;
     address constant KYBER_INTERFACE = 0x7e6b8b9510D71BF8EF0f893902EbB9C865eEF4Df;
+    address constant TUB_ADDRESS = 0xa71937147b55Deb8a530C7229C442Fd3F31b7db2;
+    address constant VOX_ADDRESS = 0xBb4339c0aB5B1d9f14Bd6e3426444A1e9d86A1d9;
     
     ///@dev User has to own MKR and aprrove the DSProxy address
-    function repay(address _tub, address _vox, uint _cdpId) public {
-        TubInterface tub = TubInterface(_tub);
+    function repay(uint _cdpId) public {
+        TubInterface tub = TubInterface(TUB_ADDRESS);
         bytes32 cup = bytes32(_cdpId);
 
-        uint maxCollateral = maxFreeCollateral(tub, _vox, cup);
+        uint maxCollateral = maxFreeCollateral(tub, VOX_ADDRESS, cup);
 
-        free(_tub, cup, maxCollateral, true);
+        free(address(tub), cup, maxCollateral, true);
 
         //TODO: don't use contract balance 
         uint daiAmount = swapEtherToToken(address(this).balance, DAI_ADDRESS);
         
         //TODO: check so we don't spend more dai than there is debt
-        wipe(_tub, cup, daiAmount, true);
+        wipe(address(tub), cup, daiAmount, true);
 
         emit Repay(msg.sender, maxCollateral, daiAmount);
     }
 
-    function boost(address _tub, address _vox, uint _cdpId) public {
-        TubInterface tub = TubInterface(_tub);
+    function boost(uint _cdpId) public {
+        TubInterface tub = TubInterface(TUB_ADDRESS);
         bytes32 cup = bytes32(_cdpId);
         
-        uint maxDai = maxFreeDai(tub, _vox, cup);
+        uint maxDai = maxFreeDai(tub, VOX_ADDRESS, cup);
         
         tub.draw(cup, maxDai);
         
@@ -57,6 +59,10 @@ contract SaverProxy is SaiProxy {
     
     function maxFreeDai(TubInterface _tub, address _vox, bytes32 _cdpId) public returns (uint) {
         return sub(wdiv(rmul(_tub.ink(_cdpId), _tub.tag()), rmul(_tub.mat(), WAD)), _tub.tab(_cdpId));
+    }
+
+    function getRatio(TubInterface _tub, bytes32 _cdpId) public returns(uint) {
+        return (wdiv(rmul(rmul(_tub.ink(_cdpId), _tub.tag()), WAD), _tub.tab(_cdpId)))/10000000;
     }
     
     function lockPeth(TubInterface _tub, bytes32 cup, uint maxDai) internal returns(uint) {
