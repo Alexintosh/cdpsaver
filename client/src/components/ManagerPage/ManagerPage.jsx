@@ -1,4 +1,5 @@
 import React from 'react';
+import PieChart from '../PieChart/PieChart';
 
 import './ManagerPage.scss';
 
@@ -44,7 +45,14 @@ const ManagerPage = () => (
 
           <div className="separator" />
 
-          <div className="main-subsection" />
+          <div className="main-subsection">
+            <PieChart
+              values={[
+                { data: 600, color: '#61717E', label: 'Debt' },
+                { data: 220, color: '#37B06F', label: 'Collateral' },
+              ]}
+            />
+          </div>
         </div>
 
         <div className="bottom-controls">
