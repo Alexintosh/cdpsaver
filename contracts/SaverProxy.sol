@@ -25,7 +25,7 @@ contract SaverProxy is SaiProxy {
         TubInterface tub = TubInterface(_tub);
         bytes32 cup = bytes32(_cdpId);
 
-        uint maxCollateral = maxFreeCollateral(tub, _vox, bytes32(_cdpId));
+        uint maxCollateral = maxFreeCollateral(tub, _vox, cup);
 
         free(_tub, cup, maxCollateral, true);
 
@@ -50,13 +50,13 @@ contract SaverProxy is SaiProxy {
         
         emit Boost(msg.sender, maxDai, ethAmount);
     }
-    
+
     function maxFreeCollateral(TubInterface _tub, address _vox, bytes32 _cdpId) public returns (uint) {
         return sub(_tub.ink(_cdpId), wdiv(wmul(wmul(_tub.tab(_cdpId), rmul(_tub.mat(), WAD)), IVox(_vox).par()), _tub.tag()));
     }
     
     function maxFreeDai(TubInterface _tub, address _vox, bytes32 _cdpId) public returns (uint) {
-        return wdiv(wmul(maxFreeCollateral(_tub, _vox, bytes32(_cdpId)), 10201999999999999957),100000000000000000);
+        return sub(wdiv(rmul(_tub.ink(_cdpId), _tub.tag()), rmul(_tub.mat(), WAD)), _tub.tab(_cdpId));
     }
     
     function lockPeth(TubInterface _tub, bytes32 cup, uint maxDai) internal returns(uint) {
