@@ -1,5 +1,6 @@
 import React from 'react';
 import PieChart from '../PieChart/PieChart';
+import Tabs from '../Tabs/Tabs';
 
 import './ManagerPage.scss';
 
@@ -60,6 +61,17 @@ const ManagerPage = () => (
           <button type="button" className="button green uppercase">Transfer</button>
         </div>
 
+        <div className="actions-section-wrapper">
+          <Tabs>
+            <div label="Borrow">
+              content
+            </div>
+
+            <div label="Payback">
+              content
+            </div>
+          </Tabs>
+        </div>
       </div>
     </div>
   </div>
