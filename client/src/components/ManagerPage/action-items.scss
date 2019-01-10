@@ -1,0 +1,22 @@
+.action-items-wrapper {
+
+  .item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    max-width: 310px;
+
+    .button {
+      width: 124px;
+    }
+
+    .form-item-wrapper {
+      border-left-width: 9px;
+      margin-bottom: 0;
+
+      &.generate { border-left-color: #9B51E0 }
+      &.withdraw { border-left-color: #F2C94C }
+      &.repay { border-left-color: #56CCF2 }
+    }
+  }
+}

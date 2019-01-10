@@ -1,8 +1,10 @@
 import React from 'react';
 import PieChart from '../PieChart/PieChart';
 import Tabs from '../Tabs/Tabs';
+import ManagerBorrowForm from './ManagerBorrowForm/ManagerBorrowForm';
 
 import './ManagerPage.scss';
+import './action-items.scss';
 
 const ManagerPage = () => (
   <div className="manager-page-wrapper dashboard-page-wrapper">
@@ -64,7 +66,11 @@ const ManagerPage = () => (
         <div className="actions-section-wrapper">
           <Tabs>
             <div label="Borrow">
-              content
+              <ManagerBorrowForm />
+
+              <div className="info-text">
+                *Repay will draw ETH from cdp and repay in DAI, lowering the liq. price
+              </div>
             </div>
 
             <div label="Payback">
