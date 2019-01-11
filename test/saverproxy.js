@@ -1,8 +1,56 @@
+
+const dotenv = require('dotenv').config();
+
 const SaverProxy = artifacts.require("./SaverProxy.sol");
+const Monitor = artifacts.require("./Monitor.sol");
+const ProxyRegistryInterface = artifacts.require("./ProxyRegistryInterface.sol");
+const DSProxy = artifacts.require("./DSProxy.sol");
 
 contract("SaverProxy", accounts => {
-  it("...get the deployed contract", async () => {
-    const s = await SaverProxy.deployed(0xe03AE319fA811d0F0F3552827D293153B944eE79);
- 
+
+  let saver, monitor, proxy;
+
+  const cdpId = process.env.CDPID;
+  const cdpIdBytes32 = process.env.CDPID_BYTES;
+
+  before(async () => {
+
+
+    if (process.env.DEPLOY_AGAIN == true) {
+      saver = await SaverProxy.deployed();
+      monitor = await Monitor.deployed();
+
+      const registry = await ProxyRegistryInterface.at("0x64a436ae831c1672ae81f674cab8b6775df3475c");
+      const proxyAddr = await registry.proxies(accounts[0]);
+      proxy = await DSProxy.at(proxyAddr);
+
+    } else {
+      saver = await SaverProxy.at("0xA8f27bc4F3557F4e5A7Fa83b111678b162Ba3916");
+      monitor = await Monitor.at("0x9A31FAA5799152841FfC53289dD763F9f5EB718b");
+
+      const registry = await ProxyRegistryInterface.at("0x64a436ae831c1672ae81f674cab8b6775df3475c");
+      const proxyAddr = await registry.proxies(accounts[0]);
+      proxy = await DSProxy.at(proxyAddr);
+    }
   });
+
+  it('...should print some addresses', async () => {
+    console.log(`Saver addr: ${saver.address}, Monitor addr: ${monitor.address}`);
+  });
+
+  it('...should call the boost feature', async () => {
+    const data = saver.boost;
+
+    const ratio = await monitor.getRatio.call(cdpIdBytes32);
+
+    console.log('Ratio: ', ratio.toString(), " data: ", data);
+
+    // await proxy.execute(saver.address, data, {from: accounts[0]});
+
+    // const newRatio = monitor.getRatio(cdpIdBytes32);
+
+    // console.log(ratio, newRatio);
+  });
+
+  
 });

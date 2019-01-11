@@ -44,7 +44,7 @@ contract SaverProxy is SaiProxy {
         TubInterface tub = TubInterface(TUB_ADDRESS);
         bytes32 cup = bytes32(_cdpId);
         
-        uint maxDai = maxFreeDai(tub, VOX_ADDRESS, cup);
+        uint maxDai = maxFreeDai(tub, cup);
         
         tub.draw(cup, maxDai);
         
@@ -57,7 +57,7 @@ contract SaverProxy is SaiProxy {
         return sub(_tub.ink(_cdpId), wdiv(wmul(wmul(_tub.tab(_cdpId), rmul(_tub.mat(), WAD)), IVox(_vox).par()), _tub.tag()));
     }
     
-    function maxFreeDai(TubInterface _tub, address _vox, bytes32 _cdpId) public returns (uint) {
+    function maxFreeDai(TubInterface _tub, bytes32 _cdpId) public returns (uint) {
         return sub(wdiv(rmul(_tub.ink(_cdpId), _tub.tag()), rmul(_tub.mat(), WAD)), _tub.tab(_cdpId));
     }
 
