@@ -1,18 +1,22 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import './ConnectWalletButtons.scss';
 
-const ConnectWalletButtons = () => (
+const ConnectWalletButtons = ({ handleSwitch }) => (
   <div className="connect-wallet-buttons">
-    <button type="button" className="button green">Metamask</button>
+    <button type="button" className="button green" onClick={() => { handleSwitch('metamask'); }}>
+      Metamask
+    </button>
+
     <button type="button" className="button green">Trezor</button>
+
     <button type="button" className="button green">Ledger</button>
   </div>
 );
 
-ConnectWalletButtons.propTypes = {};
+ConnectWalletButtons.propTypes = {
+  handleSwitch: PropTypes.func.isRequired,
+};
 
-const mapStateToProps = () => ({});
-
-export default connect(mapStateToProps)(ConnectWalletButtons);
+export default ConnectWalletButtons;

@@ -1,3 +1,4 @@
+import { ADD_ACCOUNT, CONNECT_PROVIDER } from '../actionTypes/generalActionTypes';
 import { CREATE_CDP_SUCCESS } from '../actionTypes/onboardingActionTypes';
 
 const MOCK_CDP = {
@@ -15,6 +16,12 @@ const MOCK_CDP = {
 
 const INITIAL_STATE = {
   cdp: MOCK_CDP,
+
+  connectingProvider: false,
+
+  account: '',
+  accountType: '',
+  balance: 0,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -23,6 +30,12 @@ export default (state = INITIAL_STATE, action) => {
   switch (type) {
     case CREATE_CDP_SUCCESS:
       return { ...state, cdp: payload };
+
+    case CONNECT_PROVIDER:
+      return { ...state, connectingProvider: true };
+
+    case ADD_ACCOUNT:
+      return { ...state, connectingProvider: false, ...payload };
 
     default:
       return state;

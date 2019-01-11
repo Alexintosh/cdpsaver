@@ -6,7 +6,7 @@ import Slider from 'rc-slider';
 import onboardingWizardCreateCdpFormValidator from './onboardingWizardCreateCdpFormValidator';
 import InputComponent from '../../../../Forms/InputComponent';
 import { createCdpAction } from '../../../../../actions/onboardingActions';
-import { getRainbowSliderValColor } from '../../../../../services/utils';
+import { getRainbowSliderValColor } from '../../../../../utils/utils';
 
 import '../../../../../common/slider.scss';
 

@@ -45,3 +45,17 @@ export const getRainbowSliderValColor = (val, gradients, sliderWidth) => {
   // Get the color with pickHex(thx, less.js's mix function!)
   return pickHex(secondColor, firstColor, ratio);
 };
+
+/**
+ * Adds decimals to a string number
+ *
+ * @param num {String}
+ * @param decimals {Number}
+ *
+ * @return {string | *}
+ */
+export const toDecimal = (num, decimals = 2) => {
+  const conditional = num.indexOf('.') !== -1;
+
+  return conditional ? num.substr(0, num.indexOf('.') + decimals + 1) : num;
+};

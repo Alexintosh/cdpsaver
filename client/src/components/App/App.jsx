@@ -8,12 +8,15 @@ import OnboardingRoutes from '../Onboarding/OnboardingRoutes';
 import Page404 from '../Page404/Page404';
 import DashboardRoutes from '../Dashboard/DashboardRoutes';
 import ModalRoot from '../Modals/ModalRoot';
+import { setupWeb3 } from '../../services/ethService';
 
 import './App.scss';
 import '../../common/icons/icons.scss';
 
 class RoutesWrapper extends Component {
-  componentWillMount() {}
+  componentWillMount() {
+    setupWeb3();
+  }
 
   render() {
     const { store } = this.props;

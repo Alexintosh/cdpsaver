@@ -6,3 +6,5 @@ export const MARKETPLACE_SORT_OPTIONS = [
   { label: 'Dai debt descending', value: 'liq-dsc' },
   { label: 'Dai debt ascending', value: 'liq-dsc' },
 ];
+
+export const LS_ACCOUNT = 'LS_ACCOUNT';

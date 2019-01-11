@@ -5,13 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="Description" content="CDP saver">
 
-  <link rel="stylesheet" href="<%=htmlWebpackPlugin.files.chunks.main.css %>">
+  <link rel="preload" href="<%=htmlWebpackPlugin.files.chunks.main.css %>" as="style" onload="this.rel='stylesheet'">
 
   <title>CDP saver</title>
 </head>
 <body>
   <div id="root"></div>
 
+  <link rel="preload" href="<%= htmlWebpackPlugin.files.chunks.main.entry %>" as="script">
   <script src="<%= htmlWebpackPlugin.files.chunks.main.entry %>"></script>
 </body>
 </html>

@@ -1,7 +1,8 @@
 import Maker from '@makerdao/dai';
 import web3 from 'web3';
+import config from '../config/config.json';
 
-const maker = Maker.create('browser');
+const maker = Maker.create('http', { url: config.providerUrl });
 
 /**
  * Fetches multiple Cdp data for a cdp id from the Maker library  and formats them
