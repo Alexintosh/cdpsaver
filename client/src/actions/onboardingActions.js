@@ -8,10 +8,11 @@ import {
   MONITORING_SUBSCRIBE_FAILURE,
 
   RESET_ONBOARDING_WIZARD,
+
+  FINISH_ONBOARDING,
 } from '../actionTypes/onboardingActionTypes';
-import { createCdp } from '../services/cdpService';
 import { subscribeToMonitoringApiRequest } from '../services/apiService';
-import { MOCK_CDP } from '../constants/general';
+import { LS_ONBOARDING_FINISHED, MOCK_CDP } from '../constants/general';
 
 /**
  * Resets the state of the onboarding reducer
@@ -61,4 +62,17 @@ export const submitOnboardingMonitoringForm = formData => async (dispatch) => {
   } catch (err) {
     dispatch({ type: MONITORING_SUBSCRIBE_FAILURE, payload: err });
   }
+};
+
+/**
+ * Adds some data to LS and moves the user to another page
+ * @param history
+ * @return {Function}
+ */
+export const finishOnboarding = history => (dispatch) => {
+  localStorage.setItem(LS_ONBOARDING_FINISHED, JSON.stringify({ onboardingFinished: true }));
+  dispatch({ type: FINISH_ONBOARDING });
+
+  // TODO check if here the place the user is redirected to is the place he came from/ was he redirected to onboarding
+  history.push('/dashboard/saver');
 };

@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { finishOnboarding } from '../../../actions/onboardingActions';
 
 import './OnboardingTransfer.scss';
 
-const OnboardingTransfer = ({ cdp }) => {
+const OnboardingTransfer = ({ cdp, history, finishOnboarding }) => {
   if (!cdp) return (<Redirect to="/onboarding/create-cdp" />);
 
   return (
@@ -26,9 +27,9 @@ const OnboardingTransfer = ({ cdp }) => {
             Previous
           </Link>
 
-          <Link to="/dashboard" className="button green uppercase">
+          <button type="button" className="button green uppercase" onClick={() => { finishOnboarding(history); }}>
             Finish
-          </Link>
+          </button>
         </div>
       </div>
     </div>
@@ -41,10 +42,16 @@ OnboardingTransfer.defaultProps = {
 
 OnboardingTransfer.propTypes = {
   cdp: PropTypes.object,
+  history: PropTypes.object.isRequired,
+  finishOnboarding: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ general }) => ({
   cdp: general.cdp,
 });
 
-export default connect(mapStateToProps)(OnboardingTransfer);
+const mapDispatchToProps = {
+  finishOnboarding,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardingTransfer);

@@ -6,12 +6,12 @@ import {
   ADD_CDP,
 } from '../actionTypes/generalActionTypes';
 import { CREATE_CDP_SUCCESS } from '../actionTypes/onboardingActionTypes';
-import { LS_ACCOUNT } from '../constants/general';
+import { LS_ACCOUNT, MOCK_CDP } from '../constants/general';
 
 const lsAccountType = JSON.parse(localStorage.getItem(LS_ACCOUNT));
 
 const INITIAL_STATE = {
-  cdp: null,
+  cdp: MOCK_CDP,
 
   connectingProvider: false,
 

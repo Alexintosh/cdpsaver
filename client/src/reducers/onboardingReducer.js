@@ -8,7 +8,12 @@ import {
   MONITORING_SUBSCRIBE_FAILURE,
 
   RESET_ONBOARDING_WIZARD,
+
+  FINISH_ONBOARDING,
 } from '../actionTypes/onboardingActionTypes';
+import { LS_ONBOARDING_FINISHED } from '../constants/general';
+
+const lsOnboardingFinished = JSON.parse(localStorage.getItem(LS_ONBOARDING_FINISHED));
 
 const INITIAL_STATE = {
   creatingCdp: false,
@@ -19,6 +24,8 @@ const INITIAL_STATE = {
   subscribingToMonitoringSuccess: false,
 
   cdpFormSubmitted: false,
+
+  onboardingFinished: !!lsOnboardingFinished,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -53,8 +60,11 @@ export default (state = INITIAL_STATE, action) => {
         subscribingToMonitoringError: payload,
       };
 
+    case FINISH_ONBOARDING:
+      return { ...state, onboardingFinished: true };
+
     case RESET_ONBOARDING_WIZARD:
-      return INITIAL_STATE;
+      return { ...INITIAL_STATE, onboardingFinished: state.onboardingFinished };
 
     default:
       return state;

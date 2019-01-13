@@ -8,6 +8,7 @@ export const MARKETPLACE_SORT_OPTIONS = [
 ];
 
 export const LS_ACCOUNT = 'LS_ACCOUNT';
+export const LS_ONBOARDING_FINISHED = 'LS_ONBOARDING_FINISHED';
 
 export const MOCK_CDP = {
   id: 3613,
