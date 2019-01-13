@@ -9,6 +9,8 @@ import Page404 from '../Page404/Page404';
 import DashboardRoutes from '../Dashboard/DashboardRoutes';
 import ModalRoot from '../Modals/ModalRoot';
 import { setupWeb3 } from '../../services/ethService';
+import PrivateRoute from '../PrivateRoute/PrivateRoute';
+import MarketplacePage from '../MarketplacePage/MarketplacePage';
 
 import './App.scss';
 import '../../common/icons/icons.scss';
@@ -30,7 +32,8 @@ class RoutesWrapper extends Component {
             <Switch>
               <Route exact path="/" component={HomePage} />
               <Route path="/onboarding" component={OnboardingRoutes} />
-              <Route path="/dashboard" component={DashboardRoutes} />
+              <Route path="marketplace" component={MarketplacePage} />
+              <PrivateRoute path="/dashboard" component={DashboardRoutes} />
               <Route path="*" component={Page404} />
             </Switch>
 

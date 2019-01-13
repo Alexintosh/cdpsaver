@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Route, Redirect, withRouter } from 'react-router-dom';
 import { LS_ACCOUNT } from '../../constants/general';
 
 const PrivateRoute = ({
-  component: Component, account, ...rest
+  component: Component, account, match, ...rest
 }) => {
   const to = rest.path;
 
@@ -18,7 +18,7 @@ const PrivateRoute = ({
   }
 
   return (
-    <Component {...rest} />
+    <Route {...rest} render={props => (<Component {...props} />)} />
   );
 };
 
@@ -27,6 +27,7 @@ PrivateRoute.defaultProps = {
 };
 
 PrivateRoute.propTypes = {
+  match: PropTypes.object.isRequired,
   component: PropTypes.func.isRequired,
   account: PropTypes.string,
 };
@@ -35,4 +36,4 @@ const mapStateToProps = ({ general }) => ({
   account: general.account,
 });
 
-export default connect(mapStateToProps)(PrivateRoute);
+export default connect(mapStateToProps)(withRouter(PrivateRoute));
