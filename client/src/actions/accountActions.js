@@ -43,6 +43,8 @@ export const loginMetaMask = (silent, history, to) => async (dispatch, getState)
     }
 
     const account = await getAccount();
+    if (getState().general.account === account) return;
+
     const balance = toDecimal(await getBalance(account));
 
     dispatch({ type: CONNECT_PROVIDER_SUCCESS, payload: { account, accountType, balance } });
@@ -52,12 +54,28 @@ export const loginMetaMask = (silent, history, to) => async (dispatch, getState)
     notify(`Metamask account found ${account}`, 'success')(dispatch);
   } catch (err) {
     setupWeb3();
+    dispatch({ type: CONNECT_PROVIDER_FAILURE, payload: err.message });
 
-    if (!silent) {
-      console.log('SHOW NOTIFICATION ERROR', err);
+    if (!silent) notify(err.message, 'error')(dispatch);
+  }
+};
 
-      dispatch({ type: CONNECT_PROVIDER_FAILURE, payload: err.message });
-      notify(err.message, 'error')(dispatch);
-    }
+
+/**
+ * If the user has already once successfully added an account this will
+ * try a silent login for that account type
+ *
+ * @return {Function}
+ */
+export const silentLogin = () => (dispatch, getState) => {
+  const { accountType } = getState().general;
+
+  switch (accountType) {
+    case 'metamask':
+      dispatch(loginMetaMask(true, null, '/dashboard/saver'));
+      break;
+
+    default:
+      return false;
   }
 };

@@ -4,6 +4,7 @@ import {
   CONNECT_PROVIDER_FAILURE,
 } from '../actionTypes/generalActionTypes';
 import { CREATE_CDP_SUCCESS } from '../actionTypes/onboardingActionTypes';
+import { LS_ACCOUNT } from '../constants/general';
 
 const MOCK_CDP = {
   id: 3613,
@@ -18,6 +19,8 @@ const MOCK_CDP = {
   ratio: 3.2135773574432274,
 };
 
+const lsAccountType = JSON.parse(localStorage.getItem(LS_ACCOUNT));
+
 const INITIAL_STATE = {
   cdp: MOCK_CDP,
 
@@ -25,7 +28,7 @@ const INITIAL_STATE = {
 
   account: '',
   accountError: '',
-  accountType: '',
+  accountType: lsAccountType ? lsAccountType.accountType : '',
   balance: 0,
 };
 

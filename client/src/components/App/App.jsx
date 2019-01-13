@@ -12,12 +12,14 @@ import { setupWeb3 } from '../../services/ethService';
 import PrivateRoute from '../PrivateRoute/PrivateRoute';
 import MarketplacePage from '../MarketplacePage/MarketplacePage';
 import Notifications from '../Notifications/Notifications';
+import { silentLogin } from '../../actions/accountActions';
 
 import './App.scss';
 import '../../common/icons/icons.scss';
 
 class RoutesWrapper extends Component {
   componentWillMount() {
+    this.props.silentLogin();
     setupWeb3();
   }
 
@@ -49,8 +51,9 @@ class RoutesWrapper extends Component {
 
 RoutesWrapper.propTypes = {
   store: PropTypes.object.isRequired,
+  silentLogin: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { silentLogin };
 
 export default connect(null, mapDispatchToProps)(RoutesWrapper);
