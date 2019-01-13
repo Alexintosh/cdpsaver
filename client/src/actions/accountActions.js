@@ -1,11 +1,13 @@
 import {
-  ADD_ACCOUNT,
   CONNECT_PROVIDER,
+  CONNECT_PROVIDER_SUCCESS,
+  CONNECT_PROVIDER_FAILURE,
 } from '../actionTypes/generalActionTypes';
 import {
   isMetaMaskApproved, setWeb3toMetamask, getBalance, getAccount, nameOfNetwork, getNetwork, metamaskApprove,
   setupWeb3,
 } from '../services/ethService';
+import { notify } from './noitificationActions';
 import { toDecimal } from '../utils/utils';
 import config from '../config/config.json';
 import { LS_ACCOUNT } from '../constants/general';
@@ -43,19 +45,19 @@ export const loginMetaMask = (silent, history, to) => async (dispatch, getState)
     const account = await getAccount();
     const balance = toDecimal(await getBalance(account));
 
-    dispatch({ type: ADD_ACCOUNT, payload: { account, accountType, balance } });
+    dispatch({ type: CONNECT_PROVIDER_SUCCESS, payload: { account, accountType, balance } });
     localStorage.setItem(LS_ACCOUNT, JSON.stringify({ accountType: 'metamask' }));
 
-    // showNotification(`Metamask account found ${account}`, 'success');
-
     if (!silent) history.push(to);
-    console.log('SHOW NOTIFICATION');
+    notify(`Metamask account found ${account}`, 'success')(dispatch);
   } catch (err) {
     setupWeb3();
 
     if (!silent) {
       console.log('SHOW NOTIFICATION ERROR', err);
-      // showNotification(err, 'error');
+
+      dispatch({ type: CONNECT_PROVIDER_FAILURE, payload: err.message });
+      notify(err.message, 'error')(dispatch);
     }
   }
 };

@@ -11,6 +11,7 @@ import ModalRoot from '../Modals/ModalRoot';
 import { setupWeb3 } from '../../services/ethService';
 import PrivateRoute from '../PrivateRoute/PrivateRoute';
 import MarketplacePage from '../MarketplacePage/MarketplacePage';
+import Notifications from '../Notifications/Notifications';
 
 import './App.scss';
 import '../../common/icons/icons.scss';
@@ -28,6 +29,7 @@ class RoutesWrapper extends Component {
         <BrowserRouter>
           <div className="app">
             <Header />
+            <Notifications />
 
             <Switch>
               <Route exact path="/" component={HomePage} />

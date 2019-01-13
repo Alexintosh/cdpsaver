@@ -4,6 +4,7 @@ import generalReducer from './generalReducer';
 import onboardingReducer from './onboardingReducer';
 import marketplaceReducer from './marketplaceReducer';
 import modalReducer from './modalReducer';
+import notificationReducer from './notificationReducer';
 
 export default combineReducers({
   form: formReducer,
@@ -11,4 +12,5 @@ export default combineReducers({
   onboarding: onboardingReducer,
   marketplace: marketplaceReducer,
   modal: modalReducer,
+  notification: notificationReducer,
 });
