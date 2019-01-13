@@ -1,8 +1,9 @@
 import Maker from '@makerdao/dai';
 import web3 from 'web3';
-import config from '../config/config.json';
+import clientConfig from '../config/clientConfig.json';
+import { proxyRegistryInterfaceContract } from './contractRegistryService';
 
-const maker = Maker.create('http', { url: config.providerUrl });
+const maker = Maker.create('http', { url: clientConfig.providerUrl });
 
 /**
  * Fetches multiple Cdp data for a cdp id from the Maker library  and formats them
@@ -54,7 +55,6 @@ export const getCdpInfos = ids => new Promise(async (resolve, reject) => {
 
 /**
  * * Creates a CDP on the blockchain with ethAmount and daiAmountInfo
- * TODO IMPLEMENT LATE
  *
  * @param ethAmount
  * @param daiAmount
@@ -64,10 +64,24 @@ export const getCdpInfos = ids => new Promise(async (resolve, reject) => {
 export const createCdp = async (ethAmount, daiAmount) => {
   try {
     // create logic here
-    console.log('ETH', ethAmount, 'DAI', daiAmount);
-    const cdpInfo = await getCdpInfo(3613);
-    return cdpInfo;
+    return await getCdpInfo(3613);
   } catch (err) {
     throw new Error(err);
   }
 };
+
+/**
+ * Checks if the connected user has a cdp for their address
+ *
+ */
+export const getAddressCdp = address => new Promise(async (resolve, reject) => {
+  if (!address) return reject('user has no address');
+
+  try {
+    const result = await proxyRegistryInterfaceContract().methods.proxies(address).call();
+
+    resolve(result);
+  } catch (err) {
+    reject(err);
+  }
+});

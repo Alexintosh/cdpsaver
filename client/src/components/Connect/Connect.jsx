@@ -53,7 +53,7 @@ class Connect extends Component {
 
             {
               this.state.shown === 'choose' && (
-                <ConnectWalletButtons handleSwitch={this.switch} accountType={accountType}/>
+                <ConnectWalletButtons handleSwitch={this.switch} accountType={accountType} />
               )
             }
 

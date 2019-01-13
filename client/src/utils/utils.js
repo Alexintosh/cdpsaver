@@ -59,3 +59,5 @@ export const toDecimal = (num, decimals = 2) => {
 
   return conditional ? num.substr(0, num.indexOf('.') + decimals + 1) : num;
 };
+
+export const isEmptyBytes = string => string === '0x0000000000000000000000000000000000000000';

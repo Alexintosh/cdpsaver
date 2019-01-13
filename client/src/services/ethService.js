@@ -1,15 +1,3 @@
-import Web3 from 'web3';
-import config from '../config/config.json';
-import { toDecimal } from '../utils/utils';
-
-export const setWeb3toMetamask = () => {
-  window._web3 = new Web3(web3.currentProvider);
-};
-
-export const setupWeb3 = () => {
-  window._web3 = new Web3(config.providerUrl);
-};
-
 export const getAccount = () => (
   new Promise(async (resolve, reject) => {
     try {

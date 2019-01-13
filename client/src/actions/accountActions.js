@@ -2,15 +2,18 @@ import {
   CONNECT_PROVIDER,
   CONNECT_PROVIDER_SUCCESS,
   CONNECT_PROVIDER_FAILURE,
+
+  ADD_CDP,
 } from '../actionTypes/generalActionTypes';
 import {
-  isMetaMaskApproved, setWeb3toMetamask, getBalance, getAccount, nameOfNetwork, getNetwork, metamaskApprove,
-  setupWeb3,
+  isMetaMaskApproved, getBalance, getAccount, nameOfNetwork, getNetwork, metamaskApprove,
 } from '../services/ethService';
+import { setWeb3toMetamask, setupWeb3 } from '../services/web3Service';
 import { notify } from './noitificationActions';
-import { toDecimal } from '../utils/utils';
-import config from '../config/config.json';
+import { isEmptyBytes, toDecimal } from '../utils/utils';
+import clientConfig from '../config/clientConfig.json';
 import { LS_ACCOUNT } from '../constants/general';
+import { getAddressCdp } from '../services/cdpService';
 
 /**
  * Tries to connect to the MetaMask web3 provider, also checks if the app is pre-approved
@@ -36,8 +39,8 @@ export const loginMetaMask = silent => async (dispatch, getState) => {
 
     const network = await getNetwork();
 
-    if (config.network !== network) {
-      throw new Error(`Wrong network - please set MetaMask to ${nameOfNetwork(config.network)}`);
+    if (clientConfig.network !== network) {
+      throw new Error(`Wrong network - please set MetaMask to ${nameOfNetwork(clientConfig.network)}`);
     }
 
     const account = await getAccount();
@@ -68,7 +71,7 @@ export const silentLogin = () => async (dispatch, getState) => {
 
   switch (accountType) {
     case 'metamask': {
-      await dispatch(loginMetaMask(true, null, '/dashboard/saver'));
+      await dispatch(loginMetaMask(true));
       break;
     }
 
@@ -76,7 +79,9 @@ export const silentLogin = () => async (dispatch, getState) => {
       return false;
   }
 
-  // check for CDP
+  const cdp = await getAddressCdp(getState().general.account);
+
+  if (!isEmptyBytes(cdp)) dispatch({ type: ADD_CDP, payload: cdp });
 };
 
 /**
@@ -88,7 +93,7 @@ export const silentLogin = () => async (dispatch, getState) => {
  *
  * @return {Function}
  */
-export const normalLogin = (accountType, history, to) => async (dispatch) => {
+export const normalLogin = (accountType, history, to) => async (dispatch, getState) => {
   // LOGIN TO WANTED ACCOUNT TYPE
   switch (accountType) {
     case 'metamask': {
@@ -99,7 +104,10 @@ export const normalLogin = (accountType, history, to) => async (dispatch) => {
     default:
       return false;
   }
-  // check for CDP
-  // REDIRECT TO WANTED ROUTE
+
+  const cdp = await getAddressCdp(getState().general.account);
+
+  if (!isEmptyBytes(cdp)) dispatch({ type: ADD_CDP, payload: cdp });
+
   history.push(to);
 };

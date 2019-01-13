@@ -36,9 +36,16 @@ class OnboardingRoutes extends Component {
   }
 
   render() {
-    const { match, hasCdp, account } = this.props;
+    const {
+      match, hasCdp, account, connectingProvider,
+    } = this.props;
 
-    if (!account) return (<Redirect to={{ pathname: '/connect', state: { to: '/dashboard/saver' } }} />);
+    // TODO CHECK IF THIS NEEDS TO BE GENERALIZED
+    if (connectingProvider) return (<div>Connecting provider, please wait.</div>);
+
+    if (!account && !connectingProvider) {
+      return (<Redirect to={{ pathname: '/connect', state: { to: '/dashboard/saver' } }} />);
+    }
 
     return (
       <div className="onboarding-wrapper">
@@ -64,6 +71,7 @@ OnboardingRoutes.propTypes = {
   hasCdp: PropTypes.bool.isRequired,
   match: PropTypes.object.isRequired,
   resetOnboardingWizard: PropTypes.func.isRequired,
+  connectingProvider: PropTypes.bool.isRequired,
 };
 
 const mapDispatchToProps = {
@@ -73,6 +81,7 @@ const mapDispatchToProps = {
 const mapStateToProps = ({ general }) => ({
   hasCdp: !!general.cdp,
   account: general.account,
+  connectingProvider: general.connectingProvider,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OnboardingRoutes);

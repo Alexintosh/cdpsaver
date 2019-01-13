@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect, Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { setupWeb3 } from '../../services/ethService';
 import { silentLogin } from '../../actions/accountActions';
 import Header from '../Header/Header';
 import HomePage from '../HomePage/HomePage';
@@ -21,7 +20,6 @@ import '../../common/icons/icons.scss';
 class RoutesWrapper extends Component {
   componentWillMount() {
     this.props.silentLogin();
-    setupWeb3();
   }
 
   render() {

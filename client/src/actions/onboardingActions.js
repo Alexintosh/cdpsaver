@@ -11,6 +11,7 @@ import {
 } from '../actionTypes/onboardingActionTypes';
 import { createCdp } from '../services/cdpService';
 import { subscribeToMonitoringApiRequest } from '../services/apiService';
+import { MOCK_CDP } from '../constants/general';
 
 /**
  * Resets the state of the onboarding reducer
@@ -34,9 +35,9 @@ export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dis
   dispatch({ type: CREATE_CDP_REQUEST });
 
   try {
-    const payload = await createCdp(parseFloat(ethAmount), parseFloat(daiAmount));
+    // const payload = await createCdp(parseFloat(ethAmount), parseFloat(daiAmount));
 
-    dispatch({ type: CREATE_CDP_SUCCESS, payload });
+    dispatch({ type: CREATE_CDP_SUCCESS, payload: MOCK_CDP });
     history.push('/onboarding/info');
   } catch (err) {
     dispatch({ type: CREATE_CDP_ERROR, payload: err });
