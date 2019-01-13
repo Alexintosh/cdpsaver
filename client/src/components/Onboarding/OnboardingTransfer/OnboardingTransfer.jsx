@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import './OnboardingWizardTransfer.scss';
+import './OnboardingTransfer.scss';
 
-const OnboardingWizardTransfer = ({ cdp }) => {
-  if (!cdp) return (<Redirect to="/onboarding/wizard/create-cdp" />);
+const OnboardingTransfer = ({ cdp }) => {
+  if (!cdp) return (<Redirect to="/onboarding/create-cdp" />);
 
   return (
-    <div className="onboarding-wizard-transfer-wrapper onboarding-page-wrapper">
+    <div className="onboarding-transfer-wrapper onboarding-page-wrapper">
       <div className="onboarding-content-bg">
         <div className="onboarding-content-wrapper no-margin width-container">
           <div className="content-text">
@@ -22,7 +22,7 @@ const OnboardingWizardTransfer = ({ cdp }) => {
         </div>
 
         <div className="bottom-controls width-container">
-          <Link to="/onboarding/wizard/monitoring" className="button gray uppercase">
+          <Link to="/onboarding/monitoring" className="button gray uppercase">
             Previous
           </Link>
 
@@ -35,11 +35,11 @@ const OnboardingWizardTransfer = ({ cdp }) => {
   );
 };
 
-OnboardingWizardTransfer.defaultProps = {
+OnboardingTransfer.defaultProps = {
   cdp: null,
 };
 
-OnboardingWizardTransfer.propTypes = {
+OnboardingTransfer.propTypes = {
   cdp: PropTypes.object,
 };
 
@@ -47,4 +47,4 @@ const mapStateToProps = ({ general }) => ({
   cdp: general.cdp,
 });
 
-export default connect(mapStateToProps)(OnboardingWizardTransfer);
+export default connect(mapStateToProps)(OnboardingTransfer);

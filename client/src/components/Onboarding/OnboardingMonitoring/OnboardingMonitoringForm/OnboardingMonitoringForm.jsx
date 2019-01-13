@@ -2,16 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
-import onboardingWizardMonitoringFormValidator from './onboardingWizardMonitoringFormValidator';
-import { submitOnboardingMonitoringForm } from '../../../../../actions/onboardingActions';
-import InputComponent from '../../../../Forms/InputComponent';
-import CheckboxComponent from '../../../../Forms/CheckboxComponent/CheckboxComponent';
+import onboardingMonitoringFormValidator from './onboardingMonitoringFormValidator';
+import { submitOnboardingMonitoringForm } from '../../../../actions/onboardingActions';
+import InputComponent from '../../../Forms/InputComponent';
+import CheckboxComponent from '../../../Forms/CheckboxComponent/CheckboxComponent';
 
-let OnboardingWizardMonitoringForm = ({
+let OnboardingMonitoringForm = ({
   handleSubmit, onSubmit, pristine, invalid, submittingForm,
 }) => (
   <form
-    id="onboarding-wizard-monitoring-form"
+    id="onboarding-monitoring-form"
     onSubmit={handleSubmit((e) => { onSubmit(e); })}
     className="form-wrapper"
   >
@@ -55,7 +55,7 @@ let OnboardingWizardMonitoringForm = ({
   </form>
 );
 
-OnboardingWizardMonitoringForm.propTypes = {
+OnboardingMonitoringForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   pristine: PropTypes.bool.isRequired,
@@ -63,10 +63,10 @@ OnboardingWizardMonitoringForm.propTypes = {
   submittingForm: PropTypes.bool.isRequired,
 };
 
-OnboardingWizardMonitoringForm = reduxForm({
-  form: 'onboardingWizardMonitoringForm',
-  validate: onboardingWizardMonitoringFormValidator,
-})(OnboardingWizardMonitoringForm);
+OnboardingMonitoringForm = reduxForm({
+  form: 'onboardingMonitoringForm',
+  validate: onboardingMonitoringFormValidator,
+})(OnboardingMonitoringForm);
 
 const mapStateToProps = ({ onboarding }) => ({
   submittingForm: onboarding.subscribingToMonitoring,
@@ -76,4 +76,4 @@ const mapDispatchToProps = {
   onSubmit: submitOnboardingMonitoringForm,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(OnboardingWizardMonitoringForm);
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardingMonitoringForm);

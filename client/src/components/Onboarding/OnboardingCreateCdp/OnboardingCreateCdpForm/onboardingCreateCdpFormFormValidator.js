@@ -1,4 +1,4 @@
-const onboardingWizardCreateCdpFormValidator = ({ ethAmount, daiAmount }) => {
+const onboardingCreateCdpFormFormValidator = ({ ethAmount, daiAmount }) => {
   const errors = {};
 
   if (!ethAmount) errors.ethAmount = 'Required';
@@ -10,4 +10,4 @@ const onboardingWizardCreateCdpFormValidator = ({ ethAmount, daiAmount }) => {
   return errors;
 };
 
-export default onboardingWizardCreateCdpFormValidator;
+export default onboardingCreateCdpFormFormValidator;

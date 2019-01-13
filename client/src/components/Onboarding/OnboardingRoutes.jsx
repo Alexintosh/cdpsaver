@@ -1,22 +1,78 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Route } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Route, Redirect } from 'react-router-dom';
+import { resetOnboardingWizard } from '../../actions/onboardingActions';
 import OnboardingRedirect from './OnboardingRedirect';
-import OnbardingConnect from './OnbardingConnect/OnbardingConnect';
-import OnbardingWizardRoutes from './OnbardingWizard/OnboardingWizardRoutes';
+import SubHeaderRoutes from '../SubHeaderRoutes/SubHeaderRoutes';
+import OnboardingCreateCdp from './OnboardingCreateCdp/OnboardingCreateCdp';
+import OnboardingInfo from './OnboardingInfo/OnboardingInfo';
+import OnboardingMonitoring from './OnboardingMonitoring/OnboardingMonitoring';
+import OnboardingTransfer from './OnboardingTransfer/OnboardingTransfer';
 
 import './Onboarding.scss';
 
-const OnboardingRoutes = ({ match }) => (
-  <React.Fragment>
-    <Route exact path={`${match.path}`} component={OnboardingRedirect} />
-    <Route path={`${match.path}/connect`} component={OnbardingConnect} />
-    <Route path={`${match.path}/wizard`} component={OnbardingWizardRoutes} />
-  </React.Fragment>
-);
+class OnboardingRoutes extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onboardingWizardLinks = [
+      { lebel: 'Create CDP', pathname: '/onboarding/create-cdp' },
+      { lebel: 'Info', pathname: '/onboarding/info' },
+      { lebel: 'Monitoring', pathname: '/onboarding/monitoring' },
+      { lebel: 'Transfer', pathname: '/onboarding/transfer' },
+    ];
+  }
+
+  componentWillMount() {
+    // TODO HE ALREADY COMPLETED THE ONBOARDING THEN REDIRECT HIM
+    if (!this.props.hasCdp) return;
+
+    this.onboardingWizardLinks.splice(0, 1);
+  }
+
+  componentWillUnmount() {
+    this.props.resetOnboardingWizard();
+  }
+
+  render() {
+    const { match, hasCdp, account } = this.props;
+
+    if (!account) return (<Redirect to={{ pathname: '/connect', state: { to: '/dashboard/saver' } }} />);
+
+    return (
+      <div className="onboarding-wrapper">
+        <SubHeaderRoutes data={this.onboardingWizardLinks} />
+
+        <React.Fragment>
+          <Route path={match.path} exact component={props => <OnboardingRedirect hasCdp={hasCdp} {...props} />} />
+          <Route
+            path={`${match.path}/create-cdp`}
+            component={props => <OnboardingCreateCdp hasCdp={hasCdp} {...props} />}
+          />
+          <Route path={`${match.path}/info`} component={OnboardingInfo} />
+          <Route path={`${match.path}/monitoring`} component={OnboardingMonitoring} />
+          <Route path={`${match.path}/transfer`} component={OnboardingTransfer} />
+        </React.Fragment>
+      </div>
+    );
+  }
+}
 
 OnboardingRoutes.propTypes = {
+  account: PropTypes.string.isRequired,
+  hasCdp: PropTypes.bool.isRequired,
   match: PropTypes.object.isRequired,
+  resetOnboardingWizard: PropTypes.func.isRequired,
 };
 
-export default OnboardingRoutes;
+const mapDispatchToProps = {
+  resetOnboardingWizard,
+};
+
+const mapStateToProps = ({ general }) => ({
+  hasCdp: !!general.cdp,
+  account: general.account,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardingRoutes);

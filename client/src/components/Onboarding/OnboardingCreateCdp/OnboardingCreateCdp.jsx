@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import OnboardingWizardCreateCdpForm from './OnboardingWizardCreateCdpForm/OnboardingWizardCreateCdpForm';
+import OnboardingWizardCreateCdpForm from './OnboardingCreateCdpForm/OnboardingCreateCdpForm';
 
-import './OnboardingWizardCreateCdp.scss';
+import './OnboardingCreateCdp.scss';
 
-let OnboardingWizardCreateCdp = ({
+let OnboardingCreateCdp = ({
   hasCdp, pristine, invalid, submittingForm, history, cdpFormSubmitted,
 }) => {
-  if (hasCdp || cdpFormSubmitted) return (<Redirect to="/onboarding/wizard/info" />);
+  if (hasCdp || cdpFormSubmitted) return (<Redirect to="/onboarding/info" />);
 
   return (
-    <div className="onboarding-wizard-create-cdp-wrapper onboarding-page-wrapper">
+    <div className="onboarding-create-cdp-wrapper onboarding-page-wrapper">
       <div className="onboarding-content-bg">
         <div className="onboarding-content-wrapper no-margin width-container">
 
@@ -34,7 +34,7 @@ let OnboardingWizardCreateCdp = ({
             type="submit"
             disabled={pristine || invalid || submittingForm}
             className="button green uppercase"
-            form="onboarding-wizard-create-cdp-form"
+            form="onboarding-create-cdp-form"
           >
             { submittingForm ? 'Creating' : 'Create' }
           </button>
@@ -44,7 +44,7 @@ let OnboardingWizardCreateCdp = ({
   );
 };
 
-OnboardingWizardCreateCdp.propTypes = {
+OnboardingCreateCdp.propTypes = {
   hasCdp: PropTypes.bool.isRequired,
   pristine: PropTypes.bool.isRequired,
   invalid: PropTypes.bool.isRequired,
@@ -53,13 +53,13 @@ OnboardingWizardCreateCdp.propTypes = {
   cdpFormSubmitted: PropTypes.bool.isRequired,
 };
 
-OnboardingWizardCreateCdp = reduxForm({
-  form: 'onboardingWizardCreateCdpForm',
-})(OnboardingWizardCreateCdp);
+OnboardingCreateCdp = reduxForm({
+  form: 'onboardingCreateCdpForm',
+})(OnboardingCreateCdp);
 
 const mapStateToProps = ({ onboarding }) => ({
   submittingForm: onboarding.creatingCdp,
   cdpFormSubmitted: onboarding.cdpFormSubmitted,
 });
 
-export default connect(mapStateToProps)(OnboardingWizardCreateCdp);
+export default connect(mapStateToProps)(OnboardingCreateCdp);

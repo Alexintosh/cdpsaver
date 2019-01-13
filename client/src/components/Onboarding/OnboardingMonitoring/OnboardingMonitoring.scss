@@ -1,8 +1,8 @@
-@import "../../../../common/variables";
-@import "../../../../common/text";
-@import "../../../../common/colors";
+@import "../../../common/variables";
+@import "../../../common/text";
+@import "../../../common/colors";
 
-.onboarding-wizard-monitoring-wrapper {
+.onboarding-monitoring-wrapper {
 
   .onboarding-content-wrapper {
     @include flex-center;

@@ -2,15 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import OnboardingWizardMonitoringForm from './OnboardingWizardMonitoringForm/OnboardingWizardMonitoringForm';
+import OnboardingWizardMonitoringForm from './OnboardingMonitoringForm/OnboardingMonitoringForm';
 
-import './OnboardingWizardMonitoring.scss';
+import './OnboardingMonitoring.scss';
 
-const OnboardingWizardMonitoring = ({ cdp, subscribingToMonitoringSuccess }) => {
-  if (!cdp) return (<Redirect to="/onboarding/wizard/create-cdp" />);
+const OnboardingMonitoring = ({ cdp, subscribingToMonitoringSuccess }) => {
+  if (!cdp) return (<Redirect to="/onboarding/create-cdp" />);
 
   return (
-    <div className="onboarding-wizard-monitoring-wrapper onboarding-page-wrapper">
+    <div className="onboarding-monitoring-wrapper onboarding-page-wrapper">
       <div className="onboarding-content-bg">
         <div className="onboarding-content-wrapper no-margin width-container">
           {
@@ -43,11 +43,11 @@ const OnboardingWizardMonitoring = ({ cdp, subscribingToMonitoringSuccess }) => 
         </div>
 
         <div className="bottom-controls width-container">
-          <Link to="/onboarding/wizard/info" className="button gray uppercase">
+          <Link to="/onboarding/info" className="button gray uppercase">
             Previous
           </Link>
 
-          <Link to="/onboarding/wizard/transfer" className="button green uppercase">
+          <Link to="/onboarding/transfer" className="button green uppercase">
             Next
           </Link>
         </div>
@@ -56,11 +56,11 @@ const OnboardingWizardMonitoring = ({ cdp, subscribingToMonitoringSuccess }) => 
   );
 };
 
-OnboardingWizardMonitoring.defaultProps = {
+OnboardingMonitoring.defaultProps = {
   cdp: null,
 };
 
-OnboardingWizardMonitoring.propTypes = {
+OnboardingMonitoring.propTypes = {
   cdp: PropTypes.object,
   subscribingToMonitoringSuccess: PropTypes.bool.isRequired,
 };
@@ -70,4 +70,4 @@ const mapStateToProps = ({ general, onboarding }) => ({
   subscribingToMonitoringSuccess: onboarding.subscribingToMonitoringSuccess,
 });
 
-export default connect(mapStateToProps)(OnboardingWizardMonitoring);
+export default connect(mapStateToProps)(OnboardingMonitoring);

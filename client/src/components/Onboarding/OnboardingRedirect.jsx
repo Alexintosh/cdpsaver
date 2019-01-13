@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
-const OnboardigRedirect = ({ match }) => (
-  <Redirect to={`${match.path}/connect`} />
+const OnboardingWizardRedirect = ({ match, hasCdp }) => (
+  <Redirect to={`${match.path}/${!hasCdp ? 'create-cdp' : 'info'}`} />
 );
 
-OnboardigRedirect.propTypes = {
+OnboardingWizardRedirect.propTypes = {
   match: PropTypes.object.isRequired,
+  hasCdp: PropTypes.bool.isRequired,
 };
 
-export default OnboardigRedirect;
+export default OnboardingWizardRedirect;

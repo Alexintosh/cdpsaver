@@ -37,7 +37,7 @@ export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dis
     const payload = await createCdp(parseFloat(ethAmount), parseFloat(daiAmount));
 
     dispatch({ type: CREATE_CDP_SUCCESS, payload });
-    history.push('/onboarding/wizard/info');
+    history.push('/onboarding/info');
   } catch (err) {
     dispatch({ type: CREATE_CDP_ERROR, payload: err });
   }

@@ -1,6 +1,6 @@
-import { EMAIL_REGEX } from '../../../../../constants/general';
+import { EMAIL_REGEX } from '../../../../constants/general';
 
-const onboardingWizardMonitoringFormValidator = ({ email, ratioPercent }) => {
+const onboardingMonitoringFormValidator = ({ email, ratioPercent }) => {
   const errors = {};
 
   if (!email) errors.email = 'Required';
@@ -16,4 +16,4 @@ const onboardingWizardMonitoringFormValidator = ({ email, ratioPercent }) => {
   return errors;
 };
 
-export default onboardingWizardMonitoringFormValidator;
+export default onboardingMonitoringFormValidator;

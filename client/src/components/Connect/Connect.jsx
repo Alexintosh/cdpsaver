@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import ConnectWalletButtons from '../../ConnectWalletButtons/ConnectWalletButtons';
-import { loginMetaMask } from '../../../actions/accountActions';
+import ConnectWalletButtons from '../ConnectWalletButtons/ConnectWalletButtons';
+import { loginMetaMask } from '../../actions/accountActions';
 
-import './OnbardingConnect.scss';
+import './Connect.scss';
 
-class OnbardingConnect extends Component {
+class Connect extends Component {
   constructor(props) {
     super(props);
 
@@ -33,7 +33,7 @@ class OnbardingConnect extends Component {
     const to = location.state ? location.state.to : '/dashboard/saver';
 
     return (
-      <div className="onboarding-connect-wrapper onboarding-page-wrapper">
+      <div className="connect-wrapper onboarding-page-wrapper">
         <div className="sub-heading-wrapper">
           <div className="width-container">
             <div className="sub-title">Connect your wallet</div>
@@ -94,7 +94,7 @@ class OnbardingConnect extends Component {
   }
 }
 
-OnbardingConnect.propTypes = {
+Connect.propTypes = {
   history: PropTypes.object.isRequired,
   loginMetaMask: PropTypes.func.isRequired,
   connectingProvider: PropTypes.bool.isRequired,
@@ -111,4 +111,4 @@ const mapDispatchToProps = {
   loginMetaMask,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(OnbardingConnect));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Connect));

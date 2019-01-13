@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import Slider from 'rc-slider';
-import onboardingWizardCreateCdpFormValidator from './onboardingWizardCreateCdpFormValidator';
-import InputComponent from '../../../../Forms/InputComponent';
-import { createCdpAction } from '../../../../../actions/onboardingActions';
-import { getRainbowSliderValColor } from '../../../../../utils/utils';
+import onboardingCreateCdpFormFormValidator from './onboardingCreateCdpFormFormValidator';
+import InputComponent from '../../../Forms/InputComponent';
+import { createCdpAction } from '../../../../actions/onboardingActions';
+import { getRainbowSliderValColor } from '../../../../utils/utils';
 
-import '../../../../../common/slider.scss';
+import '../../../../common/slider.scss';
 
-class OnboardingWizardCreateCdpForm extends Component {
+class OnboardingCreateCdpForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,7 +42,7 @@ class OnboardingWizardCreateCdpForm extends Component {
 
     return (
       <form
-        id="onboarding-wizard-create-cdp-form"
+        id="onboarding-create-cdp-form"
         onSubmit={handleSubmit((e) => { onSubmit(e, history); })}
         className="form-wrapper"
       >
@@ -94,16 +94,16 @@ class OnboardingWizardCreateCdpForm extends Component {
   }
 }
 
-OnboardingWizardCreateCdpForm.propTypes = {
+OnboardingCreateCdpForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
 };
 
 const OnboardingWizardCreateCdpFormComp = reduxForm({
-  form: 'onboardingWizardCreateCdpForm',
-  validate: onboardingWizardCreateCdpFormValidator,
-})(OnboardingWizardCreateCdpForm);
+  form: 'onboardingCreateCdpForm',
+  validate: onboardingCreateCdpFormFormValidator,
+})(OnboardingCreateCdpForm);
 
 const mapStateToProps = () => ({});
 

@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import './OnboardingWizardInfo.scss';
+import './OnboardingInfo.scss';
 
-const OnboardingWizardInfo = ({ cdp }) => {
-  if (!cdp) return (<Redirect to="/onboarding/wizard/create-cdp" />);
+const OnboardingInfo = ({ cdp }) => {
+  if (!cdp) return (<Redirect to="/onboarding/create-cdp" />);
 
   return (
-    <div className="onboarding-wizard-info-wrapper onboarding-page-wrapper">
+    <div className="onboarding-info-wrapper onboarding-page-wrapper">
       <div className="onboarding-content-bg">
         <div className="onboarding-content-wrapper no-margin width-container">
 
@@ -42,7 +42,7 @@ const OnboardingWizardInfo = ({ cdp }) => {
         </div>
 
         <div className="bottom-controls width-container">
-          <Link to="/onboarding/wizard/monitoring" className="button green uppercase">
+          <Link to="/onboarding/monitoring" className="button green uppercase">
             Next
           </Link>
         </div>
@@ -51,11 +51,11 @@ const OnboardingWizardInfo = ({ cdp }) => {
   );
 };
 
-OnboardingWizardInfo.defaultProps = {
+OnboardingInfo.defaultProps = {
   cdp: null,
 };
 
-OnboardingWizardInfo.propTypes = {
+OnboardingInfo.propTypes = {
   cdp: PropTypes.object,
 };
 
@@ -63,4 +63,4 @@ const mapStateToProps = ({ general }) => ({
   cdp: general.cdp,
 });
 
-export default connect(mapStateToProps)(OnboardingWizardInfo);
+export default connect(mapStateToProps)(OnboardingInfo);

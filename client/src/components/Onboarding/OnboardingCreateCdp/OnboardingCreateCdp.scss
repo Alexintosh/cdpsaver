@@ -1,7 +1,7 @@
-@import "../../../../common/variables";
-@import "../../../../common/colors";
+@import "../../../common/variables";
+@import "../../../common/colors";
 
-.onboarding-wizard-create-cdp-wrapper {
+.onboarding-create-cdp-wrapper {
 
   .onboarding-content-wrapper {
     @include flex-center;
