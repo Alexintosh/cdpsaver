@@ -34,22 +34,42 @@ contract("SaverProxy", accounts => {
     }
   });
 
+  function getAbiFunction(contract, functionName) {
+    const abi = contract.toJSON().abi;
+
+    return abi.find(abi => abi.name === functionName);
+  }
+
   it('...should print some addresses', async () => {
     console.log(`Saver addr: ${saver.address}, Monitor addr: ${monitor.address}`);
   });
 
-  it('...should call the boost feature', async () => {
-    const data = saver.boost;
 
-    const ratio = await monitor.getRatio.call(cdpIdBytes32);
+  // it('...should call the repay feature', async () => {
 
-    console.log('Ratio: ', ratio.toString(), " data: ", data);
+  //   const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaverProxy, 'repay'), [cdpId]);
 
-    // await proxy.execute(saver.address, data, {from: accounts[0]});
+  //   const ratio = await monitor.getRatio.call(cdpIdBytes32);
 
-    // const newRatio = monitor.getRatio(cdpIdBytes32);
+  //   try {
+  //     console.log('Old Ratio: ', ratio.toString());
 
-    // console.log(ratio, newRatio);
+  //     const tx = await proxy.methods['execute(address,bytes)'](saver.address, data);
+
+  //     const newRatio = await monitor.getRatio.call(cdpIdBytes32);
+  //     console.log('Updated ratio: ', newRatio.toString());
+
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // });
+
+  it('...should call repay from the monitor contract', async () => {
+    // step 1, subscribe the user
+
+    //step 2, give permission
+
+    //step 3, call the save method
   });
 
   
