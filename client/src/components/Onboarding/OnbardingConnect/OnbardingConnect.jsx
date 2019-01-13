@@ -28,11 +28,9 @@ class OnbardingConnect extends Component {
 
   render() {
     const {
-      loginMetaMask, connectingProvider, location, history,
+      loginMetaMask, connectingProvider, location, history, accountType,
     } = this.props;
     const to = location.state ? location.state.to : '/dashboard/saver';
-
-    // TODO CHECK IF CONNECTED AND REDIRECT IF SO
 
     return (
       <div className="onboarding-connect-wrapper onboarding-page-wrapper">
@@ -54,7 +52,9 @@ class OnbardingConnect extends Component {
             </div>
 
             {
-              this.state.shown === 'choose' && (<ConnectWalletButtons handleSwitch={this.switch} />)
+              this.state.shown === 'choose' && (
+                <ConnectWalletButtons handleSwitch={this.switch} accountType={accountType}/>
+              )
             }
 
             {
@@ -67,14 +67,23 @@ class OnbardingConnect extends Component {
                     private key on a website. It protects you from phishing & malicious websites.
                   </p>
 
-                  <button
-                    disabled={connectingProvider}
-                    type="button"
-                    className="button uppercase green"
-                    onClick={() => loginMetaMask(false, history, to)}
-                  >
-                    Connect Metamask
-                  </button>
+                  <div className="buttons-wrapper">
+                    <div
+                      className="button uppercase gray"
+                      onClick={() => { this.switch('choose'); }}
+                    >
+                      Cancel
+                    </div>
+
+                    <button
+                      disabled={connectingProvider || accountType === 'metamask'}
+                      type="button"
+                      className="button uppercase green"
+                      onClick={() => loginMetaMask(false, history, to)}
+                    >
+                      Connect Metamask
+                    </button>
+                  </div>
                 </div>
               )
             }
@@ -90,10 +99,12 @@ OnbardingConnect.propTypes = {
   loginMetaMask: PropTypes.func.isRequired,
   connectingProvider: PropTypes.bool.isRequired,
   location: PropTypes.object.isRequired,
+  accountType: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = ({ general }) => ({
   connectingProvider: general.connectingProvider,
+  accountType: general.accountType,
 });
 
 const mapDispatchToProps = {

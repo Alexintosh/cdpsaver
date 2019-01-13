@@ -3,9 +3,14 @@ import PropTypes from 'prop-types';
 
 import './ConnectWalletButtons.scss';
 
-const ConnectWalletButtons = ({ handleSwitch }) => (
+const ConnectWalletButtons = ({ handleSwitch, accountType }) => (
   <div className="connect-wallet-buttons">
-    <button type="button" className="button green" onClick={() => { handleSwitch('metamask'); }}>
+    <button
+      disabled={accountType === 'metamask'}
+      type="button"
+      className="button green"
+      onClick={() => { handleSwitch('metamask'); }}
+    >
       Metamask
     </button>
 
@@ -17,6 +22,7 @@ const ConnectWalletButtons = ({ handleSwitch }) => (
 
 ConnectWalletButtons.propTypes = {
   handleSwitch: PropTypes.func.isRequired,
+  accountType: PropTypes.string.isRequired,
 };
 
 export default ConnectWalletButtons;
