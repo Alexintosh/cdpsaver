@@ -16,12 +16,10 @@ import { LS_ACCOUNT } from '../constants/general';
  * Tries to connect to the MetaMask web3 provider, also checks if the app is pre-approved
  *
  * @param silent {Boolean}
- * @param history {Object}
- * @param to {String}
  *
  * @return {Function}
  */
-export const loginMetaMask = (silent, history, to) => async (dispatch, getState) => {
+export const loginMetaMask = silent => async (dispatch, getState) => {
   dispatch({ type: CONNECT_PROVIDER });
   const accountType = 'metamask';
 
@@ -49,8 +47,6 @@ export const loginMetaMask = (silent, history, to) => async (dispatch, getState)
 
     dispatch({ type: CONNECT_PROVIDER_SUCCESS, payload: { account, accountType, balance } });
     localStorage.setItem(LS_ACCOUNT, JSON.stringify({ accountType: 'metamask' }));
-
-    if (!silent) history.push(to);
     notify(`Metamask account found ${account}`, 'success')(dispatch);
   } catch (err) {
     setupWeb3();
@@ -67,15 +63,43 @@ export const loginMetaMask = (silent, history, to) => async (dispatch, getState)
  *
  * @return {Function}
  */
-export const silentLogin = () => (dispatch, getState) => {
+export const silentLogin = () => async (dispatch, getState) => {
   const { accountType } = getState().general;
 
   switch (accountType) {
-    case 'metamask':
-      dispatch(loginMetaMask(true, null, '/dashboard/saver'));
+    case 'metamask': {
+      await dispatch(loginMetaMask(true, null, '/dashboard/saver'));
       break;
+    }
 
     default:
       return false;
   }
+
+  // check for CDP
+};
+
+/**
+ * Tries not silent login for the selected account type
+ *
+ * @param accountType {String}
+ * @param history {Object}
+ * @param to {String}
+ *
+ * @return {Function}
+ */
+export const normalLogin = (accountType, history, to) => async (dispatch) => {
+  // LOGIN TO WANTED ACCOUNT TYPE
+  switch (accountType) {
+    case 'metamask': {
+      await dispatch(loginMetaMask(false));
+      break;
+    }
+
+    default:
+      return false;
+  }
+  // check for CDP
+  // REDIRECT TO WANTED ROUTE
+  history.push(to);
 };

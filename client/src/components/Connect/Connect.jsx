@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ConnectWalletButtons from '../ConnectWalletButtons/ConnectWalletButtons';
-import { loginMetaMask } from '../../actions/accountActions';
+import { normalLogin } from '../../actions/accountActions';
 
 import './Connect.scss';
 
@@ -28,7 +28,7 @@ class Connect extends Component {
 
   render() {
     const {
-      loginMetaMask, connectingProvider, location, history, accountType,
+      normalLogin, connectingProvider, location, history, accountType,
     } = this.props;
     const to = location.state ? location.state.to : '/dashboard/saver';
 
@@ -79,7 +79,7 @@ class Connect extends Component {
                       disabled={connectingProvider || accountType === 'metamask'}
                       type="button"
                       className="button uppercase green"
-                      onClick={() => loginMetaMask(false, history, to)}
+                      onClick={() => normalLogin('metamask', history, to)}
                     >
                       Connect Metamask
                     </button>
@@ -96,7 +96,7 @@ class Connect extends Component {
 
 Connect.propTypes = {
   history: PropTypes.object.isRequired,
-  loginMetaMask: PropTypes.func.isRequired,
+  normalLogin: PropTypes.func.isRequired,
   connectingProvider: PropTypes.bool.isRequired,
   location: PropTypes.object.isRequired,
   accountType: PropTypes.string.isRequired,
@@ -108,7 +108,7 @@ const mapStateToProps = ({ general }) => ({
 });
 
 const mapDispatchToProps = {
-  loginMetaMask,
+  normalLogin,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Connect));
