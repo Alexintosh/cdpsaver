@@ -5,10 +5,11 @@ const SaverProxy = artifacts.require("./SaverProxy.sol");
 const Monitor = artifacts.require("./Monitor.sol");
 const ProxyRegistryInterface = artifacts.require("./ProxyRegistryInterface.sol");
 const DSProxy = artifacts.require("./DSProxy.sol");
+const SaverAuthority = artifacts.require("./SaverAuthority.sol");
 
 contract("SaverProxy", accounts => {
 
-  let saver, monitor, proxy;
+  let saver, monitor, proxy, authority, registry;
 
   const cdpId = process.env.CDPID;
   const cdpIdBytes32 = process.env.CDPID_BYTES;
@@ -16,41 +17,124 @@ contract("SaverProxy", accounts => {
   before(async () => {
 
 
-    if (process.env.DEPLOY_AGAIN == true) {
+    if (process.env.DEPLOY_AGAIN === 'true') {
       saver = await SaverProxy.deployed();
       monitor = await Monitor.deployed();
-
-      const registry = await ProxyRegistryInterface.at("0x64a436ae831c1672ae81f674cab8b6775df3475c");
-      const proxyAddr = await registry.proxies(accounts[0]);
-      proxy = await DSProxy.at(proxyAddr);
-
+      authority = await SaverAuthority.deployed();
     } else {
-      saver = await SaverProxy.at("0xA8f27bc4F3557F4e5A7Fa83b111678b162Ba3916");
-      monitor = await Monitor.at("0x9A31FAA5799152841FfC53289dD763F9f5EB718b");
-
-      const registry = await ProxyRegistryInterface.at("0x64a436ae831c1672ae81f674cab8b6775df3475c");
-      const proxyAddr = await registry.proxies(accounts[0]);
-      proxy = await DSProxy.at(proxyAddr);
+      saver = await SaverProxy.at("0x5E1E63dc7A6154e9ee73A0beb487bb5ECbe4e50C");
+      monitor = await Monitor.at("0x42BB43a9E628e545636c3Efcc21e593739C3276d");
+      authority = await SaverAuthority.at("0xeF1db1cAE584532C13fbBc8D3F3D48cC12134701");
     }
+
+    registry = await ProxyRegistryInterface.at("0x64a436ae831c1672ae81f674cab8b6775df3475c");
+    const proxyAddr = await registry.proxies(accounts[0]);
+    proxy = await DSProxy.at(proxyAddr);
   });
+
+  function getAbiFunction(contract, functionName) {
+    const abi = contract.toJSON().abi;
+
+    return abi.find(abi => abi.name === functionName);
+  }
 
   it('...should print some addresses', async () => {
-    console.log(`Saver addr: ${saver.address}, Monitor addr: ${monitor.address}`);
+    console.log(`Saver addr: ${saver.address}, Monitor addr: ${monitor.address}, Authority addr: ${authority.address}`);
   });
 
-  it('...should call the boost feature', async () => {
-    const data = saver.boost;
-
-    const ratio = await monitor.getRatio.call(cdpIdBytes32);
-
-    console.log('Ratio: ', ratio.toString(), " data: ", data);
-
-    // await proxy.execute(saver.address, data, {from: accounts[0]});
-
-    // const newRatio = monitor.getRatio(cdpIdBytes32);
-
-    // console.log(ratio, newRatio);
+  it('...should add collateral', async () => {
+    
   });
+
+  it('...should draw dai', async () => {
+    
+  });
+
+  it('...should repay dai', async () => {
+    
+  });
+
+  it('...should draw collateral', async () => {
+    
+  });
+
+
+  // it('...should call the repay feature', async () => {
+
+  //   const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaverProxy, 'repay'), [cdpId]);
+
+  //   const ratio = await monitor.getRatio.call(cdpIdBytes32);
+
+  //   try {
+  //     console.log('Old Ratio: ', ratio.toString());
+
+  //     const tx = await proxy.methods['execute(address,bytes)'](saver.address, data);
+
+  //     const newRatio = await monitor.getRatio.call(cdpIdBytes32);
+  //     console.log('Updated ratio: ', newRatio.toString());
+
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // });
+
+  // it('...should call repay from the monitor contract', async () => {
+    
+  //   console.log(accounts[1]);
+
+  //   const minRatio = 800; //set really high so we can test it
+
+  //   try {
+
+  //     // step 1, subscribe the user
+  //     await monitor.subscribe(cdpIdBytes32, minRatio, {from: accounts[0]});
+
+  //     //step 2, give permission
+  //     const tx = await proxy.setAuthority(authority.address, {from: accounts[0]});
+  //     //console.log(tx);
+
+  //     //step 3, call the save method
+  //     const saveTx = await monitor.saveUser(accounts[0], {from: accounts[0]});
+
+  //     const newRatio = await monitor.getRatio.call(cdpIdBytes32);
+  //     console.log('Updated ratio: ', newRatio.toString());
+  //     console.log(saveTx);
+
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // });
+
+
+
+  // it('...should create a new CDP', async () => {
+  //   const daiAmount = web3.utils.toWei("1", 'ether'); //1 dai token
+  //   const ethAmount = "0.05";
+
+  //   try {
+  //       const tx = await saver.createCdp(daiAmount, 
+  //         {from: accounts[2], value: web3.utils.toWei(ethAmount, 'ether')});
+
+  //       console.log(accounts[2], tx);
+    
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // });
+
+
+
+  // it('...should remove proxy ownership', async () => {
+  //   try {
+  //     const proxyAddr = await registry.proxies(accounts[2]);
+  //     const proxyForAccount2 = await DSProxy.at(proxyAddr);
+
+  //     await proxyForAccount2.setOwner("0x0000000000000000000000000000000000000000", {from: accounts[2]});
+    
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // });
 
   
 });

@@ -988,7 +988,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.0",
-  "updatedAt": "2019-01-11T14:06:57.480Z",
+  "updatedAt": "2019-01-14T13:27:18.476Z",
   "devdoc": {
     "methods": {
       "canCall(address,address,bytes4)": {

@@ -68,9 +68,9 @@ contract SaiProxy is DSMath {
 
             if(!fromContract) {
                 tub.sai().transferFrom(msg.sender, address(this), wad);
+                handleGovFee(tub, rmul(wad, rdiv(tub.rap(cup), tub.tab(cup))), otc_);
             }
             
-            handleGovFee(tub, rmul(wad, rdiv(tub.rap(cup), tub.tab(cup))), otc_);
 
             if (tub.sai().allowance(address(this), address(tub)) != uint(-1)) {
                 tub.sai().approve(address(tub), uint(-1));

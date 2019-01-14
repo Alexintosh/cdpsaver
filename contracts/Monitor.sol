@@ -1,14 +1,16 @@
 pragma solidity ^0.5.0;
 
 import "./interfaces/TubInterface.sol";
+import "./interfaces/ProxyRegistryInterface.sol";
+import "./interfaces/ERC20.sol";
 import "./DS/DSMath.sol";
 import "./DS/DSProxy.sol";
-
 
 contract Monitor is DSMath {
 
     PipInterface pip = PipInterface(0xA944bd4b25C9F186A846fd5668941AA3d3B8425F); //KOVAN
     TubInterface tub = TubInterface(0xa71937147b55Deb8a530C7229C442Fd3F31b7db2); //KOVAN
+    ProxyRegistryInterface registry = ProxyRegistryInterface(0x64A436ae831C1672AE81F674CAb8B6775df3475C); //KOVAN
 
     address public saverProxy;
 
@@ -27,14 +29,17 @@ contract Monitor is DSMath {
         saverProxy = _saverProxy;
     }
 
+    //TODO: what if user changes the proxy or cdp changes owners??
     function subscribe(bytes32 _cup, uint _minRatio) public {
-        require(msg.sender == tub.lad(_cup));
+        require(isOwner(msg.sender, _cup));
         require(_minRatio >= MIN_RATIO + 1);
 
-        if (hodlers[msg.sender].exists) {
-            hodlers[msg.sender].minRatio = _minRatio;
+        DSProxy proxy = registry.proxies(msg.sender);
+
+        if (hodlers[address(proxy)].exists) {
+            hodlers[address(proxy)].minRatio = _minRatio;
         } else {
-            hodlers[msg.sender] = CupHolder({
+            hodlers[address(proxy)] = CupHolder({
                 cup: _cup,
                 minRatio: _minRatio,
                 timeCreated: now,
@@ -44,16 +49,21 @@ contract Monitor is DSMath {
     }
 
     function unsubscribe(bytes32 _cup) public {
-        require(msg.sender == tub.lad(_cup));
+        require(isOwner(msg.sender, _cup));
 
-        hodlers[msg.sender].exists = false;
+        DSProxy proxy = registry.proxies(msg.sender);
+
+        hodlers[address(proxy)].exists = false;
     }
 
     function saveUser(address payable _user) public {
-        require(hodlers[_user].exists);
-        require(getRatio(hodlers[_user].cup) <= hodlers[_user].minRatio);
+        DSProxy proxy = registry.proxies(_user);
 
-        DSProxy(_user).execute(saverProxy, abi.encodeWithSignature("repay(uint)", uint(hodlers[_user].cup)));
+        require(address(proxy) != address(0));
+        require(hodlers[address(proxy)].exists);
+        require(getRatio(hodlers[address(proxy)].cup) <= hodlers[address(proxy)].minRatio);
+
+        proxy.execute(saverProxy, abi.encodeWithSignature("repay(uint256)", uint(hodlers[address(proxy)].cup)));
 
     }
 
@@ -61,4 +71,13 @@ contract Monitor is DSMath {
         return (wdiv(rmul(rmul(tub.ink(_cdpId), tub.tag()), WAD), tub.tab(_cdpId)))/10000000;
     }
 
+    function isOwner(address _owner, bytes32 _cup) internal returns(bool) {
+         DSProxy reg = registry.proxies(_owner);
+         
+         if(address(reg) != address(0x0)) {
+             return true;
+         }
+        
+        return false;
+    }
 }

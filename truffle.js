@@ -9,10 +9,10 @@ module.exports = {
   networks: {
     kovan: {
       provider: function() {
-        return new HDWalletProvider(mnemonic, `https://kovan.infura.io/`);
+        return new HDWalletProvider(mnemonic, `https://kovan.infura.io/`, 0, 10);
       },
       network_id: '42',
-      gasPrice: 2000000000
+      gasPrice: 3000000000
       },
     rinkeby: {
       provider: function() {

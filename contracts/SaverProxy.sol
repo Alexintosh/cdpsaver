@@ -3,6 +3,7 @@ pragma solidity ^0.5.0;
 import "./interfaces/TubInterface.sol";
 import "./interfaces/ERC20.sol";
 import "./interfaces/KyberNetworkProxyInterface.sol";
+import "./interfaces/ProxyRegistryInterface.sol";
 import "./SaiProxy.sol";
 
 contract IVox {
@@ -21,20 +22,24 @@ contract SaverProxy is SaiProxy {
     address constant KYBER_INTERFACE = 0x7e6b8b9510D71BF8EF0f893902EbB9C865eEF4Df;
     address constant TUB_ADDRESS = 0xa71937147b55Deb8a530C7229C442Fd3F31b7db2;
     address constant VOX_ADDRESS = 0xBb4339c0aB5B1d9f14Bd6e3426444A1e9d86A1d9;
+    address constant REGISTRY_ADDRESS = 0x64A436ae831C1672AE81F674CAb8B6775df3475C;
+    address constant OTC_ADDRESS = 0xdB3b642eBc6Ff85A3AB335CFf9af2954F9215994;
     
     ///@dev User has to own MKR and aprrove the DSProxy address
     function repay(uint _cdpId) public {
         TubInterface tub = TubInterface(TUB_ADDRESS);
         bytes32 cup = bytes32(_cdpId);
 
+        //TODO: check so we don't get more eth than need to repay debt
         uint maxCollateral = maxFreeCollateral(tub, VOX_ADDRESS, cup);
 
         free(address(tub), cup, maxCollateral, true);
 
-        //TODO: don't use contract balance 
-        uint daiAmount = swapEtherToToken(address(this).balance, DAI_ADDRESS);
+        uint daiAmount = swapEtherToToken(maxCollateral, DAI_ADDRESS);
         
-        //TODO: check so we don't spend more dai than there is debt
+        uint fee = payStabilityFee(tub, OTC_ADDRESS, cup, daiAmount);
+        daiAmount -= fee;
+
         wipe(address(tub), cup, daiAmount, true);
 
         emit Repay(msg.sender, maxCollateral, daiAmount);
@@ -51,6 +56,13 @@ contract SaverProxy is SaiProxy {
         uint ethAmount = lockPeth(tub, cup, maxDai);
         
         emit Boost(msg.sender, maxDai, ethAmount);
+    }
+
+    function createCdp(uint _daiAmount) public payable returns (address proxy, bytes32 cup) {
+        proxy = ProxyRegistryInterface(REGISTRY_ADDRESS).build(msg.sender);
+        cup = open(TUB_ADDRESS);
+        lockAndDraw(TUB_ADDRESS, cup, _daiAmount);
+        TubInterface(TUB_ADDRESS).give(cup, proxy);
     }
 
     function maxFreeCollateral(TubInterface _tub, address _vox, bytes32 _cdpId) public returns (uint) {
@@ -82,6 +94,25 @@ contract SaverProxy is SaiProxy {
         _tub.lock(cup, ink);
         
         return ethAmount;
+    }
+
+    //TODO: precise calc. of the _daiRepay amount
+    function payStabilityFee(TubInterface _tub, address _otc, bytes32 _cup, uint _daiRepay) internal returns(uint) {
+        bytes32 mkrPrice;
+        bool ok;
+
+        uint feeInDai = rmul(_daiRepay, rdiv(_tub.rap(_cup), _tub.tab(_cup)));
+
+        (mkrPrice, ok) = _tub.pep().peek();
+
+        uint govAmt = wdiv(feeInDai, uint(mkrPrice));
+
+        uint mkrAmountInDai = OtcInterface(_otc).getPayAmount(address(_tub.sai()), address(_tub.gov()), govAmt);
+
+        //approve 
+        OtcInterface(_otc).buyAllAmount(address(_tub.gov()), govAmt, address(_tub.sai()), mkrAmountInDai);
+
+        return mkrAmountInDai;
     }
     
     // KYBER
