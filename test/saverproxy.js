@@ -9,7 +9,7 @@ const SaverAuthority = artifacts.require("./SaverAuthority.sol");
 
 contract("SaverProxy", accounts => {
 
-  let saver, monitor, proxy, authority;
+  let saver, monitor, proxy, authority, registry;
 
   const cdpId = process.env.CDPID;
   const cdpIdBytes32 = process.env.CDPID_BYTES;
@@ -21,20 +21,15 @@ contract("SaverProxy", accounts => {
       saver = await SaverProxy.deployed();
       monitor = await Monitor.deployed();
       authority = await SaverAuthority.deployed();
-
-      const registry = await ProxyRegistryInterface.at("0x64a436ae831c1672ae81f674cab8b6775df3475c");
-      const proxyAddr = await registry.proxies(accounts[0]);
-      proxy = await DSProxy.at(proxyAddr);
-
     } else {
-      saver = await SaverProxy.at("0x4b73F00131E9142361370cEeBdae3Bdc9f2C643b");
-      monitor = await Monitor.at("0x01e4626465f62cfB14BE4F3aDFD51Df33924005D");
-      authority = await SaverAuthority.at("0x9F2153E04D7BE49bA02036284296F45e880dB260");
-
-      const registry = await ProxyRegistryInterface.at("0x64a436ae831c1672ae81f674cab8b6775df3475c");
-      const proxyAddr = await registry.proxies(accounts[0]);
-      proxy = await DSProxy.at(proxyAddr);
+      saver = await SaverProxy.at("0x5E1E63dc7A6154e9ee73A0beb487bb5ECbe4e50C");
+      monitor = await Monitor.at("0x42BB43a9E628e545636c3Efcc21e593739C3276d");
+      authority = await SaverAuthority.at("0xeF1db1cAE584532C13fbBc8D3F3D48cC12134701");
     }
+
+    registry = await ProxyRegistryInterface.at("0x64a436ae831c1672ae81f674cab8b6775df3475c");
+    const proxyAddr = await registry.proxies(accounts[0]);
+    proxy = await DSProxy.at(proxyAddr);
   });
 
   function getAbiFunction(contract, functionName) {
@@ -67,35 +62,59 @@ contract("SaverProxy", accounts => {
   //   }
   // });
 
-  it('...should call repay from the monitor contract', async () => {
+  // it('...should call repay from the monitor contract', async () => {
     
-    const minRatio = 800; //set really high so we can test it
+  //   console.log(accounts[1]);
+
+  //   const minRatio = 800; //set really high so we can test it
+
+  //   try {
+
+  //     // step 1, subscribe the user
+  //     await monitor.subscribe(cdpIdBytes32, minRatio, {from: accounts[0]});
+
+  //     //step 2, give permission
+  //     const tx = await proxy.setAuthority(authority.address, {from: accounts[0]});
+  //     //console.log(tx);
+
+  //     //step 3, call the save method
+  //     const saveTx = await monitor.saveUser(accounts[0], {from: accounts[0]});
+
+  //     const newRatio = await monitor.getRatio.call(cdpIdBytes32);
+  //     console.log('Updated ratio: ', newRatio.toString());
+  //     console.log(saveTx);
+
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // });
+
+  it('...should create a new CDP', async () => {
+    const daiAmount = web3.utils.toWei("1", 'ether'); //1 dai token
+    const ethAmount = "0.05";
 
     try {
+        const tx = await saver.createCdp(daiAmount, 
+          {from: accounts[2], value: web3.utils.toWei(ethAmount, 'ether')});
 
-      // step 1, subscribe the user
-      await monitor.subscribe(cdpIdBytes32, minRatio, {from: accounts[0]});
-
-      //step 2, give permission
-      const tx = await proxy.setAuthority(authority.address, {from: accounts[0]});
-      //console.log(tx);
-
-      //step 3, call the save method
-      const saveTx = await monitor.saveUser(accounts[0], {from: accounts[0]});
-
-      const newRatio = await monitor.getRatio.call(cdpIdBytes32);
-      console.log('Updated ratio: ', newRatio.toString());
-      console.log(saveTx);
-
+        console.log(accounts[2], tx);
+    
     } catch(err) {
       console.log(err);
     }
   });
 
-  // it('...should create a new CDP', async () => {
-  //   const daiAmount = 10;
-  //   const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaverProxy, 'createCdp'), [daiAmount]);
-  // });
+  it('...should remove proxy ownership', async () => {
+    try {
+      const proxyAddr = await registry.proxies(accounts[2]);
+      const proxyForAccount2 = await DSProxy.at(proxyAddr);
+
+      await proxyForAccount2.setOwner("0x0000000000000000000000000000000000000000", {from: accounts[2]});
+    
+    } catch(err) {
+      console.log(err);
+    }
+  });
 
   
 });
