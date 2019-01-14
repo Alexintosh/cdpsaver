@@ -81,6 +81,8 @@ export const silentLogin = () => async (dispatch, getState) => {
 
   const cdp = await getAddressCdp(getState().general.account);
 
+  console.log('CDP: ', cdp);
+
   if (!isEmptyBytes(cdp)) dispatch({ type: ADD_CDP, payload: cdp });
 };
 
@@ -106,6 +108,8 @@ export const normalLogin = (accountType, history, to) => async (dispatch, getSta
   }
 
   const cdp = await getAddressCdp(getState().general.account);
+
+  console.log('CDP: ', cdp);
 
   if (!isEmptyBytes(cdp)) dispatch({ type: ADD_CDP, payload: cdp });
 

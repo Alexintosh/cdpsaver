@@ -114,23 +114,23 @@ const x = {
  *
  */
 export const getAddressCdp = address => new Promise(async (resolve, reject) => {
-  if (!address) return reject('user has no address');
+  const proxy = await proxyRegistryInterfaceContract();
 
-  const sig = Object(x.m)('give(bytes32,address)');
-  const bar = Object(x.q)(address);
-  try {
-    // const proxyAddress = await proxyRegistryInterfaceContract().methods.proxies(address).call();
-    // console.log('proxyAddress', proxyAddress);
-    // const checksumAddress = web3.utils.toChecksumAddress(proxyAddress);
+  const proxyAddr = await proxy.methods.proxies(address).call();
 
-    const cdpMeta = await getCdpForAddress(sig, bar);
-    console.log('cdpMeta', cdpMeta);
-    return;
-    const cdp = await getCdpInfo(cdpMeta.id, true);
+  const contract = await SaiTubAddressContract();
 
-    resolve(MOCK_CDP);
-  } catch (err) {
-    console.log('ERROR', err);
-    reject(err);
+  const event = await contract.getPastEvents('LogNewCup', {
+    filter: { lad: proxyAddr },
+    fromBlock: 0,
+    toBlock: 'latest',
+  });
+
+  if (event) {
+    const cdpId = web3.utils.hexToNumber(event[0].returnValues.cup);
+
+    resolve(cdpId);
+  } else {
+    reject(-1);
   }
 });
