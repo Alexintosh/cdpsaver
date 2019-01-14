@@ -3,6 +3,7 @@ pragma solidity ^0.5.0;
 import "./interfaces/TubInterface.sol";
 import "./interfaces/ERC20.sol";
 import "./interfaces/KyberNetworkProxyInterface.sol";
+import "./interfaces/ProxyRegistryInterface.sol";
 import "./SaiProxy.sol";
 
 contract IVox {
@@ -21,6 +22,7 @@ contract SaverProxy is SaiProxy {
     address constant KYBER_INTERFACE = 0x7e6b8b9510D71BF8EF0f893902EbB9C865eEF4Df;
     address constant TUB_ADDRESS = 0xa71937147b55Deb8a530C7229C442Fd3F31b7db2;
     address constant VOX_ADDRESS = 0xBb4339c0aB5B1d9f14Bd6e3426444A1e9d86A1d9;
+    address constant REGISTRY_ADDRESS = 0x64A436ae831C1672AE81F674CAb8B6775df3475C;
     
     ///@dev User has to own MKR and aprrove the DSProxy address
     function repay(uint _cdpId) public {
@@ -53,6 +55,13 @@ contract SaverProxy is SaiProxy {
         emit Boost(msg.sender, maxDai, ethAmount);
     }
 
+    function createCdp(uint _daiAmount) public payable returns (address proxy, bytes32 cup) {
+        proxy = ProxyRegistryInterface(REGISTRY_ADDRESS).build(msg.sender);
+        cup = open(TUB_ADDRESS);
+        lockAndDraw(TUB_ADDRESS, cup, _daiAmount);
+        TubInterface(TUB_ADDRESS).give(cup, proxy);
+    }
+
     function maxFreeCollateral(TubInterface _tub, address _vox, bytes32 _cdpId) public returns (uint) {
         return sub(_tub.ink(_cdpId), wdiv(wmul(wmul(_tub.tab(_cdpId), rmul(_tub.mat(), WAD)), IVox(_vox).par()), _tub.tag()));
     }
@@ -82,6 +91,10 @@ contract SaverProxy is SaiProxy {
         _tub.lock(cup, ink);
         
         return ethAmount;
+    }
+
+    function payStabilityFee() internal {
+        
     }
     
     // KYBER
