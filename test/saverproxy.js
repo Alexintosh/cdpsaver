@@ -42,6 +42,22 @@ contract("SaverProxy", accounts => {
     console.log(`Saver addr: ${saver.address}, Monitor addr: ${monitor.address}, Authority addr: ${authority.address}`);
   });
 
+  it('...should add collateral', async () => {
+    
+  });
+
+  it('...should draw dai', async () => {
+    
+  });
+
+  it('...should repay dai', async () => {
+    
+  });
+
+  it('...should draw collateral', async () => {
+    
+  });
+
 
   // it('...should call the repay feature', async () => {
 
@@ -89,32 +105,36 @@ contract("SaverProxy", accounts => {
   //   }
   // });
 
-  it('...should create a new CDP', async () => {
-    const daiAmount = web3.utils.toWei("1", 'ether'); //1 dai token
-    const ethAmount = "0.05";
 
-    try {
-        const tx = await saver.createCdp(daiAmount, 
-          {from: accounts[2], value: web3.utils.toWei(ethAmount, 'ether')});
 
-        console.log(accounts[2], tx);
+  // it('...should create a new CDP', async () => {
+  //   const daiAmount = web3.utils.toWei("1", 'ether'); //1 dai token
+  //   const ethAmount = "0.05";
+
+  //   try {
+  //       const tx = await saver.createCdp(daiAmount, 
+  //         {from: accounts[2], value: web3.utils.toWei(ethAmount, 'ether')});
+
+  //       console.log(accounts[2], tx);
     
-    } catch(err) {
-      console.log(err);
-    }
-  });
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // });
 
-  it('...should remove proxy ownership', async () => {
-    try {
-      const proxyAddr = await registry.proxies(accounts[2]);
-      const proxyForAccount2 = await DSProxy.at(proxyAddr);
 
-      await proxyForAccount2.setOwner("0x0000000000000000000000000000000000000000", {from: accounts[2]});
+
+  // it('...should remove proxy ownership', async () => {
+  //   try {
+  //     const proxyAddr = await registry.proxies(accounts[2]);
+  //     const proxyForAccount2 = await DSProxy.at(proxyAddr);
+
+  //     await proxyForAccount2.setOwner("0x0000000000000000000000000000000000000000", {from: accounts[2]});
     
-    } catch(err) {
-      console.log(err);
-    }
-  });
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // });
 
   
 });
