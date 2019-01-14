@@ -23,6 +23,7 @@ contract SaverProxy is SaiProxy {
     address constant TUB_ADDRESS = 0xa71937147b55Deb8a530C7229C442Fd3F31b7db2;
     address constant VOX_ADDRESS = 0xBb4339c0aB5B1d9f14Bd6e3426444A1e9d86A1d9;
     address constant REGISTRY_ADDRESS = 0x64A436ae831C1672AE81F674CAb8B6775df3475C;
+    address constant OTC_ADDRESS = 0xdB3b642eBc6Ff85A3AB335CFf9af2954F9215994;
     
     ///@dev User has to own MKR and aprrove the DSProxy address
     function repay(uint _cdpId) public {
@@ -37,6 +38,8 @@ contract SaverProxy is SaiProxy {
         uint daiAmount = swapEtherToToken(address(this).balance, DAI_ADDRESS);
         
         //TODO: check so we don't spend more dai than there is debt
+        payStabilityFee(tub, OTC_ADDRESS, cup, daiAmount);
+
         wipe(address(tub), cup, daiAmount, true);
 
         emit Repay(msg.sender, maxCollateral, daiAmount);
@@ -93,8 +96,23 @@ contract SaverProxy is SaiProxy {
         return ethAmount;
     }
 
-    function payStabilityFee() internal {
-        
+    //TODO: precise calc. of the _daiRepay amount
+    function payStabilityFee(TubInterface _tub, address _otc, bytes32 _cup, uint _daiRepay) internal returns(uint) {
+        bytes32 mkrPrice;
+        bool ok;
+
+        uint feeInDai = rmul(_daiRepay, rdiv(_tub.rap(_cup), _tub.tab(_cup)));
+
+        (mkrPrice, ok) = _tub.pep().peek();
+
+        uint govAmt = wdiv(feeInDai, uint(mkrPrice));
+
+        uint mkrAmountInDai = OtcInterface(_otc).getPayAmount(address(_tub.sai()), address(_tub.gov()), govAmt);
+
+        //approve 
+        OtcInterface(_otc).buyAllAmount(address(_tub.gov()), govAmt, address(_tub.sai()), mkrAmountInDai);
+
+        return mkrAmountInDai;
     }
     
     // KYBER

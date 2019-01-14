@@ -27,9 +27,9 @@ contract("SaverProxy", accounts => {
       proxy = await DSProxy.at(proxyAddr);
 
     } else {
-      saver = await SaverProxy.at("0x5F0679505134b1a146aD614bD2766A67df584D6b");
-      monitor = await Monitor.at("0x192417c115F5C32f121dCB3dD7AF01f7234251f3");
-      authority = await SaverAuthority.at("0xB48a89004192FfF05006F49D524f25EFcAa6E17f");
+      saver = await SaverProxy.at("0x4b73F00131E9142361370cEeBdae3Bdc9f2C643b");
+      monitor = await Monitor.at("0x01e4626465f62cfB14BE4F3aDFD51Df33924005D");
+      authority = await SaverAuthority.at("0x9F2153E04D7BE49bA02036284296F45e880dB260");
 
       const registry = await ProxyRegistryInterface.at("0x64a436ae831c1672ae81f674cab8b6775df3475c");
       const proxyAddr = await registry.proxies(accounts[0]);
@@ -85,6 +85,7 @@ contract("SaverProxy", accounts => {
 
       const newRatio = await monitor.getRatio.call(cdpIdBytes32);
       console.log('Updated ratio: ', newRatio.toString());
+      console.log(saveTx);
 
     } catch(err) {
       console.log(err);
