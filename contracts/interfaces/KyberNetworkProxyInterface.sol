@@ -17,4 +17,5 @@ contract KyberNetworkProxyInterface {
 
     function swapEtherToToken(ERC20 token, uint minConversionRate) external payable returns(uint);
     function swapTokenToEther(ERC20 token, uint tokenQty, uint minRate) external payable returns(uint);
+    function swapTokenToToken(ERC20 src, uint srcAmount, ERC20 dest, uint minConversionRate) public returns(uint);
 }

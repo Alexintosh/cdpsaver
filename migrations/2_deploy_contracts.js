@@ -1,6 +1,7 @@
 const SaverProxy = artifacts.require("./SaverProxy.sol");
 const Monitor = artifacts.require("./Monitor.sol");
 const SaverAuthority = artifacts.require("./SaverAuthority.sol");
+const KyberWrapper = artifacts.require("./KyberWrapper.sol");
 
 const dotenv = require('dotenv').config();
 
@@ -12,6 +13,8 @@ module.exports = function(deployer, network) {
         return deployer.deploy(Monitor, SaverProxy.address);
       }).then(() => {
         return deployer.deploy(SaverAuthority, Monitor.address);
+      }).then(() => {
+        return deployer.deploy(KyberWrapper);
       });
     }
 

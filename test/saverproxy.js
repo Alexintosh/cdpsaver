@@ -43,7 +43,7 @@ contract("SaverProxy", accounts => {
   });
 
   it('...should add collateral', async () => {
-    
+    const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaverProxy, 'lock'), []);
   });
 
   it('...should draw dai', async () => {

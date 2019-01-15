@@ -1,51 +1,50 @@
 pragma solidity ^0.5.0;
 
 import "./interfaces/TubInterface.sol";
-import "./interfaces/ERC20.sol";
-import "./interfaces/KyberNetworkProxyInterface.sol";
 import "./interfaces/ProxyRegistryInterface.sol";
-import "./SaiProxy.sol";
+import "./interfaces/ExchangeInterface.sol";
+import "./interfaces/SaiProxyInterface.sol";
+import "./DS/DSMath.sol";
 
 contract IVox {
     function par() public returns (uint); //ref per dai
 }
 
-contract SaverProxy is SaiProxy {
+contract SaverProxy is DSMath {
     
     event Repay(address indexed owner, uint collateralAmount, uint daiAmount);
     event Boost(address indexed owner, uint daiAmount, uint collateralAmount);
     
     //KOVAN
-    address constant ETHER_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
     address constant WETH_ADDRESS = 0xd0A1E359811322d97991E03f863a0C30C2cF029C;
     address constant DAI_ADDRESS = 0xC4375B7De8af5a38a93548eb8453a498222C4fF2;
-    address constant KYBER_INTERFACE = 0x7e6b8b9510D71BF8EF0f893902EbB9C865eEF4Df;
+    address constant MKR_ADDRESS = 0xAaF64BFCC32d0F15873a02163e7E500671a4ffcD;
     address constant TUB_ADDRESS = 0xa71937147b55Deb8a530C7229C442Fd3F31b7db2;
     address constant VOX_ADDRESS = 0xBb4339c0aB5B1d9f14Bd6e3426444A1e9d86A1d9;
     address constant REGISTRY_ADDRESS = 0x64A436ae831C1672AE81F674CAb8B6775df3475C;
-    address constant OTC_ADDRESS = 0xdB3b642eBc6Ff85A3AB335CFf9af2954F9215994;
+    address constant SAI_PROXY = 0xADB7c74bCe932fC6C27ddA3Ac2344707d2fBb0E6;
     
     ///@dev User has to own MKR and aprrove the DSProxy address
-    function repay(uint _cdpId) public {
+    function repay(uint _cdpId, address _wrapperAddress) public {
         TubInterface tub = TubInterface(TUB_ADDRESS);
         bytes32 cup = bytes32(_cdpId);
 
         //TODO: check so we don't get more eth than need to repay debt
         uint maxCollateral = maxFreeCollateral(tub, VOX_ADDRESS, cup);
 
-        free(address(tub), cup, maxCollateral, true);
+        free(address(tub), cup, maxCollateral);
 
-        uint daiAmount = swapEtherToToken(maxCollateral, DAI_ADDRESS);
+        uint daiAmount = ExchangeInterface(_wrapperAddress).swapEtherToToken(maxCollateral, DAI_ADDRESS);
         
-        uint fee = payStabilityFee(tub, OTC_ADDRESS, cup, daiAmount);
+        uint fee = payStabilityFee(tub, _wrapperAddress, cup, daiAmount);
         daiAmount -= fee;
 
-        wipe(address(tub), cup, daiAmount, true);
+        wipe(address(tub), cup, daiAmount);
 
         emit Repay(msg.sender, maxCollateral, daiAmount);
     }
 
-    function boost(uint _cdpId) public {
+    function boost(uint _cdpId, address _wrapperAddress) public {
         TubInterface tub = TubInterface(TUB_ADDRESS);
         bytes32 cup = bytes32(_cdpId);
         
@@ -53,16 +52,18 @@ contract SaverProxy is SaiProxy {
         
         tub.draw(cup, maxDai);
         
-        uint ethAmount = lockPeth(tub, cup, maxDai);
+        uint ethAmount = lockPeth(tub, cup, maxDai, _wrapperAddress);
         
         emit Boost(msg.sender, maxDai, ethAmount);
     }
 
     function createCdp(uint _daiAmount) public payable returns (address proxy, bytes32 cup) {
         proxy = ProxyRegistryInterface(REGISTRY_ADDRESS).build(msg.sender);
-        cup = open(TUB_ADDRESS);
-        lockAndDraw(TUB_ADDRESS, cup, _daiAmount);
-        TubInterface(TUB_ADDRESS).give(cup, proxy);
+        TubInterface tub = TubInterface(TUB_ADDRESS);
+
+        cup = TubInterface(tub).open();
+        SaiProxyInterface(SAI_PROXY).lockAndDraw(TUB_ADDRESS, cup, _daiAmount);
+        tub.give(cup, proxy);
     }
 
     function maxFreeCollateral(TubInterface _tub, address _vox, bytes32 _cdpId) public returns (uint) {
@@ -77,27 +78,26 @@ contract SaverProxy is SaiProxy {
         return (wdiv(rmul(rmul(_tub.ink(_cdpId), _tub.tag()), WAD), _tub.tab(_cdpId)))/10000000;
     }
     
-    function lockPeth(TubInterface _tub, bytes32 cup, uint maxDai) internal returns(uint) {
-        uint ethAmount = swapTokenToEther(DAI_ADDRESS, maxDai);
+    function lockPeth(TubInterface _tub, bytes32 cup, uint maxDai, address _wrapperAddress) internal returns(uint) {
+        uint ethAmount = ExchangeInterface(_wrapperAddress).swapTokenToEther(DAI_ADDRESS, maxDai);
         
         _tub.gem().deposit.value(ethAmount)();
 
         uint ink = rdiv(ethAmount, _tub.per());
-        if (_tub.gem().allowance(address(this), address(_tub)) != uint(-1)) {
-            _tub.gem().approve(address(_tub), uint(-1));
-        }
+        
+        allowOnce(_tub, _tub.gem());
+
         _tub.join(ink);
 
-        if (_tub.skr().allowance(address(this), address(_tub)) != uint(-1)) {
-            _tub.skr().approve(address(_tub), uint(-1));
-        }
+        allowOnce(_tub, _tub.skr());
+
         _tub.lock(cup, ink);
         
         return ethAmount;
     }
 
     //TODO: precise calc. of the _daiRepay amount
-    function payStabilityFee(TubInterface _tub, address _otc, bytes32 _cup, uint _daiRepay) internal returns(uint) {
+    function payStabilityFee(TubInterface _tub, address _wrapperAddress, bytes32 _cup, uint _daiRepay) internal returns(uint) {
         bytes32 mkrPrice;
         bool ok;
 
@@ -107,51 +107,39 @@ contract SaverProxy is SaiProxy {
 
         uint govAmt = wdiv(feeInDai, uint(mkrPrice));
 
-        uint mkrAmountInDai = OtcInterface(_otc).getPayAmount(address(_tub.sai()), address(_tub.gov()), govAmt);
-
-        //approve 
-        OtcInterface(_otc).buyAllAmount(address(_tub.gov()), govAmt, address(_tub.sai()), mkrAmountInDai);
+        uint mkrAmountInDai = ExchangeInterface(_wrapperAddress).swapTokenToToken(DAI_ADDRESS, MKR_ADDRESS, govAmt);
 
         return mkrAmountInDai;
     }
-    
-    // KYBER
 
-    //TODO: watch out for gas price limits
-    function swapEtherToToken (uint _ethAmount, address _tokenAddress) internal returns(uint) {
+    // SaiProxy methods, small changes
+    function free(address tub_, bytes32 cup, uint jam) internal {
+        if (jam > 0) {
+            TubInterface tub = TubInterface(tub_);
+            uint ink = rdiv(jam, tub.per());
+            tub.free(cup, ink);
+            
+            allowOnce(tub, tub.skr());
 
-        uint minRate;
-        ERC20 ETH_TOKEN_ADDRESS = ERC20(ETHER_ADDRESS);
-        ERC20 token = ERC20(_tokenAddress);
-
-        KyberNetworkProxyInterface _kyberNetworkProxy = KyberNetworkProxyInterface(KYBER_INTERFACE);
-
-        (, minRate) = _kyberNetworkProxy.getExpectedRate(ETH_TOKEN_ADDRESS, token, _ethAmount);
-
-        //will send back tokens to this contract's address
-        uint destAmount = _kyberNetworkProxy.swapEtherToToken.value(_ethAmount)(token, minRate);
-
-        return destAmount;
-    }
-    
-    function swapTokenToEther (address _tokenAddress, uint _amount) internal returns(uint) {
-
-        uint minRate;
-        ERC20 ETH_TOKEN_ADDRESS = ERC20(ETHER_ADDRESS);
-        ERC20 token = ERC20(_tokenAddress);
-        
-        KyberNetworkProxyInterface _kyberNetworkProxy = KyberNetworkProxyInterface(KYBER_INTERFACE);
-        
-        (, minRate) = _kyberNetworkProxy.getExpectedRate(token, ETH_TOKEN_ADDRESS, _amount);
-
-        // Mitigate ERC20 Approve front-running attack, by initially setting, allowance to 0
-        require(token.approve(address(_kyberNetworkProxy), 0));
-
-        // Approve tokens so network can take them during the swap
-        token.approve(address(_kyberNetworkProxy), _amount);
-        uint destAmount = _kyberNetworkProxy.swapTokenToEther(token, _amount, minRate);
-
-        return destAmount;
+            tub.exit(ink);
+            tub.gem().withdraw(jam);
+        }
     }
 
+    function wipe(address tub_, bytes32 cup, uint wad) internal {
+        if (wad > 0) {
+            TubInterface tub = TubInterface(tub_);
+
+            allowOnce(tub, tub.sai());
+           
+            allowOnce(tub, tub.gov());
+            tub.wipe(cup, wad);
+        }
+    }
+
+    function allowOnce(TubInterface _tub, TokenInterface _token) internal {
+        if (_token.allowance(address(this), address(_tub)) != uint(-1)) {
+            _token.approve(address(_tub), uint(-1));
+        }
+    }
 }
