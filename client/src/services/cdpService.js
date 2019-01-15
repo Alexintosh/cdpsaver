@@ -120,17 +120,23 @@ export const getAddressCdp = address => new Promise(async (resolve, reject) => {
 
   const contract = await SaiTubAddressContract();
 
-  const event = await contract.getPastEvents('LogNewCup', {
-    filter: { lad: proxyAddr },
+  // pokusas prvo po adresi proxija i LogNewCup
+
+  // ako je to praznao izvuces log note
+
+  const event = await contract.getPastEvents('LogNote', {
+    filter: {
+      sig: '0xbaa8529c00000000000000000000000000000000000000000000000000000000', // ovo je konstanta
+      bar: '0x0000000000000000000000003cc63875677187c72cd6889acefe0de19f24c2c3', // adresa proxija mora biti u ovo obliku
+    },
     fromBlock: 0,
     toBlock: 'latest',
-  });
-
-  if (event) {
-    const cdpId = web3.utils.hexToNumber(event[0].returnValues.cup);
+  }, (err, res) => {
+    // izvuces poslednji event koji se desio i foo ti je cdp number
+    console.log(res);
+    const cdpId = web3.utils.hexToNumber(res[0].returnValues.foo);
+    console.log('CDP: ', cdpId);
 
     resolve(cdpId);
-  } else {
-    reject(-1);
-  }
+  });
 });
