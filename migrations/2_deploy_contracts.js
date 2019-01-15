@@ -7,14 +7,13 @@ const dotenv = require('dotenv').config();
 
 module.exports = function(deployer, network) {
   if (network == 'kovan') {
-    if (process.env.DEPLOY_AGAIN === 'true') {
-      deployer.deploy(SaverProxy).then(() => {
-        return deployer.deploy(Monitor, SaverProxy.address);
-      }).then(() => {
-        return deployer.deploy(SaverAuthority, Monitor.address);
-      });
-    }
-
+    let deployAgain = (process.env.DEPLOY_AGAIN === 'true') ? true : false
+    
+    deployer.deploy(SaverProxy, {gas: 6720000, overwrite: deployAgain}).then(() => {
+      return deployer.deploy(Monitor, SaverProxy.address, {gas: 6720000, overwrite: deployAgain});
+    }).then(() => {
+      return deployer.deploy(SaverAuthority, Monitor.address, {gas: 6720000, overwrite: deployAgain});
+    });
 
   } else {
     deployer.deploy(SaverProxy);

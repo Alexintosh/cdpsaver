@@ -26,14 +26,14 @@
       "type": "event"
     }
   ],
-  "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3fe6080604052600080fdfea165627a7a72305820eec77829fdd6f0aafa3e5ebd6997a404d7e798d649661df39ba2fccfc96845d50029",
-  "deployedBytecode": "0x6080604052600080fdfea165627a7a72305820eec77829fdd6f0aafa3e5ebd6997a404d7e798d649661df39ba2fccfc96845d50029",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3fe6080604052600080fdfea165627a7a723058209d71d4d8fa2283242964e80f23ed31709a620b538958f5132c66149f0331f45c0029",
+  "deployedBytecode": "0x6080604052600080fdfea165627a7a723058209d71d4d8fa2283242964e80f23ed31709a620b538958f5132c66149f0331f45c0029",
   "sourceMap": "54:131:0:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;54:131:0;;;;;;;",
   "deployedSourceMap": "54:131:0:-;;;;;",
   "source": "pragma solidity ^0.5.0;\n\nimport \"./DSAuthority.sol\";\n\ncontract DSAuthEvents {\n    event LogSetAuthority (address indexed authority);\n    event LogSetOwner     (address indexed owner);\n}\n\ncontract DSAuth is DSAuthEvents {\n    DSAuthority  public  authority;\n    address      public  owner;\n\n    constructor() public {\n        owner = msg.sender;\n        emit LogSetOwner(msg.sender);\n    }\n\n    function setOwner(address owner_)\n        public\n        auth\n    {\n        owner = owner_;\n        emit LogSetOwner(owner);\n    }\n\n    function setAuthority(DSAuthority authority_)\n        public\n        auth\n    {\n        authority = authority_;\n        emit LogSetAuthority(address(authority));\n    }\n\n    modifier auth {\n        require(isAuthorized(msg.sender, msg.sig));\n        _;\n    }\n\n    function isAuthorized(address src, bytes4 sig) internal view returns (bool) {\n        if (src == address(this)) {\n            return true;\n        } else if (src == owner) {\n            return true;\n        } else if (authority == DSAuthority(0)) {\n            return false;\n        } else {\n            return authority.canCall(src, address(this), sig);\n        }\n    }\n}",
-  "sourcePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/DS/DSAuth.sol",
+  "sourcePath": "/Users/nikolaklipa/Decenter/cdpsaver/contracts/DS/DSAuth.sol",
   "ast": {
-    "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/DS/DSAuth.sol",
+    "absolutePath": "/Users/nikolaklipa/Decenter/cdpsaver/contracts/DS/DSAuth.sol",
     "exportedSymbols": {
       "DSAuth": [
         124
@@ -57,7 +57,7 @@
         "src": "0:23:0"
       },
       {
-        "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/DS/DSAuthority.sol",
+        "absolutePath": "/Users/nikolaklipa/Decenter/cdpsaver/contracts/DS/DSAuthority.sol",
         "file": "./DSAuthority.sol",
         "id": 2,
         "nodeType": "ImportDirective",
@@ -297,7 +297,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2189,
+                        "referencedDeclaration": 3061,
                         "src": "333:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -340,7 +340,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 2189,
+                          "referencedDeclaration": 3061,
                           "src": "370:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -847,7 +847,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 2189,
+                              "referencedDeclaration": 3061,
                               "src": "748:3:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -876,7 +876,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 2189,
+                              "referencedDeclaration": 3061,
                               "src": "760:3:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -946,10 +946,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2192,
-                        2193
+                        3064,
+                        3065
                       ],
-                      "referencedDeclaration": 2192,
+                      "referencedDeclaration": 3064,
                       "src": "727:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -1036,7 +1036,7 @@
                           "name": "this",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 2206,
+                          "referencedDeclaration": 3078,
                           "src": "898:4:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_contract$_DSAuth_$124",
@@ -1248,7 +1248,7 @@
                                       "name": "this",
                                       "nodeType": "Identifier",
                                       "overloadedDeclarations": [],
-                                      "referencedDeclaration": 2206,
+                                      "referencedDeclaration": 3078,
                                       "src": "1135:4:0",
                                       "typeDescriptions": {
                                         "typeIdentifier": "t_contract$_DSAuth_$124",
@@ -1588,7 +1588,7 @@
     "src": "0:1165:0"
   },
   "legacyAST": {
-    "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/DS/DSAuth.sol",
+    "absolutePath": "/Users/nikolaklipa/Decenter/cdpsaver/contracts/DS/DSAuth.sol",
     "exportedSymbols": {
       "DSAuth": [
         124
@@ -1612,7 +1612,7 @@
         "src": "0:23:0"
       },
       {
-        "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/DS/DSAuthority.sol",
+        "absolutePath": "/Users/nikolaklipa/Decenter/cdpsaver/contracts/DS/DSAuthority.sol",
         "file": "./DSAuthority.sol",
         "id": 2,
         "nodeType": "ImportDirective",
@@ -1852,7 +1852,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2189,
+                        "referencedDeclaration": 3061,
                         "src": "333:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -1895,7 +1895,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 2189,
+                          "referencedDeclaration": 3061,
                           "src": "370:3:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -2402,7 +2402,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 2189,
+                              "referencedDeclaration": 3061,
                               "src": "748:3:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -2431,7 +2431,7 @@
                               "name": "msg",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 2189,
+                              "referencedDeclaration": 3061,
                               "src": "760:3:0",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_magic_message",
@@ -2501,10 +2501,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        2192,
-                        2193
+                        3064,
+                        3065
                       ],
-                      "referencedDeclaration": 2192,
+                      "referencedDeclaration": 3064,
                       "src": "727:7:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -2591,7 +2591,7 @@
                           "name": "this",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 2206,
+                          "referencedDeclaration": 3078,
                           "src": "898:4:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_contract$_DSAuth_$124",
@@ -2803,7 +2803,7 @@
                                       "name": "this",
                                       "nodeType": "Identifier",
                                       "overloadedDeclarations": [],
-                                      "referencedDeclaration": 2206,
+                                      "referencedDeclaration": 3078,
                                       "src": "1135:4:0",
                                       "typeDescriptions": {
                                         "typeIdentifier": "t_contract$_DSAuth_$124",
@@ -3147,8 +3147,8 @@
     "version": "0.5.0+commit.1d4f565a.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.0.0",
-  "updatedAt": "2019-01-08T09:27:20.683Z",
+  "schemaVersion": "3.0.1",
+  "updatedAt": "2019-01-14T11:11:50.218Z",
   "devdoc": {
     "methods": {}
   },

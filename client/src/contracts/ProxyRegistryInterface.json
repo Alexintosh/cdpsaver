@@ -45,19 +45,19 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.5.0;\n\nimport \"../DS/DSProxy.sol\";\n\ncontract ProxyRegistryInterface {\n    function proxies(address _owner) public view returns(DSProxy);\n    function build(address) public returns (address);\n}",
-  "sourcePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/interfaces/ProxyRegistryInterface.sol",
+  "sourcePath": "/Users/nikolaklipa/Decenter/cdpsaver/contracts/interfaces/ProxyRegistryInterface.sol",
   "ast": {
-    "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/interfaces/ProxyRegistryInterface.sol",
+    "absolutePath": "/Users/nikolaklipa/Decenter/cdpsaver/contracts/interfaces/ProxyRegistryInterface.sol",
     "exportedSymbols": {
       "ProxyRegistryInterface": [
-        2626
+        2802
       ]
     },
-    "id": 2627,
+    "id": 2803,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2610,
+        "id": 2786,
         "literals": [
           "solidity",
           "^",
@@ -68,11 +68,11 @@
         "src": "0:23:14"
       },
       {
-        "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/DS/DSProxy.sol",
+        "absolutePath": "/Users/nikolaklipa/Decenter/cdpsaver/contracts/DS/DSProxy.sol",
         "file": "../DS/DSProxy.sol",
-        "id": 2611,
+        "id": 2787,
         "nodeType": "ImportDirective",
-        "scope": 2627,
+        "scope": 2803,
         "sourceUnit": 643,
         "src": "25:27:14",
         "symbolAliases": [],
@@ -84,9 +84,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 2626,
+        "id": 2802,
         "linearizedBaseContracts": [
-          2626
+          2802
         ],
         "name": "ProxyRegistryInterface",
         "nodeType": "ContractDefinition",
@@ -94,22 +94,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2618,
+            "id": 2794,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "proxies",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2614,
+              "id": 2790,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2613,
+                  "id": 2789,
                   "name": "_owner",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2618,
+                  "scope": 2794,
                   "src": "109:14:14",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -118,7 +118,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2612,
+                    "id": 2788,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "109:7:14",
@@ -135,15 +135,15 @@
               "src": "108:16:14"
             },
             "returnParameters": {
-              "id": 2617,
+              "id": 2793,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2616,
+                  "id": 2792,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2618,
+                  "scope": 2794,
                   "src": "145:7:14",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -153,7 +153,7 @@
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 2615,
+                    "id": 2791,
                     "name": "DSProxy",
                     "nodeType": "UserDefinedTypeName",
                     "referencedDeclaration": 598,
@@ -169,7 +169,7 @@
               ],
               "src": "144:9:14"
             },
-            "scope": 2626,
+            "scope": 2802,
             "src": "92:62:14",
             "stateMutability": "view",
             "superFunction": null,
@@ -178,22 +178,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2625,
+            "id": 2801,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "build",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2621,
+              "id": 2797,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2620,
+                  "id": 2796,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2625,
+                  "scope": 2801,
                   "src": "174:7:14",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -202,7 +202,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2619,
+                    "id": 2795,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "174:7:14",
@@ -219,15 +219,15 @@
               "src": "173:9:14"
             },
             "returnParameters": {
-              "id": 2624,
+              "id": 2800,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2623,
+                  "id": 2799,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2625,
+                  "scope": 2801,
                   "src": "199:7:14",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -236,7 +236,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2622,
+                    "id": 2798,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "199:7:14",
@@ -252,31 +252,31 @@
               ],
               "src": "198:9:14"
             },
-            "scope": 2626,
+            "scope": 2802,
             "src": "159:49:14",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 2627,
+        "scope": 2803,
         "src": "54:156:14"
       }
     ],
     "src": "0:210:14"
   },
   "legacyAST": {
-    "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/interfaces/ProxyRegistryInterface.sol",
+    "absolutePath": "/Users/nikolaklipa/Decenter/cdpsaver/contracts/interfaces/ProxyRegistryInterface.sol",
     "exportedSymbols": {
       "ProxyRegistryInterface": [
-        2626
+        2802
       ]
     },
-    "id": 2627,
+    "id": 2803,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2610,
+        "id": 2786,
         "literals": [
           "solidity",
           "^",
@@ -287,11 +287,11 @@
         "src": "0:23:14"
       },
       {
-        "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/DS/DSProxy.sol",
+        "absolutePath": "/Users/nikolaklipa/Decenter/cdpsaver/contracts/DS/DSProxy.sol",
         "file": "../DS/DSProxy.sol",
-        "id": 2611,
+        "id": 2787,
         "nodeType": "ImportDirective",
-        "scope": 2627,
+        "scope": 2803,
         "sourceUnit": 643,
         "src": "25:27:14",
         "symbolAliases": [],
@@ -303,9 +303,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 2626,
+        "id": 2802,
         "linearizedBaseContracts": [
-          2626
+          2802
         ],
         "name": "ProxyRegistryInterface",
         "nodeType": "ContractDefinition",
@@ -313,22 +313,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2618,
+            "id": 2794,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "proxies",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2614,
+              "id": 2790,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2613,
+                  "id": 2789,
                   "name": "_owner",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2618,
+                  "scope": 2794,
                   "src": "109:14:14",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -337,7 +337,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2612,
+                    "id": 2788,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "109:7:14",
@@ -354,15 +354,15 @@
               "src": "108:16:14"
             },
             "returnParameters": {
-              "id": 2617,
+              "id": 2793,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2616,
+                  "id": 2792,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2618,
+                  "scope": 2794,
                   "src": "145:7:14",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -372,7 +372,7 @@
                   },
                   "typeName": {
                     "contractScope": null,
-                    "id": 2615,
+                    "id": 2791,
                     "name": "DSProxy",
                     "nodeType": "UserDefinedTypeName",
                     "referencedDeclaration": 598,
@@ -388,7 +388,7 @@
               ],
               "src": "144:9:14"
             },
-            "scope": 2626,
+            "scope": 2802,
             "src": "92:62:14",
             "stateMutability": "view",
             "superFunction": null,
@@ -397,22 +397,22 @@
           {
             "body": null,
             "documentation": null,
-            "id": 2625,
+            "id": 2801,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "build",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2621,
+              "id": 2797,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2620,
+                  "id": 2796,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2625,
+                  "scope": 2801,
                   "src": "174:7:14",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -421,7 +421,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2619,
+                    "id": 2795,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "174:7:14",
@@ -438,15 +438,15 @@
               "src": "173:9:14"
             },
             "returnParameters": {
-              "id": 2624,
+              "id": 2800,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2623,
+                  "id": 2799,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2625,
+                  "scope": 2801,
                   "src": "199:7:14",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -455,7 +455,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2622,
+                    "id": 2798,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "199:7:14",
@@ -471,14 +471,14 @@
               ],
               "src": "198:9:14"
             },
-            "scope": 2626,
+            "scope": 2802,
             "src": "159:49:14",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 2627,
+        "scope": 2803,
         "src": "54:156:14"
       }
     ],
@@ -489,8 +489,8 @@
     "version": "0.5.0+commit.1d4f565a.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.0.0",
-  "updatedAt": "2019-01-14T08:46:45.698Z",
+  "schemaVersion": "3.0.1",
+  "updatedAt": "2019-01-14T11:11:50.207Z",
   "devdoc": {
     "methods": {}
   },

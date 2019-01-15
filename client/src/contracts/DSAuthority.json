@@ -34,9 +34,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.5.0;\n\ncontract DSAuthority {\n    function canCall(\n        address src, address dst, bytes4 sig\n    ) public view returns (bool);\n}",
-  "sourcePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/DS/DSAuthority.sol",
+  "sourcePath": "/Users/nikolaklipa/Decenter/cdpsaver/contracts/DS/DSAuthority.sol",
   "ast": {
-    "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/DS/DSAuthority.sol",
+    "absolutePath": "/Users/nikolaklipa/Decenter/cdpsaver/contracts/DS/DSAuthority.sol",
     "exportedSymbols": {
       "DSAuthority": [
         138
@@ -212,7 +212,7 @@
     "src": "0:150:1"
   },
   "legacyAST": {
-    "absolutePath": "/Users/nenadpalinkasevic/Desktop/blockchain/cdpsaver/contracts/DS/DSAuthority.sol",
+    "absolutePath": "/Users/nikolaklipa/Decenter/cdpsaver/contracts/DS/DSAuthority.sol",
     "exportedSymbols": {
       "DSAuthority": [
         138
@@ -392,8 +392,8 @@
     "version": "0.5.0+commit.1d4f565a.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.0.0",
-  "updatedAt": "2019-01-08T09:27:20.681Z",
+  "schemaVersion": "3.0.1",
+  "updatedAt": "2019-01-14T11:11:50.207Z",
   "devdoc": {
     "methods": {}
   },
