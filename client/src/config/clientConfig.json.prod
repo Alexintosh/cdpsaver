@@ -1,4 +1,5 @@
 {
     "network": 1,
-    "provider": "https://mainnet.infura.io"
+    "provider": "https://mainnet.infura.io",
+    "proxyServer": "https://sai-mainnet.makerfoundation.com/v1"
 }

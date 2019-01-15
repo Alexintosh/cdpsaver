@@ -15,6 +15,8 @@ contract VoxInterface {
 }
 
 contract TubInterface {
+    event LogNewCup(address indexed lad, bytes32 cup);
+
     function open() public returns (bytes32);
     function join(uint) public;
     function exit(uint) public;

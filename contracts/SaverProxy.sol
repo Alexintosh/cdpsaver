@@ -30,15 +30,15 @@ contract SaverProxy is SaiProxy {
         TubInterface tub = TubInterface(TUB_ADDRESS);
         bytes32 cup = bytes32(_cdpId);
 
+        //TODO: check so we don't get more eth than need to repay debt
         uint maxCollateral = maxFreeCollateral(tub, VOX_ADDRESS, cup);
 
         free(address(tub), cup, maxCollateral, true);
 
-        //TODO: don't use contract balance 
-        uint daiAmount = swapEtherToToken(address(this).balance, DAI_ADDRESS);
+        uint daiAmount = swapEtherToToken(maxCollateral, DAI_ADDRESS);
         
-        //TODO: check so we don't spend more dai than there is debt
-        payStabilityFee(tub, OTC_ADDRESS, cup, daiAmount);
+        uint fee = payStabilityFee(tub, OTC_ADDRESS, cup, daiAmount);
+        daiAmount -= fee;
 
         wipe(address(tub), cup, daiAmount, true);
 

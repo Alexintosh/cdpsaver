@@ -1,9 +1,11 @@
 import Maker from '@makerdao/dai';
 import web3 from 'web3';
+import config from '../config/config.json';
 import clientConfig from '../config/clientConfig.json';
-import { proxyRegistryInterfaceContract } from './contractRegistryService';
+import { proxyRegistryInterfaceContract, SaiTubAddressContract } from './contractRegistryService';
+import { saiTubContractTools } from '../utils/utils';
 
-const maker = Maker.create('http', { url: clientConfig.providerUrl });
+const maker = Maker.create('http', { url: clientConfig.provider });
 
 /**
  * Fetches multiple Cdp data for a cdp id from the Maker library  and formats them
@@ -71,6 +73,55 @@ export const createCdp = async (ethAmount, daiAmount) => {
 };
 
 /**
+ * Calls the SaiTub contract and fetches cdp for proxy address from alternative event
+ *
+ * @param contract {Object}
+ * @param proxyAddress {String}
+ *
+ * @return {Promise<Number>}
+ */
+export const getCdpIdFromLogNote = (contract, proxyAddress) => new Promise(async (resolve, reject) => {
+  const sig = Object(saiTubContractTools.formatMethodName)('give(bytes32,address)');
+  const bar = Object(saiTubContractTools.formatProxyAddress)(proxyAddress);
+
+  try {
+    contract.getPastEvents('LogNote', {
+      filter: { sig, bar },
+      fromBlock: config.SaiTub.networks[clientConfig.network].createdBlock,
+    }, (err, res) => {
+      if (err) return reject(err);
+
+      resolve(web3.utils.hexToNumber(res[0].returnValues.foo));
+    });
+  } catch (e) {
+    reject(e);
+  }
+});
+
+/**
+ * Calls the SaiTub contract and fetches cdp for proxy address from the LogNewCup event
+ *
+ * @param contract {Object}
+ * @param address {String}
+ *
+ * @return {Promise<Number>}
+ */
+export const getCdpIdFromLogNewCup = (contract, address) => new Promise(async (resolve, reject) => {
+  try {
+    contract.getPastEvents('LogNewCup', {
+      filter: { lad: address },
+      fromBlock: config.SaiTub.networks[clientConfig.network].createdBlock,
+    }, (err, res) => {
+      if (err) return reject(err);
+
+      resolve(web3.utils.hexToNumber(res[0].returnValues.cup));
+    });
+  } catch (e) {
+    reject(e);
+  }
+});
+
+/**
  * Checks if the connected user has a cdp for their address
  *
  */
@@ -78,9 +129,19 @@ export const getAddressCdp = address => new Promise(async (resolve, reject) => {
   if (!address) return reject('user has no address');
 
   try {
-    const result = await proxyRegistryInterfaceContract().methods.proxies(address).call();
+    const proxyAddr = await proxyRegistryInterfaceContract().methods.proxies(address).call();
 
-    resolve(result);
+    if (!proxyAddr) return resolve(null);
+
+    const contract = await SaiTubAddressContract();
+    let cdpId = await getCdpIdFromLogNewCup(contract, proxyAddr);
+
+    // If the cdpId is not found in the LogNewCup event,
+    // try searching in the LogNoteEvent
+    if (!cdpId) cdpId = await getCdpIdFromLogNote(contract, proxyAddr);
+
+    const cdp = await getCdpInfo(cdpId, true);
+    resolve(cdp);
   } catch (err) {
     reject(err);
   }
