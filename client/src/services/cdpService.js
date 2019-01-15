@@ -134,7 +134,7 @@ export const getAddressCdp = address => new Promise(async (resolve, reject) => {
     if (!proxyAddr) return resolve(null);
 
     const contract = await SaiTubAddressContract();
-    let cdpId = await getCdpIdFromLogNewCup(contract, '0x7d0dc31161c2b727e60bd8c211fd6772b9936691');
+    let cdpId = await getCdpIdFromLogNewCup(contract, proxyAddr);
 
     // If the cdpId is not found in the LogNewCup event,
     // try searching in the LogNoteEvent
