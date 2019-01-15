@@ -6,6 +6,8 @@ const Monitor = artifacts.require("./Monitor.sol");
 const ProxyRegistryInterface = artifacts.require("./ProxyRegistryInterface.sol");
 const DSProxy = artifacts.require("./DSProxy.sol");
 const SaverAuthority = artifacts.require("./SaverAuthority.sol");
+const KyberWrapper = artifacts.require("./KyberWrapper.sol");
+
 
 contract("SaverProxy", accounts => {
 
@@ -18,6 +20,7 @@ contract("SaverProxy", accounts => {
     saver = await SaverProxy.deployed();
     monitor = await Monitor.deployed();
     authority = await SaverAuthority.deployed();
+    wrapper = await KyberWrapper.deployed();
     const registry = await ProxyRegistryInterface.at("0x64a436ae831c1672ae81f674cab8b6775df3475c");
 
     const proxyAddr = await registry.proxies(accounts[0]);
@@ -34,41 +37,41 @@ contract("SaverProxy", accounts => {
     console.log(`Saver addr: ${saver.address}, Monitor addr: ${monitor.address}, Authority addr: ${authority.address}`);
   });
 
-  it('...should add collateral', async () => {
-    const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaverProxy, 'lock'), []);
-  });
-
-  it('...should draw dai', async () => {
-    
-  });
-
-  it('...should repay dai', async () => {
-    
-  });
-
-  it('...should draw collateral', async () => {
-    
-  });
-
-
-  // it('...should call the repay feature', async () => {
-
-  //   const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaverProxy, 'repay'), [cdpId]);
-
-  //   const ratio = await monitor.getRatio.call(cdpIdBytes32);
-
-  //   try {
-  //     console.log('Old Ratio: ', ratio.toString());
-
-  //     const tx = await proxy.methods['execute(address,bytes)'](saver.address, data);
-
-  //     const newRatio = await monitor.getRatio.call(cdpIdBytes32);
-  //     console.log('Updated ratio: ', newRatio.toString());
-
-  //   } catch(err) {
-  //     console.log(err);
-  //   }
+  // it('...should add collateral', async () => {
+  //   const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaverProxy, 'lock'), []);
   // });
+
+  // it('...should draw dai', async () => {
+    
+  // });
+
+  // it('...should repay dai', async () => {
+    
+  // });
+
+  // it('...should draw collateral', async () => {
+    
+  // });
+
+
+  it('...should call the repay feature', async () => {
+
+    const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaverProxy, 'repay'), [cdpId, wrapper.address]);
+
+    const ratio = await monitor.getRatio.call(cdpIdBytes32);
+
+    try {
+      console.log('Old Ratio: ', ratio.toString());
+
+      const tx = await proxy.methods['execute(address,bytes)'](saver.address, data);
+
+      const newRatio = await monitor.getRatio.call(cdpIdBytes32);
+      console.log('Updated ratio: ', newRatio.toString());
+
+    } catch(err) {
+      console.log(err);
+    }
+  });
 
   // it('...should call repay from the monitor contract', async () => {
     

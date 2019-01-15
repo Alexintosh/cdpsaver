@@ -34,7 +34,8 @@ contract SaverProxy is DSMath {
 
         free(address(tub), cup, maxCollateral);
 
-        uint daiAmount = ExchangeInterface(_wrapperAddress).swapEtherToToken(maxCollateral, DAI_ADDRESS);
+        uint daiAmount = ExchangeInterface(_wrapperAddress).swapEtherToToken.
+                            value(maxCollateral)(maxCollateral, DAI_ADDRESS);
         
         uint fee = payStabilityFee(tub, _wrapperAddress, cup, daiAmount);
         daiAmount -= fee;
@@ -106,6 +107,8 @@ contract SaverProxy is DSMath {
         (mkrPrice, ok) = _tub.pep().peek();
 
         uint govAmt = wdiv(feeInDai, uint(mkrPrice));
+
+        ERC20(DAI_ADDRESS).transfer(_wrapperAddress, govAmt);
 
         uint mkrAmountInDai = ExchangeInterface(_wrapperAddress).swapTokenToToken(DAI_ADDRESS, MKR_ADDRESS, govAmt);
 

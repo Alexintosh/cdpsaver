@@ -11,7 +11,7 @@ contract KyberWrapper is ExchangeInterface {
     address constant ETHER_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
     //TODO: watch out for gas price limits
-    function swapEtherToToken (uint _ethAmount, address _tokenAddress) public returns(uint) {
+    function swapEtherToToken (uint _ethAmount, address _tokenAddress) payable external returns(uint) {
 
         uint minRate;
         ERC20 ETH_TOKEN_ADDRESS = ERC20(ETHER_ADDRESS);
@@ -24,10 +24,12 @@ contract KyberWrapper is ExchangeInterface {
         //will send back tokens to this contract's address
         uint destAmount = _kyberNetworkProxy.swapEtherToToken.value(_ethAmount)(token, minRate);
 
+        token.transfer(msg.sender, destAmount);
+
         return destAmount;
     }
     
-    function swapTokenToEther (address _tokenAddress, uint _amount) public returns(uint) {
+    function swapTokenToEther (address _tokenAddress, uint _amount) external returns(uint) {
 
         uint minRate;
         ERC20 ETH_TOKEN_ADDRESS = ERC20(ETHER_ADDRESS);
@@ -44,10 +46,12 @@ contract KyberWrapper is ExchangeInterface {
         token.approve(address(_kyberNetworkProxy), _amount);
         uint destAmount = _kyberNetworkProxy.swapTokenToEther(token, _amount, minRate);
 
+        msg.sender.transfer(destAmount);
+
         return destAmount;
     }
 
-    function swapTokenToToken (address _srcAddr, address _destAddr, uint srcQty) public returns (uint) {
+    function swapTokenToToken (address _srcAddr, address _destAddr, uint srcQty) external returns(uint) {
         uint minRate;
         ERC20 srcToken = ERC20(_srcAddr);
         ERC20 destToken = ERC20(_destAddr);
@@ -61,6 +65,8 @@ contract KyberWrapper is ExchangeInterface {
         // Approve tokens so network can take them during the swap
         srcToken.approve(address(_kyberNetworkProxy), srcQty);
         uint destAmount = _kyberNetworkProxy.swapTokenToToken(srcToken, srcQty, destToken, minRate);
+
+        destToken.transfer(msg.sender, destAmount);
 
         return destAmount;
 
