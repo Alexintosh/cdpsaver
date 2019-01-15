@@ -15,19 +15,11 @@ contract("SaverProxy", accounts => {
   const cdpIdBytes32 = process.env.CDPID_BYTES;
 
   before(async () => {
+    saver = await SaverProxy.deployed();
+    monitor = await Monitor.deployed();
+    authority = await SaverAuthority.deployed();
+    const registry = await ProxyRegistryInterface.at("0x64a436ae831c1672ae81f674cab8b6775df3475c");
 
-
-    if (process.env.DEPLOY_AGAIN === 'true') {
-      saver = await SaverProxy.deployed();
-      monitor = await Monitor.deployed();
-      authority = await SaverAuthority.deployed();
-    } else {
-      saver = await SaverProxy.at("0x5E1E63dc7A6154e9ee73A0beb487bb5ECbe4e50C");
-      monitor = await Monitor.at("0x42BB43a9E628e545636c3Efcc21e593739C3276d");
-      authority = await SaverAuthority.at("0xeF1db1cAE584532C13fbBc8D3F3D48cC12134701");
-    }
-
-    registry = await ProxyRegistryInterface.at("0x64a436ae831c1672ae81f674cab8b6775df3475c");
     const proxyAddr = await registry.proxies(accounts[0]);
     proxy = await DSProxy.at(proxyAddr);
   });
