@@ -1,10 +1,11 @@
 import Maker from '@makerdao/dai';
 import web3 from 'web3';
+import config from '../config/config.json';
 import clientConfig from '../config/clientConfig.json';
 import { proxyRegistryInterfaceContract, SaiTubAddressContract } from './contractRegistryService';
-import { MOCK_CDP } from '../constants/general';
+import { saiTubContractTools } from '../utils/utils';
 
-const maker = Maker.create('http', { url: clientConfig.providerUrl });
+const maker = Maker.create('http', { url: clientConfig.provider });
 
 /**
  * Fetches multiple Cdp data for a cdp id from the Maker library  and formats them
@@ -72,71 +73,76 @@ export const createCdp = async (ethAmount, daiAmount) => {
 };
 
 /**
- * Calls the SaiTub contract and fetches cdp for proxy address
+ * Calls the SaiTub contract and fetches cdp for proxy address from alternative event
  *
- * @param sig
- * @param bar
+ * @param contract {Object}
+ * @param proxyAddress {String}
  *
- * @return {Promise<any>}
+ * @return {Promise<Number>}
  */
-export const getCdpForAddress = (sig, bar) => new Promise(async (resolve, reject) => {
+export const getCdpIdFromLogNote = (contract, proxyAddress) => new Promise(async (resolve, reject) => {
+  const sig = Object(saiTubContractTools.formatMethodName)('give(bytes32,address)');
+  const bar = Object(saiTubContractTools.formatProxyAddress)(proxyAddress);
+
   try {
-    const contract = await SaiTubAddressContract();
+    contract.getPastEvents('LogNote', {
+      filter: { sig, bar },
+      fromBlock: config.SaiTub.networks[clientConfig.network].createdBlock,
+    }, (err, res) => {
+      if (err) return reject(err);
 
-    const event = await contract.getPastEvents('LogNote', {
-      filter: { bar, sig },
-      fromBlock: 5216602,
+      resolve(web3.utils.hexToNumber(res[0].returnValues.foo));
     });
-
-    console.log('event', event);
   } catch (e) {
-    console.log('ERR', e);
     reject(e);
   }
 });
 
-const x = {
-  u: (e, t, n) => new Array(t - e.length + 1).join(n || "0") + e, // eslint-disable-line
-  m: e => web3.utils.sha3(e).substring(0, 10),
-  q: (e) => {
-    const t = !(arguments.length > 1 && void 0 !== arguments[1]) || arguments[1]; // eslint-disable-line
-    let n = web3.utils.toHex(e);
+/**
+ * Calls the SaiTub contract and fetches cdp for proxy address from the LogNewCup event
+ *
+ * @param contract {Object}
+ * @param address {String}
+ *
+ * @return {Promise<Number>}
+ */
+export const getCdpIdFromLogNewCup = (contract, address) => new Promise(async (resolve, reject) => {
+  try {
+    contract.getPastEvents('LogNewCup', {
+      filter: { lad: address },
+      fromBlock: config.SaiTub.networks[clientConfig.network].createdBlock,
+    }, (err, res) => {
+      if (err) return reject(err);
 
-    return n = n.replace('0x', ''), // eslint-disable-line
-    n = x.u(n, 64), // eslint-disable-line
-    t && (n = '0x' + n), // eslint-disable-line
-    n; // eslint-disable-line
-  },
-};
+      resolve(web3.utils.hexToNumber(res[0].returnValues.cup));
+    });
+  } catch (e) {
+    reject(e);
+  }
+});
 
 /**
  * Checks if the connected user has a cdp for their address
  *
  */
 export const getAddressCdp = address => new Promise(async (resolve, reject) => {
-  const proxy = await proxyRegistryInterfaceContract();
+  if (!address) return reject('user has no address');
 
-  const proxyAddr = await proxy.methods.proxies(address).call();
+  try {
+    const proxyAddr = await proxyRegistryInterfaceContract().methods.proxies(address).call();
 
-  const contract = await SaiTubAddressContract();
+    if (!proxyAddr) return resolve(null);
 
-  // pokusas prvo po adresi proxija i LogNewCup
+    const contract = await SaiTubAddressContract();
+    let cdpId = await getCdpIdFromLogNewCup(contract, '0x7d0dc31161c2b727e60bd8c211fd6772b9936691');
 
-  // ako je to praznao izvuces log note
+    // If the cdpId is not found in the LogNewCup event,
+    // try searching in the LogNoteEvent
+    if (!cdpId) cdpId = await getCdpIdFromLogNote(contract, proxyAddr);
 
-  const event = await contract.getPastEvents('LogNote', {
-    filter: {
-      sig: '0xbaa8529c00000000000000000000000000000000000000000000000000000000', // ovo je konstanta
-      bar: '0x0000000000000000000000003cc63875677187c72cd6889acefe0de19f24c2c3', // adresa proxija mora biti u ovo obliku
-    },
-    fromBlock: 0,
-    toBlock: 'latest',
-  }, (err, res) => {
-    // izvuces poslednji event koji se desio i foo ti je cdp number
-    console.log(res);
-    const cdpId = web3.utils.hexToNumber(res[0].returnValues.foo);
-    console.log('CDP: ', cdpId);
-
-    resolve(cdpId);
-  });
+    const cdp = await getCdpInfo(cdpId, true);
+    resolve(cdp);
+  } catch (err) {
+    reject(err);
+  }
 });
