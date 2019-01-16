@@ -37,13 +37,18 @@ class OnboardingRoutes extends Component {
 
   render() {
     const {
-      match, hasCdp, account, connectingProvider,
+      match, hasCdp, account, connectingProvider, gettingCdp,
+      onboardingFinished, loggingIn,
     } = this.props;
+
+    if (onboardingFinished) return (<Redirect to="/dashboard/saver" />);
 
     // TODO CHECK IF THIS NEEDS TO BE GENERALIZED
     if (connectingProvider) return (<div>Connecting provider, please wait.</div>);
+    if (gettingCdp) return (<div>Getting your cdp, please wait...</div>);
+    if (loggingIn && (!connectingProvider && !gettingCdp)) return (<div>Logging in...</div>);
 
-    if (!account && !connectingProvider) {
+    if (!loggingIn && !account && !connectingProvider) {
       return (<Redirect to={{ pathname: '/connect', state: { to: '/dashboard/saver' } }} />);
     }
 
@@ -72,16 +77,22 @@ OnboardingRoutes.propTypes = {
   match: PropTypes.object.isRequired,
   resetOnboardingWizard: PropTypes.func.isRequired,
   connectingProvider: PropTypes.bool.isRequired,
+  gettingCdp: PropTypes.bool.isRequired,
+  onboardingFinished: PropTypes.bool.isRequired,
+  loggingIn: PropTypes.bool.isRequired,
 };
 
 const mapDispatchToProps = {
   resetOnboardingWizard,
 };
 
-const mapStateToProps = ({ general }) => ({
+const mapStateToProps = ({ general, onboarding }) => ({
   hasCdp: !!general.cdp,
   account: general.account,
   connectingProvider: general.connectingProvider,
+  gettingCdp: general.gettingCdp,
+  loggingIn: general.loggingIn,
+  onboardingFinished: onboarding.onboardingFinished,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OnboardingRoutes);

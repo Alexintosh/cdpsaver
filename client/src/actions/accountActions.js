@@ -3,14 +3,19 @@ import {
   CONNECT_PROVIDER_SUCCESS,
   CONNECT_PROVIDER_FAILURE,
 
-  ADD_CDP,
+  GET_CDP_REQUEST,
+  GET_CDP_SUCCESS,
+  GET_CDP_FAILURE,
+
+  LOGIN_STARTED,
+  LOGIN_FINISHED,
 } from '../actionTypes/generalActionTypes';
 import {
   isMetaMaskApproved, getBalance, getAccount, nameOfNetwork, getNetwork, metamaskApprove,
 } from '../services/ethService';
 import { setWeb3toMetamask, setupWeb3 } from '../services/web3Service';
 import { notify } from './noitificationActions';
-import { isEmptyBytes, toDecimal } from '../utils/utils';
+import { toDecimal } from '../utils/utils';
 import clientConfig from '../config/clientConfig.json';
 import { LS_ACCOUNT } from '../constants/general';
 import { getAddressCdp } from '../services/cdpService';
@@ -59,6 +64,22 @@ export const loginMetaMask = silent => async (dispatch, getState) => {
   }
 };
 
+/**
+ * Handles when a cdp if fetched from the chain
+ *
+ * @return {Function}
+ */
+export const getCdp = () => async (dispatch, getState) => {
+  dispatch({ type: GET_CDP_REQUEST });
+
+  try {
+    const cdp = await getAddressCdp(getState().general.account);
+
+    dispatch({ type: GET_CDP_SUCCESS, payload: cdp });
+  } catch (err) {
+    dispatch({ type: GET_CDP_FAILURE, payload: err });
+  }
+};
 
 /**
  * If the user has already once successfully added an account this will
@@ -69,19 +90,27 @@ export const loginMetaMask = silent => async (dispatch, getState) => {
 export const silentLogin = () => async (dispatch, getState) => {
   const { accountType } = getState().general;
 
-  switch (accountType) {
-    case 'metamask': {
-      await dispatch(loginMetaMask(true));
-      break;
+  if (!accountType) return;
+
+  dispatch({ type: LOGIN_STARTED });
+
+  try {
+    switch (accountType) {
+      case 'metamask': {
+        await dispatch(loginMetaMask(true));
+        break;
+      }
+
+      default:
+        return false;
     }
 
-    default:
-      return false;
+    await dispatch(getCdp());
+  } catch (err) {
+    console.log('LOGIN ERROR', err);
   }
 
-  const cdp = await getAddressCdp(getState().general.account);
-
-  if (!isEmptyBytes(cdp)) dispatch({ type: ADD_CDP, payload: cdp });
+  dispatch({ type: LOGIN_FINISHED });
 };
 
 /**
@@ -93,21 +122,25 @@ export const silentLogin = () => async (dispatch, getState) => {
  *
  * @return {Function}
  */
-export const normalLogin = (accountType, history, to) => async (dispatch, getState) => {
-  // LOGIN TO WANTED ACCOUNT TYPE
-  switch (accountType) {
-    case 'metamask': {
-      await dispatch(loginMetaMask(false));
-      break;
+export const normalLogin = (accountType, history, to) => async (dispatch) => {
+  dispatch({ type: LOGIN_STARTED });
+
+  try {
+    switch (accountType) {
+      case 'metamask': {
+        await dispatch(loginMetaMask(false));
+        history.push(to);
+        break;
+      }
+
+      default:
+        return false;
     }
 
-    default:
-      return false;
+    await dispatch(getCdp());
+  } catch (err) {
+    console.log('LOGIN ERROR', err);
   }
 
-  const cdp = await getAddressCdp(getState().general.account);
-
-  if (!isEmptyBytes(cdp)) dispatch({ type: ADD_CDP, payload: cdp });
-
-  history.push(to);
+  dispatch({ type: LOGIN_FINISHED });
 };

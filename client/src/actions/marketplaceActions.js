@@ -16,7 +16,7 @@ import { getCdpInfos } from '../services/cdpService';
  * @return {Function}
  */
 export const getMarketplaceCdpsData = () => async (dispatch) => {
-  const mockCdpIds = [3613, 3615, 3617, 3618, 3650];
+  const mockCdpIds = [4691];
   dispatch({ type: GET_MARKETPLACE_CDP_DATA_REQUEST });
 
   try {

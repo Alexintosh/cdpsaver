@@ -22,7 +22,6 @@ let OnboardingMonitoringForm = ({
       placeholder="cdplover@makr.com"
       component={InputComponent}
       showErrorText
-      focus
     />
 
     <Field

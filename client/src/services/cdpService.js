@@ -26,7 +26,7 @@ export const getCdpInfo = (id, useAuth = true) => new Promise(async (resolve, re
       owner: info[0],
       depositedPETH: parseFloat(web3.utils.fromWei(info[1].toString(), 'ether')),
       generatedDAI: parseFloat(web3.utils.fromWei(info[2].toString(), 'ether')),
-      debtDai: await cdp.getDebtValue(),
+      debtDai: (await cdp.getDebtValue())._amount,
       depositedETH: (await cdp.getCollateralValue())._amount,
       depositedUSD: (await cdp.getCollateralValue(Maker.USD))._amount,
       liquidationPrice: (await cdp.getLiquidationPrice())._amount,
@@ -91,6 +91,8 @@ export const getCdpIdFromLogNote = (contract, proxyAddress) => new Promise(async
     }, (err, res) => {
       if (err) return reject(err);
 
+      if (res.length === 0) return resolve(null);
+
       resolve(web3.utils.hexToNumber(res[0].returnValues.foo));
     });
   } catch (e) {
@@ -113,6 +115,8 @@ export const getCdpIdFromLogNewCup = (contract, address) => new Promise(async (r
       fromBlock: config.SaiTub.networks[clientConfig.network].createdBlock,
     }, (err, res) => {
       if (err) return reject(err);
+
+      if (res.length === 0) return resolve(null);
 
       resolve(web3.utils.hexToNumber(res[0].returnValues.cup));
     });

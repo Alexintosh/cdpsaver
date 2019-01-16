@@ -3,15 +3,24 @@ import {
   CONNECT_PROVIDER_SUCCESS,
   CONNECT_PROVIDER_FAILURE,
 
-  ADD_CDP,
+  GET_CDP_REQUEST,
+  GET_CDP_SUCCESS,
+  GET_CDP_FAILURE,
+
+  LOGIN_STARTED,
+  LOGIN_FINISHED,
 } from '../actionTypes/generalActionTypes';
 import { CREATE_CDP_SUCCESS } from '../actionTypes/onboardingActionTypes';
-import { LS_ACCOUNT, MOCK_CDP } from '../constants/general';
+import { LS_ACCOUNT } from '../constants/general';
 
 const lsAccountType = JSON.parse(localStorage.getItem(LS_ACCOUNT));
 
 const INITIAL_STATE = {
-  cdp: MOCK_CDP,
+  loggingIn: false,
+
+  cdp: null,
+  gettingCdp: false,
+  gettingCdpError: '',
 
   connectingProvider: false,
 
@@ -25,8 +34,25 @@ export default (state = INITIAL_STATE, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case GET_CDP_REQUEST:
+      return { ...state, gettingCdp: true };
+
+    case GET_CDP_SUCCESS:
+      return {
+        ...state,
+        gettingCdp: false,
+        gettingCdpError: '',
+        cdp: payload,
+      };
+
+    case GET_CDP_FAILURE:
+      return {
+        ...state,
+        gettingCdp: false,
+        gettingCdpError: payload,
+      };
+
     case CREATE_CDP_SUCCESS:
-    case ADD_CDP:
       return { ...state, cdp: payload };
 
     case CONNECT_PROVIDER:
@@ -49,6 +75,12 @@ export default (state = INITIAL_STATE, action) => {
         balance: 0,
         accountError: payload,
       };
+
+    case LOGIN_STARTED:
+      return { ...state, loggingIn: true };
+
+    case LOGIN_FINISHED:
+      return { ...state, loggingIn: false };
 
     default:
       return state;
