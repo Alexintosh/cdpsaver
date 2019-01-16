@@ -58,15 +58,6 @@ contract SaverProxy is DSMath {
         emit Boost(msg.sender, maxDai, ethAmount);
     }
 
-    function createCdp(uint _daiAmount) public payable returns (address proxy, bytes32 cup) {
-        proxy = ProxyRegistryInterface(REGISTRY_ADDRESS).build(msg.sender);
-        TubInterface tub = TubInterface(TUB_ADDRESS);
-
-        cup = TubInterface(tub).open();
-        SaiProxyInterface(SAI_PROXY).lockAndDraw(TUB_ADDRESS, cup, _daiAmount);
-        tub.give(cup, proxy);
-    }
-
     function maxFreeCollateral(TubInterface _tub, address _vox, bytes32 _cdpId) public returns (uint) {
         return sub(_tub.ink(_cdpId), wdiv(wmul(wmul(_tub.tab(_cdpId), rmul(_tub.mat(), WAD)), IVox(_vox).par()), _tub.tag()));
     }

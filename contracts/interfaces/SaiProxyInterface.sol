@@ -14,4 +14,6 @@ contract SaiProxyInterface {
     function wipeAndFree(address tub_, bytes32 cup, uint jam, uint wad, address otc_) public payable;
     function shut(address tub_, bytes32 cup) public;
     function shut(address tub_, bytes32 cup, address otc_) public;
+
+    function createOpenLockAndDraw(address registry_, address tub_, uint wad) public payable returns (address proxy, bytes32 cup);
 }
