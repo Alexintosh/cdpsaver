@@ -41,7 +41,7 @@ class OnboardingRoutes extends Component {
       onboardingFinished, loggingIn,
     } = this.props;
 
-    if (onboardingFinished) return (<Redirect to="/dashboard/saver" />);
+    if (onboardingFinished) return (<Redirect to="/dashboard/manage" />);
 
     // TODO CHECK IF THIS NEEDS TO BE GENERALIZED
     if (connectingProvider) return (<div>Connecting provider, please wait.</div>);
@@ -49,7 +49,7 @@ class OnboardingRoutes extends Component {
     if (loggingIn && (!connectingProvider && !gettingCdp)) return (<div>Logging in...</div>);
 
     if (!loggingIn && !account && !connectingProvider) {
-      return (<Redirect to={{ pathname: '/connect', state: { to: '/dashboard/saver' } }} />);
+      return (<Redirect to={{ pathname: '/connect', state: { to: '/dashboard/manage' } }} />);
     }
 
     return (

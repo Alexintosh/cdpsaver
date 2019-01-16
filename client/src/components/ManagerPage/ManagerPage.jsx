@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import PieChart from '../PieChart/PieChart';
 import Tabs from '../Tabs/Tabs';
 import ManagerBorrowForm from './ManagerBorrowForm/ManagerBorrowForm';
@@ -7,7 +9,7 @@ import ManagerPaybackFrom from './ManagerPaybackFrom/ManagerPaybackFrom';
 import './ManagerPage.scss';
 import './action-items.scss';
 
-const ManagerPage = () => (
+const ManagerPage = ({ cdp }) => (
   <div className="manager-page-wrapper dashboard-page-wrapper">
     <div className="sub-heading-wrapper">
       <div className="width-container">
@@ -22,7 +24,7 @@ const ManagerPage = () => (
             <div className="info-wrapper-main">
               <div className="item">
                 <div className="label">Liquidation price</div>
-                <div className="value">48$</div>
+                <div className="value">{ cdp.liquidationPrice.toFixed(2) }$</div>
               </div>
 
               <div className="item">
@@ -32,18 +34,18 @@ const ManagerPage = () => (
 
               <div className="item">
                 <div className="label">Ratio</div>
-                <div className="value">220%</div>
+                <div className="value">{ (cdp.ratio * 100).toFixed(2) }%</div>
               </div>
             </div>
 
             <div className="row-item-wrapper">
               <span className="label">Debt:</span>
-              <span className="value">3600 Dai</span>
+              <span className="value">{ cdp.debtDai.toFixed(2) } Dai</span>
             </div>
 
             <div className="row-item-wrapper">
               <span className="label">Collateral amount:</span>
-              <span className="value">360 Eth</span>
+              <span className="value">{ cdp.depositedETH.toFixed(2) } Eth</span>
             </div>
           </div>
 
@@ -52,8 +54,8 @@ const ManagerPage = () => (
           <div className="main-subsection">
             <PieChart
               values={[
-                { data: 600, color: '#61717E', label: 'Debt' },
-                { data: 220, color: '#37B06F', label: 'Collateral' },
+                { data: cdp.debtDai.toFixed(2), color: '#61717E', label: 'Debt' },
+                { data: cdp.depositedUSD.toFixed(2), color: '#37B06F', label: 'Collateral' },
               ]}
             />
           </div>
@@ -88,6 +90,12 @@ const ManagerPage = () => (
   </div>
 );
 
-ManagerPage.propTypes = {};
+ManagerPage.propTypes = {
+  cdp: PropTypes.object.isRequired,
+};
 
-export default ManagerPage;
+const mapStateToProps = ({ general }) => ({
+  cdp: general.cdp,
+});
+
+export default connect(mapStateToProps)(ManagerPage);

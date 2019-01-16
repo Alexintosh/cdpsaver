@@ -30,7 +30,7 @@ class Connect extends Component {
     const {
       normalLogin, connectingProvider, location, history, accountType,
     } = this.props;
-    const to = location.state ? location.state.to : '/dashboard/saver';
+    const to = location.state ? location.state.to : '/dashboard/manage';
 
     return (
       <div className="connect-wrapper onboarding-page-wrapper">

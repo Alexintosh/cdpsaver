@@ -1,8 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import './SaverPage.scss';
 
-const SaverPage = () => (
+const SaverPage = ({ cdp }) => (
   <div className="saver-page-wrapper dashboard-page-wrapper">
     <div className="sub-heading-wrapper">
       <div className="width-container">
@@ -16,7 +18,7 @@ const SaverPage = () => (
           <div className="main-items-wrapper">
             <div className="item">
               <div className="label">Liquidation price</div>
-              <div className="value">48$</div>
+              <div className="value">{ cdp.liquidationPrice.toFixed(2) }$</div>
             </div>
 
             <div className="item">
@@ -26,18 +28,18 @@ const SaverPage = () => (
 
             <div className="item">
               <div className="label">Ratio</div>
-              <div className="value">220%</div>
+              <div className="value">{ (cdp.ratio * 100).toFixed(2) }%</div>
             </div>
           </div>
 
           <div className="row-item-wrapper">
             <span className="label">Debt:</span>
-            <span className="value">3600 Dai</span>
+            <span className="value">{ cdp.debtDai.toFixed(2) } Dai</span>
           </div>
 
           <div className="row-item-wrapper">
             <span className="label">Collateral amount:</span>
-            <span className="value">360 Eth</span>
+            <span className="value">{ cdp.depositedETH.toFixed(2) } Eth</span>
           </div>
         </div>
 
@@ -85,6 +87,12 @@ const SaverPage = () => (
   </div>
 );
 
-SaverPage.propTypes = {};
+SaverPage.propTypes = {
+  cdp: PropTypes.object.isRequired,
+};
 
-export default SaverPage;
+const mapStateToProps = ({ general }) => ({
+  cdp: general.cdp,
+});
+
+export default connect(mapStateToProps)(SaverPage);
