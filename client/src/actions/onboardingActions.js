@@ -74,5 +74,5 @@ export const finishOnboarding = history => (dispatch) => {
   dispatch({ type: FINISH_ONBOARDING });
 
   // TODO check if here the place the user is redirected to is the place he came from/ was he redirected to onboarding
-  history.push('/dashboard/saver');
+  history.push('/dashboard/manage');
 };
