@@ -10,12 +10,12 @@ const SubHeaderRoutes = ({ data }) => {
     <div className="sub-heading-wrapper sub-header-routes-wrapper">
       <div className="width-container">
         {
-          data.map(({ lebel, pathname }, index) => {
+          data.map(({ label, pathname }, index) => {
             const active = locPathanme.includes(pathname);
 
             return (
               <div className={`sub-header-item ${active ? 'active' : 'not-active'}`} key={pathname}>
-                <div className="label">{lebel}</div>
+                <div className="label">{label}</div>
 
                 {
                   (index < (data.length - 1))

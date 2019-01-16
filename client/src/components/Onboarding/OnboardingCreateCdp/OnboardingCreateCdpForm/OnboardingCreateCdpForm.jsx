@@ -53,7 +53,6 @@ class OnboardingCreateCdpForm extends Component {
           type="number"
           labelText="Amount of ETH:"
           secondLabelText="ETH"
-          additional={{ min: 1 }}
           component={InputComponent}
           showErrorText
           focus
@@ -66,7 +65,6 @@ class OnboardingCreateCdpForm extends Component {
           type="number"
           labelText="Amount of DAI:"
           secondLabelText="DAI"
-          additional={{ min: 1 }}
           component={InputComponent}
           showErrorText
         />

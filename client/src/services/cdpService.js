@@ -2,7 +2,7 @@ import Maker from '@makerdao/dai';
 import web3 from 'web3';
 import config from '../config/config.json';
 import clientConfig from '../config/clientConfig.json';
-import { proxyRegistryInterfaceContract, SaiTubAddressContract } from './contractRegistryService';
+import { proxyRegistryInterfaceContract, SaiTubContract } from './contractRegistryService';
 import { saiTubContractTools } from '../utils/utils';
 
 export const maker = Maker.create('http', { url: clientConfig.provider });
@@ -54,23 +54,6 @@ export const getCdpInfos = ids => new Promise(async (resolve, reject) => {
     reject(err);
   }
 });
-
-/**
- * * Creates a CDP on the blockchain with ethAmount and daiAmountInfo
- *
- * @param ethAmount
- * @param daiAmount
- *
- * @return {Promise<{id: number, owner: string, depositedPETH: *, depositedETH: string, depositedUSD: string, generatedDAI: number, liquidationPrice: string, isSafe: bool, ratio: *}>}
- */
-export const createCdp = async (ethAmount, daiAmount) => {
-  try {
-    // create logic here
-    return await getCdpInfo(3613);
-  } catch (err) {
-    throw new Error(err);
-  }
-};
 
 /**
  * Calls the SaiTub contract and fetches cdp for proxy address from alternative event
@@ -137,7 +120,7 @@ export const getAddressCdp = address => new Promise(async (resolve, reject) => {
 
     if (!proxyAddr) return resolve(null);
 
-    const contract = await SaiTubAddressContract();
+    const contract = await SaiTubContract();
     let cdpId = await getCdpIdFromLogNewCup(contract, proxyAddr);
 
     // If the cdpId is not found in the LogNewCup event,

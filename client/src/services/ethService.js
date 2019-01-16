@@ -1,3 +1,9 @@
+import {
+  SaiSaverProxyContract,
+  proxyRegistryInterfaceAddress,
+  tubInterfaceAddress,
+} from './contractRegistryService';
+
 export const getAccount = () => (
   new Promise(async (resolve, reject) => {
     try {
@@ -63,3 +69,29 @@ export const metamaskApprove = async () => {
     throw new Error((e));
   }
 };
+
+/**
+ * Calls the SaiSaverProxy contract and sends params to create the cdp
+ *
+ * @param from {String}
+ * @param ethAmount {String}
+ * @param daiAmount {Number}
+ *
+ * @return {Promise<Boolean>}
+ */
+export const createCdp = (from, ethAmount, daiAmount) => new Promise(async (resolve, reject) => {
+  const address1 = proxyRegistryInterfaceAddress;
+  const address2 = tubInterfaceAddress;
+
+  try {
+    const contract = await SaiSaverProxyContract();
+    const params = { from, value: window._web3.utils.toWei(ethAmount, 'ether') };
+
+    contract.methods.createOpenLockAndDraw(address1, address2, daiAmount).send(params)
+      .on('confirmation', () => { resolve(true); })
+      .on('error', reject);
+  } catch (err) {
+    console.log('ERROR', err);
+    reject(err);
+  }
+});
