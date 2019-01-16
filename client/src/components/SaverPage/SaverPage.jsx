@@ -4,7 +4,9 @@ import { connect } from 'react-redux';
 
 import './SaverPage.scss';
 
-const SaverPage = ({ cdp }) => (
+const SaverPage = ({
+  cdp, gettingEthPrice, ethPrice,
+}) => (
   <div className="saver-page-wrapper dashboard-page-wrapper">
     <div className="sub-heading-wrapper">
       <div className="width-container">
@@ -18,7 +20,7 @@ const SaverPage = ({ cdp }) => (
           <div className="main-items-wrapper">
             <div className="item">
               <div className="label">Liquidation price</div>
-              <div className="value">{ cdp.liquidationPrice.toFixed(2) }$</div>
+              <div className="value">{ gettingEthPrice ? 'Loading...' : ethPrice }</div>
             </div>
 
             <div className="item">
@@ -89,10 +91,14 @@ const SaverPage = ({ cdp }) => (
 
 SaverPage.propTypes = {
   cdp: PropTypes.object.isRequired,
+  ethPrice: PropTypes.number.isRequired,
+  gettingEthPrice: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = ({ general }) => ({
   cdp: general.cdp,
+  ethPrice: general.ethPrice,
+  gettingEthPrice: general.gettingEthPrice,
 });
 
 export default connect(mapStateToProps)(SaverPage);

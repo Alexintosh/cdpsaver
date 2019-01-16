@@ -5,7 +5,7 @@ import clientConfig from '../config/clientConfig.json';
 import { proxyRegistryInterfaceContract, SaiTubAddressContract } from './contractRegistryService';
 import { saiTubContractTools } from '../utils/utils';
 
-const maker = Maker.create('http', { url: clientConfig.provider });
+export const maker = Maker.create('http', { url: clientConfig.provider });
 
 /**
  * Fetches multiple Cdp data for a cdp id from the Maker library  and formats them

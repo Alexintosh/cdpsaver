@@ -9,7 +9,9 @@ import ManagerPaybackFrom from './ManagerPaybackFrom/ManagerPaybackFrom';
 import './ManagerPage.scss';
 import './action-items.scss';
 
-const ManagerPage = ({ cdp }) => (
+const ManagerPage = ({
+  cdp, gettingEthPrice, ethPrice,
+}) => (
   <div className="manager-page-wrapper dashboard-page-wrapper">
     <div className="sub-heading-wrapper">
       <div className="width-container">
@@ -29,7 +31,7 @@ const ManagerPage = ({ cdp }) => (
 
               <div className="item">
                 <div className="label">Current price</div>
-                <div className="value">78$</div>
+                <div className="value">{ gettingEthPrice ? 'Loading...' : ethPrice }</div>
               </div>
 
               <div className="item">
@@ -92,10 +94,14 @@ const ManagerPage = ({ cdp }) => (
 
 ManagerPage.propTypes = {
   cdp: PropTypes.object.isRequired,
+  ethPrice: PropTypes.number.isRequired,
+  gettingEthPrice: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = ({ general }) => ({
   cdp: general.cdp,
+  ethPrice: general.ethPrice,
+  gettingEthPrice: general.gettingEthPrice,
 });
 
 export default connect(mapStateToProps)(ManagerPage);

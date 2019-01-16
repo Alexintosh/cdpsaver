@@ -1,3 +1,5 @@
+@import "../../common/colors";
+
 .notification-wrapper {
   position: fixed;
   transform: translateY(-80px);
@@ -27,12 +29,12 @@
     box-shadow: 0 2px 2px 0 rgba(black, .2);
 
     &.success {
-      background-color: #4a9c20;
+      background-color: $green;
       color: white;
     }
 
     &.error {
-      background-color: #d33133;
+      background-color: $dark-red;
       color: white;
     }
   }
