@@ -18,7 +18,7 @@ import { notify } from './noitificationActions';
 import { toDecimal } from '../utils/utils';
 import clientConfig from '../config/clientConfig.json';
 import { LS_ACCOUNT } from '../constants/general';
-import { getAddressCdp } from '../services/cdpService';
+import { getAddressCdp, getUpdatedCdpInfo } from '../services/cdpService';
 
 /**
  * Tries to connect to the MetaMask web3 provider, also checks if the app is pre-approved
@@ -74,6 +74,10 @@ export const getCdp = () => async (dispatch, getState) => {
 
   try {
     const cdp = await getAddressCdp(getState().general.account);
+
+    const { liquidationPrice, ratio } = await getUpdatedCdpInfo(cdp.depositedETH.toNumber(), cdp.debtDai.toNumber());
+
+    console.log(`liquidationPrice: ${liquidationPrice} ratio: ${ratio}`);
 
     dispatch({ type: GET_CDP_SUCCESS, payload: cdp });
   } catch (err) {

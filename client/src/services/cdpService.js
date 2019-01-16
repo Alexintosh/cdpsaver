@@ -150,3 +150,34 @@ export const getAddressCdp = address => new Promise(async (resolve, reject) => {
     reject(err);
   }
 });
+
+
+/**
+ * Gets the updated cdp information based on input change
+ *
+ *
+ * @param ethAmount Collateral in the cdp in eth
+ * @param daiAmount Amount of debt that is in the cdp
+ *
+ * @return {liquidationPrice, ratio} Returns the liquidation price and ration based on the input params
+ *
+ */
+export const getUpdatedCdpInfo = async (ethAmount, daiAmount) => {
+  try {
+    const liqRatio = 1.5;
+    const price = maker.service('price');
+
+    const ethPrice = await price.getEthPrice();
+    const peth2wethRatio = await price.getWethToPethRatio();
+
+    const liquidationPrice = (parseFloat(daiAmount) * liqRatio) / (parseFloat(ethAmount) * peth2wethRatio);
+    const ratio = (parseFloat(ethAmount) * ethPrice.toNumber() * peth2wethRatio) / parseFloat(daiAmount) * 100;
+
+    return {
+      liquidationPrice,
+      ratio,
+    };
+  } catch (err) {
+    throw new Error(err);
+  }
+};
