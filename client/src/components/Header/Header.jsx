@@ -18,12 +18,11 @@ const Header = () => (
       </Link>
 
       <div className="links-wrapper">
-        <NavLink activeClassName="active" to="/connect">Connect</NavLink>
-        <NavLink activeClassName="active" to="/onboarding">Onboarding</NavLink>
         <NavLink activeClassName="active" to="/marketplace">Marketplace</NavLink>
         <NavLink activeClassName="active" to="/dashboard/manage">Manage</NavLink>
         <NavLink activeClassName="active" to="/dashboard/monitoring">Monitoring</NavLink>
         <NavLink activeClassName="active" to="/dashboard/saver">Saver</NavLink>
+        <NavLink activeClassName="active" to="/connect">Connect</NavLink>
       </div>
     </div>
   </div>
