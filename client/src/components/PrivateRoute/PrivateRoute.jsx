@@ -2,14 +2,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, Redirect, withRouter } from 'react-router-dom';
+import Loader from '../Loader/Loader';
 
 const PrivateRoute = ({
   component: Component, account, match, connectingProvider, cdp,
   onboardingFinished, gettingCdp, loggingIn, ...rest
 }) => {
-  if (connectingProvider) return (<div>Connecting provider, please wait...</div>);
-  if (gettingCdp) return (<div>Getting your cdp, please wait...</div>);
-  if (loggingIn && (!connectingProvider && !gettingCdp)) return (<div>Logging in...</div>);
+  const showloggingIn = loggingIn && (!connectingProvider && !gettingCdp);
+  const showLoader = connectingProvider || gettingCdp || showloggingIn;
+
+  if (showLoader) {
+    let message = '';
+
+    if (loggingIn) message = 'Logging in, please wait...';
+    if (connectingProvider) message = 'Connecting web3 provider, please wait...';
+    if (gettingCdp) message = 'Getting your cdp, please wait...';
+
+    return (
+      <div className="loader-page-wrapper private">
+        <Loader message={message} />
+      </div>
+    );
+  }
 
   if (!loggingIn && !account) return (<Redirect to={{ pathname: '/connect', state: { to: rest.path } }} />);
   if (!loggingIn && (!cdp || !onboardingFinished)) return (<Redirect to="/onboarding" />);
