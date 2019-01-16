@@ -12,7 +12,9 @@ import {
   FINISH_ONBOARDING,
 } from '../actionTypes/onboardingActionTypes';
 import { subscribeToMonitoringApiRequest } from '../services/apiService';
-import { LS_ONBOARDING_FINISHED, MOCK_CDP } from '../constants/general';
+import { LS_ONBOARDING_FINISHED } from '../constants/general';
+import { createCdp } from '../services/ethService';
+import { getAddressCdp } from '../services/cdpService';
 
 /**
  * Resets the state of the onboarding reducer
@@ -32,13 +34,18 @@ export const resetOnboardingWizard = () => (dispatch) => {
  *
  * @return {Function}
  */
-export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dispatch) => {
+export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dispatch, getState) => {
   dispatch({ type: CREATE_CDP_REQUEST });
 
   try {
-    // const payload = await createCdp(parseFloat(ethAmount), parseFloat(daiAmount));
+    const { account } = getState().general;
 
-    dispatch({ type: CREATE_CDP_SUCCESS, payload: MOCK_CDP });
+    await createCdp(account, ethAmount, parseFloat(daiAmount));
+
+    // TODO SEE IF THIS CAN BE OPTIMIZED,
+    const payload = await getAddressCdp(account);
+
+    dispatch({ type: CREATE_CDP_SUCCESS, payload });
     history.push('/onboarding/info');
   } catch (err) {
     dispatch({ type: CREATE_CDP_ERROR, payload: err });

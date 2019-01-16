@@ -5,7 +5,9 @@ import PropTypes from 'prop-types';
 
 import './OnboardingInfo.scss';
 
-const OnboardingInfo = ({ cdp }) => {
+const OnboardingInfo = ({
+  cdp, gettingEthPrice, ethPrice,
+}) => {
   if (!cdp) return (<Redirect to="/onboarding/create-cdp" />);
 
   return (
@@ -21,7 +23,7 @@ const OnboardingInfo = ({ cdp }) => {
 
             <div className="info-item-wrapper">
               <div className="info-label">Current price</div>
-              <div className="info-value">150$</div>
+              <div className="info-value">{ gettingEthPrice ? 'Loading...' : ethPrice }</div>
             </div>
 
             <div className="info-item-wrapper">
@@ -57,10 +59,14 @@ OnboardingInfo.defaultProps = {
 
 OnboardingInfo.propTypes = {
   cdp: PropTypes.object,
+  ethPrice: PropTypes.number.isRequired,
+  gettingEthPrice: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = ({ general }) => ({
   cdp: general.cdp,
+  ethPrice: general.ethPrice,
+  gettingEthPrice: general.gettingEthPrice,
 });
 
 export default connect(mapStateToProps)(OnboardingInfo);

@@ -9,6 +9,7 @@ import OnboardingCreateCdp from './OnboardingCreateCdp/OnboardingCreateCdp';
 import OnboardingInfo from './OnboardingInfo/OnboardingInfo';
 import OnboardingMonitoring from './OnboardingMonitoring/OnboardingMonitoring';
 import OnboardingTransfer from './OnboardingTransfer/OnboardingTransfer';
+import Loader from '../Loader/Loader';
 
 import './Onboarding.scss';
 
@@ -17,15 +18,14 @@ class OnboardingRoutes extends Component {
     super(props);
 
     this.onboardingWizardLinks = [
-      { lebel: 'Create CDP', pathname: '/onboarding/create-cdp' },
-      { lebel: 'Info', pathname: '/onboarding/info' },
-      { lebel: 'Monitoring', pathname: '/onboarding/monitoring' },
-      { lebel: 'Transfer', pathname: '/onboarding/transfer' },
+      { label: 'Create CDP', pathname: '/onboarding/create-cdp' },
+      { label: 'Info', pathname: '/onboarding/info' },
+      { label: 'Monitoring', pathname: '/onboarding/monitoring' },
+      { label: 'Transfer', pathname: '/onboarding/transfer' },
     ];
   }
 
   componentWillMount() {
-    // TODO HE ALREADY COMPLETED THE ONBOARDING THEN REDIRECT HIM
     if (!this.props.hasCdp) return;
 
     this.onboardingWizardLinks.splice(0, 1);
@@ -37,16 +37,24 @@ class OnboardingRoutes extends Component {
 
   render() {
     const {
-      match, hasCdp, account, connectingProvider, gettingCdp,
-      onboardingFinished, loggingIn,
+      match, hasCdp, account, connectingProvider, gettingCdp, loggingIn,
     } = this.props;
+    const showloggingIn = loggingIn && (!connectingProvider && !gettingCdp);
+    const showLoader = connectingProvider || gettingCdp || showloggingIn;
 
-    if (onboardingFinished) return (<Redirect to="/dashboard/manage" />);
+    if (showLoader) {
+      let message = '';
 
-    // TODO CHECK IF THIS NEEDS TO BE GENERALIZED
-    if (connectingProvider) return (<div>Connecting provider, please wait.</div>);
-    if (gettingCdp) return (<div>Getting your cdp, please wait...</div>);
-    if (loggingIn && (!connectingProvider && !gettingCdp)) return (<div>Logging in...</div>);
+      if (loggingIn) message = 'Logging in, please wait...';
+      if (connectingProvider) message = 'Connecting web3 provider, please wait...';
+      if (gettingCdp) message = 'Getting your cdp, please wait...';
+
+      return (
+        <div className="loader-page-wrapper private">
+          <Loader message={message} />
+        </div>
+      );
+    }
 
     if (!loggingIn && !account && !connectingProvider) {
       return (<Redirect to={{ pathname: '/connect', state: { to: '/dashboard/manage' } }} />);
@@ -78,7 +86,6 @@ OnboardingRoutes.propTypes = {
   resetOnboardingWizard: PropTypes.func.isRequired,
   connectingProvider: PropTypes.bool.isRequired,
   gettingCdp: PropTypes.bool.isRequired,
-  onboardingFinished: PropTypes.bool.isRequired,
   loggingIn: PropTypes.bool.isRequired,
 };
 
@@ -86,13 +93,12 @@ const mapDispatchToProps = {
   resetOnboardingWizard,
 };
 
-const mapStateToProps = ({ general, onboarding }) => ({
+const mapStateToProps = ({ general }) => ({
   hasCdp: !!general.cdp,
   account: general.account,
   connectingProvider: general.connectingProvider,
   gettingCdp: general.gettingCdp,
   loggingIn: general.loggingIn,
-  onboardingFinished: onboarding.onboardingFinished,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OnboardingRoutes);

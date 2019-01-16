@@ -9,6 +9,9 @@ import {
 
   LOGIN_STARTED,
   LOGIN_FINISHED,
+
+  GET_ETH_PRICE_REQUEST,
+  GET_ETH_PRICE_SUCCESS,
 } from '../actionTypes/generalActionTypes';
 import { CREATE_CDP_SUCCESS } from '../actionTypes/onboardingActionTypes';
 import { LS_ACCOUNT } from '../constants/general';
@@ -28,6 +31,9 @@ const INITIAL_STATE = {
   accountError: '',
   accountType: lsAccountType ? lsAccountType.accountType : '',
   balance: 0,
+
+  ethPrice: 0,
+  gettingEthPrice: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -81,6 +87,12 @@ export default (state = INITIAL_STATE, action) => {
 
     case LOGIN_FINISHED:
       return { ...state, loggingIn: false };
+
+    case GET_ETH_PRICE_REQUEST:
+      return { ...state, gettingEthPrice: true };
+
+    case GET_ETH_PRICE_SUCCESS:
+      return { ...state, gettingEthPrice: false, ethPrice: payload };
 
     default:
       return state;

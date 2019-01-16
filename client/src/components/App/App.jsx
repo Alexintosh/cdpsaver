@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect, Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { updateEthPriceInterval } from '../../actions/generalActions';
 import { silentLogin } from '../../actions/accountActions';
 import Header from '../Header/Header';
 import HomePage from '../HomePage/HomePage';
@@ -19,6 +20,7 @@ import '../../common/icons/icons.scss';
 
 class RoutesWrapper extends Component {
   componentWillMount() {
+    this.props.updateEthPriceInterval();
     this.props.silentLogin();
   }
 
@@ -52,8 +54,11 @@ class RoutesWrapper extends Component {
 RoutesWrapper.propTypes = {
   store: PropTypes.object.isRequired,
   silentLogin: PropTypes.func.isRequired,
+  updateEthPriceInterval: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = { silentLogin };
+const mapDispatchToProps = {
+  updateEthPriceInterval, silentLogin,
+};
 
 export default connect(null, mapDispatchToProps)(RoutesWrapper);
