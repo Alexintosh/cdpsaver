@@ -74,12 +74,9 @@ export const getCdp = () => async (dispatch, getState) => {
 
   try {
     const cdp = await getAddressCdp(getState().general.account);
+    const newData = await getUpdatedCdpInfo(cdp.depositedETH.toNumber(), cdp.debtDai.toNumber());
 
-    const { liquidationPrice, ratio } = await getUpdatedCdpInfo(cdp.depositedETH.toNumber(), cdp.debtDai.toNumber());
-
-    console.log(`liquidationPrice: ${liquidationPrice} ratio: ${ratio}`);
-
-    dispatch({ type: GET_CDP_SUCCESS, payload: cdp });
+    dispatch({ type: GET_CDP_SUCCESS, payload: { ...cdp, ...newData } });
   } catch (err) {
     dispatch({ type: GET_CDP_FAILURE, payload: err });
   }

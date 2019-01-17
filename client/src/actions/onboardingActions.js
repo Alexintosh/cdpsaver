@@ -14,7 +14,7 @@ import {
 import { subscribeToMonitoringApiRequest } from '../services/apiService';
 import { LS_ONBOARDING_FINISHED } from '../constants/general';
 import { createCdp } from '../services/ethService';
-import { getAddressCdp } from '../services/cdpService';
+import { getAddressCdp, getUpdatedCdpInfo } from '../services/cdpService';
 
 /**
  * Resets the state of the onboarding reducer
@@ -44,8 +44,9 @@ export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dis
 
     // TODO SEE IF THIS CAN BE OPTIMIZED,
     const payload = await getAddressCdp(account);
+    const newInfo = await getUpdatedCdpInfo(ethAmount, daiAmount);
 
-    dispatch({ type: CREATE_CDP_SUCCESS, payload });
+    dispatch({ type: CREATE_CDP_SUCCESS, payload: { ...payload, ...newInfo } });
     history.push('/onboarding/info');
   } catch (err) {
     dispatch({ type: CREATE_CDP_ERROR, payload: err });

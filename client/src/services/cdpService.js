@@ -134,7 +134,6 @@ export const getAddressCdp = address => new Promise(async (resolve, reject) => {
   }
 });
 
-
 /**
  * Gets the updated cdp information based on input change
  *
@@ -154,7 +153,7 @@ export const getUpdatedCdpInfo = async (ethAmount, daiAmount) => {
     const peth2wethRatio = await price.getWethToPethRatio();
 
     const liquidationPrice = (parseFloat(daiAmount) * liqRatio) / (parseFloat(ethAmount) * peth2wethRatio);
-    const ratio = (parseFloat(ethAmount) * ethPrice.toNumber() * peth2wethRatio) / parseFloat(daiAmount) * 100;
+    const ratio = ((parseFloat(ethAmount) * ethPrice.toNumber() * peth2wethRatio) / parseFloat(daiAmount)) * 100;
 
     return {
       liquidationPrice,
@@ -164,3 +163,4 @@ export const getUpdatedCdpInfo = async (ethAmount, daiAmount) => {
     throw new Error(err);
   }
 };
+
