@@ -30,7 +30,7 @@ const SaverPage = ({
 
             <div className="item">
               <div className="label">Ratio</div>
-              <div className="value">{ (cdp.ratio * 100).toFixed(2) }%</div>
+              <div className="value">{ (cdp.ratio).toFixed(2) }%</div>
             </div>
           </div>
 

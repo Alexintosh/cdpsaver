@@ -28,7 +28,7 @@ const OnboardingInfo = ({
 
             <div className="info-item-wrapper">
               <div className="info-label">Ratio</div>
-              <div className="info-value">{ (cdp.ratio * 100).toFixed(2) }%</div>
+              <div className="info-value">{ (cdp.ratio).toFixed(2) }%</div>
             </div>
           </div>
 
