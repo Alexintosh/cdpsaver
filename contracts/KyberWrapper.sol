@@ -30,7 +30,6 @@ contract KyberWrapper is ExchangeInterface {
     }
     
     function swapTokenToEther (address _tokenAddress, uint _amount) external returns(uint) {
-
         uint minRate;
         ERC20 ETH_TOKEN_ADDRESS = ERC20(ETHER_ADDRESS);
         ERC20 token = ERC20(_tokenAddress);
@@ -51,6 +50,10 @@ contract KyberWrapper is ExchangeInterface {
         return destAmount;
     }
 
+    function() payable external {
+        
+    }
+
     function swapTokenToToken (address _srcAddr, address _destAddr, uint srcQty) external returns(uint) {
         uint minRate;
         ERC20 srcToken = ERC20(_srcAddr);
@@ -69,6 +72,5 @@ contract KyberWrapper is ExchangeInterface {
         destToken.transfer(msg.sender, destAmount);
 
         return destAmount;
-
     }
 }
