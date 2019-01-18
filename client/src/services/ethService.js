@@ -3,6 +3,8 @@ import {
   proxyRegistryInterfaceAddress,
   tubInterfaceAddress,
 } from './contractRegistryService';
+import { getContractInstance, getAbiFunction } from '../utils/utils';
+import SaiProxyInterfaceJson from '../contracts/SaiProxyInterface.json';
 
 export const getAccount = () => (
   new Promise(async (resolve, reject) => {
@@ -94,5 +96,28 @@ export const createCdp = (from, ethAmount, _daiAmount) => new Promise(async (res
   } catch (err) {
     console.log('ERROR', err);
     reject(err);
+  }
+});
+
+/**
+ * Calls the proxy contract and generates more dai for it
+ *
+ * @param amountDai
+ * @param address
+ * @return {Promise<any>}
+ */
+export const generateDai = (amountDai, address) => new Promise(async (resolve, reject) => {
+  const web3 = window._web3;
+
+  try {
+    const contract = (await getContractInstance(web3, SaiProxyInterfaceJson)).deployed();
+    const contractFunction = getAbiFunction(contract, 'draw');
+
+    const daiParam = web3.utils.toWei(amountDai, 'ether');
+
+    console.log('contractFunction', contractFunction);
+    // const data = web3.eth.abi.encodeFunctionCall(, [tubAddr, cdpIdBytes32, daiAmount]);
+  } catch (err) {
+    reject(err.message);
   }
 });

@@ -77,3 +77,31 @@ export const saiTubContractTools = {
       n; // eslint-disable-line
   },
 };
+
+/**
+ * Returns an instance of the provided contract json
+ *
+ * @param web3 {Object}
+ * @param contractDefinition {Object}
+ *
+ * @return {Promise<Object>}
+ */
+export const getContractInstance = async (web3, contractDefinition) => {
+  const networkId = await web3.eth.net.getId();
+  const deployedAddress = contractDefinition.networks[networkId].address;
+
+  return new web3.eth.Contract(contractDefinition.abi, deployedAddress);
+};
+
+/**
+ * Finds abi function inside a contract
+ *
+ * @param contract {Object}
+ * @param functionName {String}
+ *
+ * @return {Object}
+ */
+export const getAbiFunction = (contract, functionName) => {
+  const { abi } = contract.toJSON();
+  return abi.find(abi => abi.name === functionName);
+};
