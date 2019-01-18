@@ -163,4 +163,3 @@ export const getUpdatedCdpInfo = async (ethAmount, daiAmount) => {
     throw new Error(err);
   }
 };
-
