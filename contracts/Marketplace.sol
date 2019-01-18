@@ -1,64 +1,129 @@
 pragma solidity ^0.5.0;
 
 import "./DS/DSProxy.sol";
+import "./DS/DSMath.sol";
 import "./interfaces/TubInterface.sol";
+import "./interfaces/ProxyRegistryInterface.sol";
 
-contract Marketplace is DSAuth {
+contract Marketplace is DSAuth, DSMath {
 
     struct SaleItem {
-        uint price;
-        uint time;
-        address payable lad;
+        address payable owner;
+        uint fixedPrice;
+        uint discount;
+        bool saleType;
         bool active;
     }
+ 
+    mapping (bytes32 => uint) public items;
+    SaleItem[] public itemsArr;
 
-    mapping (bytes32 => SaleItem) public items;
-    bytes32[] public itemsArr;
+    address public marketplaceProxy;
 
-    // address constant TUB_ADDRESS = 0x448a5065aebb8e423f0896e6c5d525c040f59af3;
-    address constant TUB_ADDRESS = 0xa71937147b55Deb8a530C7229C442Fd3F31b7db2; //KOVAN
+    uint public fee = 1; // Fee is 1%
 
-    TubInterface cdp = TubInterface(TUB_ADDRESS);
+    ProxyRegistryInterface registry = ProxyRegistryInterface(0x64A436ae831C1672AE81F674CAb8B6775df3475C); //KOVAN
+    TubInterface tub = TubInterface(0xa71937147b55Deb8a530C7229C442Fd3F31b7db2);
 
-    event OnSale(bytes32 indexed cup, address indexed lad, uint price);
-    event Bought(bytes32 indexed cup, address indexed newLad, address indexed oldLad, uint price);
+    event OnSale(bytes32 indexed cup, address indexed lad, uint fixedPrice, uint discount, bool saleType);
+    event Bought(bytes32 indexed cup, address indexed newLad, address indexed oldLad, 
+                        uint fixedPrice, uint discount, bool saleType);
 
-    function putOnSale(bytes32 _cup, uint _price) public {
-        require(cdp.lad(_cup) == msg.sender, "msg.sender must be cup owner");
+    constructor(address _marketplaceProxy) public {
+        marketplaceProxy = _marketplaceProxy;
+    }
 
-        items[_cup] = SaleItem({
-            price: _price,
-            time: now,
-            lad: msg.sender,
-            active: true
-        });
+    function putOnSale(bytes32 _cup, uint _fixedPrice, uint _discount, bool _type) public {
+        require(isOwner(msg.sender, _cup), "msg.sender must be owner of proxy which owns the cup");
+        require(_discount < 100, "can't have 100% discount, just put fixedPrice 0");
 
-        itemsArr.push(_cup);
+        // don't have two types of sale fixedPrice or by discount
+        if (_type) {
+            _discount = 0;
+        } else {
+            _fixedPrice = 0;
+        }
 
-        emit OnSale(_cup, msg.sender, _price);
+        DSProxy proxy = registry.proxies(msg.sender);
+
+        itemsArr.push(SaleItem({
+            fixedPrice: _fixedPrice,
+            discount: _discount,
+            owner: address(proxy),
+            active: true,
+            saleType: _type
+        }));
+
+        items[_cup] = itemsArr.length - 1;
+
+        emit OnSale(_cup, msg.sender, _fixedPrice, _discount, _type);
 
     }
 
     function buy(bytes32 _cup) public payable {
-        require(items[_cup].active == true, "Check if cup is on sale");
-        require(msg.value >= items[_cup].price, "Check if enough ether is sent for this cup");
+        uint itemIndex = items[_cup];
+        SaleItem storage item = itemsArr[itemIndex];
 
-        DSProxy usersProxy =  DSProxy(items[_cup].lad);
+        require(item.active == true, "Check if cup is on sale");
+
+        uint price;
+
+        if (item.saleType) {
+            require(msg.value >= item.fixedPrice, "Check if enough ether is sent for this cup");
+            price = item.fixedPrice;
+        } else {
+            uint collateral = rmul(tub.ink(_cup), tub.tag());
+            uint debt = tub.tab(_cup);
+
+            uint ethAmount = ((collateral - debt) * (100 - (item.discount - fee))) / 100;
+
+            require(msg.value >= ethAmount, "Check if enough ether is sent for this cup");
+
+            price = ((collateral - debt) * (100 - (item.discount))) / 100;
+        }
 
         // give the cup to the buyer, him becoming the lad that owns the cup
-        usersProxy.execute(TUB_ADDRESS, 
+        DSProxy(item.owner).execute(marketplaceProxy, 
             abi.encodeWithSignature("give(bytes32, address)", _cup, msg.sender));
 
-        //TODO: take a fee?
+        item.active = false;
 
-        items[_cup].lad.transfer(items[_cup].price); // transfer money to the seller
+        item.owner.transfer(price); // transfer money to the seller
 
-        //TODO: delete the sales item
-        items[_cup].active = false;
+        emit Bought(_cup, msg.sender, item.owner, item.fixedPrice, item.discount, item.saleType);
+
+        removeItem(itemIndex);
+
     }
 
-    function cancel(uint cdpId) public {
+    function cancel(bytes32 _cup) public {
+        require(isOwner(msg.sender, _cup), "msg.sender must be owner of proxy which owns the cup");
 
+        uint itemIndex = items[_cup];
+        
+        removeItem(itemIndex);
+    }
+
+    function withdraw() public auth {
+        msg.sender.transfer(address(this).balance);
+    }
+
+    function removeItem(uint itemIndex) internal {
+        itemsArr[itemIndex] = itemsArr[itemsArr.length - 1];
+        delete itemsArr[itemsArr.length - 1];
+        itemsArr.length--;
+    }
+
+    function isOwner(address _owner, bytes32 _cup) internal view returns(bool) {
+        DSProxy proxy = registry.proxies(_owner);
+         
+        require(tub.lad(_cup) == address(proxy));
+
+        if (address(proxy) != address(0x0)) {
+            return true;
+        }
+        
+        return false;
     }
 
 }
