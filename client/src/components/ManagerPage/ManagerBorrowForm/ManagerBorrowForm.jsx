@@ -1,15 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Field, reduxForm, formValueSelector } from 'redux-form';
+import {
+  Field, reduxForm, formValueSelector, change,
+} from 'redux-form';
 import InputComponent from '../../Forms/InputComponent';
 import { generateDaiAction } from '../../../actions/dashboardActions';
 
 const ManagerBorrowForm = ({
-  generatingDai, generateDaiAction, formValues,
+  generatingDai, generateDaiAction, formValues, maxDai, gettingMaxDai, dispatch,
 }) => (
   <form className="action-items-wrapper form-wrapper" onSubmit={() => {}}>
     <div className="item">
+      <div
+        className={`max-wrapper ${generatingDai ? 'loading' : ''}`}
+        onClick={() => {
+          if (!generatingDai) dispatch(change('managerBorrowForm', 'generateDaiAmount', maxDai));
+        }}
+      >
+        { gettingMaxDai ? 'Loading...' : `(max ${maxDai.toFixed(2)})` }
+      </div>
       <Field
         id="manager-generate-input"
         wrapperClassName="form-item-wrapper generate"
@@ -65,6 +75,9 @@ ManagerBorrowForm.propTypes = {
   generateDaiAction: PropTypes.func.isRequired,
   generatingDai: PropTypes.bool.isRequired,
   formValues: PropTypes.object.isRequired,
+  maxDai: PropTypes.number.isRequired,
+  gettingMaxDai: PropTypes.bool.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 const ManagerBorrowFormComp = reduxForm({ form: 'managerBorrowForm' })(ManagerBorrowForm);
@@ -76,6 +89,8 @@ const mapStateToProps = state => ({
     generateDaiAmount: selector(state, 'generateDaiAmount'),
   },
   generatingDai: state.dashboard.generatingDai,
+  maxDai: state.dashboard.maxDai,
+  gettingMaxDai: state.dashboard.gettingMaxDai,
 });
 
 const mapDispatchToProps = { generateDaiAction };

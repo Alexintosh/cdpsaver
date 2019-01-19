@@ -1,5 +1,6 @@
 @import "../../common/colors";
 @import "../../common/text";
+@import "../../common/variables";
 
 .manager-page-wrapper {
 
@@ -40,6 +41,19 @@
           margin-left: 3px;
           color: white;
         }
+      }
+    }
+  }
+
+  .max-wrapper {
+    color: $gray;
+
+    &:not(.loading) {
+      @include hover-transition;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.7;
       }
     }
   }
