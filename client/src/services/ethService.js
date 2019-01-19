@@ -128,12 +128,9 @@ export const generateDai = (amountDai, cdpId, proxyAddress, account) => new Prom
 
     const data = web3.eth.abi.encodeFunctionCall(contractFunction, [saiTubAddress, cdpIdBytes32, daiParam]);
 
-    try {
-      await proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send({ from: account });
-      resolve(true);
-    } catch (err) {
-      reject(err.message);
-    }
+    await proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send({ from: account });
+
+    resolve(true);
   } catch (err) {
     reject(err.message);
   }
