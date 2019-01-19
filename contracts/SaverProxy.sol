@@ -79,10 +79,6 @@ contract SaverProxy is DSMath {
     function maxFreeDai(TubInterface _tub, bytes32 _cdpId) public returns (uint) {
         return (sub(wdiv(rmul(_tub.ink(_cdpId), _tub.tag()), rmul(_tub.mat(), WAD)), _tub.tab(_cdpId))) - 1;
     }
-
-    function getRatio(TubInterface _tub, bytes32 _cdpId) public returns(uint) {
-        return (wdiv(rmul(rmul(_tub.ink(_cdpId), _tub.tag()), WAD), _tub.tab(_cdpId)))/10000000;
-    }
     
     function lockPeth(TubInterface _tub, bytes32 cup, uint maxDai, address _wrapper) internal returns(uint) {
         ERC20(DAI_ADDRESS).transferFrom(address(this), _wrapper, maxDai);

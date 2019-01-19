@@ -74,6 +74,8 @@ contract Monitor is DSMath {
     function isOwner(address _owner, bytes32 _cup) internal returns(bool) {
          DSProxy reg = registry.proxies(_owner);
          
+         require(tub.lad(_cup) == address(reg));
+
          if(address(reg) != address(0x0)) {
              return true;
          }
