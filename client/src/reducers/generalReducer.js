@@ -16,6 +16,7 @@ import {
   ADD_PROXY_ADDRESS,
 } from '../actionTypes/generalActionTypes';
 import { CREATE_CDP_SUCCESS } from '../actionTypes/onboardingActionTypes';
+import { GENERATE_DAI_SUCCESS } from '../actionTypes/dashboardActionTypes';
 import { LS_ACCOUNT } from '../constants/general';
 
 const lsAccountType = JSON.parse(localStorage.getItem(LS_ACCOUNT));
@@ -63,7 +64,23 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case CREATE_CDP_SUCCESS:
-      return { ...state, cdp: payload };
+    case GENERATE_DAI_SUCCESS:
+      return {
+        ...state,
+        cdp: {
+          debtDai: payload.debtDai,
+          depositedETH: payload.depositedETH,
+          depositedPETH: payload.depositedPETH,
+          depositedUSD: payload.depositedUSD,
+          generatedDAI: payload.generatedDAI,
+          id: payload.id,
+          isSafe: payload.isSafe,
+          liquidationPrice: payload.liquidationPrice,
+          owner: payload.owner,
+          ratio: payload.ratio,
+          ...payload,
+        },
+      };
 
     case CONNECT_PROVIDER:
       return { ...state, connectingProvider: true };
