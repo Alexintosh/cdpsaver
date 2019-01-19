@@ -12,6 +12,8 @@ import {
 
   GET_ETH_PRICE_REQUEST,
   GET_ETH_PRICE_SUCCESS,
+
+  ADD_PROXY_ADDRESS,
 } from '../actionTypes/generalActionTypes';
 import { CREATE_CDP_SUCCESS } from '../actionTypes/onboardingActionTypes';
 import { LS_ACCOUNT } from '../constants/general';
@@ -31,6 +33,8 @@ const INITIAL_STATE = {
   accountError: '',
   accountType: lsAccountType ? lsAccountType.accountType : '',
   balance: 0,
+
+  proxyAddress: '',
 
   ethPrice: 0,
   gettingEthPrice: false,
@@ -87,6 +91,9 @@ export default (state = INITIAL_STATE, action) => {
 
     case LOGIN_FINISHED:
       return { ...state, loggingIn: false };
+
+    case ADD_PROXY_ADDRESS:
+      return { ...state, proxyAddress: payload };
 
     case GET_ETH_PRICE_REQUEST:
       return { ...state, gettingEthPrice: true };

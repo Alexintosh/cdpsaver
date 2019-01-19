@@ -15,7 +15,8 @@ export const generateDaiAction = amountDai => async (dispatch, getState) => {
   dispatch({ type: GENERATE_DAI_REQUEST });
 
   try {
-    await generateDai(amountDai, getState().general.address);
+    const { cdp, account, proxyAddress } = getState().general;
+    await generateDai(amountDai, cdp.id, proxyAddress, account);
 
     dispatch({ type: GENERATE_DAI_SUCCESS });
   } catch (err) {

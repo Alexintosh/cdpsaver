@@ -11,6 +11,7 @@ import {
 
   FINISH_ONBOARDING,
 } from '../actionTypes/onboardingActionTypes';
+import { ADD_PROXY_ADDRESS } from '../actionTypes/generalActionTypes';
 import { subscribeToMonitoringApiRequest } from '../services/apiService';
 import { LS_ONBOARDING_FINISHED } from '../constants/general';
 import { createCdp } from '../services/ethService';
@@ -43,10 +44,11 @@ export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dis
     await createCdp(account, ethAmount, parseFloat(daiAmount));
 
     // TODO SEE IF THIS CAN BE OPTIMIZED,
-    const payload = await getAddressCdp(account);
+    const { cdp, proxyAddress } = await getAddressCdp(account);
     const newInfo = await getUpdatedCdpInfo(ethAmount, daiAmount);
 
-    dispatch({ type: CREATE_CDP_SUCCESS, payload: { ...payload, ...newInfo } });
+    dispatch({ type: CREATE_CDP_SUCCESS, payload: { ...cdp, ...newInfo } });
+    dispatch({ type: ADD_PROXY_ADDRESS, payload: proxyAddress });
     history.push('/onboarding/info');
   } catch (err) {
     dispatch({ type: CREATE_CDP_ERROR, payload: err });

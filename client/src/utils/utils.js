@@ -1,4 +1,5 @@
 import web3 from 'web3';
+import BN from 'bn.js';
 
 /**
  * Takes two rgb arrays and gradient weight and calculates combined rgb color
@@ -104,4 +105,17 @@ export const getContractInstance = async (web3, contractDefinition) => {
 export const getAbiFunction = (contract, functionName) => {
   const { abi } = contract.toJSON();
   return abi.find(abi => abi.name === functionName);
+};
+
+export const padToBytes32 = (_n) => {
+  let n = _n;
+
+  while (n.length < 64) n = `0${n}`;
+
+  return `0x${n}`;
+};
+
+export const numStringToBytes32 = (num) => {
+  const bn = new BN(num).toTwos(256);
+  return padToBytes32(bn.toString(16));
 };

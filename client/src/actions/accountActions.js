@@ -9,6 +9,8 @@ import {
 
   LOGIN_STARTED,
   LOGIN_FINISHED,
+
+  ADD_PROXY_ADDRESS,
 } from '../actionTypes/generalActionTypes';
 import {
   isMetaMaskApproved, getBalance, getAccount, nameOfNetwork, getNetwork, metamaskApprove,
@@ -73,10 +75,11 @@ export const getCdp = () => async (dispatch, getState) => {
   dispatch({ type: GET_CDP_REQUEST });
 
   try {
-    const cdp = await getAddressCdp(getState().general.account);
+    const { cdp, proxyAddress } = await getAddressCdp(getState().general.account);
     const newData = await getUpdatedCdpInfo(cdp.depositedETH.toNumber(), cdp.debtDai.toNumber());
 
     dispatch({ type: GET_CDP_SUCCESS, payload: { ...cdp, ...newData } });
+    dispatch({ type: ADD_PROXY_ADDRESS, payload: proxyAddress });
   } catch (err) {
     dispatch({ type: GET_CDP_FAILURE, payload: err });
   }
