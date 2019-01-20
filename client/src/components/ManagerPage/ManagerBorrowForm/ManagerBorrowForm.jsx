@@ -12,7 +12,7 @@ import {
 
 const ManagerBorrowForm = ({
   generatingDai, generateDaiAction, formValues, maxDai, gettingMaxDai, dispatch,
-  withdrawingEth, withdrawEthAction,
+  withdrawingEth, withdrawEthAction, maxEthWithdraw, gettingMaxEthWithdraw,
 }) => (
   <form className="action-items-wrapper form-wrapper" onSubmit={() => {}}>
     <div className="item">
@@ -44,7 +44,14 @@ const ManagerBorrowForm = ({
     </div>
 
     <div className="item">
-      <div className="max-wrapper">(max 280)</div>
+      <div
+        className={`max-wrapper ${withdrawingEth ? 'loading' : ''}`}
+        onClick={() => {
+          if (!withdrawingEth) dispatch(change('managerBorrowForm', 'withdrawEthAmount', maxDai));
+        }}
+      >
+        { gettingMaxEthWithdraw ? 'Loading...' : `(max ${maxEthWithdraw.toFixed(2)})` }
+      </div>
       <Field
         id="manager-withdraw-input"
         wrapperClassName="form-item-wrapper withdraw"
@@ -91,6 +98,8 @@ ManagerBorrowForm.propTypes = {
   dispatch: PropTypes.func.isRequired,
   withdrawEthAction: PropTypes.func.isRequired,
   withdrawingEth: PropTypes.bool.isRequired,
+  maxEthWithdraw: PropTypes.number.isRequired,
+  gettingMaxEthWithdraw: PropTypes.bool.isRequired,
 };
 
 const ManagerBorrowFormComp = reduxForm({ form: 'managerBorrowForm' })(ManagerBorrowForm);
@@ -107,6 +116,8 @@ const mapStateToProps = state => ({
   gettingMaxDai: state.dashboard.gettingMaxDai,
 
   withdrawingEth: state.dashboard.withdrawingEth,
+  maxEthWithdraw: state.dashboard.maxEthWithdraw,
+  gettingMaxEthWithdraw: state.dashboard.gettingMaxEthWithdraw,
 });
 
 const mapDispatchToProps = {

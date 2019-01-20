@@ -190,3 +190,12 @@ export const getMaxDai = async (daiDebt, collateral, _ethPrice) => {
     throw new Error(err);
   }
 };
+
+/**
+ * Calculates the max amount of eth that the user can withdraw from the cdp
+ * TODO Finish this when the formula is complete
+ * @return {Promise<number>}
+ */
+export const getMaxEthWithdraw = () => new Promise((resolve) => {
+  setTimeout(() => { resolve(280); }, 2000);
+});

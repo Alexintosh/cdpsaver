@@ -5,14 +5,18 @@ import PieChart from '../PieChart/PieChart';
 import Tabs from '../Tabs/Tabs';
 import ManagerBorrowForm from './ManagerBorrowForm/ManagerBorrowForm';
 import ManagerPaybackFrom from './ManagerPaybackFrom/ManagerPaybackFrom';
-import { getMaxDaiAction } from '../../actions/dashboardActions';
+import {
+  getMaxDaiAction, getMaxEthWithdrawAction,
+} from '../../actions/dashboardActions';
 
 import './ManagerPage.scss';
 import './action-items.scss';
 
 class ManagerPage extends Component {
   componentWillMount() {
+    // TODO optimize this by putting it borrow or payback
     this.props.getMaxDaiAction();
+    this.props.getMaxEthWithdrawAction();
   }
 
   render() {
@@ -106,6 +110,7 @@ ManagerPage.propTypes = {
   ethPrice: PropTypes.number.isRequired,
   gettingEthPrice: PropTypes.bool.isRequired,
   getMaxDaiAction: PropTypes.func.isRequired,
+  getMaxEthWithdrawAction: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ general }) => ({
@@ -114,6 +119,8 @@ const mapStateToProps = ({ general }) => ({
   gettingEthPrice: general.gettingEthPrice,
 });
 
-const mapDispatchToProps = { getMaxDaiAction };
+const mapDispatchToProps = {
+  getMaxDaiAction, getMaxEthWithdrawAction,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManagerPage);
