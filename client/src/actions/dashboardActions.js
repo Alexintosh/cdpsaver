@@ -7,8 +7,12 @@ import {
   GET_MAX_DAI_REQUEST,
   GET_MAX_DAI_SUCCESS,
   GET_MAX_DAI_FAILURE,
+
+  WITHDRAW_ETH_REQUEST,
+  WITHDRAW_ETH_SUCCESS,
+  WITHDRAW_ETH_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
-import { generateDai } from '../services/ethService';
+import { generateDai, withdrawEthFromCdp } from '../services/ethService';
 import { getCdpInfo, getMaxDai, getUpdatedCdpInfo } from '../services/cdpService';
 
 /**
@@ -39,6 +43,7 @@ export const generateDaiAction = amountDai => async (dispatch, getState) => {
 
 /**
  * Handles redux actions for when the number of max dai that can be generated is calculating
+ *
  * @return {Function}
  */
 export const getMaxDaiAction = () => async (dispatch, getState) => {
@@ -52,5 +57,31 @@ export const getMaxDaiAction = () => async (dispatch, getState) => {
     dispatch({ type: GET_MAX_DAI_SUCCESS, payload });
   } catch (err) {
     dispatch({ type: GET_MAX_DAI_FAILURE, payload: err.message });
+  }
+};
+
+/**
+ * Handles redux actions for the withdraw eth from cdp smart contract call
+ *
+ * @param amountEth {String}
+ * @return {Function}
+ */
+export const withdrawEthAction = amountEth => async (dispatch, getState) => {
+  dispatch({ type: WITHDRAW_ETH_REQUEST });
+
+  try {
+    const {
+      cdp, account, proxyAddress, ethPrice,
+    } = getState().general;
+
+    await withdrawEthFromCdp(amountEth, cdp.id, proxyAddress, account);
+
+    const newCdp = await getCdpInfo(cdp.id, false);
+    const newCdpInfo = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
+
+    dispatch({ type: WITHDRAW_ETH_SUCCESS, payload: { ...newCdp, ...newCdpInfo } });
+    dispatch(change('managerBorrowForm', 'withdrawEthAmount', null));
+  } catch (err) {
+    dispatch({ type: WITHDRAW_ETH_FAILURE, payload: err.message });
   }
 };

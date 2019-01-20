@@ -5,10 +5,14 @@ import {
   Field, reduxForm, formValueSelector, change,
 } from 'redux-form';
 import InputComponent from '../../Forms/InputComponent';
-import { generateDaiAction } from '../../../actions/dashboardActions';
+import {
+  generateDaiAction,
+  withdrawEthAction,
+} from '../../../actions/dashboardActions';
 
 const ManagerBorrowForm = ({
   generatingDai, generateDaiAction, formValues, maxDai, gettingMaxDai, dispatch,
+  withdrawingEth, withdrawEthAction,
 }) => (
   <form className="action-items-wrapper form-wrapper" onSubmit={() => {}}>
     <div className="item">
@@ -40,21 +44,28 @@ const ManagerBorrowForm = ({
     </div>
 
     <div className="item">
+      <div className="max-wrapper">(max 280)</div>
       <Field
         id="manager-withdraw-input"
         wrapperClassName="form-item-wrapper withdraw"
-        name="withdraw"
+        name="withdrawEthAmount"
         labelText="Withdraw:"
-        secondLabelText="DAI"
+        secondLabelText="ETH"
         placeholder="1"
         component={InputComponent}
       />
-      <button type="button" className="button gray uppercase">
-        Withdraw
+      <button
+        type="button"
+        className="button gray uppercase"
+        onClick={() => { withdrawEthAction(formValues.withdrawEthAmount); }}
+        disabled={withdrawingEth || !formValues.withdrawEthAmount}
+      >
+        { withdrawingEth ? 'Withdrawing' : 'Withdraw' }
       </button>
     </div>
 
     <div className="item">
+      <div className="max-wrapper">(max 280)</div>
       <Field
         id="manager-repay-input"
         wrapperClassName="form-item-wrapper repay"
@@ -78,6 +89,8 @@ ManagerBorrowForm.propTypes = {
   maxDai: PropTypes.number.isRequired,
   gettingMaxDai: PropTypes.bool.isRequired,
   dispatch: PropTypes.func.isRequired,
+  withdrawEthAction: PropTypes.func.isRequired,
+  withdrawingEth: PropTypes.bool.isRequired,
 };
 
 const ManagerBorrowFormComp = reduxForm({ form: 'managerBorrowForm' })(ManagerBorrowForm);
@@ -87,12 +100,17 @@ const selector = formValueSelector('managerBorrowForm');
 const mapStateToProps = state => ({
   formValues: {
     generateDaiAmount: selector(state, 'generateDaiAmount'),
+    withdrawEthAmount: selector(state, 'withdrawEthAmount'),
   },
   generatingDai: state.dashboard.generatingDai,
   maxDai: state.dashboard.maxDai,
   gettingMaxDai: state.dashboard.gettingMaxDai,
+
+  withdrawingEth: state.dashboard.withdrawingEth,
 });
 
-const mapDispatchToProps = { generateDaiAction };
+const mapDispatchToProps = {
+  generateDaiAction, withdrawEthAction,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManagerBorrowFormComp);

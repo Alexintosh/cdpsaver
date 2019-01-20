@@ -6,6 +6,10 @@ import {
   GET_MAX_DAI_REQUEST,
   GET_MAX_DAI_SUCCESS,
   GET_MAX_DAI_FAILURE,
+
+  WITHDRAW_ETH_REQUEST,
+  WITHDRAW_ETH_SUCCESS,
+  WITHDRAW_ETH_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 
 const INITIAL_STATE = {
@@ -15,6 +19,9 @@ const INITIAL_STATE = {
   maxDai: 0,
   gettingMaxDai: false,
   gettingMaxDaiError: false,
+
+  withdrawingEth: false,
+  withdrawingEthError: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -54,6 +61,23 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         gettingMaxDai: false,
         gettingMaxDaiError: payload,
+      };
+
+    case WITHDRAW_ETH_REQUEST:
+      return { ...state, withdrawingEth: true };
+
+    case WITHDRAW_ETH_SUCCESS:
+      return {
+        ...state,
+        withdrawingEth: false,
+        withdrawingEthError: '',
+      };
+
+    case WITHDRAW_ETH_FAILURE:
+      return {
+        ...state,
+        withdrawingEth: false,
+        withdrawingEthError: payload,
       };
 
     default:
