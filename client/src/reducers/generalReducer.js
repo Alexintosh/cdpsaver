@@ -16,7 +16,11 @@ import {
   ADD_PROXY_ADDRESS,
 } from '../actionTypes/generalActionTypes';
 import { CREATE_CDP_SUCCESS } from '../actionTypes/onboardingActionTypes';
-import { GENERATE_DAI_SUCCESS, WITHDRAW_ETH_SUCCESS } from '../actionTypes/dashboardActionTypes';
+import {
+  ADD_COLLATERAL_SUCCESS,
+  GENERATE_DAI_SUCCESS,
+  WITHDRAW_ETH_SUCCESS
+} from '../actionTypes/dashboardActionTypes';
 import { LS_ACCOUNT } from '../constants/general';
 
 const lsAccountType = JSON.parse(localStorage.getItem(LS_ACCOUNT));
@@ -66,6 +70,7 @@ export default (state = INITIAL_STATE, action) => {
     case CREATE_CDP_SUCCESS:
     case GENERATE_DAI_SUCCESS:
     case WITHDRAW_ETH_SUCCESS:
+    case ADD_COLLATERAL_SUCCESS:
       return {
         ...state,
         cdp: {

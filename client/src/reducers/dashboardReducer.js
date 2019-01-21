@@ -14,6 +14,10 @@ import {
   GET_MAX_ETH_WITHDRAW_REQUEST,
   GET_MAX_ETH_WITHDRAW_SUCCESS,
   GET_MAX_ETH_WITHDRAW_FAILURE,
+
+  ADD_COLLATERAL_REQUEST,
+  ADD_COLLATERAL_SUCCESS,
+  ADD_COLLATERAL_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 
 const INITIAL_STATE = {
@@ -30,6 +34,9 @@ const INITIAL_STATE = {
   maxEthWithdraw: 0,
   gettingMaxEthWithdraw: false,
   gettingMaxEthWithdrawError: '',
+
+  addingCollateral: false,
+  addingCollateralError: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -104,6 +111,23 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         gettingMaxEthWithdraw: false,
         gettingMaxEthWithdrawError: payload,
+      };
+
+    case ADD_COLLATERAL_REQUEST:
+      return { ...state, addingCollateral: true };
+
+    case ADD_COLLATERAL_SUCCESS:
+      return {
+        ...state,
+        addingCollateral: false,
+        addingCollateralError: '',
+      };
+
+    case ADD_COLLATERAL_FAILURE:
+      return {
+        ...state,
+        addingCollateral: false,
+        addingCollateralError: payload,
       };
 
     default:

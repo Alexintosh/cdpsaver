@@ -168,3 +168,36 @@ export const withdrawEthFromCdp = (amountEth, cdpId, proxyAddress, account) => n
     reject(err.message);
   }
 });
+
+/**
+ * Calls the proxy contract and adds eth to the cdp collateral
+ *
+ * @param amountEth {String}
+ * @param cdpId {Number}
+ * @param proxyAddress {String}
+ * @param account {String}
+ *
+ * @return {Promise<Boolean>}
+ */
+export const addCollateralToCdp = async (amountEth, cdpId, proxyAddress, account) => new Promise(async (resolve, reject) => { // eslint-disable-line
+  const web3 = window._web3;
+
+  try {
+    const contract = config.SaiSaverProxy;
+    const contractFunction = contract.abi.find(abi => abi.name === 'lock');
+
+    const dsProxyContractAbi = dsProxyContractJson.abi;
+    const proxyContract = new window._web3.eth.Contract(dsProxyContractAbi, proxyAddress);
+
+    const value = web3.utils.toWei(amountEth, 'ether');
+    const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
+
+    const data = web3.eth.abi.encodeFunctionCall(contractFunction, [saiTubAddress, cdpIdBytes32]);
+
+    await proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send({ from: account, value });
+
+    resolve(true);
+  } catch (err) {
+    reject(err.message);
+  }
+});

@@ -19,6 +19,7 @@
       margin-bottom: 0;
 
       .input-values label {
+        white-space: nowrap;
         font-size: $font-size-medium;
         color: white;
       }

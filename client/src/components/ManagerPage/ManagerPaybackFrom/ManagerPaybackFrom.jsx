@@ -1,9 +1,13 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-import { Field, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Field, formValueSelector, reduxForm } from 'redux-form';
 import InputComponent from '../../Forms/InputComponent';
+import { addCollateralAction } from '../../../actions/dashboardActions';
 
-const ManagerPaybackForm = () => (
+const ManagerPaybackForm = ({
+  formValues, addingCollateral, addCollateralAction,
+}) => (
   <form className="action-items-wrapper form-wrapper" onSubmit={() => {}}>
     <div className="item">
       <Field
@@ -24,14 +28,20 @@ const ManagerPaybackForm = () => (
       <Field
         id="manager-add-collateral-input"
         wrapperClassName="form-item-wrapper collateral"
-        name="addCollateral"
-        labelText="Withdraw:"
-        secondLabelText="DAI"
+        name="addCollateralAmount"
+        labelText="Add collateral:"
+        secondLabelText="ETH"
         placeholder="1"
         component={InputComponent}
       />
-      <button type="button" className="button gray uppercase variable-width">
-        Add Collateral
+
+      <button
+        type="button"
+        className="button gray uppercase variable-width"
+        onClick={() => { addCollateralAction(formValues.addCollateralAmount); }}
+        disabled={addingCollateral || !formValues.addCollateralAmount}
+      >
+        { addingCollateral ? 'Adding collateral' : 'Add collateral' }
       </button>
     </div>
 
@@ -52,6 +62,26 @@ const ManagerPaybackForm = () => (
   </form>
 );
 
-const ManagerPaybackFormComp = reduxForm({ form: 'managerBorrowForm' })(ManagerPaybackForm);
+ManagerPaybackForm.propTypes = {
+  addCollateralAction: PropTypes.func.isRequired,
+  addingCollateral: PropTypes.bool.isRequired,
+  formValues: PropTypes.object.isRequired,
+};
 
-export default ManagerPaybackFormComp;
+const ManagerPaybackFormComp = reduxForm({ form: 'managerPaybackForm' })(ManagerPaybackForm);
+
+const selector = formValueSelector('managerPaybackForm');
+
+const mapStateToProps = state => ({
+  formValues: {
+    addCollateralAmount: selector(state, 'addCollateralAmount'),
+  },
+  addingCollateral: state.dashboard.addingCollateral,
+});
+
+
+const mapDispatchToProps = {
+  addCollateralAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManagerPaybackFormComp);
