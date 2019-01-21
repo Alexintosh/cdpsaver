@@ -5,7 +5,7 @@ import '../../common/forms.scss';
 
 const InputComponent = ({
   input, placeholder, wrapperClassName, inputClassName, errorClassName, showErrorText,
-  type, id, labelText, labelClass, meta: { touched, error }, focus, additional, icon,
+  type, id, labelText, labelClass, meta: { touched, error }, focus, additional, icon, disabled,
   secondLabelText,
 }) => (
   <div className={`${wrapperClassName} ${touched && error ? 'wrapper-error' : ''}`}>
@@ -20,6 +20,7 @@ const InputComponent = ({
         className={`${inputClassName} ${touched && error ? errorClassName : ''}`}
         type={type}
         autoFocus={focus}
+        disabled={disabled}
       />
       { secondLabelText && <div className="second-label">{secondLabelText}</div> }
     </div>
@@ -37,6 +38,7 @@ InputComponent.defaultProps = {
   placeholder: '',
   showErrorText: false,
   focus: false,
+  disabled: false,
   additional: {},
   wrapperClassName: 'form-item-wrapper',
   inputClassName: 'form-item',
@@ -58,6 +60,7 @@ InputComponent.propTypes = {
   meta: PropTypes.object.isRequired,
   showErrorText: PropTypes.bool,
   focus: PropTypes.bool,
+  disabled: PropTypes.bool,
   additional: PropTypes.object,
   icon: PropTypes.node,
 };

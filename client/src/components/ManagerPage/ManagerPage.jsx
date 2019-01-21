@@ -81,19 +81,19 @@ class ManagerPage extends Component {
 
             <div className="actions-section-wrapper">
               <Tabs>
-                <div label="Payback">
-                  <ManagerPaybackFrom />
-
-                  <div className="info-text">
-                    *Boost will draw DAI and buy ETH, increasing the amount ETH in the cdp
-                  </div>
-                </div>
-
                 <div label="Borrow">
                   <ManagerBorrowForm />
 
                   <div className="info-text">
                     *Repay will draw ETH from cdp and repay in DAI, lowering the liq. price
+                  </div>
+                </div>
+
+                <div label="Payback">
+                  <ManagerPaybackFrom />
+
+                  <div className="info-text">
+                    *Boost will draw DAI and buy ETH, increasing the amount ETH in the cdp
                   </div>
                 </div>
               </Tabs>

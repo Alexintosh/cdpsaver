@@ -8,6 +8,7 @@ import {
 import config from '../config/config.json';
 import { numStringToBytes32 } from '../utils/utils';
 import dsProxyContractJson from '../contracts/DSProxy.json';
+import { getCdpInfo, getUpdatedCdpInfo } from './cdpService';
 
 export const getAccount = () => (
   new Promise(async (resolve, reject) => {
@@ -102,101 +103,51 @@ export const createCdp = (from, ethAmount, _daiAmount) => new Promise(async (res
   }
 });
 
-
 /**
- * Calls the proxy contract and generates more dai for it
+ * Calls the proxy contract and handles the action that is specified in the parameters
  *
- * @param amountDai {String}
+ * @param amount {String}
  * @param cdpId {Number}
  * @param proxyAddress {String}
  * @param account {String}
+2 * @param funcName {String}
+ * @param ethPrice {Number}
+ * @param sendAsValue {Boolean}
  *
- * @return {Promise<Boolean>}
+ * @return {Promise<Object>}
  */
-export const generateDai = (amountDai, cdpId, proxyAddress, account) => new Promise(async (resolve, reject) => {
+export const callProxyContract = (
+  amount, cdpId, proxyAddress, account, funcName, ethPrice, sendAsValue = false,
+) => new Promise(async (resolve, reject) => {
   const web3 = window._web3;
 
   try {
     const contract = config.SaiSaverProxy;
-    const contractFunction = contract.abi.find(abi => abi.name === 'draw');
+    const contractFunction = contract.abi.find(abi => abi.name === funcName);
 
     const dsProxyContractAbi = dsProxyContractJson.abi;
     const proxyContract = new window._web3.eth.Contract(dsProxyContractAbi, proxyAddress);
 
-    const daiParam = web3.utils.toWei(amountDai, 'ether');
+    const amountParam = web3.utils.toWei(amount, 'ether');
     const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
 
-    const data = web3.eth.abi.encodeFunctionCall(contractFunction, [saiTubAddress, cdpIdBytes32, daiParam]);
+    const params = [saiTubAddress, cdpIdBytes32];
+    const txParams = { from: account };
 
-    await proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send({ from: account });
+    if (sendAsValue) {
+      txParams.value = amountParam;
+    } else {
+      params.push(amountParam);
+    }
 
-    resolve(true);
-  } catch (err) {
-    reject(err.message);
-  }
-});
+    const data = web3.eth.abi.encodeFunctionCall(contractFunction, params);
 
-/**
- * Calls the proxy contract and withdraws eth for it
- *
- * @param amountEth {String}
- * @param cdpId {Number}
- * @param proxyAddress {String}
- * @param account {String}
- *
- * @return {Promise<Boolean>}
- */
-export const withdrawEthFromCdp = (amountEth, cdpId, proxyAddress, account) => new Promise(async (resolve, reject) => {
-  const web3 = window._web3;
+    await proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send(txParams);
 
-  try {
-    const contract = config.SaiSaverProxy;
-    const contractFunction = contract.abi.find(abi => abi.name === 'free');
+    const newCdp = await getCdpInfo(cdpId, false);
+    const newCdpInfo = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
 
-    const dsProxyContractAbi = dsProxyContractJson.abi;
-    const proxyContract = new window._web3.eth.Contract(dsProxyContractAbi, proxyAddress);
-
-    const ethParam = web3.utils.toWei(amountEth, 'ether');
-    const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
-
-    const data = web3.eth.abi.encodeFunctionCall(contractFunction, [saiTubAddress, cdpIdBytes32, ethParam]);
-
-    await proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send({ from: account });
-
-    resolve(true);
-  } catch (err) {
-    reject(err.message);
-  }
-});
-
-/**
- * Calls the proxy contract and adds eth to the cdp collateral
- *
- * @param amountEth {String}
- * @param cdpId {Number}
- * @param proxyAddress {String}
- * @param account {String}
- *
- * @return {Promise<Boolean>}
- */
-export const addCollateralToCdp = async (amountEth, cdpId, proxyAddress, account) => new Promise(async (resolve, reject) => { // eslint-disable-line
-  const web3 = window._web3;
-
-  try {
-    const contract = config.SaiSaverProxy;
-    const contractFunction = contract.abi.find(abi => abi.name === 'lock');
-
-    const dsProxyContractAbi = dsProxyContractJson.abi;
-    const proxyContract = new window._web3.eth.Contract(dsProxyContractAbi, proxyAddress);
-
-    const value = web3.utils.toWei(amountEth, 'ether');
-    const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
-
-    const data = web3.eth.abi.encodeFunctionCall(contractFunction, [saiTubAddress, cdpIdBytes32]);
-
-    await proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send({ from: account, value });
-
-    resolve(true);
+    resolve({ ...newCdp, ...newCdpInfo });
   } catch (err) {
     reject(err.message);
   }

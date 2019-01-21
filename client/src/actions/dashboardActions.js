@@ -20,10 +20,8 @@ import {
   ADD_COLLATERAL_SUCCESS,
   ADD_COLLATERAL_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
-import { generateDai, withdrawEthFromCdp, addCollateralToCdp } from '../services/ethService';
-import {
-  getCdpInfo, getMaxDai, getUpdatedCdpInfo, getMaxEthWithdraw,
-} from '../services/cdpService';
+import { callProxyContract } from '../services/ethService';
+import { getMaxDai, getMaxEthWithdraw } from '../services/cdpService';
 
 /**
  * Handles redux actions for when the number of max dai that can be generated is calculating
@@ -54,16 +52,12 @@ export const generateDaiAction = amountDai => async (dispatch, getState) => {
   dispatch({ type: GENERATE_DAI_REQUEST });
 
   try {
-    const {
-      cdp, account, proxyAddress, ethPrice,
-    } = getState().general;
+    const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
+    const params = [amountDai, cdp.id, proxyAddress, account, 'draw', ethPrice];
 
-    await generateDai(amountDai, cdp.id, proxyAddress, account);
+    const payload = await callProxyContract(...params);
 
-    const newCdp = await getCdpInfo(cdp.id, false);
-    const newCdpInfo = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
-
-    dispatch({ type: GENERATE_DAI_SUCCESS, payload: { ...newCdp, ...newCdpInfo } });
+    dispatch({ type: GENERATE_DAI_SUCCESS, payload });
     dispatch(change('managerBorrowForm', 'generateDaiAmount', null));
     dispatch(getMaxDaiAction());
   } catch (err) {
@@ -100,16 +94,12 @@ export const withdrawEthAction = amountEth => async (dispatch, getState) => {
   dispatch({ type: WITHDRAW_ETH_REQUEST });
 
   try {
-    const {
-      cdp, account, proxyAddress, ethPrice,
-    } = getState().general;
+    const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
+    const params = [amountEth, cdp.id, proxyAddress, account, 'free', ethPrice];
 
-    await withdrawEthFromCdp(amountEth, cdp.id, proxyAddress, account);
+    const payload = await callProxyContract(...params);
 
-    const newCdp = await getCdpInfo(cdp.id, false);
-    const newCdpInfo = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
-
-    dispatch({ type: WITHDRAW_ETH_SUCCESS, payload: { ...newCdp, ...newCdpInfo } });
+    dispatch({ type: WITHDRAW_ETH_SUCCESS, payload });
     dispatch(change('managerBorrowForm', 'withdrawEthAmount', null));
     dispatch(getMaxEthWithdrawAction());
   } catch (err) {
@@ -128,16 +118,12 @@ export const addCollateralAction = amountEth => async (dispatch, getState) => {
   dispatch({ type: ADD_COLLATERAL_REQUEST });
 
   try {
-    const {
-      cdp, account, proxyAddress, ethPrice,
-    } = getState().general;
+    const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
+    const params = [amountEth, cdp.id, proxyAddress, account, 'lock', ethPrice, true];
 
-    await addCollateralToCdp(amountEth, cdp.id, proxyAddress, account);
+    const payload = await callProxyContract(...params);
 
-    const newCdp = await getCdpInfo(cdp.id, false);
-    const newCdpInfo = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
-
-    dispatch({ type: ADD_COLLATERAL_SUCCESS, payload: { ...newCdp, ...newCdpInfo } });
+    dispatch({ type: ADD_COLLATERAL_SUCCESS, payload });
     dispatch(change('managerPaybackForm', 'addCollateralAmount', null));
   } catch (err) {
     dispatch({ type: ADD_COLLATERAL_FAILURE, payload: err.message });

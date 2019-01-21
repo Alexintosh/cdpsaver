@@ -32,6 +32,7 @@ const ManagerPaybackForm = ({
         labelText="Add collateral:"
         secondLabelText="ETH"
         placeholder="1"
+        disabled={addingCollateral}
         component={InputComponent}
       />
 

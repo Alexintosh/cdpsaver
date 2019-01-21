@@ -31,6 +31,7 @@ const ManagerBorrowForm = ({
         labelText="Generate:"
         secondLabelText="DAI"
         placeholder="1"
+        disabled={generatingDai}
         component={InputComponent}
       />
       <button
@@ -59,6 +60,7 @@ const ManagerBorrowForm = ({
         labelText="Withdraw:"
         secondLabelText="ETH"
         placeholder="1"
+        disabled={withdrawingEth}
         component={InputComponent}
       />
       <button

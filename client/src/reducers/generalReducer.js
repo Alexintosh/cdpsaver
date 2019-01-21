@@ -19,7 +19,7 @@ import { CREATE_CDP_SUCCESS } from '../actionTypes/onboardingActionTypes';
 import {
   ADD_COLLATERAL_SUCCESS,
   GENERATE_DAI_SUCCESS,
-  WITHDRAW_ETH_SUCCESS
+  WITHDRAW_ETH_SUCCESS,
 } from '../actionTypes/dashboardActionTypes';
 import { LS_ACCOUNT } from '../constants/general';
 
