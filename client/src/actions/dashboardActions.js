@@ -79,7 +79,7 @@ export const getMaxEthWithdrawAction = () => async (dispatch, getState) => {
   try {
     const { cdp, ethPrice } = getState().general;
 
-    const payload = await getMaxEthWithdraw(cdp, ethPrice);
+    const payload = await getMaxEthWithdraw(cdp.debtDai, cdp.depositedETH.toNumber(), ethPrice);
 
     dispatch({ type: GET_MAX_ETH_WITHDRAW_SUCCESS, payload });
   } catch (err) {

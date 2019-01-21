@@ -193,9 +193,24 @@ export const getMaxDai = async (daiDebt, collateral, _ethPrice) => {
 
 /**
  * Calculates the max amount of eth that the user can withdraw from the cdp
- * TODO Finish this when the formula is complete
+ *
+ * @param daiDebt
+ * @param collateral
+ * @param _ethPrice
+ *
  * @return {Promise<number>}
  */
-export const getMaxEthWithdraw = () => new Promise((resolve) => {
-  setTimeout(() => { resolve(280); }, 2000);
-});
+export const getMaxEthWithdraw = async (daiDebt, collateral, _ethPrice) => {
+  try {
+    const price = maker.service('price');
+
+    let ethPrice = _ethPrice;
+    if (!ethPrice) ethPrice = (await price.getEthPrice()).toNumber();
+
+    const peth2wethRatio = await price.getWethToPethRatio();
+
+    return collateral - (((150 / 100) * daiDebt) / (ethPrice * peth2wethRatio));
+  } catch (err) {
+    throw new Error(err);
+  }
+};
