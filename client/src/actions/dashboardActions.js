@@ -157,6 +157,10 @@ export const setAfterValue = (amount, type) => async (dispatch, getState) => {
       payload.afterCdp = await getUpdatedCdpInfo(cdp.depositedETH, cdp.generatedDAI + parseFloat(amount), ethPrice);
     }
 
+    if (type === 'withdraw') {
+      payload.afterCdp = await getUpdatedCdpInfo(cdp.depositedETH - parseFloat(amount), cdp.generatedDAI, ethPrice);
+    }
+
     dispatch({ type: GET_AFTER_CDP_SUCCESS, payload });
   } catch (err) {
     dispatch({ type: GET_AFTER_CDP_FAILURE, payload: err.message });

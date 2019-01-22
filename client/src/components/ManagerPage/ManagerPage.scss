@@ -33,6 +33,8 @@
             position: absolute;
 
             &.generate, &.payback { .amount { color: $purple; } }
+            &.withdraw, &.collateral { .amount { color: $yellow; } }
+            &.repay, &.boost { .amount { color: $blue; } }
 
             .amount-wrapper {
               display: flex;

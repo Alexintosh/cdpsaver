@@ -60,11 +60,14 @@ const ManagerBorrowForm = ({
       </div>
       <Field
         id="manager-withdraw-input"
+        type="number"
         wrapperClassName="form-item-wrapper withdraw"
         name="withdrawEthAmount"
+        onChange={(e) => { setAfterValue(e.target.value, 'withdraw'); }}
         labelText="Withdraw:"
         secondLabelText="ETH"
         placeholder="1"
+        additional={{ max: maxEthWithdraw }}
         disabled={withdrawingEth}
         component={InputComponent}
       />
@@ -72,7 +75,7 @@ const ManagerBorrowForm = ({
         type="button"
         className="button gray uppercase"
         onClick={() => { withdrawEthAction(formValues.withdrawEthAmount); }}
-        disabled={withdrawingEth || !formValues.withdrawEthAmount}
+        disabled={withdrawingEth || !formValues.withdrawEthAmount || (formValues.withdrawEthAmount > maxEthWithdraw)}
       >
         { withdrawingEth ? 'Withdrawing' : 'Withdraw' }
       </button>
