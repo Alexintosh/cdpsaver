@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Field, formValueSelector, reduxForm } from 'redux-form';
 import InputComponent from '../../Forms/InputComponent';
-import { addCollateralAction } from '../../../actions/dashboardActions';
+import { addCollateralAction, setAfterValue } from '../../../actions/dashboardActions';
 
 const ManagerPaybackForm = ({
-  formValues, addingCollateral, addCollateralAction,
+  formValues, addingCollateral, addCollateralAction, setAfterValue,
 }) => (
   <form className="action-items-wrapper form-wrapper" onSubmit={() => {}}>
     <div className="item">
@@ -27,8 +27,10 @@ const ManagerPaybackForm = ({
     <div className="item">
       <Field
         id="manager-add-collateral-input"
+        type="number"
         wrapperClassName="form-item-wrapper collateral"
         name="addCollateralAmount"
+        onChange={(e) => { setAfterValue(e.target.value, 'collateral'); }}
         labelText="Add collateral:"
         secondLabelText="ETH"
         placeholder="1"
@@ -67,6 +69,7 @@ ManagerPaybackForm.propTypes = {
   addCollateralAction: PropTypes.func.isRequired,
   addingCollateral: PropTypes.bool.isRequired,
   formValues: PropTypes.object.isRequired,
+  setAfterValue: PropTypes.func.isRequired,
 };
 
 const ManagerPaybackFormComp = reduxForm({ form: 'managerPaybackForm' })(ManagerPaybackForm);
@@ -82,7 +85,7 @@ const mapStateToProps = state => ({
 
 
 const mapDispatchToProps = {
-  addCollateralAction,
+  addCollateralAction, setAfterValue,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManagerPaybackFormComp);

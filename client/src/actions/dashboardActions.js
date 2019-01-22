@@ -137,28 +137,37 @@ export const addCollateralAction = amountEth => async (dispatch, getState) => {
 /**
  * Calculates the changed cdp value
  *
- * @param amount
- * @param type
+ * @param _amount {String}
+ * @param type {String}
+ *
  * @return {Function}
  */
-export const setAfterValue = (amount, type) => async (dispatch, getState) => {
-  if (!amount) return dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });
+export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
+  if (!_amount) return dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });
 
   dispatch({ type: GET_AFTER_CDP_REQUEST });
 
   try {
+    const amount = parseFloat(_amount);
+
     const { afterType } = getState().dashboard;
     const { ethPrice, cdp } = getState().general;
+    const depositedEth = cdp.depositedETH.toNumber();
+
     const payload = {};
 
     if (type !== afterType) payload.afterType = type;
 
     if (type === 'generate') {
-      payload.afterCdp = await getUpdatedCdpInfo(cdp.depositedETH, cdp.generatedDAI + parseFloat(amount), ethPrice);
+      payload.afterCdp = await getUpdatedCdpInfo(depositedEth, cdp.generatedDAI + amount, ethPrice);
     }
 
     if (type === 'withdraw') {
-      payload.afterCdp = await getUpdatedCdpInfo(cdp.depositedETH - parseFloat(amount), cdp.generatedDAI, ethPrice);
+      payload.afterCdp = await getUpdatedCdpInfo(depositedEth - amount, cdp.generatedDAI, ethPrice);
+    }
+
+    if (type === 'collateral') {
+      payload.afterCdp = await getUpdatedCdpInfo(depositedEth + amount, cdp.generatedDAI, ethPrice);
     }
 
     dispatch({ type: GET_AFTER_CDP_SUCCESS, payload });
