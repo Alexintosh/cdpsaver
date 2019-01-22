@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect, Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { updateEthPriceInterval } from '../../actions/generalActions';
+import { updateEthPriceInterval, listenToAccChange } from '../../actions/generalActions';
 import { silentLogin } from '../../actions/accountActions';
 import Header from '../Header/Header';
 import HomePage from '../HomePage/HomePage';
@@ -20,6 +20,7 @@ import '../../common/icons/icons.scss';
 
 class RoutesWrapper extends Component {
   componentWillMount() {
+    this.props.listenToAccChange();
     this.props.updateEthPriceInterval();
     this.props.silentLogin();
   }
@@ -55,10 +56,11 @@ RoutesWrapper.propTypes = {
   store: PropTypes.object.isRequired,
   silentLogin: PropTypes.func.isRequired,
   updateEthPriceInterval: PropTypes.func.isRequired,
+  listenToAccChange: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = {
-  updateEthPriceInterval, silentLogin,
+  updateEthPriceInterval, silentLogin, listenToAccChange,
 };
 
 export default connect(null, mapDispatchToProps)(RoutesWrapper);

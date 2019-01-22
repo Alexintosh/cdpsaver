@@ -27,3 +27,23 @@ export const updateEthPriceInterval = () => async (dispatch) => {
   dispatch(updateEthPrice(priceInterface));
   setInterval(() => { dispatch(updateEthPrice(priceInterface)); }, 60000);
 };
+
+/**
+ * Listens to account change and reloads the page if there is no account or
+ * the account changes
+ *
+ * @return {Function}
+ */
+export const listenToAccChange = () => (dispatch, getState) => {
+  setInterval(async () => {
+    const { account, connectingProvider } = getState().general;
+
+    if (connectingProvider) return;
+    if (!account) return;
+
+    const accounts = await window._web3.eth.getAccounts();
+
+    if (!accounts[0]) window.location.reload();
+    if (accounts[0] !== account) window.location.reload();
+  }, 1000);
+};
