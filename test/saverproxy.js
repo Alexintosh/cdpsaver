@@ -13,6 +13,7 @@ const SaiProxyInterface = artifacts.require("./SaiProxyInterface.sol");
 contract("SaverProxy", accounts => {
 
   let saver, monitor, proxy, authority, registry, saiProxy;
+  const tubAddr = "0xa71937147b55Deb8a530C7229C442Fd3F31b7db2";
 
   const cdpId = process.env.CDPID;
   const cdpIdBytes32 = process.env.CDPID_BYTES;
@@ -41,7 +42,6 @@ contract("SaverProxy", accounts => {
   });
 
   // it('...should add collateral', async () => {
-  //   const tubAddr = "0xa71937147b55Deb8a530C7229C442Fd3F31b7db2";
 
   //   const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaiProxyInterface, 'lock'), [tubAddr, cdpIdBytes32]);
 
@@ -63,7 +63,6 @@ contract("SaverProxy", accounts => {
   // });
 
   // it('...should draw/generate dai', async () => {
-  //   const tubAddr = "0xa71937147b55Deb8a530C7229C442Fd3F31b7db2";
 
   //   const daiAmount = web3.utils.toWei("2", 'ether'); // 2 dai
 
@@ -84,7 +83,6 @@ contract("SaverProxy", accounts => {
   // });
 
   // it('...should withdraw collateral', async () => {
-  //     const tubAddr = "0xa71937147b55Deb8a530C7229C442Fd3F31b7db2";
 
   //   const ethAmount = web3.utils.toWei("0.01", 'ether');
 
@@ -104,32 +102,99 @@ contract("SaverProxy", accounts => {
   //   }
   // });
 
-  // it('...should repay dai', async () => {
-    
+
+  // it('...should repay dai, user has both dai and mkr', async () => {
+  //   // 2 dai
+  //   const daiAmount = web3.utils.toWei("2", 'ether');
+
+  //   const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaiProxyInterface, 'wipe'), [tubAddr, cdpIdBytes32, daiAmount, 
+  //   "0x0000000000000000000000000000000000000000"]);
+
+  //     try {
+  //     const ratio = await monitor.getRatio.call(cdpIdBytes32);
+  //     console.log('Old Ratio: ', ratio.toString());
+
+  //     const tx = await proxy.methods['execute(address,bytes)'](saiProxy.address, data);
+
+  //     const newRatio = await monitor.getRatio.call(cdpIdBytes32);
+  //     console.log('Updated ratio: ', newRatio.toString());
+
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
   // });
 
-  it('...should call the repay feature', async () => {
+  // it('...should transfer the cdp', async () => {
+  //   // 2 dai
+  //   const newOwner = accounts[3];
+  //   const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaiProxyInterface, 'give'), 
+  //   [tubAddr, cdpIdBytes32, newOwner]);
 
-    const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaverProxy, 'repay'), [cdpIdBytes32, false, wrapper.address]);
+  //     try {
+  //     const tx = await proxy.methods['execute(address,bytes)'](saiProxy.address, data);
 
-    const ratio = await monitor.getRatio.call(cdpIdBytes32);
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // });
 
-    try {
-      console.log('Old Ratio: ', ratio.toString());
+  //   it('...should create a new CDP', async () => {
+  //   const daiAmount = web3.utils.toWei("1", 'ether'); //1 dai token
+  //   const ethAmount = "0.05";
 
-      const tx = await proxy.methods['execute(address,bytes)'](saver.address, data);
+  //   const registryAddr = "0x64a436ae831c1672ae81f674cab8b6775df3475c";
 
-      const newRatio = await monitor.getRatio.call(cdpIdBytes32);
-      console.log(tx);
+  //   try {
+  //       const tx = await saiProxy.createOpenLockAndDraw(registryAddr, tubAddr, daiAmount, 
+  //         {from: accounts[2], value: web3.utils.toWei(ethAmount, 'ether')});
+
+  //       console.log(accounts[2], tx);
+    
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // });
+
+    it('...should close the cdp', async () => {
+    // 2 dai
+    const newOwner = accounts[2];
+    const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaiProxyInterface, 'shut'), 
+    [tubAddr, cdpIdBytes32]);
+
+      try {
+
+        const proxyAddr2 = await registry.proxies(accounts[2]);
+        proxy2 = await DSProxy.at(proxyAddr2);
+
+        const tx = await proxy2.methods['execute(address,bytes)'](saiProxy.address, data);
 
     } catch(err) {
       console.log(err);
     }
   });
 
+  // it('...should call the repay feature', async () => {
+
+  //   const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaverProxy, 'repay'), [cdpIdBytes32, wrapper.address, 0, false]);
+
+  //   const ratio = await monitor.getRatio.call(cdpIdBytes32);
+
+  //   try {
+  //     console.log('Old Ratio: ', ratio.toString());
+
+  //     const tx = await proxy.methods['execute(address,bytes)'](saver.address, data);
+
+  //     const newRatio = await monitor.getRatio.call(cdpIdBytes32);
+  //     console.log(tx);
+
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // });
+
   // it('...should call the boost feature', async () => {
 
-  //   const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaverProxy, 'boost'), [cdpIdBytes32, wrapper.address]);
+  //   const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaverProxy, 'boost'), [cdpIdBytes32, wrapper.address, 0]);
 
   //   const ratio = await monitor.getRatio.call(cdpIdBytes32);
 
@@ -168,26 +233,6 @@ contract("SaverProxy", accounts => {
   //     console.log('Updated ratio: ', newRatio.toString());
   //     console.log(saveTx);
 
-  //   } catch(err) {
-  //     console.log(err);
-  //   }
-  // });
-
-
-
-  // it('...should create a new CDP', async () => {
-  //   const daiAmount = web3.utils.toWei("1", 'ether'); //1 dai token
-  //   const ethAmount = "0.05";
-
-  //   const registryAddr = "0x64a436ae831c1672ae81f674cab8b6775df3475c";
-  //   const tubAddr = "0xa71937147b55Deb8a530C7229C442Fd3F31b7db2";
-
-  //   try {
-  //       const tx = await saiProxy.createOpenLockAndDraw(registryAddr, tubAddr, daiAmount, 
-  //         {from: accounts[2], value: web3.utils.toWei(ethAmount, 'ether')});
-
-  //       console.log(accounts[2], tx);
-    
   //   } catch(err) {
   //     console.log(err);
   //   }
