@@ -5,6 +5,7 @@ import PieChart from '../PieChart/PieChart';
 import Tabs from '../Tabs/Tabs';
 import ManagerBorrowForm from './ManagerBorrowForm/ManagerBorrowForm';
 import ManagerPaybackFrom from './ManagerPaybackFrom/ManagerPaybackFrom';
+import CdpAfterVal from './CdpAfterVal';
 import {
   getMaxDaiAction, getMaxEthWithdrawAction,
 } from '../../actions/dashboardActions';
@@ -20,7 +21,9 @@ class ManagerPage extends Component {
   }
 
   render() {
-    const { cdp, gettingEthPrice, ethPrice } = this.props;
+    const {
+      cdp, gettingEthPrice, ethPrice, gettingAfterCdp, afterCdp, afterType,
+    } = this.props;
 
     return (
       <div className="manager-page-wrapper dashboard-page-wrapper">
@@ -38,16 +41,30 @@ class ManagerPage extends Component {
                   <div className="item">
                     <div className="label">Liquidation price</div>
                     <div className="value">{ cdp.liquidationPrice.toFixed(2) }$</div>
+                    <CdpAfterVal
+                      type={afterType}
+                      loading={gettingAfterCdp}
+                      cdp={afterCdp}
+                      cdpProp="liquidationPrice"
+                      symbol="$"
+                    />
                   </div>
 
                   <div className="item">
                     <div className="label">Current price</div>
-                    <div className="value">{ gettingEthPrice ? 'Loading...' : ethPrice }</div>
+                    <div className="value">{ gettingEthPrice ? 'Loading...' : ethPrice }$</div>
                   </div>
 
                   <div className="item">
                     <div className="label">Ratio</div>
                     <div className="value">{ (cdp.ratio).toFixed(2) }%</div>
+                    <CdpAfterVal
+                      type={afterType}
+                      loading={gettingAfterCdp}
+                      cdp={afterCdp}
+                      cdpProp="ratio"
+                      symbol="%"
+                    />
                   </div>
                 </div>
 
@@ -105,18 +122,29 @@ class ManagerPage extends Component {
   }
 }
 
+ManagerPage.defaultProps = {
+  afterCdp: null,
+  afterType: null,
+};
+
 ManagerPage.propTypes = {
   cdp: PropTypes.object.isRequired,
   ethPrice: PropTypes.number.isRequired,
   gettingEthPrice: PropTypes.bool.isRequired,
   getMaxDaiAction: PropTypes.func.isRequired,
   getMaxEthWithdrawAction: PropTypes.func.isRequired,
+  gettingAfterCdp: PropTypes.bool.isRequired,
+  afterCdp: PropTypes.object,
+  afterType: PropTypes.string,
 };
 
-const mapStateToProps = ({ general }) => ({
+const mapStateToProps = ({ general, dashboard }) => ({
   cdp: general.cdp,
   ethPrice: general.ethPrice,
   gettingEthPrice: general.gettingEthPrice,
+  gettingAfterCdp: dashboard.gettingAfterCdp,
+  afterCdp: dashboard.afterCdp,
+  afterType: dashboard.afterType,
 });
 
 const mapDispatchToProps = {

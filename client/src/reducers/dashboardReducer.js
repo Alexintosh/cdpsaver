@@ -18,6 +18,10 @@ import {
   ADD_COLLATERAL_REQUEST,
   ADD_COLLATERAL_SUCCESS,
   ADD_COLLATERAL_FAILURE,
+
+  GET_AFTER_CDP_REQUEST,
+  GET_AFTER_CDP_SUCCESS,
+  GET_AFTER_CDP_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 
 const INITIAL_STATE = {
@@ -37,6 +41,11 @@ const INITIAL_STATE = {
 
   addingCollateral: false,
   addingCollateralError: '',
+
+  afterType: '',
+  afterCdp: null,
+  gettingAfterCdp: false,
+  gettingAfterCdpFailure: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -128,6 +137,24 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         addingCollateral: false,
         addingCollateralError: payload,
+      };
+
+    case GET_AFTER_CDP_REQUEST:
+      return { ...state, gettingAfterCdp: true };
+
+    case GET_AFTER_CDP_SUCCESS:
+      return {
+        ...state,
+        gettingAfterCdp: false,
+        gettingAfterCdpError: '',
+        ...payload,
+      };
+
+    case GET_AFTER_CDP_FAILURE:
+      return {
+        ...state,
+        gettingAfterCdp: false,
+        gettingAfterCdpError: payload,
       };
 
     default:

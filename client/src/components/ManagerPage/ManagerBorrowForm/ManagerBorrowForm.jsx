@@ -8,11 +8,13 @@ import InputComponent from '../../Forms/InputComponent';
 import {
   generateDaiAction,
   withdrawEthAction,
+  setAfterValue,
 } from '../../../actions/dashboardActions';
 
 const ManagerBorrowForm = ({
   generatingDai, generateDaiAction, formValues, maxDai, gettingMaxDai, dispatch,
   withdrawingEth, withdrawEthAction, maxEthWithdraw, gettingMaxEthWithdraw,
+  setAfterValue,
 }) => (
   <form className="action-items-wrapper form-wrapper" onSubmit={() => {}}>
     <div className="item">
@@ -26,11 +28,14 @@ const ManagerBorrowForm = ({
       </div>
       <Field
         id="manager-generate-input"
+        type="number"
         wrapperClassName="form-item-wrapper generate"
         name="generateDaiAmount"
+        onChange={(e) => { setAfterValue(e.target.value, 'generate'); }}
         labelText="Generate:"
         secondLabelText="DAI"
         placeholder="1"
+        additional={{ max: maxDai }}
         disabled={generatingDai}
         component={InputComponent}
       />
@@ -38,7 +43,7 @@ const ManagerBorrowForm = ({
         type="button"
         className="button gray uppercase"
         onClick={() => { generateDaiAction(formValues.generateDaiAmount); }}
-        disabled={generatingDai || !formValues.generateDaiAmount}
+        disabled={generatingDai || !formValues.generateDaiAmount || (formValues.generateDaiAmount > maxDai)}
       >
         { generatingDai ? 'Generating' : 'Generate' }
       </button>
@@ -102,6 +107,7 @@ ManagerBorrowForm.propTypes = {
   withdrawingEth: PropTypes.bool.isRequired,
   maxEthWithdraw: PropTypes.number.isRequired,
   gettingMaxEthWithdraw: PropTypes.bool.isRequired,
+  setAfterValue: PropTypes.func.isRequired,
 };
 
 const ManagerBorrowFormComp = reduxForm({ form: 'managerBorrowForm' })(ManagerBorrowForm);
@@ -123,7 +129,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  generateDaiAction, withdrawEthAction,
+  generateDaiAction, withdrawEthAction, setAfterValue,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManagerBorrowFormComp);

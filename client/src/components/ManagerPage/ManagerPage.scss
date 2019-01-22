@@ -17,6 +17,7 @@
         margin-bottom: 48px;
 
         .item {
+          position: relative;
           color: $gray;
 
           &:not(:last-child) { margin-right: 45px; }
@@ -26,6 +27,25 @@
           .value {
             font-size: 58px;
             color: white;
+          }
+
+          .after-value {
+            position: absolute;
+
+            &.generate, &.payback { .amount { color: $purple; } }
+
+            .amount-wrapper {
+              display: flex;
+              align-items: center;
+
+              .after {
+                margin-right: 5px;
+              }
+
+              .amount {
+                font-size: 20px;
+              }
+            }
           }
         }
       }

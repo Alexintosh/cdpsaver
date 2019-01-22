@@ -1,4 +1,5 @@
 @import "../../common/text";
+@import "../../common/colors";
 
 .action-items-wrapper {
 
@@ -24,9 +25,9 @@
         color: white;
       }
 
-      &.generate, &.payback { border-left-color: #9B51E0 }
-      &.withdraw, &.collateral{ border-left-color: #F2C94C }
-      &.repay, &.boost { border-left-color: #56CCF2 }
+      &.generate, &.payback { border-left-color: $purple }
+      &.withdraw, &.collateral{ border-left-color: $yellow }
+      &.repay, &.boost { border-left-color: $blue }
     }
   }
 }
