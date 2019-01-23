@@ -4,6 +4,8 @@ import {
   tubInterfaceAddress,
   saiTubAddress,
   saiSaverProxyAddress,
+  DaiErc20Contract,
+  MakerErc20Contract,
 } from './contractRegistryService';
 import config from '../config/config.json';
 import { numStringToBytes32 } from '../utils/utils';
@@ -150,5 +152,29 @@ export const callProxyContract = (
     resolve({ ...newCdp, ...newCdpInfo });
   } catch (err) {
     reject(err.message);
+  }
+});
+
+export const getDaiAllowance = address => new Promise(async (resolve, reject) => {
+  const contract = await DaiErc20Contract();
+
+  try {
+    const data = await contract.methods.allowance(address, tubInterfaceAddress).call();
+
+    resolve(parseFloat(weiToEth(data)));
+  } catch (err) {
+    reject(err);
+  }
+});
+
+export const getMakerAllowance = address => new Promise(async (resolve, reject) => {
+  const contract = await MakerErc20Contract();
+
+  try {
+    const data = await contract.methods.allowance(address, tubInterfaceAddress).call();
+
+    resolve(parseFloat(weiToEth(data)));
+  } catch (err) {
+    reject(err);
   }
 });

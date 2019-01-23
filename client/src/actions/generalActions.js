@@ -47,3 +47,10 @@ export const listenToAccChange = () => (dispatch, getState) => {
     if (accounts[0] !== account) window.location.reload();
   }, 1000);
 };
+
+/**
+ * Handles fetching of all the data needed to close a cdp
+ *
+ * @return {Function}
+ */
+export const getCloseDataAction = () => (dispatch, getState) => {};

@@ -10,6 +10,7 @@ import ManagerPaybackFrom from './ManagerPaybackFrom/ManagerPaybackFrom';
 import CdpAfterVal from './CdpAfterVal';
 import { formatAccType, formatAcc } from '../../utils/utils';
 import { getMaxDaiAction, getMaxEthWithdrawAction } from '../../actions/dashboardActions';
+import { openCloseCdpModal } from '../../actions/modalActions';
 
 import './ManagerPage.scss';
 import './action-items.scss';
@@ -24,7 +25,7 @@ class ManagerPage extends Component {
   render() {
     const {
       cdp, gettingEthPrice, ethPrice, gettingAfterCdp, afterCdp, afterType, accountType,
-      account,
+      account, openCloseCdpModal,
     } = this.props;
 
     return (
@@ -109,7 +110,13 @@ class ManagerPage extends Component {
             </div>
 
             <div className="bottom-controls">
-              <button type="button" className="button gray uppercase">Close</button>
+              <button
+                type="button"
+                className="button gray uppercase"
+                onClick={() => { openCloseCdpModal(); }}
+              >
+                Close
+              </button>
               <button type="button" className="button green uppercase">Transfer</button>
             </div>
 
@@ -155,6 +162,7 @@ ManagerPage.propTypes = {
   afterType: PropTypes.string,
   accountType: PropTypes.string.isRequired,
   account: PropTypes.string.isRequired,
+  openCloseCdpModal: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ general, dashboard }) => ({
@@ -169,7 +177,7 @@ const mapStateToProps = ({ general, dashboard }) => ({
 });
 
 const mapDispatchToProps = {
-  getMaxDaiAction, getMaxEthWithdrawAction,
+  getMaxDaiAction, getMaxEthWithdrawAction, openCloseCdpModal,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManagerPage);

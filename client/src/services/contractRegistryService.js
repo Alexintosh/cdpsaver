@@ -14,3 +14,9 @@ export const saiSaverProxyAddress = config.SaiSaverProxy.networks[clientConfig.n
 export const SaiSaverProxyContract = () => new window._web3.eth.Contract(config.SaiSaverProxy.abi, saiSaverProxyAddress); // eslint-disable-line
 
 export const tubInterfaceAddress = config.TubInterface.networks[clientConfig.network].address;
+
+export const daiErc20Address = config.DaiErc20.networks[clientConfig.network].address;
+export const DaiErc20Contract = () => new window._web3.eth.Contract(config.DaiErc20.abi, daiErc20Address);
+
+export const makerErc20Address = config.MakerErc20.networks[clientConfig.network].address;
+export const MakerErc20Contract = () => new window._web3.eth.Contract(config.MakerErc20.abi, makerErc20Address);

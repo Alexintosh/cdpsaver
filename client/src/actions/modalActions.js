@@ -1,6 +1,7 @@
 import { TOGGLE_MODAL } from '../actionTypes/modalActionTypes';
 import {
   SELL_CDP_MODAL,
+  CLOSE_CDP_MODAL,
 } from '../components/Modals/modalTypes';
 
 /**
@@ -32,4 +33,12 @@ export const closeModal = () => (dispatch) => {
  */
 export const openSellCdpModal = () => (dispatch) => {
   dispatch(toggleModal(SELL_CDP_MODAL, { width: 750 }, true));
+};
+
+/**
+ * Checks if the modal should be opened or if the tx can be sent right away
+ * If it can't be spent then it opens the modal
+ */
+export const openCloseCdpModal = () => async (dispatch) => {
+  dispatch(toggleModal(CLOSE_CDP_MODAL, { width: 481 }, true));
 };
