@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import PieChart from '../PieChart/PieChart';
 import Tabs from '../Tabs/Tabs';
+import DaiIcon from '../Decorative/DaiIcon';
+import EthIcon from '../Decorative/EthIcon';
 import ManagerBorrowForm from './ManagerBorrowForm/ManagerBorrowForm';
 import ManagerPaybackFrom from './ManagerPaybackFrom/ManagerPaybackFrom';
 import CdpAfterVal from './CdpAfterVal';
@@ -69,17 +71,23 @@ class ManagerPage extends Component {
                 </div>
 
                 <div className="row-item-wrapper">
-                  <span className="label">Debt:</span>
-                  <span className="value">{ cdp.debtDai.toFixed(2) } Dai</span>
+                  <DaiIcon />
+
+                  <div className="row-val-wrapper">
+                    <span className="label">Debt:</span>
+                    <span className="value">{ cdp.debtDai.toFixed(2) } Dai</span>
+                  </div>
                 </div>
 
                 <div className="row-item-wrapper">
-                  <span className="label">Collateral amount:</span>
-                  <span className="value">{ cdp.depositedETH.toFixed(2) } Eth</span>
+                  <EthIcon />
+
+                  <div className="row-val-wrapper">
+                    <span className="label">Collateral amount:</span>
+                    <span className="value">{ cdp.depositedETH.toFixed(2) } Eth</span>
+                  </div>
                 </div>
               </div>
-
-              <div className="separator" />
 
               <div className="main-subsection">
                 <PieChart

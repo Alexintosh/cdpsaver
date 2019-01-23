@@ -10,11 +10,11 @@
 
     .main-subsection {
       flex-grow: 1;
-      padding: 40px;
+      padding: 37px 48px 24px 32px;
 
       .info-wrapper-main {
         display: flex;
-        margin-bottom: 48px;
+        margin-bottom: 93px;
 
         .item {
           position: relative;
@@ -25,7 +25,7 @@
           .label { margin-bottom: 1px; }
 
           .value {
-            font-size: 58px;
+            font-size: 42px;
             color: white;
           }
 
@@ -53,11 +53,19 @@
       }
 
       .row-item-wrapper {
-        display: flex;
+        display: inline-flex;
+        align-items: center;
         font-size: $font-size-extra-large;
         color: $gray;
 
-        &:not(:last-child) { margin-bottom: 8px; }
+        &:not(:last-child) { margin-right: 25px; }
+
+        svg { margin-right: 20px; }
+
+        .row-val-wrapper {
+          display: flex;
+          flex-direction: column;
+        }
 
         .value {
           margin-left: 3px;

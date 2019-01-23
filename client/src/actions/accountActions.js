@@ -57,7 +57,8 @@ export const loginMetaMask = silent => async (dispatch, getState) => {
 
     dispatch({ type: CONNECT_PROVIDER_SUCCESS, payload: { account, accountType, balance } });
     localStorage.setItem(LS_ACCOUNT, JSON.stringify({ accountType: 'metamask' }));
-    notify(`Metamask account found ${account}`, 'success')(dispatch);
+
+    if (!silent) notify(`Metamask account found ${account}`, 'success')(dispatch);
   } catch (err) {
     setupWeb3();
     dispatch({ type: CONNECT_PROVIDER_FAILURE, payload: err.message });
