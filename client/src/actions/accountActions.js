@@ -20,7 +20,7 @@ import { notify } from './noitificationActions';
 import { toDecimal } from '../utils/utils';
 import clientConfig from '../config/clientConfig.json';
 import { LS_ACCOUNT } from '../constants/general';
-import { getAddressCdp, getUpdatedCdpInfo } from '../services/cdpService';
+import { maker, getAddressCdp, getUpdatedCdpInfo } from '../services/cdpService';
 
 /**
  * Tries to connect to the MetaMask web3 provider, also checks if the app is pre-approved
@@ -43,6 +43,8 @@ export const loginMetaMask = silent => async (dispatch, getState) => {
     await metamaskApprove();
 
     setWeb3toMetamask();
+
+    await maker.addAccount('metamask', { type: 'browser' });
 
     const network = await getNetwork();
 
@@ -99,6 +101,8 @@ export const silentLogin = () => async (dispatch, getState) => {
 
   dispatch({ type: LOGIN_STARTED });
 
+  await maker.authenticate();
+
   try {
     switch (accountType) {
       case 'metamask': {
@@ -129,6 +133,8 @@ export const silentLogin = () => async (dispatch, getState) => {
  */
 export const normalLogin = (accountType, history, to) => async (dispatch) => {
   dispatch({ type: LOGIN_STARTED });
+
+  await maker.authenticate();
 
   try {
     switch (accountType) {

@@ -167,6 +167,18 @@ export const getDaiAllowance = address => new Promise(async (resolve, reject) =>
   }
 });
 
+export const getDaiBalance = address => new Promise(async (resolve, reject) => {
+  const contract = await DaiErc20Contract();
+
+  try {
+    const data = await contract.methods.balanceOf(address).call();
+
+    resolve(parseFloat(data));
+  } catch (err) {
+    reject(err);
+  }
+});
+
 export const getMakerAllowance = address => new Promise(async (resolve, reject) => {
   const contract = await MakerErc20Contract();
 

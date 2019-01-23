@@ -1,5 +1,13 @@
-import { GET_ETH_PRICE_REQUEST, GET_ETH_PRICE_SUCCESS } from '../actionTypes/generalActionTypes';
+import {
+  GET_ETH_PRICE_REQUEST,
+  GET_ETH_PRICE_SUCCESS,
+
+  GET_CLOSE_DATA_REQUEST,
+  GET_CLOSE_DATA_SUCCESS,
+  GET_CLOSE_DATA_FAILURE,
+} from '../actionTypes/generalActionTypes';
 import { maker } from '../services/cdpService';
+import { getDaiAllowance, getDaiBalance, getMakerAllowance } from '../services/ethService';
 
 /**
  * Checks the price of Ether and updates it in the state
@@ -53,4 +61,37 @@ export const listenToAccChange = () => (dispatch, getState) => {
  *
  * @return {Function}
  */
-export const getCloseDataAction = () => (dispatch, getState) => {};
+export const getCloseDataAction = () => async (dispatch, getState) => {
+  dispatch({ type: GET_CLOSE_DATA_REQUEST });
+
+  const { cdp, account } = getState().general;
+  const payload = {};
+
+  try {
+    const daiBalance = await getDaiBalance(account);
+    payload.enoughMkrToWipe = await cdp.cdpInstance.enoughMkrToWipe(daiBalance);
+
+    // TODO remove ! from line bellow, it was added for testing
+    // If he has enough dai and maker tokens to pay check if they are unlocked
+    if (!payload.enoughMkrToWipe) {
+      const daiAllowance = await getDaiAllowance(account);
+      const makerAllowance = await getMakerAllowance(account);
+
+      const governanceFee = (await cdp.cdpInstance.getGovernanceFee())._amount;
+
+      payload.daiUnlocked = daiAllowance > cdp.debtDai;
+      payload.makerUnlocked = makerAllowance > governanceFee;
+    }
+
+    // TODO do this
+    // if (!payload.enoughMkrToWipe) {
+    //   // Check if the user can pay in ETH
+    //   payload.enoughEthToWipe =
+    // }
+
+    dispatch({ type: GET_CLOSE_DATA_SUCCESS, payload });
+  } catch (e) {
+    console.log('ERROR', e, e.message);
+    dispatch({ type: GET_CLOSE_DATA_FAILURE, payload: e.message });
+  }
+};

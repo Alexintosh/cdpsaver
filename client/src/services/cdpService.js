@@ -32,6 +32,7 @@ export const getCdpInfo = (id, useAuth = true) => new Promise(async (resolve, re
       liquidationPrice: (await cdp.getLiquidationPrice())._amount,
       isSafe: await cdp.isSafe(),
       ratio: await cdp.getCollateralizationRatio(), // cdp.getCollateralizationRatio() returns the USD value of the collateral in the CDP divided by the USD value of the Dai debt for the CDP, e.g. 2.5.
+      cdpInstance: cdp,
     });
   } catch (err) {
     reject(err);

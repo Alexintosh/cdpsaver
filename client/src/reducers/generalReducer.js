@@ -14,6 +14,10 @@ import {
   GET_ETH_PRICE_SUCCESS,
 
   ADD_PROXY_ADDRESS,
+
+  GET_CLOSE_DATA_REQUEST,
+  GET_CLOSE_DATA_SUCCESS,
+  GET_CLOSE_DATA_FAILURE,
 } from '../actionTypes/generalActionTypes';
 import { CREATE_CDP_SUCCESS } from '../actionTypes/onboardingActionTypes';
 import {
@@ -43,6 +47,13 @@ const INITIAL_STATE = {
 
   ethPrice: 0,
   gettingEthPrice: false,
+
+  enoughMkrToWipe: false,
+  daiUnlocked: false,
+  makerUnlocked: false,
+  enoughEthToWipe: false,
+  gettingCloseData: false,
+  gettingCloseDataError: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -84,6 +95,7 @@ export default (state = INITIAL_STATE, action) => {
           liquidationPrice: payload.liquidationPrice,
           owner: payload.owner,
           ratio: payload.ratio,
+          cdpInstance: payload.cdpInstance,
           ...payload,
         },
       };
@@ -123,6 +135,24 @@ export default (state = INITIAL_STATE, action) => {
 
     case GET_ETH_PRICE_SUCCESS:
       return { ...state, gettingEthPrice: false, ethPrice: payload };
+
+    case GET_CLOSE_DATA_REQUEST:
+      return { ...state, gettingCloseData: true };
+
+    case GET_CLOSE_DATA_SUCCESS:
+      return {
+        ...state,
+        gettingCloseData: false,
+        gettingCloseDataError: '',
+        ...payload,
+      };
+
+    case GET_CLOSE_DATA_FAILURE:
+      return {
+        ...state,
+        gettingCloseData: false,
+        gettingCloseDataError: payload,
+      };
 
     default:
       return state;
