@@ -27,23 +27,26 @@ contract SaverProxy is DSMath {
     address constant TUB_ADDRESS = 0xa71937147b55Deb8a530C7229C442Fd3F31b7db2;
     
     constructor() public {
-        ERC20(DAI_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        ERC20(MKR_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        ERC20(PETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        ERC20(WETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        // ERC20(DAI_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        // ERC20(MKR_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        // ERC20(PETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        // ERC20(WETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
     }
 
     ///@dev User has to own MKR and aprrove the DSProxy address
     //TODO: check so we don't get more eth than need to repay debt
-    function repay(bytes32 _cup, bool _buyMkr, address _wrapper) public {
+    function repay(bytes32 _cup, address _wrapper, uint _amount, bool _buyMkr) public {
         TubInterface tub = TubInterface(TUB_ADDRESS);
 
-        uint maxCollateral = maxFreeCollateral(tub, VOX_ADDRESS, _cup);
+        if (_amount == 0) {
+            // TODO: save gas cost and calc. on the front?
+            _amount = maxFreeCollateral(tub, VOX_ADDRESS, _cup);
+        }
 
-        free(tub, _cup, maxCollateral);
+        free(tub, _cup, _amount);
 
         uint daiAmount = ExchangeInterface(_wrapper).swapEtherToToken.
-                            value(maxCollateral)(maxCollateral, DAI_ADDRESS);
+                            value(_amount)(_amount, DAI_ADDRESS);
         
         if (_buyMkr) {
             // uint fee = payStabilityFee(tub, _cup, daiAmount);
@@ -55,19 +58,21 @@ contract SaverProxy is DSMath {
 
         tub.wipe(_cup, daiAmount);
 
-        emit Repay(msg.sender, maxCollateral, daiAmount);
+        emit Repay(msg.sender, _amount, daiAmount);
     }
 
-    function boost(bytes32 _cup, address _wrapper) public {
+    function boost(bytes32 _cup, address _wrapper, uint _amount) public {
         TubInterface tub = TubInterface(TUB_ADDRESS);
         
-        uint maxDai = maxFreeDai(tub, _cup);
+        if (_amount == 0) {
+            _amount = maxFreeDai(tub, _cup);
+        }
         
-        tub.draw(_cup, maxDai);
+        tub.draw(_cup, _amount);
         
-        uint ethAmount = lockPeth(tub, _cup, maxDai, _wrapper);
+        uint ethAmount = lockPeth(tub, _cup, _amount, _wrapper);
         
-        emit Boost(msg.sender, maxDai, ethAmount);
+        emit Boost(msg.sender, _amount, ethAmount);
     }
 
 
