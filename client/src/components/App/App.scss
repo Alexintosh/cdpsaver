@@ -47,6 +47,20 @@ a {
     .sub-title {
       font-size: $font-size-extra-large;
       margin-right: 15px;
+
+      &.with-label {
+        display: flex;
+
+        .label {
+          font-size: $font-size-regular;
+          color: $gray;
+          margin-right: 7px;
+        }
+
+        .value {
+          font-size: $font-size-medium;
+        }
+      }
     }
 
     .sub-text {

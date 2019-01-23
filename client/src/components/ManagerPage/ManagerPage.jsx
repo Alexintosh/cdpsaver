@@ -8,9 +8,8 @@ import EthIcon from '../Decorative/EthIcon';
 import ManagerBorrowForm from './ManagerBorrowForm/ManagerBorrowForm';
 import ManagerPaybackFrom from './ManagerPaybackFrom/ManagerPaybackFrom';
 import CdpAfterVal from './CdpAfterVal';
-import {
-  getMaxDaiAction, getMaxEthWithdrawAction,
-} from '../../actions/dashboardActions';
+import { formatAccType, formatAcc } from '../../utils/utils';
+import { getMaxDaiAction, getMaxEthWithdrawAction } from '../../actions/dashboardActions';
 
 import './ManagerPage.scss';
 import './action-items.scss';
@@ -24,14 +23,24 @@ class ManagerPage extends Component {
 
   render() {
     const {
-      cdp, gettingEthPrice, ethPrice, gettingAfterCdp, afterCdp, afterType,
+      cdp, gettingEthPrice, ethPrice, gettingAfterCdp, afterCdp, afterType, accountType,
+      account,
     } = this.props;
 
     return (
       <div className="manager-page-wrapper dashboard-page-wrapper">
         <div className="sub-heading-wrapper">
           <div className="width-container">
-            <div className="sub-title">Manage</div>
+            <div className="sub-title with-label">
+              <div className="label">CDP ID:</div>
+              <div className="value">{ cdp.id }</div>
+            </div>
+
+            <div className="account-wrapper">
+              <div className="acc-type">{ formatAccType(accountType) }</div>
+              <div className="connected">Connected:</div>
+              <div className="acc">{ formatAcc(account) }</div>
+            </div>
           </div>
         </div>
 
@@ -144,6 +153,8 @@ ManagerPage.propTypes = {
   gettingAfterCdp: PropTypes.bool.isRequired,
   afterCdp: PropTypes.object,
   afterType: PropTypes.string,
+  accountType: PropTypes.string.isRequired,
+  account: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = ({ general, dashboard }) => ({
@@ -153,6 +164,8 @@ const mapStateToProps = ({ general, dashboard }) => ({
   gettingAfterCdp: dashboard.gettingAfterCdp,
   afterCdp: dashboard.afterCdp,
   afterType: dashboard.afterType,
+  accountType: general.accountType,
+  account: general.account,
 });
 
 const mapDispatchToProps = {

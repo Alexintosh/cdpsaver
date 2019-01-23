@@ -119,3 +119,9 @@ export const numStringToBytes32 = (num) => {
   const bn = new BN(num).toTwos(256);
   return padToBytes32(bn.toString(16));
 };
+
+export const formatAcc = account => `${account.substring(0, 12)}...${account.substr(account.length - 6)}`;
+
+export const formatAccType = (accType) => {
+  if (accType === 'metamask') return 'MetaMask';
+};
