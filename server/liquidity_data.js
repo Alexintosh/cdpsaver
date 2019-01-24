@@ -1,7 +1,5 @@
 const axios = require("axios");
 
-const ETH_PRICE = 112.46;
-
 axios.get("https://mkr.tools/api/v1/bites")
   .then((res) => {
 
