@@ -22,6 +22,8 @@ import {
 import { CREATE_CDP_SUCCESS } from '../actionTypes/onboardingActionTypes';
 import {
   ADD_COLLATERAL_SUCCESS,
+  APPROVE_DAI_SUCCESS,
+  APPROVE_MAKER_SUCCESS,
   GENERATE_DAI_SUCCESS,
   WITHDRAW_ETH_SUCCESS,
 } from '../actionTypes/dashboardActionTypes';
@@ -155,6 +157,12 @@ export default (state = INITIAL_STATE, action) => {
         gettingCloseData: false,
         gettingCloseDataError: payload,
       };
+
+    case APPROVE_DAI_SUCCESS:
+      return { ...state, daiUnlocked: true };
+
+    case APPROVE_MAKER_SUCCESS:
+      return { ...state, makerUnlocked: true };
 
     default:
       return state;

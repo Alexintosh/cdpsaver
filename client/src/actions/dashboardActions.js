@@ -23,9 +23,18 @@ import {
   GET_AFTER_CDP_REQUEST,
   GET_AFTER_CDP_SUCCESS,
   GET_AFTER_CDP_FAILURE,
+
+  APPROVE_DAI_REQUEST,
+  APPROVE_DAI_SUCCESS,
+  APPROVE_DAI_FAILURE,
+
+  APPROVE_MAKER_REQUEST,
+  APPROVE_MAKER_SUCCESS,
+  APPROVE_MAKER_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
-import { callProxyContract } from '../services/ethService';
+import { approveDai, approveMaker, callProxyContract } from '../services/ethService';
 import { getMaxDai, getMaxEthWithdraw, getUpdatedCdpInfo } from '../services/cdpService';
+import { MM_DENIED_TX_ERROR } from '../constants/general';
 
 /**
  * Handles redux actions for when the number of max dai that can be generated is calculating
@@ -173,5 +182,43 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
     dispatch({ type: GET_AFTER_CDP_SUCCESS, payload });
   } catch (err) {
     dispatch({ type: GET_AFTER_CDP_FAILURE, payload: err.message });
+  }
+};
+
+/**
+ * Handles redux actions for when the user wants to approve his dai in order to close his cdp
+ *
+ * @return {Function}
+ */
+export const approveDaiAction = () => async (dispatch, getState) => {
+  dispatch({ type: APPROVE_DAI_REQUEST });
+
+  try {
+    await approveDai(getState().general.account);
+
+    dispatch({ type: APPROVE_DAI_SUCCESS });
+  } catch (err) {
+    const payload = err.message.includes(MM_DENIED_TX_ERROR) ? '' : err.message;
+
+    dispatch({ type: APPROVE_DAI_FAILURE, payload });
+  }
+};
+
+/**
+ * Handles redux actions for when the user wants to approve his maker in order to close his cdp
+ *
+ * @return {Function}
+ */
+export const approveMakerAction = () => async (dispatch, getState) => {
+  dispatch({ type: APPROVE_MAKER_REQUEST });
+
+  try {
+    await approveMaker(getState().general.account);
+
+    dispatch({ type: APPROVE_MAKER_SUCCESS });
+  } catch (err) {
+    const payload = err.message.includes(MM_DENIED_TX_ERROR) ? '' : err.message;
+
+    dispatch({ type: APPROVE_MAKER_FAILURE, payload });
   }
 };

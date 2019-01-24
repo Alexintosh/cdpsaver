@@ -42,9 +42,25 @@
       text-align: left;
     }
 
+    .approved {
+      display: flex;
+      align-items: center;
+      color: $green;
+
+      i:before { color: $green; }
+      span { margin-right: 5px; }
+    }
+
     button {
       width: 124px;
       height: 44px;
     }
+  }
+
+  .lock-item-error {
+    color: $dark-red;
+
+    &.maker { margin-top: 20px; }
+    &.dai { margin-borrom: 15px; }
   }
 }

@@ -10,6 +10,8 @@ export const MARKETPLACE_SORT_OPTIONS = [
 export const LS_ACCOUNT = 'LS_ACCOUNT';
 export const LS_ONBOARDING_FINISHED = 'LS_ONBOARDING_FINISHED';
 
+export const MM_DENIED_TX_ERROR = 'User denied transaction signature';
+
 export const MOCK_CDP = {
   id: 3613,
   owner: '0xB4cE4f46a567e794b91DE27BCc5a9D6A37AaB1c3',

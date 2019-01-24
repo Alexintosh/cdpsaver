@@ -155,6 +155,12 @@ export const callProxyContract = (
   }
 });
 
+/**
+ * Gets dai allowance for the users address from the dai erc20 contract
+ *
+ * @param address {String}
+ * @return {Promise<Number>}
+ */
 export const getDaiAllowance = address => new Promise(async (resolve, reject) => {
   const contract = await DaiErc20Contract();
 
@@ -167,6 +173,12 @@ export const getDaiAllowance = address => new Promise(async (resolve, reject) =>
   }
 });
 
+/**
+ * Gets dai balance for the users address from the dai erc20 contract
+ *
+ * @param address {String}
+ * @return {Promise<Number>}
+ */
 export const getDaiBalance = address => new Promise(async (resolve, reject) => {
   const contract = await DaiErc20Contract();
 
@@ -179,6 +191,32 @@ export const getDaiBalance = address => new Promise(async (resolve, reject) => {
   }
 });
 
+/**
+ * Approves that dai can be used for the users address on the dai erc20 contract
+ *
+ * @param address {String}
+ * @return {Promise<Boolean>}
+ */
+export const approveDai = address => new Promise(async (resolve, reject) => {
+  const contract = await DaiErc20Contract();
+
+  const num = ethToWei(Number.MAX_SAFE_INTEGER.toString());
+
+  try {
+    await contract.methods.approve(tubInterfaceAddress, num).send({ from: address });
+
+    resolve(true);
+  } catch (err) {
+    reject(err);
+  }
+});
+
+/**
+ * Gets maker allowance for the users address from the dai erc20 contract
+ *
+ * @param address {String}
+ * @return {Promise<Number>}
+ */
 export const getMakerAllowance = address => new Promise(async (resolve, reject) => {
   const contract = await MakerErc20Contract();
 
@@ -191,6 +229,12 @@ export const getMakerAllowance = address => new Promise(async (resolve, reject) 
   }
 });
 
+/**
+ * Gets dai balance for the users address from the dai erc20 contract
+ *
+ * @param address {String}
+ * @return {Promise<Number>}
+ */
 export const getMakerBalance = address => new Promise(async (resolve, reject) => {
   const contract = await MakerErc20Contract();
 
@@ -198,6 +242,26 @@ export const getMakerBalance = address => new Promise(async (resolve, reject) =>
     const data = await contract.methods.balanceOf(address).call();
 
     resolve(parseFloat(weiToEth(data)));
+  } catch (err) {
+    reject(err);
+  }
+});
+
+/**
+ * Approves that maker can be used for the users address on the dai erc20 contract
+ *
+ * @param address {String}
+ * @return {Promise<Boolean>}
+ */
+export const approveMaker = address => new Promise(async (resolve, reject) => {
+  const contract = await MakerErc20Contract();
+
+  const num = ethToWei(Number.MAX_SAFE_INTEGER.toString());
+
+  try {
+    await contract.methods.approve(tubInterfaceAddress, num).send({ from: address });
+
+    resolve(true);
   } catch (err) {
     reject(err);
   }

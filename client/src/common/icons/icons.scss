@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?6r8h4c');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?6r8h4c#iefix') format('embedded-opentype'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?6r8h4c') format('truetype'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?6r8h4c') format('woff'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?6r8h4c##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?k7dvus');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?k7dvus#iefix') format('embedded-opentype'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?k7dvus') format('truetype'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?k7dvus') format('woff'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?k7dvus##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -26,6 +26,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-success-circle {
+  &:before {
+    content: $icon-success-circle;
+    color: #fff;
+  }
+}
 .icon-empty {
   &:before {
     content: $icon-empty;

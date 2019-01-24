@@ -22,6 +22,14 @@ import {
   GET_AFTER_CDP_REQUEST,
   GET_AFTER_CDP_SUCCESS,
   GET_AFTER_CDP_FAILURE,
+
+  APPROVE_DAI_REQUEST,
+  APPROVE_DAI_SUCCESS,
+  APPROVE_DAI_FAILURE,
+
+  APPROVE_MAKER_REQUEST,
+  APPROVE_MAKER_SUCCESS,
+  APPROVE_MAKER_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 
 const INITIAL_STATE = {
@@ -46,6 +54,12 @@ const INITIAL_STATE = {
   afterCdp: null,
   gettingAfterCdp: false,
   gettingAfterCdpFailure: '',
+
+  approvingDai: false,
+  approvingDaiError: '',
+
+  approvingMaker: false,
+  approvingMakerError: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -155,6 +169,40 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         gettingAfterCdp: false,
         gettingAfterCdpError: payload,
+      };
+
+    case APPROVE_DAI_REQUEST:
+      return { ...state, approvingDai: true };
+
+    case APPROVE_DAI_SUCCESS:
+      return {
+        ...state,
+        approvingDai: false,
+        approvingDaiError: '',
+      };
+
+    case APPROVE_DAI_FAILURE:
+      return {
+        ...state,
+        approvingDai: false,
+        approvingDaiError: payload,
+      };
+
+    case APPROVE_MAKER_REQUEST:
+      return { ...state, approvingMaker: true };
+
+    case APPROVE_MAKER_SUCCESS:
+      return {
+        ...state,
+        approvingMaker: false,
+        approvingMakerError: '',
+      };
+
+    case APPROVE_MAKER_FAILURE:
+      return {
+        ...state,
+        approvingMaker: false,
+        approvingMakerError: payload,
       };
 
     default:

@@ -1,4 +1,4 @@
-import clientConfig from '../config/clientConfig.json';
+// import clientConfig from '../config/clientConfig.json';
 
 export const subscribeToMonitoringApiRequest = (/* formData */) => new Promise((resolve) => {
   setTimeout(() => {
