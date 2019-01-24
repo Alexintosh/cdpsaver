@@ -48,6 +48,8 @@ const INITIAL_STATE = {
   ethPrice: 0,
   gettingEthPrice: false,
 
+  daiBalance: 0,
+  makerBalance: 0,
   enoughMkrToWipe: false,
   daiUnlocked: false,
   makerUnlocked: false,

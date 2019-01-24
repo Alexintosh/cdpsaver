@@ -1,0 +1,50 @@
+@import "../../common/colors";
+@import "../../common/text";
+
+.lock-unlock-interface-wrapper {
+
+  .lock-header {
+    display: flex;
+    align-items: center;
+    color: $gray;
+    border-bottom: 1px solid $green;
+    margin-bottom: 18px;
+
+    .header-item {
+      margin-bottom: 8px;
+    }
+
+    .header-item:first-child {
+      margin-right: 82px;
+    }
+  }
+
+  div:nth-child(2).lock-item {
+    margin-bottom: 17px;
+  }
+
+  .lock-item {
+    display: flex;
+    align-items: center;
+    font-size: $font-size-extra-large;
+
+    .currency {
+      width: 65px;
+      flex-shrink: 0;
+      margin-right: 60px;
+      text-align: left;
+    }
+
+    .balance {
+      width: 65px;
+      flex-shrink: 0;
+      margin-right: 66px;
+      text-align: left;
+    }
+
+    button {
+      width: 124px;
+      height: 44px;
+    }
+  }
+}

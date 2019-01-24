@@ -3,7 +3,9 @@ import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { getCloseDataAction } from '../../../actions/generalActions';
 import ModalHeader from '../ModalHeader';
-import ModalBody from '../ModalBody';
+import LockUnlockInterface from '../../LockUnlockInterface/LockUnlockInterface';
+
+import './CloseCdpModal.scss';
 
 class CloseCdpModal extends Component {
   componentWillMount() {
@@ -16,11 +18,15 @@ class CloseCdpModal extends Component {
       gettingCloseDataError,
     } = this.props;
 
+    const cantClose = !daiUnlocked || !makerUnlocked;
+
     return (
-      <div className="sell-cdp-modal-wrapper">
+      <div className="close-cdp-modal-wrapper">
         <ModalHeader closeModal={closeModal} actionHeader actionText="Close" />
 
-        <ModalBody>
+        <div className="modal-content">
+          <h3 className="title">Close</h3>
+
           { gettingCloseData && (<div className="loading-wrapper">Loading data...</div>) }
 
           {
@@ -34,7 +40,30 @@ class CloseCdpModal extends Component {
           {
             !gettingCloseData && !gettingCloseDataError && (
               <div className="content-wrapper">
-                { enoughMkrToWipe && (<div className="maker-close">close with tokens</div>) }
+                <div className="container">
+                  <div className="description">
+                    What is the overall collateral ratio of the system (lowest, higest point of the week)
+                    How much dai is in the system,How much dai is in the system,
+                  </div>
+                </div>
+
+                {
+                  enoughMkrToWipe && (
+                    <div>
+                      { cantClose && (<div className="container"><LockUnlockInterface /></div>) }
+
+                      <div className="modal-controls">
+                        <button
+                          disabled={cantClose}
+                          type="button"
+                          className={`button ${cantClose ? 'gray' : 'green'} uppercase`}
+                        >
+                          Close cdp
+                        </button>
+                      </div>
+                    </div>
+                  )
+                }
 
                 { !enoughMkrToWipe && enoughEthToWipe && (<div className="eth-close">close with ether</div>) }
 
@@ -42,7 +71,7 @@ class CloseCdpModal extends Component {
               </div>
             )
           }
-        </ModalBody>
+        </div>
       </div>
     );
   }

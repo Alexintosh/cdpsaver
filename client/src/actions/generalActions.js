@@ -7,7 +7,9 @@ import {
   GET_CLOSE_DATA_FAILURE,
 } from '../actionTypes/generalActionTypes';
 import { maker } from '../services/cdpService';
-import { getDaiAllowance, getDaiBalance, getMakerAllowance } from '../services/ethService';
+import {
+  getDaiAllowance, getDaiBalance, getMakerAllowance, getMakerBalance, weiToEth,
+} from '../services/ethService';
 
 /**
  * Checks the price of Ether and updates it in the state
@@ -81,6 +83,9 @@ export const getCloseDataAction = () => async (dispatch, getState) => {
 
       payload.daiUnlocked = daiAllowance > cdp.debtDai;
       payload.makerUnlocked = makerAllowance > governanceFee;
+
+      payload.daiBalance = parseFloat(weiToEth(daiBalance));
+      payload.makerBalance = await getMakerBalance(account);
     }
 
     // TODO do this
@@ -91,7 +96,6 @@ export const getCloseDataAction = () => async (dispatch, getState) => {
 
     dispatch({ type: GET_CLOSE_DATA_SUCCESS, payload });
   } catch (e) {
-    console.log('ERROR', e, e.message);
     dispatch({ type: GET_CLOSE_DATA_FAILURE, payload: e.message });
   }
 };

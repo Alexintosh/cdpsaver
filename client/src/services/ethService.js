@@ -190,3 +190,15 @@ export const getMakerAllowance = address => new Promise(async (resolve, reject) 
     reject(err);
   }
 });
+
+export const getMakerBalance = address => new Promise(async (resolve, reject) => {
+  const contract = await MakerErc20Contract();
+
+  try {
+    const data = await contract.methods.balanceOf(address).call();
+
+    resolve(parseFloat(weiToEth(data)));
+  } catch (err) {
+    reject(err);
+  }
+});
