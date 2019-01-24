@@ -155,23 +155,24 @@ contract("SaverProxy", accounts => {
   //   }
   // });
 
-    it('...should close the cdp', async () => {
-    // 2 dai
-    const newOwner = accounts[2];
-    const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaiProxyInterface, 'shut'), 
-    [tubAddr, cdpIdBytes32]);
+  //   it('...should close the cdp', async () => {
+  //   const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaiProxyInterface, 'shut'), 
+  //   [tubAddr, cdpIdBytes32, "0x0000000000000000000000000000000000000000"]);
 
-      try {
+  //     console.log(getAbiFunction(SaiProxyInterface, 'shut'), 
+  //     [tubAddr, cdpIdBytes32, "0x0000000000000000000000000000000000000000"]);
 
-        const proxyAddr2 = await registry.proxies(accounts[2]);
-        proxy2 = await DSProxy.at(proxyAddr2);
+  //     try {
 
-        const tx = await proxy2.methods['execute(address,bytes)'](saiProxy.address, data);
+  //       const proxyAddr2 = await registry.proxies(accounts[2]);
+  //       proxy2 = await DSProxy.at(proxyAddr2);
 
-    } catch(err) {
-      console.log(err);
-    }
-  });
+  //       const tx = await proxy2.methods['execute(address,bytes)'](saiProxy.address, data, {from: accounts[2]});
+
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // });
 
   // it('...should call the repay feature', async () => {
 
