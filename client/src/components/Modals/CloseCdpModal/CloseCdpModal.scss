@@ -16,6 +16,26 @@
     .description {
       max-width: 380px;
     }
+
+    .error-wrapper {
+      padding-top: 0;
+    }
+  }
+
+  .sub-header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 32px;
+
+    .label {
+      color: $gray;
+      margin-right: 7px;
+    }
+
+    .value {
+      color: #fff;
+      font-size: $font-size-medium;
+    }
   }
 
   .modal-content {
@@ -26,12 +46,25 @@
     .title {
       background: $dark-gray;
       font-size: $font-size-extra-large;
-      padding: 57px 0 32px 0;
+      padding: 57px 0 2px 0;
       margin: 0;
     }
   }
 
-  .loading-wrapper, .error-wrapper, .description {
+  .description {
     background: $dark-gray;
+  }
+
+  .loading-wrapper {
+    padding: 20px 20px 40px 20px;
+  }
+
+  .no-close, .error-wrapper {
+    max-width: 380px;
+    color: $dark-red;
+    margin: 0;
+    font-size: $font-size-large;
+    padding: 20px 0 40px 0;
+    font-weight: normal;
   }
 }

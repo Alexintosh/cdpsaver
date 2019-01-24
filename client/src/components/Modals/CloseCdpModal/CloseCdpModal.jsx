@@ -6,6 +6,7 @@ import ModalHeader from '../ModalHeader';
 import LockUnlockInterface from '../../LockUnlockInterface/LockUnlockInterface';
 
 import './CloseCdpModal.scss';
+import Loader from '../../Loader/Loader';
 
 class CloseCdpModal extends Component {
   componentWillMount() {
@@ -15,7 +16,7 @@ class CloseCdpModal extends Component {
   render() {
     const {
       closeModal, enoughMkrToWipe, enoughEthToWipe, daiUnlocked, makerUnlocked, gettingCloseData,
-      gettingCloseDataError,
+      gettingCloseDataError, cdpId,
     } = this.props;
 
     const cantClose = !daiUnlocked || !makerUnlocked;
@@ -25,14 +26,29 @@ class CloseCdpModal extends Component {
         <ModalHeader closeModal={closeModal} actionHeader actionText="Close" />
 
         <div className="modal-content">
-          <h3 className="title">Close</h3>
+          <h3 className="title">Close CDP</h3>
 
-          { gettingCloseData && (<div className="loading-wrapper">Loading data...</div>) }
+          <div className="container">
+            <div className="sub-header">
+              <span className="label">CDP ID:</span>
+              <span className="value">{ cdpId }</span>
+            </div>
+          </div>
 
           {
-            gettingCloseData && gettingCloseDataError && (
-              <div className="error-wrapper">
-                There was an error while fetching data, please refresh the page.
+            gettingCloseData && (
+              <div className="container">
+                <div className="loading-wrapper">
+                  <Loader />
+                </div>
+              </div>
+            )
+          }
+
+          {
+            !gettingCloseData && gettingCloseDataError && (
+              <div className="container">
+                <div className="error-wrapper">{gettingCloseDataError}</div>
               </div>
             )
           }
@@ -67,7 +83,15 @@ class CloseCdpModal extends Component {
 
                 { !enoughMkrToWipe && enoughEthToWipe && (<div className="eth-close">close with ether</div>) }
 
-                { !enoughMkrToWipe && !enoughEthToWipe && (<div className="no-close">no close</div>) }
+                {
+                  !enoughMkrToWipe && !enoughEthToWipe && (
+                    <div className="container">
+                      <div className="no-close">
+                        You do not have enough tokens to close your CDP at this moment.
+                      </div>
+                    </div>
+                  )
+                }
               </div>
             )
           }
@@ -86,6 +110,7 @@ CloseCdpModal.propTypes = {
   makerUnlocked: PropTypes.bool.isRequired,
   gettingCloseData: PropTypes.bool.isRequired,
   gettingCloseDataError: PropTypes.string.isRequired,
+  cdpId: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = ({ general }) => ({
@@ -95,6 +120,7 @@ const mapStateToProps = ({ general }) => ({
   makerUnlocked: general.makerUnlocked,
   gettingCloseData: general.gettingCloseData,
   gettingCloseDataError: general.gettingCloseDataError,
+  cdpId: general.cdp.id,
 });
 
 const mapDispatchToProps = {
