@@ -1,0 +1,49 @@
+@import "../../../common/colors";
+@import "../../../common/text";
+
+#transfer-cdp-modal-wrapper {
+
+  &.form-error .form-wrapper {
+    margin-bottom: 30px;
+  }
+
+  .modal-content {
+
+    .title {
+      background: $dark-gray;
+      font-size: $font-size-extra-large;
+      margin: 57px 0 2px 0;
+    }
+
+    .description {
+      max-width: 380px;
+      margin: 0 auto 36px auto;
+    }
+  }
+
+  .form-wrapper {
+    max-width: 300px;
+    margin: 0 auto 54px auto;
+
+    .form-item-wrapper {
+      padding: 14px 19px;
+    }
+
+    .input-values {
+      flex-direction: column;
+
+      label { margin-bottom: 2px; }
+
+      input {
+        font-size: $font-size-regular - 0.1;
+        text-align: left;
+      }
+    }
+  }
+
+  .form-error {
+    color: $dark-red;
+    max-width: 380px;
+    margin: 0 auto 30px auto;
+  }
+}

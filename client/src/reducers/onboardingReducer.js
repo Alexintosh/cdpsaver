@@ -12,6 +12,7 @@ import {
   FINISH_ONBOARDING,
 } from '../actionTypes/onboardingActionTypes';
 import { LS_ONBOARDING_FINISHED } from '../constants/general';
+import { TRANSFER_CDP_SUCCESS } from '../actionTypes/dashboardActionTypes';
 
 const lsOnboardingFinished = JSON.parse(localStorage.getItem(LS_ONBOARDING_FINISHED));
 
@@ -65,6 +66,9 @@ export default (state = INITIAL_STATE, action) => {
 
     case RESET_ONBOARDING_WIZARD:
       return { ...INITIAL_STATE, onboardingFinished: state.onboardingFinished };
+
+    case TRANSFER_CDP_SUCCESS:
+      return { ...INITIAL_STATE, onboardingFinished: false };
 
     default:
       return state;

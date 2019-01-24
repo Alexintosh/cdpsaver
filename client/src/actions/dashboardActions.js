@@ -31,10 +31,16 @@ import {
   APPROVE_MAKER_REQUEST,
   APPROVE_MAKER_SUCCESS,
   APPROVE_MAKER_FAILURE,
+
+  TRANSFER_CDP_REQUEST,
+  TRANSFER_CDP_SUCCESS,
+  TRANSFER_CDP_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
-import { approveDai, approveMaker, callProxyContract } from '../services/ethService';
+import {
+  approveDai, approveMaker, callProxyContract, transferCdp,
+} from '../services/ethService';
 import { getMaxDai, getMaxEthWithdraw, getUpdatedCdpInfo } from '../services/cdpService';
-import { MM_DENIED_TX_ERROR } from '../constants/general';
+import { LS_ONBOARDING_FINISHED, MM_DENIED_TX_ERROR } from '../constants/general';
 
 /**
  * Handles redux actions for when the number of max dai that can be generated is calculating
@@ -220,5 +226,36 @@ export const approveMakerAction = () => async (dispatch, getState) => {
     const payload = err.message.includes(MM_DENIED_TX_ERROR) ? '' : err.message;
 
     dispatch({ type: APPROVE_MAKER_FAILURE, payload });
+  }
+};
+
+/**
+ * Handles redux actions for when the user wants to transfer his cdp to another address
+ *
+ * @param formValues {Object}
+ * @param history {Object}
+ * @param closeModal {Function}
+ *
+ * @return {Function}
+ */
+export const transferCdpAction = ({ toAddress }, history, closeModal) => async (dispatch, getState) => {
+  dispatch({ type: TRANSFER_CDP_REQUEST });
+
+  try {
+    const { account, cdp, proxyAddress } = getState().general;
+
+    await transferCdp(account, toAddress, cdp.id, proxyAddress);
+
+    localStorage.removeItem(LS_ONBOARDING_FINISHED);
+
+    closeModal();
+    dispatch({ type: TRANSFER_CDP_SUCCESS });
+
+    history.push('/onboarding/create-cdp');
+  } catch (err) {
+    console.log('err', err);
+    const payload = err.message.includes(MM_DENIED_TX_ERROR) ? '' : err.message;
+
+    dispatch({ type: TRANSFER_CDP_FAILURE, payload });
   }
 };

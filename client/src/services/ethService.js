@@ -112,7 +112,7 @@ export const createCdp = (from, ethAmount, _daiAmount) => new Promise(async (res
  * @param cdpId {Number}
  * @param proxyAddress {String}
  * @param account {String}
-2 * @param funcName {String}
+ * @param funcName {String}
  * @param ethPrice {Number}
  * @param sendAsValue {Boolean}
  *
@@ -260,6 +260,45 @@ export const approveMaker = address => new Promise(async (resolve, reject) => {
 
   try {
     await contract.methods.approve(tubInterfaceAddress, num).send({ from: address });
+
+    resolve(true);
+  } catch (err) {
+    reject(err);
+  }
+});
+
+/**
+ * Transfers the cdp from one address to another address
+ *
+ * @param fromAddress {String}
+ * @param toAddress {String}
+ * @param cdpId {Number}
+ * @param proxyAddress {String}
+ *
+ * @return {Promise<Boolean>}
+ */
+export const transferCdp = (fromAddress, toAddress, cdpId, proxyAddress) => new Promise(async (resolve, reject) => {
+  try {
+    const contract = config.SaiSaverProxy;
+    const contractFunction = contract.abi.find(abi => abi.name === 'give');
+
+    const dsProxyContractAbi = dsProxyContractJson.abi;
+    const proxyContract = new window._web3.eth.Contract(dsProxyContractAbi, proxyAddress);
+
+    const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
+
+    const params = [saiTubAddress, cdpIdBytes32, toAddress];
+    const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, params);
+
+    await proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send({ from: fromAddress });
+
+    const wait = () => new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(true);
+      }, 2000);
+    });
+
+    await wait();
 
     resolve(true);
   } catch (err) {

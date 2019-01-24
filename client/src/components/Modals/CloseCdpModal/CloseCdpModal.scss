@@ -22,22 +22,6 @@
     }
   }
 
-  .sub-header {
-    display: flex;
-    align-items: center;
-    padding-bottom: 32px;
-
-    .label {
-      color: $gray;
-      margin-right: 7px;
-    }
-
-    .value {
-      color: #fff;
-      font-size: $font-size-medium;
-    }
-  }
-
   .modal-content {
     display: flex;
     flex-direction: column;

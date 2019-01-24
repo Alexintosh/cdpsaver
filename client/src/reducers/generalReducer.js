@@ -25,6 +25,7 @@ import {
   APPROVE_DAI_SUCCESS,
   APPROVE_MAKER_SUCCESS,
   GENERATE_DAI_SUCCESS,
+  TRANSFER_CDP_SUCCESS,
   WITHDRAW_ETH_SUCCESS,
 } from '../actionTypes/dashboardActionTypes';
 import { LS_ACCOUNT } from '../constants/general';
@@ -163,6 +164,9 @@ export default (state = INITIAL_STATE, action) => {
 
     case APPROVE_MAKER_SUCCESS:
       return { ...state, makerUnlocked: true };
+
+    case TRANSFER_CDP_SUCCESS:
+      return { ...state, cdp: null, proxyAddress: '' };
 
     default:
       return state;

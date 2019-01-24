@@ -71,6 +71,21 @@
         font-size: 20px;
         margin: 57px 0 32px 0;
       }
+
+      .sub-header {
+        @include flex-center;
+        padding-bottom: 32px;
+
+        .label {
+          color: $gray;
+          margin-right: 7px;
+        }
+
+        .value {
+          color: #fff;
+          font-size: $font-size-medium;
+        }
+      }
     }
 
     .modal-controls {

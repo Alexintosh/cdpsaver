@@ -25,12 +25,6 @@ class OnboardingRoutes extends Component {
     ];
   }
 
-  componentWillMount() {
-    if (!this.props.hasCdp) return;
-
-    this.onboardingWizardLinks.splice(0, 1);
-  }
-
   componentWillUnmount() {
     this.props.resetOnboardingWizard();
   }
@@ -48,6 +42,10 @@ class OnboardingRoutes extends Component {
       if (loggingIn) message = 'Logging in, please wait...';
       if (connectingProvider) message = 'Connecting web3 provider, please wait...';
       if (gettingCdp) message = 'Getting your cdp, please wait...';
+
+      if (hasCdp && this.onboardingWizardLinks.length === 4) {
+        this.onboardingWizardLinks.splice(0, 1);
+      }
 
       return (
         <div className="loader-page-wrapper private">

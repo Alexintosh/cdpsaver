@@ -21,7 +21,7 @@ class SellCdpModal extends Component {
 
     return (
       <div className="sell-cdp-modal-wrapper">
-        <ModalHeader closeModal={closeModal} actionHeader actionText="Approve" />
+        <ModalHeader closeModal={closeModal} />
 
         <ModalBody>
           {

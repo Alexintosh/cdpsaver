@@ -30,6 +30,10 @@ import {
   APPROVE_MAKER_REQUEST,
   APPROVE_MAKER_SUCCESS,
   APPROVE_MAKER_FAILURE,
+
+  TRANSFER_CDP_REQUEST,
+  TRANSFER_CDP_SUCCESS,
+  TRANSFER_CDP_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 
 const INITIAL_STATE = {
@@ -60,6 +64,9 @@ const INITIAL_STATE = {
 
   approvingMaker: false,
   approvingMakerError: '',
+
+  transferringCdp: false,
+  transferringCdpError: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -203,6 +210,23 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         approvingMaker: false,
         approvingMakerError: payload,
+      };
+
+    case TRANSFER_CDP_REQUEST:
+      return { ...state, transferringCdp: true };
+
+    case TRANSFER_CDP_SUCCESS:
+      return {
+        ...state,
+        transferringCdp: false,
+        transferringCdpError: '',
+      };
+
+    case TRANSFER_CDP_FAILURE:
+      return {
+        ...state,
+        transferringCdp: false,
+        transferringCdpError: payload,
       };
 
     default:

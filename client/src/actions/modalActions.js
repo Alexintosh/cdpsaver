@@ -2,6 +2,7 @@ import { TOGGLE_MODAL } from '../actionTypes/modalActionTypes';
 import {
   SELL_CDP_MODAL,
   CLOSE_CDP_MODAL,
+  TRANSFER_CDP_MODAL,
 } from '../components/Modals/modalTypes';
 
 /**
@@ -29,16 +30,24 @@ export const closeModal = () => (dispatch) => {
 };
 
 /**
- * Opens confirm remove modal when player wants to remove a panel
+ * Opens confirm remove modal when the user wants to sell his cdp
  */
 export const openSellCdpModal = () => (dispatch) => {
   dispatch(toggleModal(SELL_CDP_MODAL, { width: 750 }, true));
 };
 
 /**
- * Checks if the modal should be opened or if the tx can be sent right away
- * If it can't be spent then it opens the modal
+ * Opens close cdp modal when the user wants to close his cdp
  */
 export const openCloseCdpModal = () => async (dispatch) => {
   dispatch(toggleModal(CLOSE_CDP_MODAL, { width: 481 }, true));
+};
+
+/**
+ * Opens the transfer cdp modal when the user whats to send it someone else
+ *
+ * @param {Object} history
+ */
+export const openTransferCdpModal = history => async (dispatch) => {
+  dispatch(toggleModal(TRANSFER_CDP_MODAL, { width: 481, history }, true));
 };
