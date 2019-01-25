@@ -3,6 +3,7 @@ import { Pie } from 'react-chartjs-2';
 import PropTypes from 'prop-types';
 
 import './PieChart.scss';
+import { formatNumber } from '../../utils/utils';
 
 const options = {
   rotation: -(0.1) * Math.PI,
@@ -38,7 +39,7 @@ const PieChart = ({ values }) => {
 
               <div className="value-wrapper">
                 <div className="label">{ label }</div>
-                <div className="value">{ data }</div>
+                <div className="value">{ formatNumber(data, 2) }</div>
               </div>
             </div>
           ))

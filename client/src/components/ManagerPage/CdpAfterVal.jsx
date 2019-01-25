@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { formatNumber } from '../../utils/utils';
 
 const CdpAfterVal = ({
   type, loading, cdp, cdpProp, symbol,
@@ -10,7 +11,7 @@ const CdpAfterVal = ({
       !loading && cdp && (
         <div className="amount-wrapper">
           <span className="after">After:</span>
-          <span className="amount">{ cdp[cdpProp].toFixed(2) }{ symbol }</span>
+          <span className="amount">{ formatNumber(cdp[cdpProp], 2) }{ symbol }</span>
         </div>
       )
     }

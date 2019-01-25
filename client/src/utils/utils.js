@@ -125,3 +125,27 @@ export const formatAcc = account => `${account.substring(0, 12)}...${account.sub
 export const formatAccType = (accType) => {
   if (accType === 'metamask') return 'MetaMask';
 };
+
+const countDecimals = (value) => {
+  if (Math.floor(value) !== value) return value.toString().split('.')[1].length || 0;
+
+  return 0;
+};
+
+export const formatNumber = (_num, fixed) => {
+  try {
+    let num = _num;
+
+    if (typeof num === 'object') num = num.toNumber();
+
+    if (Number.isInteger(num)) return num;
+
+    const decimals = countDecimals(num);
+    const numString = num.toString();
+
+    console.log(num, numString.substring(0, (numString.length - decimals) + fixed));
+    return numString.substring(0, (numString.length - decimals) + fixed);
+  } catch (err) {
+    return _num.toFixed(fixed);
+  }
+};

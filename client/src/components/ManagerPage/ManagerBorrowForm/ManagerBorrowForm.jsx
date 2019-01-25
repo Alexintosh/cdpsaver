@@ -10,6 +10,7 @@ import {
   withdrawEthAction,
   setAfterValue,
 } from '../../../actions/dashboardActions';
+import { formatNumber } from '../../../utils/utils';
 
 const ManagerBorrowForm = ({
   generatingDai, generateDaiAction, formValues, maxDai, gettingMaxDai, dispatch,
@@ -24,7 +25,7 @@ const ManagerBorrowForm = ({
           if (!generatingDai) dispatch(change('managerBorrowForm', 'generateDaiAmount', maxDai));
         }}
       >
-        { gettingMaxDai ? 'Loading...' : `(max ${maxDai.toFixed(2)})` }
+        { gettingMaxDai ? 'Loading...' : `(max ${formatNumber(maxDai, 2)})` }
       </div>
       <Field
         id="manager-generate-input"
@@ -56,7 +57,7 @@ const ManagerBorrowForm = ({
           if (!withdrawingEth) dispatch(change('managerBorrowForm', 'withdrawEthAmount', maxDai));
         }}
       >
-        { gettingMaxEthWithdraw ? 'Loading...' : `(max ${maxEthWithdraw.toFixed(2)})` }
+        { gettingMaxEthWithdraw ? 'Loading...' : `(max ${formatNumber(maxEthWithdraw, 2)})` }
       </div>
       <Field
         id="manager-withdraw-input"

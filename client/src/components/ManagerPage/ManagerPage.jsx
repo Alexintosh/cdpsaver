@@ -8,7 +8,7 @@ import EthIcon from '../Decorative/EthIcon';
 import ManagerBorrowForm from './ManagerBorrowForm/ManagerBorrowForm';
 import ManagerPaybackFrom from './ManagerPaybackFrom/ManagerPaybackFrom';
 import CdpAfterVal from './CdpAfterVal';
-import { formatAccType, formatAcc } from '../../utils/utils';
+import { formatAccType, formatAcc, formatNumber } from '../../utils/utils';
 import { getMaxDaiAction, getMaxEthWithdrawAction } from '../../actions/dashboardActions';
 import { openCloseCdpModal, openTransferCdpModal } from '../../actions/modalActions';
 
@@ -52,7 +52,7 @@ class ManagerPage extends Component {
                 <div className="info-wrapper-main">
                   <div className="item">
                     <div className="label">Liquidation price</div>
-                    <div className="value">{ cdp.liquidationPrice.toFixed(2) }$</div>
+                    <div className="value">{ formatNumber(cdp.liquidationPrice, 2) }$</div>
                     <CdpAfterVal
                       type={afterType}
                       loading={gettingAfterCdp}
@@ -69,7 +69,7 @@ class ManagerPage extends Component {
 
                   <div className="item">
                     <div className="label">Ratio</div>
-                    <div className="value">{ (cdp.ratio).toFixed(2) }%</div>
+                    <div className="value">{ formatNumber(cdp.ratio, 2) }%</div>
                     <CdpAfterVal
                       type={afterType}
                       loading={gettingAfterCdp}
@@ -85,7 +85,7 @@ class ManagerPage extends Component {
 
                   <div className="row-val-wrapper">
                     <span className="label">Debt:</span>
-                    <span className="value">{ cdp.debtDai.toFixed(2) } Dai</span>
+                    <span className="value">{ formatNumber(cdp.debtDai, 2) } Dai</span>
                   </div>
                 </div>
 
@@ -94,7 +94,7 @@ class ManagerPage extends Component {
 
                   <div className="row-val-wrapper">
                     <span className="label">Collateral amount:</span>
-                    <span className="value">{ cdp.depositedETH.toFixed(2) } Eth</span>
+                    <span className="value">{ formatNumber(cdp.depositedETH, 2) } Eth</span>
                   </div>
                 </div>
               </div>
@@ -102,8 +102,8 @@ class ManagerPage extends Component {
               <div className="main-subsection">
                 <PieChart
                   values={[
-                    { data: cdp.debtDai.toFixed(2), color: '#61717E', label: 'Debt' },
-                    { data: cdp.depositedUSD.toFixed(2), color: '#37B06F', label: 'Collateral' },
+                    { data: cdp.debtDai, color: '#61717E', label: 'Debt' },
+                    { data: cdp.depositedUSD, color: '#37B06F', label: 'Collateral' },
                   ]}
                 />
               </div>

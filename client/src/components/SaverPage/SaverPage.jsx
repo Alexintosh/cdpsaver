@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import './SaverPage.scss';
+import { formatNumber } from '../../utils/utils';
 
 const SaverPage = ({
   cdp, gettingEthPrice, ethPrice,
@@ -25,23 +26,23 @@ const SaverPage = ({
 
             <div className="item">
               <div className="label">Current price</div>
-              <div className="value">78$</div>
+              <div className="value">{ formatNumber(ethPrice, 2) }</div>
             </div>
 
             <div className="item">
               <div className="label">Ratio</div>
-              <div className="value">{ (cdp.ratio).toFixed(2) }%</div>
+              <div className="value">{ formatNumber(cdp.ratio, 2) }%</div>
             </div>
           </div>
 
           <div className="row-item-wrapper">
             <span className="label">Debt:</span>
-            <span className="value">{ cdp.debtDai.toFixed(2) } Dai</span>
+            <span className="value">{ formatNumber(cdp.debtDai, 2) } Dai</span>
           </div>
 
           <div className="row-item-wrapper">
             <span className="label">Collateral amount:</span>
-            <span className="value">{ cdp.depositedETH.toFixed(2) } Eth</span>
+            <span className="value">{ formatNumber(cdp.depositedETH, 2) } Eth</span>
           </div>
         </div>
 
