@@ -1,69 +1,82 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Field, formValueSelector, reduxForm } from 'redux-form';
 import InputComponent from '../../Forms/InputComponent';
 import { addCollateralAction, setAfterValue } from '../../../actions/dashboardActions';
 
-const ManagerPaybackForm = ({
-  formValues, addingCollateral, addCollateralAction, setAfterValue,
-}) => (
-  <form className="action-items-wrapper form-wrapper" onSubmit={() => {}}>
-    <div className="item">
-      <Field
-        id="manager-payback-input"
-        wrapperClassName="form-item-wrapper payback"
-        name="payback"
-        labelText="Payback:"
-        secondLabelText="DAI"
-        placeholder="1"
-        component={InputComponent}
-      />
-      <button type="button" className="button gray uppercase">
-        Payback
-      </button>
-    </div>
+class ManagerPaybackForm extends Component {
+  componentWillUnmount() {
+    this.props.setAfterValue(0, 'clear');
+  }
 
-    <div className="item">
-      <Field
-        id="manager-add-collateral-input"
-        type="number"
-        wrapperClassName="form-item-wrapper collateral"
-        name="addCollateralAmount"
-        onChange={(e) => { setAfterValue(e.target.value, 'collateral'); }}
-        labelText="Add collateral:"
-        secondLabelText="ETH"
-        placeholder="1"
-        disabled={addingCollateral}
-        component={InputComponent}
-      />
+  render() {
+    const {
+      formValues, addingCollateral, addCollateralAction, setAfterValue,
+    } = this.props;
 
-      <button
-        type="button"
-        className="button gray uppercase variable-width"
-        onClick={() => { addCollateralAction(formValues.addCollateralAmount); }}
-        disabled={addingCollateral || !formValues.addCollateralAmount}
-      >
-        { addingCollateral ? 'Adding collateral' : 'Add collateral' }
-      </button>
-    </div>
+    const { addCollateralAmount } = formValues;
 
-    <div className="item">
-      <Field
-        id="manager-boost-input"
-        wrapperClassName="form-item-wrapper boost"
-        name="boost"
-        labelText="Boost:"
-        secondLabelText="DAI"
-        placeholder="1"
-        component={InputComponent}
-      />
-      <button type="button" className="button gray uppercase">
-        Boost
-      </button>
-    </div>
-  </form>
-);
+    return (
+      <form className="action-items-wrapper form-wrapper" onSubmit={() => {}}>
+        <div className="item">
+          <Field
+            id="manager-payback-input"
+            wrapperClassName="form-item-wrapper payback"
+            name="paybackAmount"
+            labelText="Payback:"
+            secondLabelText="DAI"
+            placeholder="1"
+            component={InputComponent}
+          />
+          <button type="button" className="button gray uppercase">
+            Payback
+          </button>
+        </div>
+
+        <div className="item">
+          <Field
+            id="manager-add-collateral-input"
+            type="number"
+            wrapperClassName="form-item-wrapper collateral"
+            name="addCollateralAmount"
+            onChange={(e) => { setAfterValue(e.target.value, 'collateral'); }}
+            labelText="Add collateral:"
+            secondLabelText="ETH"
+            placeholder="1"
+            additional={{ min: 0 }}
+            disabled={addingCollateral}
+            component={InputComponent}
+          />
+
+          <button
+            type="button"
+            className="button gray uppercase variable-width"
+            onClick={() => { addCollateralAction(addCollateralAmount); }}
+            disabled={addingCollateral || !addCollateralAmount || addCollateralAmount < 0}
+          >
+            { addingCollateral ? 'Adding collateral' : 'Add collateral' }
+          </button>
+        </div>
+
+        <div className="item">
+          <Field
+            id="manager-boost-input"
+            wrapperClassName="form-item-wrapper boost"
+            name="boostAmount"
+            labelText="Boost:"
+            secondLabelText="DAI"
+            placeholder="1"
+            component={InputComponent}
+          />
+          <button type="button" className="button gray uppercase">
+            Boost
+          </button>
+        </div>
+      </form>
+    );
+  }
+}
 
 ManagerPaybackForm.propTypes = {
   addCollateralAction: PropTypes.func.isRequired,
@@ -82,7 +95,6 @@ const mapStateToProps = state => ({
   },
   addingCollateral: state.dashboard.addingCollateral,
 });
-
 
 const mapDispatchToProps = {
   addCollateralAction, setAfterValue,

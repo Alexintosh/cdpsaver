@@ -1,4 +1,4 @@
-import { change } from 'redux-form';
+import { change, untouch } from 'redux-form';
 import {
   GENERATE_DAI_REQUEST,
   GENERATE_DAI_SUCCESS,
@@ -41,6 +41,19 @@ import {
 } from '../services/ethService';
 import { getMaxDai, getMaxEthWithdraw, getUpdatedCdpInfo } from '../services/cdpService';
 import { LS_ONBOARDING_FINISHED, MM_DENIED_TX_ERROR } from '../constants/general';
+
+/**
+ * Resets the provided redux form fileds
+ *
+ * @param formName {String}
+ * @param fieldsObj {Object}
+ */
+const resetFields = (formName, fieldsObj) => (dispatch) => {
+  Object.keys(fieldsObj).forEach((fieldKey) => {
+    dispatch(change(formName, fieldKey, fieldsObj[fieldKey]));
+    dispatch(untouch(formName, fieldKey));
+  });
+};
 
 /**
  * Handles redux actions for when the number of max dai that can be generated is calculating
@@ -175,15 +188,20 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
 
     if (type === 'generate') {
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth, cdp.generatedDAI + amount, ethPrice);
+      dispatch(resetFields('managerBorrowForm', { withdrawEthAmount: '', repayAmount: '' }));
     }
 
     if (type === 'withdraw') {
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth - amount, cdp.generatedDAI, ethPrice);
+      dispatch(resetFields('managerBorrowForm', { generateDaiAmount: '', repayAmount: '' }));
     }
 
     if (type === 'collateral') {
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth + amount, cdp.generatedDAI, ethPrice);
+      dispatch(resetFields('managerPaybackForm', { paybackAmount: '', boostAmount: '' }));
     }
+
+    if (type === 'clear') payload.afterCdp = null;
 
     dispatch({ type: GET_AFTER_CDP_SUCCESS, payload });
   } catch (err) {
