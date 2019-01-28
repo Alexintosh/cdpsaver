@@ -15,6 +15,10 @@ import {
   GET_MAX_ETH_WITHDRAW_SUCCESS,
   GET_MAX_ETH_WITHDRAW_FAILURE,
 
+  REPAY_DAI_REQUEST,
+  REPAY_DAI_SUCCESS,
+  REPAY_DAI_FAILURE,
+
   ADD_COLLATERAL_REQUEST,
   ADD_COLLATERAL_SUCCESS,
   ADD_COLLATERAL_FAILURE,
@@ -53,6 +57,13 @@ const INITIAL_STATE = {
 
   addingCollateral: false,
   addingCollateralError: '',
+
+  maxDaiRepay: 0,
+  gettingMaxDaiRepay: false,
+  gettingMaxDaiRepayError: '',
+
+  repayingDai: false,
+  repayingDaiError: '',
 
   afterType: '',
   afterCdp: null,
@@ -123,6 +134,23 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         withdrawingEth: false,
         withdrawingEthError: payload,
+      };
+
+    case REPAY_DAI_REQUEST:
+      return { ...state, repayingDai: true };
+
+    case REPAY_DAI_SUCCESS:
+      return {
+        ...state,
+        repayingDai: false,
+        repayingDaiError: '',
+      };
+
+    case REPAY_DAI_FAILURE:
+      return {
+        ...state,
+        repayingDai: false,
+        repayingDaiError: payload,
       };
 
     case GET_MAX_ETH_WITHDRAW_REQUEST:

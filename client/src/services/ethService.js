@@ -115,11 +115,12 @@ export const createCdp = (from, ethAmount, _daiAmount) => new Promise(async (res
  * @param funcName {String}
  * @param ethPrice {Number}
  * @param sendAsValue {Boolean}
+ * @param sendEmptyAddress {Boolean}
  *
  * @return {Promise<Object>}
  */
 export const callProxyContract = (
-  amount, cdpId, proxyAddress, account, funcName, ethPrice, sendAsValue = false,
+  amount, cdpId, proxyAddress, account, funcName, ethPrice, sendAsValue = false, sendEmptyAddress = false,
 ) => new Promise(async (resolve, reject) => {
   const web3 = window._web3;
 
@@ -141,6 +142,8 @@ export const callProxyContract = (
     } else {
       params.push(amountParam);
     }
+
+    if (sendEmptyAddress) params.push('0x0000000000000000000000000000000000000000');
 
     const data = web3.eth.abi.encodeFunctionCall(contractFunction, params);
 

@@ -8,6 +8,7 @@ import InputComponent from '../../Forms/InputComponent';
 import {
   generateDaiAction,
   withdrawEthAction,
+  repayDaiAction,
   setAfterValue,
 } from '../../../actions/dashboardActions';
 import { formatNumber } from '../../../utils/utils';
@@ -21,10 +22,11 @@ class ManagerBorrowForm extends Component {
     const {
       generatingDai, generateDaiAction, formValues, maxDai, gettingMaxDai, dispatch,
       withdrawingEth, withdrawEthAction, maxEthWithdraw, gettingMaxEthWithdraw,
-      setAfterValue, afterType,
+      setAfterValue, afterType, repayingDai, maxDaiRepay, repayDaiAction,
+      gettingMaxDaiRepay,
     } = this.props;
 
-    const { generateDaiAmount, withdrawEthAmount, repayAmount } = formValues;
+    const { generateDaiAmount, withdrawEthAmount, repayDaiAmount } = formValues;
 
     return (
       <form className="action-items-wrapper form-wrapper" onSubmit={() => {}}>
@@ -99,15 +101,24 @@ class ManagerBorrowForm extends Component {
           <Field
             id="manager-repay-input"
             type="number"
-            wrapperClassName="form-item-wrapper repay"
-            name="repayAmount"
+            wrapperClassName={`form-item-wrapper repay ${afterType === 'repay' ? 'active' : ''}`}
+            name="repayDaiAmount"
+            onChange={(e) => { setAfterValue(e.target.value, 'repay'); }}
             labelText="Repay:"
             secondLabelText="DAI"
             additional={{ min: 0 }}
             placeholder="0"
+            disabled={repayingDai}
             component={InputComponent}
           />
-          <button type="button" className="button gray uppercase" disabled={repayAmount < 0}>
+          <button
+            type="button"
+            className="button gray uppercase"
+            onClick={() => { repayDaiAction(repayDaiAmount); }}
+            disabled={
+              repayingDai || !repayDaiAmount || (repayDaiAmount < 0) || (repayDaiAmount > maxDaiRepay)
+            }
+          >
             Repay
           </button>
         </div>
@@ -117,18 +128,25 @@ class ManagerBorrowForm extends Component {
 }
 
 ManagerBorrowForm.propTypes = {
+  formValues: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  setAfterValue: PropTypes.func.isRequired,
+  afterType: PropTypes.string.isRequired,
+
   generateDaiAction: PropTypes.func.isRequired,
   generatingDai: PropTypes.bool.isRequired,
-  formValues: PropTypes.object.isRequired,
   maxDai: PropTypes.number.isRequired,
   gettingMaxDai: PropTypes.bool.isRequired,
-  dispatch: PropTypes.func.isRequired,
+
   withdrawEthAction: PropTypes.func.isRequired,
   withdrawingEth: PropTypes.bool.isRequired,
   maxEthWithdraw: PropTypes.number.isRequired,
   gettingMaxEthWithdraw: PropTypes.bool.isRequired,
-  setAfterValue: PropTypes.func.isRequired,
-  afterType: PropTypes.string.isRequired,
+
+  repayDaiAction: PropTypes.func.isRequired,
+  repayingDai: PropTypes.bool.isRequired,
+  maxDaiRepay: PropTypes.number.isRequired,
+  gettingMaxDaiRepay: PropTypes.bool.isRequired,
 };
 
 const ManagerBorrowFormComp = reduxForm({ form: 'managerBorrowForm' })(ManagerBorrowForm);
@@ -139,7 +157,7 @@ const mapStateToProps = state => ({
   formValues: {
     generateDaiAmount: selector(state, 'generateDaiAmount'),
     withdrawEthAmount: selector(state, 'withdrawEthAmount'),
-    repayAmount: selector(state, 'repayAmount'),
+    repayDaiAmount: selector(state, 'repayDaiAmount'),
   },
   generatingDai: state.dashboard.generatingDai,
   maxDai: state.dashboard.maxDai,
@@ -149,11 +167,15 @@ const mapStateToProps = state => ({
   maxEthWithdraw: state.dashboard.maxEthWithdraw,
   gettingMaxEthWithdraw: state.dashboard.gettingMaxEthWithdraw,
 
+  repayingDai: state.dashboard.repayingDai,
+  maxDaiRepay: state.dashboard.maxDaiRepay,
+  gettingMaxDaiRepay: state.dashboard.gettingMaxDaiRepay,
+
   afterType: state.dashboard.afterType,
 });
 
 const mapDispatchToProps = {
-  generateDaiAction, withdrawEthAction, setAfterValue,
+  generateDaiAction, withdrawEthAction, repayDaiAction, setAfterValue,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManagerBorrowFormComp);

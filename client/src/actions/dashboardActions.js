@@ -35,6 +35,10 @@ import {
   TRANSFER_CDP_REQUEST,
   TRANSFER_CDP_SUCCESS,
   TRANSFER_CDP_FAILURE,
+
+  REPAY_DAI_REQUEST,
+  REPAY_DAI_SUCCESS,
+  REPAY_DAI_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 import {
   approveDai, approveMaker, callProxyContract, transferCdp,
@@ -140,6 +144,28 @@ export const withdrawEthAction = amountEth => async (dispatch, getState) => {
 };
 
 /**
+ * Handles redux actions for the repay dai from cdp smart contract call
+ *
+ * @return {Function}
+ */
+export const repayDaiAction = () => async (dispatch, getState) => {
+  dispatch({ type: REPAY_DAI_REQUEST });
+
+  try {
+    const { cdp } = getState().general;
+    // const params = [amountDai, cdp.id, proxyAddress, account, 'wipe', ethPrice, false, true];
+
+    // const payload = await callProxyContract(...params);
+
+    dispatch({ type: REPAY_DAI_SUCCESS, payload: cdp });
+    dispatch(change('managerBorrowForm', 'repayDaiAmount', null));
+    // dispatch(getMaxEthWithdrawAction());
+  } catch (err) {
+    dispatch({ type: REPAY_DAI_FAILURE, payload: err.message });
+  }
+};
+
+/**
  * Handles redux actions for the add eth collateral to the cdp smart contract call
  *
  * @param amountEth {String}
@@ -188,12 +214,17 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
 
     if (type === 'generate') {
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth, cdp.generatedDAI + amount, ethPrice);
-      dispatch(resetFields('managerBorrowForm', { withdrawEthAmount: '', repayAmount: '' }));
+      dispatch(resetFields('managerBorrowForm', { withdrawEthAmount: '', repayDaiAmount: '' }));
     }
 
     if (type === 'withdraw') {
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth - amount, cdp.generatedDAI, ethPrice);
-      dispatch(resetFields('managerBorrowForm', { generateDaiAmount: '', repayAmount: '' }));
+      dispatch(resetFields('managerBorrowForm', { generateDaiAmount: '', repayDaiAmount: '' }));
+    }
+
+    if (type === 'repay') {
+      payload.afterCdp = await getUpdatedCdpInfo(depositedEth, cdp.generatedDAI - amount, ethPrice);
+      dispatch(resetFields('managerBorrowForm', { generateDaiAmount: '', withdrawEthAmount: '' }));
     }
 
     if (type === 'collateral') {
