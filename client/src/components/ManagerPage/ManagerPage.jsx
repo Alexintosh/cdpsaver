@@ -25,7 +25,7 @@ class ManagerPage extends Component {
   render() {
     const {
       cdp, gettingEthPrice, ethPrice, gettingAfterCdp, afterCdp, afterType, accountType,
-      account, openCloseCdpModal, openTransferCdpModal, history,
+      account, openCloseCdpModal, openTransferCdpModal, history, network,
     } = this.props;
 
     return (
@@ -40,7 +40,15 @@ class ManagerPage extends Component {
             <div className="account-wrapper">
               <div className="acc-type">{ formatAccType(accountType) }</div>
               <div className="connected">Connected:</div>
-              <div className="acc">{ formatAcc(account) }</div>
+
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                className="acc"
+                href={`https://${network === 42 ? 'kovan.' : ''}etherscan.io/address/${account}`}
+              >
+                { formatAcc(account) }
+              </a>
             </div>
           </div>
         </div>
@@ -168,6 +176,7 @@ ManagerPage.propTypes = {
   openCloseCdpModal: PropTypes.func.isRequired,
   openTransferCdpModal: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
+  network: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = ({ general, dashboard }) => ({
@@ -179,6 +188,7 @@ const mapStateToProps = ({ general, dashboard }) => ({
   afterType: dashboard.afterType,
   accountType: general.accountType,
   account: general.account,
+  network: general.network,
 });
 
 const mapDispatchToProps = {

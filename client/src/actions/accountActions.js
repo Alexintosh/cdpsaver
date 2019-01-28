@@ -57,7 +57,13 @@ export const loginMetaMask = silent => async (dispatch, getState) => {
 
     const balance = toDecimal(await getBalance(account));
 
-    dispatch({ type: CONNECT_PROVIDER_SUCCESS, payload: { account, accountType, balance } });
+    dispatch({
+      type: CONNECT_PROVIDER_SUCCESS,
+      payload: {
+        account, accountType, balance, network,
+      },
+    });
+
     localStorage.setItem(LS_ACCOUNT, JSON.stringify({ accountType: 'metamask' }));
 
     if (!silent) notify(`Metamask account found ${account}`, 'success')(dispatch);

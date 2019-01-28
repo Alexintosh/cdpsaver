@@ -45,6 +45,7 @@ const INITIAL_STATE = {
   accountError: '',
   accountType: lsAccountType ? lsAccountType.accountType : '',
   balance: 0,
+  network: 0,
 
   proxyAddress: '',
 
