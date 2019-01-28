@@ -77,6 +77,8 @@
   }
 
   .max-wrapper {
+    position: absolute;
+    top: -20px;
     color: $gray;
 
     &:not(.loading) {

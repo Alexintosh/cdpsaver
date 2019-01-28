@@ -28,6 +28,7 @@ import {
   TRANSFER_CDP_SUCCESS,
   WITHDRAW_ETH_SUCCESS,
   REPAY_DAI_SUCCESS,
+  PAYBACK_DAI_SUCCESS,
 } from '../actionTypes/dashboardActionTypes';
 import { LS_ACCOUNT } from '../constants/general';
 
@@ -90,6 +91,7 @@ export default (state = INITIAL_STATE, action) => {
     case WITHDRAW_ETH_SUCCESS:
     case ADD_COLLATERAL_SUCCESS:
     case REPAY_DAI_SUCCESS:
+    case PAYBACK_DAI_SUCCESS:
       return {
         ...state,
         cdp: {

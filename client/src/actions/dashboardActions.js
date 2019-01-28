@@ -39,6 +39,10 @@ import {
   REPAY_DAI_REQUEST,
   REPAY_DAI_SUCCESS,
   REPAY_DAI_FAILURE,
+
+  PAYBACK_DAI_REQUEST,
+  PAYBACK_DAI_SUCCESS,
+  PAYBACK_DAI_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 import {
   approveDai, approveMaker, callProxyContract, transferCdp,
@@ -189,6 +193,29 @@ export const addCollateralAction = amountEth => async (dispatch, getState) => {
 };
 
 /**
+ * Handles redux actions for return dai to the cdp smart contract call
+ *
+ * @param amountDai {String}
+ *
+ * @return {Function}
+ */
+export const paybackDaiAction = amountDai => async (dispatch, getState) => {
+  dispatch({ type: PAYBACK_DAI_REQUEST });
+
+  try {
+    const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
+    const params = [amountDai, cdp.id, proxyAddress, account, 'wipe', ethPrice, false, true];
+
+    const payload = await callProxyContract(...params);
+
+    dispatch({ type: PAYBACK_DAI_SUCCESS, payload });
+    dispatch(change('managerPaybackForm', 'paybackAmount', null));
+  } catch (err) {
+    dispatch({ type: PAYBACK_DAI_FAILURE, payload: err.message });
+  }
+};
+
+/**
  * Calculates the changed cdp value
  *
  * @param _amount {String}
@@ -223,13 +250,19 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
     }
 
     if (type === 'repay') {
-      payload.afterCdp = await getUpdatedCdpInfo(depositedEth, cdp.generatedDAI - amount, ethPrice);
+      // payload.afterCdp = await getUpdatedCdpInfo(depositedEth, cdp.generatedDAI - amount, ethPrice);
       dispatch(resetFields('managerBorrowForm', { generateDaiAmount: '', withdrawEthAmount: '' }));
     }
 
     if (type === 'collateral') {
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth + amount, cdp.generatedDAI, ethPrice);
       dispatch(resetFields('managerPaybackForm', { paybackAmount: '', boostAmount: '' }));
+    }
+
+    if (type === 'payback') {
+      const daiAmount = amount > cdp.generatedDAI ? 0 : cdp.generatedDAI - amount;
+      payload.afterCdp = await getUpdatedCdpInfo(depositedEth, daiAmount, ethPrice);
+      dispatch(resetFields('managerPaybackForm', { addCollateralAmount: '', boostAmount: '' }));
     }
 
     if (type === 'clear') payload.afterCdp = null;

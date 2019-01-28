@@ -143,8 +143,11 @@ export const formatNumber = (_num, fixed) => {
     const decimals = countDecimals(num);
     const numString = num.toString();
 
-    console.log(num, numString.substring(0, (numString.length - decimals) + fixed));
-    return numString.substring(0, (numString.length - decimals) + fixed);
+    const formated = numString.substring(0, (numString.length - decimals) + fixed);
+
+    if (formated === 'Infinity') return '0';
+
+    return formated;
   } catch (err) {
     return _num.toFixed(fixed);
   }

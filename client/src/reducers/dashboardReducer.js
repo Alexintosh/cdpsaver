@@ -38,6 +38,10 @@ import {
   TRANSFER_CDP_REQUEST,
   TRANSFER_CDP_SUCCESS,
   TRANSFER_CDP_FAILURE,
+
+  PAYBACK_DAI_REQUEST,
+  PAYBACK_DAI_SUCCESS,
+  PAYBACK_DAI_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 
 const INITIAL_STATE = {
@@ -57,6 +61,9 @@ const INITIAL_STATE = {
 
   addingCollateral: false,
   addingCollateralError: '',
+
+  payingBackDai: false,
+  payingBackDaiError: '',
 
   maxDaiRepay: 0,
   gettingMaxDaiRepay: false,
@@ -186,6 +193,23 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         addingCollateral: false,
         addingCollateralError: payload,
+      };
+
+    case PAYBACK_DAI_REQUEST:
+      return { ...state, payingBackDai: true };
+
+    case PAYBACK_DAI_SUCCESS:
+      return {
+        ...state,
+        payingBackDai: false,
+        payingBackDaiError: '',
+      };
+
+    case PAYBACK_DAI_FAILURE:
+      return {
+        ...state,
+        payingBackDai: false,
+        payingBackDaiError: payload,
       };
 
     case GET_AFTER_CDP_REQUEST:
