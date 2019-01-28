@@ -64,7 +64,7 @@ class ManagerBorrowForm extends Component {
           <div
             className={`max-wrapper ${withdrawingEth ? 'loading' : ''}`}
             onClick={() => {
-              if (!withdrawingEth) dispatch(change('managerBorrowForm', 'withdrawEthAmount', maxDai));
+              if (!withdrawingEth) dispatch(change('managerBorrowForm', 'withdrawEthAmount', maxEthWithdraw));
             }}
           >
             { gettingMaxEthWithdraw ? 'Loading...' : `(max ${formatNumber(maxEthWithdraw, 2)})` }
