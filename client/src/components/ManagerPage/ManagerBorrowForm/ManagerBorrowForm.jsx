@@ -21,7 +21,7 @@ class ManagerBorrowForm extends Component {
     const {
       generatingDai, generateDaiAction, formValues, maxDai, gettingMaxDai, dispatch,
       withdrawingEth, withdrawEthAction, maxEthWithdraw, gettingMaxEthWithdraw,
-      setAfterValue,
+      setAfterValue, afterType,
     } = this.props;
 
     const { generateDaiAmount, withdrawEthAmount, repayAmount } = formValues;
@@ -40,7 +40,7 @@ class ManagerBorrowForm extends Component {
           <Field
             id="manager-generate-input"
             type="number"
-            wrapperClassName="form-item-wrapper generate"
+            wrapperClassName={`form-item-wrapper generate ${afterType === 'generate' ? 'active' : ''}`}
             name="generateDaiAmount"
             onChange={(e) => { setAfterValue(e.target.value, 'generate'); }}
             labelText="Generate:"
@@ -72,7 +72,7 @@ class ManagerBorrowForm extends Component {
           <Field
             id="manager-withdraw-input"
             type="number"
-            wrapperClassName="form-item-wrapper withdraw"
+            wrapperClassName={`form-item-wrapper withdraw ${afterType === 'withdraw' ? 'active' : ''}`}
             name="withdrawEthAmount"
             onChange={(e) => { setAfterValue(e.target.value, 'withdraw'); }}
             labelText="Withdraw:"
@@ -128,6 +128,7 @@ ManagerBorrowForm.propTypes = {
   maxEthWithdraw: PropTypes.number.isRequired,
   gettingMaxEthWithdraw: PropTypes.bool.isRequired,
   setAfterValue: PropTypes.func.isRequired,
+  afterType: PropTypes.string.isRequired,
 };
 
 const ManagerBorrowFormComp = reduxForm({ form: 'managerBorrowForm' })(ManagerBorrowForm);
@@ -147,6 +148,8 @@ const mapStateToProps = state => ({
   withdrawingEth: state.dashboard.withdrawingEth,
   maxEthWithdraw: state.dashboard.maxEthWithdraw,
   gettingMaxEthWithdraw: state.dashboard.gettingMaxEthWithdraw,
+
+  afterType: state.dashboard.afterType,
 });
 
 const mapDispatchToProps = {

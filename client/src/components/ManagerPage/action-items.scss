@@ -19,6 +19,12 @@
       border-left-width: 9px;
       margin-bottom: 0;
 
+      &.active {
+        &.generate, &.payback { input { color: $purple; } }
+        &.withdraw, &.collateral{ input { color: $yellow; } }
+        &.repay, &.boost { input { color: $blue; } }
+      }
+
       .input-values {
 
         label {

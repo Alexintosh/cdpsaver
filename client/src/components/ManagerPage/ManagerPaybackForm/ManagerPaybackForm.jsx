@@ -12,7 +12,7 @@ class ManagerPaybackForm extends Component {
 
   render() {
     const {
-      formValues, addingCollateral, addCollateralAction, setAfterValue,
+      formValues, addingCollateral, addCollateralAction, setAfterValue, afterType,
     } = this.props;
 
     const { paybackAmount, addCollateralAmount, boostAmount } = formValues;
@@ -40,7 +40,7 @@ class ManagerPaybackForm extends Component {
           <Field
             id="manager-add-collateral-input"
             type="number"
-            wrapperClassName="form-item-wrapper collateral"
+            wrapperClassName={`form-item-wrapper collateral ${afterType === 'collateral' ? 'active' : ''}`}
             name="addCollateralAmount"
             onChange={(e) => { setAfterValue(e.target.value, 'collateral'); }}
             labelText="Add collateral:"
@@ -87,6 +87,7 @@ ManagerPaybackForm.propTypes = {
   addingCollateral: PropTypes.bool.isRequired,
   formValues: PropTypes.object.isRequired,
   setAfterValue: PropTypes.func.isRequired,
+  afterType: PropTypes.string.isRequired,
 };
 
 const ManagerPaybackFormComp = reduxForm({ form: 'managerPaybackForm' })(ManagerPaybackForm);
@@ -100,6 +101,8 @@ const mapStateToProps = state => ({
     boostAmount: selector(state, 'boostAmount'),
   },
   addingCollateral: state.dashboard.addingCollateral,
+
+  afterType: state.dashboard.afterType,
 });
 
 const mapDispatchToProps = {

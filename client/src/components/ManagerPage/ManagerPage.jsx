@@ -6,7 +6,7 @@ import Tabs from '../Tabs/Tabs';
 import DaiIcon from '../Decorative/DaiIcon';
 import EthIcon from '../Decorative/EthIcon';
 import ManagerBorrowForm from './ManagerBorrowForm/ManagerBorrowForm';
-import ManagerPaybackFrom from './ManagerPaybackFrom/ManagerPaybackFrom';
+import ManagerPaybackForm from './ManagerPaybackForm/ManagerPaybackForm';
 import CdpAfterVal from './CdpAfterVal';
 import { formatAccType, formatAcc, formatNumber } from '../../utils/utils';
 import { getMaxDaiAction, getMaxEthWithdrawAction } from '../../actions/dashboardActions';
@@ -142,7 +142,7 @@ class ManagerPage extends Component {
                 </div>
 
                 <div label="Payback">
-                  <ManagerPaybackFrom />
+                  <ManagerPaybackForm />
 
                   <div className="info-text">
                     *Boost will draw DAI and buy ETH, increasing the amount ETH in the cdp
