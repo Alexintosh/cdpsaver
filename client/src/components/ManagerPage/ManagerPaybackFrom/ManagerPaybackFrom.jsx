@@ -15,21 +15,23 @@ class ManagerPaybackForm extends Component {
       formValues, addingCollateral, addCollateralAction, setAfterValue,
     } = this.props;
 
-    const { addCollateralAmount } = formValues;
+    const { paybackAmount, addCollateralAmount, boostAmount } = formValues;
 
     return (
       <form className="action-items-wrapper form-wrapper" onSubmit={() => {}}>
         <div className="item">
           <Field
             id="manager-payback-input"
+            type="number"
             wrapperClassName="form-item-wrapper payback"
             name="paybackAmount"
             labelText="Payback:"
             secondLabelText="DAI"
-            placeholder="1"
+            placeholder="0"
+            additional={{ min: 0 }}
             component={InputComponent}
           />
-          <button type="button" className="button gray uppercase">
+          <button type="button" className="button gray uppercase" disabled={paybackAmount < 0}>
             Payback
           </button>
         </div>
@@ -43,7 +45,7 @@ class ManagerPaybackForm extends Component {
             onChange={(e) => { setAfterValue(e.target.value, 'collateral'); }}
             labelText="Add collateral:"
             secondLabelText="ETH"
-            placeholder="1"
+            placeholder="0"
             additional={{ min: 0 }}
             disabled={addingCollateral}
             component={InputComponent}
@@ -62,14 +64,16 @@ class ManagerPaybackForm extends Component {
         <div className="item">
           <Field
             id="manager-boost-input"
+            type="number"
             wrapperClassName="form-item-wrapper boost"
             name="boostAmount"
             labelText="Boost:"
             secondLabelText="DAI"
-            placeholder="1"
+            placeholder="0"
+            additional={{ min: 0 }}
             component={InputComponent}
           />
-          <button type="button" className="button gray uppercase">
+          <button type="button" className="button gray uppercase" disabled={boostAmount < 0}>
             Boost
           </button>
         </div>
@@ -91,7 +95,9 @@ const selector = formValueSelector('managerPaybackForm');
 
 const mapStateToProps = state => ({
   formValues: {
+    paybackAmount: selector(state, 'paybackAmount'),
     addCollateralAmount: selector(state, 'addCollateralAmount'),
+    boostAmount: selector(state, 'boostAmount'),
   },
   addingCollateral: state.dashboard.addingCollateral,
 });

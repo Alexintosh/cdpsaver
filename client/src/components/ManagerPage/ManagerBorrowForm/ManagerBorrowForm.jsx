@@ -24,7 +24,7 @@ class ManagerBorrowForm extends Component {
       setAfterValue,
     } = this.props;
 
-    const { generateDaiAmount, withdrawEthAmount } = formValues;
+    const { generateDaiAmount, withdrawEthAmount, repayAmount } = formValues;
 
     return (
       <form className="action-items-wrapper form-wrapper" onSubmit={() => {}}>
@@ -45,7 +45,7 @@ class ManagerBorrowForm extends Component {
             onChange={(e) => { setAfterValue(e.target.value, 'generate'); }}
             labelText="Generate:"
             secondLabelText="DAI"
-            placeholder="1"
+            placeholder="0"
             additional={{ max: maxDai, min: 0 }}
             disabled={generatingDai}
             component={InputComponent}
@@ -77,7 +77,7 @@ class ManagerBorrowForm extends Component {
             onChange={(e) => { setAfterValue(e.target.value, 'withdraw'); }}
             labelText="Withdraw:"
             secondLabelText="ETH"
-            placeholder="1"
+            placeholder="0"
             additional={{ max: maxEthWithdraw, min: 0 }}
             disabled={withdrawingEth}
             component={InputComponent}
@@ -98,14 +98,16 @@ class ManagerBorrowForm extends Component {
           <div className="max-wrapper">(max 280)</div>
           <Field
             id="manager-repay-input"
+            type="number"
             wrapperClassName="form-item-wrapper repay"
             name="repayAmount"
             labelText="Repay:"
             secondLabelText="DAI"
-            placeholder="1"
+            additional={{ min: 0 }}
+            placeholder="0"
             component={InputComponent}
           />
-          <button type="button" className="button gray uppercase">
+          <button type="button" className="button gray uppercase" disabled={repayAmount < 0}>
             Repay
           </button>
         </div>
@@ -136,6 +138,7 @@ const mapStateToProps = state => ({
   formValues: {
     generateDaiAmount: selector(state, 'generateDaiAmount'),
     withdrawEthAmount: selector(state, 'withdrawEthAmount'),
+    repayAmount: selector(state, 'repayAmount'),
   },
   generatingDai: state.dashboard.generatingDai,
   maxDai: state.dashboard.maxDai,
