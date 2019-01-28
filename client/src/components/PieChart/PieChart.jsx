@@ -39,7 +39,7 @@ const PieChart = ({ values }) => {
 
               <div className="value-wrapper">
                 <div className="label">{ label }</div>
-                <div className="value">{ formatNumber(data, 2) }</div>
+                <div className="value">{ formatNumber(data, 2) }$</div>
               </div>
             </div>
           ))

@@ -78,10 +78,19 @@ export const getCdp = () => async (dispatch, getState) => {
   dispatch({ type: GET_CDP_REQUEST });
 
   try {
-    const { cdp, proxyAddress } = await getAddressCdp(getState().general.account);
-    const newData = await getUpdatedCdpInfo(cdp.depositedETH.toNumber(), cdp.debtDai.toNumber());
+    let payload = {};
 
-    dispatch({ type: GET_CDP_SUCCESS, payload: { ...cdp, ...newData } });
+    const { account } = getState().general;
+    const { cdp, proxyAddress } = await getAddressCdp(account);
+
+    if (cdp.owner !== proxyAddress) {
+      payload = null;
+    } else {
+      const newData = await getUpdatedCdpInfo(cdp.depositedETH.toNumber(), cdp.debtDai.toNumber());
+      payload = { ...cdp, ...newData };
+    }
+
+    dispatch({ type: GET_CDP_SUCCESS, payload });
     dispatch({ type: ADD_PROXY_ADDRESS, payload: proxyAddress });
   } catch (err) {
     dispatch({ type: GET_CDP_FAILURE, payload: err });

@@ -19,10 +19,18 @@
       border-left-width: 9px;
       margin-bottom: 0;
 
-      .input-values label {
-        white-space: nowrap;
-        font-size: $font-size-medium;
-        color: white;
+      .input-values {
+
+        label {
+          white-space: nowrap;
+          font-size: $font-size-medium;
+          color: white;
+        }
+
+        input {
+          padding-left: 15px;
+          outline: 0;
+        }
       }
 
       &.generate, &.payback { border-left-color: $purple }
