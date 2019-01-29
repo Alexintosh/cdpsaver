@@ -16,6 +16,7 @@ import { subscribeToMonitoringApiRequest } from '../services/apiService';
 import { LS_ONBOARDING_FINISHED } from '../constants/general';
 import { createCdp } from '../services/ethService';
 import { getAddressCdp, getUpdatedCdpInfo } from '../services/cdpService';
+import { sendTx } from './notificationsActions';
 
 /**
  * Resets the state of the onboarding reducer
@@ -38,10 +39,12 @@ export const resetOnboardingWizard = () => (dispatch) => {
 export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dispatch, getState) => {
   dispatch({ type: CREATE_CDP_REQUEST });
 
+  const contractSendHandler = promise => sendTx(promise, 'Create CDP', dispatch, getState);
+
   try {
     const { account } = getState().general;
 
-    await createCdp(account, ethAmount, parseFloat(daiAmount));
+    await createCdp(contractSendHandler, account, ethAmount, parseFloat(daiAmount));
 
     // TODO SEE IF THIS CAN BE OPTIMIZED,
     const { cdp, proxyAddress } = await getAddressCdp(account);

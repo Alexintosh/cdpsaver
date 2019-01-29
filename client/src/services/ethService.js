@@ -81,13 +81,14 @@ export const metamaskApprove = async () => {
 /**
  * Calls the SaiSaverProxy contract and sends params to create the cdp
  *
+ * @param sendTxFunc {Function}
  * @param from {String}
  * @param ethAmount {String}
  * @param _daiAmount {Number}
  *
  * @return {Promise<Boolean>}
  */
-export const createCdp = (from, ethAmount, _daiAmount) => new Promise(async (resolve, reject) => {
+export const createCdp = (sendTxFunc, from, ethAmount, _daiAmount) => new Promise(async (resolve, reject) => {
   const address1 = proxyRegistryInterfaceAddress;
   const address2 = tubInterfaceAddress;
 
@@ -96,11 +97,11 @@ export const createCdp = (from, ethAmount, _daiAmount) => new Promise(async (res
     const params = { from, value: window._web3.utils.toWei(ethAmount, 'ether') };
     const daiAmount = window._web3.utils.toWei(_daiAmount.toString(), 'ether');
 
-    contract.methods.createOpenLockAndDraw(address1, address2, daiAmount).send(params)
-      .on('confirmation', () => { resolve(true); })
-      .on('error', reject);
+    const promise = contract.methods.createOpenLockAndDraw(address1, address2, daiAmount).send(params);
+    await sendTxFunc(promise);
+
+    resolve(true);
   } catch (err) {
-    console.log('ERROR', err);
     reject(err);
   }
 });

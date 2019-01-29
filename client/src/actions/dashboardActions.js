@@ -138,13 +138,17 @@ export const getMaxEthWithdrawAction = () => async (dispatch, getState) => {
 export const withdrawEthAction = amountEth => async (dispatch, getState) => {
   dispatch({ type: WITHDRAW_ETH_REQUEST });
 
+  const proxySendHandler = (promise, amount) => sendTx(promise, `Withdraw ${amount} ETH`, dispatch, getState);
+
   try {
     const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
-    const params = [amountEth, cdp.id, proxyAddress, account, 'free', ethPrice];
+    const params = [proxySendHandler, amountEth, cdp.id, proxyAddress, account, 'free', ethPrice];
 
     const payload = await callProxyContract(...params);
 
     dispatch({ type: WITHDRAW_ETH_SUCCESS, payload });
+    dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });
+
     dispatch(change('managerBorrowForm', 'withdrawEthAmount', null));
     dispatch(getMaxEthWithdrawAction());
   } catch (err) {
@@ -184,13 +188,17 @@ export const repayDaiAction = () => async (dispatch, getState) => {
 export const addCollateralAction = amountEth => async (dispatch, getState) => {
   dispatch({ type: ADD_COLLATERAL_REQUEST });
 
+  const proxySendHandler = (promise, amount) => sendTx(promise, `Add collateral ${amount} ETH`, dispatch, getState);
+
   try {
     const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
-    const params = [amountEth, cdp.id, proxyAddress, account, 'lock', ethPrice, true];
+    const params = [proxySendHandler, amountEth, cdp.id, proxyAddress, account, 'lock', ethPrice, true];
 
     const payload = await callProxyContract(...params);
 
     dispatch({ type: ADD_COLLATERAL_SUCCESS, payload });
+    dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });
+
     dispatch(change('managerPaybackForm', 'addCollateralAmount', null));
   } catch (err) {
     dispatch({ type: ADD_COLLATERAL_FAILURE, payload: err.message });
