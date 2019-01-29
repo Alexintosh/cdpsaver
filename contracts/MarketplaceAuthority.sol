@@ -2,7 +2,7 @@ pragma solidity ^0.5.0;
 
 import "./DS/DSAuthority.sol";
 
-contract MarkerplaceAuthority is DSAuthority {
+contract MarketplaceAuthority is DSAuthority {
     address public marketplace;
 
     constructor(address _marketplace) public {
