@@ -108,6 +108,7 @@ export const createCdp = (from, ethAmount, _daiAmount) => new Promise(async (res
 /**
  * Calls the proxy contract and handles the action that is specified in the parameters
  *
+ * @param sendTxFunc {Function}
  * @param amount {String}
  * @param cdpId {Number}
  * @param proxyAddress {String}
@@ -120,6 +121,7 @@ export const createCdp = (from, ethAmount, _daiAmount) => new Promise(async (res
  * @return {Promise<Object>}
  */
 export const callProxyContract = (
+  sendTxFunc,
   amount, cdpId, proxyAddress, account, funcName, ethPrice, sendAsValue = false, sendEmptyAddress = false,
 ) => new Promise(async (resolve, reject) => {
   const web3 = window._web3;
@@ -147,7 +149,8 @@ export const callProxyContract = (
 
     const data = web3.eth.abi.encodeFunctionCall(contractFunction, params);
 
-    await proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send(txParams);
+    const promise = proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send(txParams);
+    await sendTxFunc(promise, amount);
 
     const newCdp = await getCdpInfo(cdpId, false);
     const newCdpInfo = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
@@ -294,14 +297,6 @@ export const transferCdp = (fromAddress, toAddress, cdpId, proxyAddress) => new 
     const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, params);
 
     await proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send({ from: fromAddress });
-
-    const wait = () => new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, 2000);
-    });
-
-    await wait();
 
     resolve(true);
   } catch (err) {

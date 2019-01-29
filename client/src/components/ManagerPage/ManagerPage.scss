@@ -80,6 +80,8 @@
     position: absolute;
     top: -20px;
     color: $gray;
+    width: 100%;
+    text-align: right;
 
     &:not(.loading) {
       @include hover-transition;

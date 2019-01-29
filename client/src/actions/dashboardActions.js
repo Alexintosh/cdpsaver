@@ -49,6 +49,7 @@ import {
 } from '../services/ethService';
 import { getMaxDai, getMaxEthWithdraw, getUpdatedCdpInfo } from '../services/cdpService';
 import { LS_ONBOARDING_FINISHED, MM_DENIED_TX_ERROR } from '../constants/general';
+import { sendTx } from './notificationsActions';
 
 /**
  * Resets the provided redux form fileds
@@ -91,13 +92,17 @@ export const getMaxDaiAction = () => async (dispatch, getState) => {
 export const generateDaiAction = amountDai => async (dispatch, getState) => {
   dispatch({ type: GENERATE_DAI_REQUEST });
 
+  const proxySendHandler = (promise, amount) => sendTx(promise, `Generate ${amount} DAI`, dispatch, getState);
+
   try {
     const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
-    const params = [amountDai, cdp.id, proxyAddress, account, 'draw', ethPrice];
+    const params = [proxySendHandler, amountDai, cdp.id, proxyAddress, account, 'draw', ethPrice];
 
     const payload = await callProxyContract(...params);
 
     dispatch({ type: GENERATE_DAI_SUCCESS, payload });
+    dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });
+
     dispatch(change('managerBorrowForm', 'generateDaiAmount', null));
     dispatch(getMaxDaiAction());
   } catch (err) {

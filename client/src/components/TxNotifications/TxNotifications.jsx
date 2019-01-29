@@ -9,7 +9,7 @@ import { closeNotification } from '../../actions/notificationsActions';
 
 import './TxNotifications.scss';
 
-const TxNotifications = ({ notifications, closeNotification }) => (
+const TxNotifications = ({ notifications, closeNotification, network }) => (
   <div className="tx-notifications-wrapper">
     {
       notifications.map(({
@@ -27,7 +27,20 @@ const TxNotifications = ({ notifications, closeNotification }) => (
 
             <div className="info-wrapper">
               <div className="title">{ title }</div>
-              <div className="description">{ description }</div>
+              { !tx && (<div className="description">{ description }</div>) }
+
+              {
+                tx && (
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="description"
+                    href={`https://${network === 42 ? 'kovan.' : ''}etherscan.io/tx/${tx}`}
+                  >
+                    { description }
+                  </a>
+                )
+              }
             </div>
           </div>
         </div>
@@ -39,10 +52,12 @@ const TxNotifications = ({ notifications, closeNotification }) => (
 TxNotifications.propTypes = {
   notifications: PropTypes.array.isRequired,
   closeNotification: PropTypes.func.isRequired,
+  network: PropTypes.number.isRequired,
 };
 
-const mapStateToProps = ({ notifications }) => ({
+const mapStateToProps = ({ notifications, general }) => ({
   notifications: notifications.notifications,
+  network: general.network,
 });
 
 const mapDispatchToProps = {
