@@ -64,14 +64,14 @@ function getRatiosAfterRepay() {
 
         let ratios = [];
         //for(let j = 0; j < 1; ++j) {
-            ratios[0] = payBackGetRatio(daiDebt, collateral, 3).toFixed(4);
+            ratios[0] = payBackGetRatio(daiDebt, collateral, 10).toFixed(4);
         //}
 
         data.push({oldRatio: (LIQUIDATION_RATIO*100) + i, ratios})
     }
 
     const file = fs.createWriteStream('ratios.txt');
-    data.forEach((v) => file.write(v.ratios[0] + '\n'));
+    data.forEach((v) => file.write(`${v.ratios[0]}\n`));
     file.end();
 }
 
