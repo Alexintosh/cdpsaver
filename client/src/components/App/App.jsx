@@ -14,6 +14,7 @@ import PrivateRoute from '../PrivateRoute/PrivateRoute';
 import MarketplacePage from '../MarketplacePage/MarketplacePage';
 import Notifications from '../Notifications/Notifications';
 import Connect from '../Connect/Connect';
+import TxNotifications from '../TxNotifications/TxNotifications';
 
 import './App.scss';
 import '../../common/icons/icons.scss';
@@ -34,6 +35,7 @@ class RoutesWrapper extends Component {
           <div className="app">
             <Header />
             <Notifications />
+            <TxNotifications />
 
             <Switch>
               <Route exact path="/" component={HomePage} />

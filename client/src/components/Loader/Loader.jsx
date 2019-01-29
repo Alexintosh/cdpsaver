@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 import './Loader.scss';
 
-const Loader = ({ message }) => (
+const Loader = ({ message, showDefaultMessage }) => (
   <div className="loader-wrapper">
     <div className="loader">
-      <div className="loader-text">Loading...</div>
+      { showDefaultMessage && (<div className="loader-text">Loading...</div>) }
       <svg className="circular" viewBox="25 25 50 50">
         <circle className="path" cx="50" cy="50" r="20" fill="none" strokeWidth="2" strokeMiterlimit="10" />
       </svg>
@@ -18,10 +18,12 @@ const Loader = ({ message }) => (
 
 Loader.defaultProps = {
   message: '',
+  showDefaultMessage: true,
 };
 
 Loader.propTypes = {
   message: PropTypes.string,
+  showDefaultMessage: PropTypes.bool,
 };
 
 export default Loader;
