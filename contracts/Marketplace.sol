@@ -1,4 +1,5 @@
 pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
 
 import "./DS/DSProxy.sol";
 import "./DS/DSMath.sol";
@@ -10,6 +11,7 @@ contract Marketplace is DSAuth, DSMath {
     struct SaleItem {
         address payable owner;
         uint discount;
+        bytes32 cup;
         bool active;
     }
  
@@ -31,14 +33,13 @@ contract Marketplace is DSAuth, DSMath {
     }
 
     function putOnSale(bytes32 _cup, uint _discount) public {
-        require(isOwner(msg.sender, _cup), "msg.sender must be owner of proxy which owns the cup");
+        require(isOwner(msg.sender, _cup), "msg.sender must be proxy which owns the cup");
         require(_discount < 100, "can't have 100% discount, just put fixedPrice 0");
-
-        DSProxy proxy = registry.proxies(msg.sender);
 
         itemsArr.push(SaleItem({
             discount: _discount,
-            owner: address(proxy),
+            owner: msg.sender,
+            cup: _cup,
             active: true
         }));
 
@@ -77,7 +78,7 @@ contract Marketplace is DSAuth, DSMath {
     }
 
     function cancel(bytes32 _cup) public {
-        require(isOwner(msg.sender, _cup), "msg.sender must be owner of proxy which owns the cup");
+        require(isOwner(msg.sender, _cup), "msg.sender must proxy which owns the cup");
 
         uint itemIndex = items[_cup];
         
@@ -88,7 +89,6 @@ contract Marketplace is DSAuth, DSMath {
         msg.sender.transfer(address(this).balance);
     }
 
-    //TODO: 
     function getCdpValue(bytes32 _cup) public returns(uint, uint) {
         uint itemIndex = items[_cup];
         SaleItem memory item = itemsArr[itemIndex];
@@ -102,22 +102,20 @@ contract Marketplace is DSAuth, DSMath {
         return (cdpValue, withoutFee);
     }
 
+    function getItemsOnSale() public view returns(SaleItem[] memory) {
+        return itemsArr;
+    }
+
     function removeItem(uint itemIndex) internal {
         itemsArr[itemIndex] = itemsArr[itemsArr.length - 1];
         delete itemsArr[itemsArr.length - 1];
         itemsArr.length--;
     }
 
-    function isOwner(address _owner, bytes32 _cup) internal view returns(bool) {
-        DSProxy proxy = registry.proxies(_owner);
-         
-        require(tub.lad(_cup) == address(proxy));
+    function isOwner(address _owner, bytes32 _cup) internal view returns(bool) {         
+        require(tub.lad(_cup) == _owner);
 
-        if (address(proxy) != address(0x0)) {
-            return true;
-        }
-        
-        return false;
+        return true;
     }
 
 }
