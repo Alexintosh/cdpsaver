@@ -18,7 +18,7 @@ contract Marketplace is DSAuth, DSMath {
 
     address public marketplaceProxy;
 
-    uint public fee = 1; // Fee is 1%
+    uint public fee = 0; // only for testing
 
     ProxyRegistryInterface registry = ProxyRegistryInterface(0x64A436ae831C1672AE81F674CAb8B6775df3475C); //KOVAN
     TubInterface tub = TubInterface(0xa71937147b55Deb8a530C7229C442Fd3F31b7db2);
@@ -54,23 +54,21 @@ contract Marketplace is DSAuth, DSMath {
 
         require(item.active == true, "Check if cup is on sale");
 
-        uint collateral = rmul(tub.ink(_cup), tub.tag());
-        uint debt = tub.tab(_cup);
+        uint cdpPrice;
+        uint cdpPriceWithoutFee;
 
-        uint ethAmount = ((collateral - debt) * (100 - (item.discount - fee))) / 100;
+        (cdpPrice, cdpPriceWithoutFee) = getCdpValue(_cup);
 
-        require(msg.value >= ethAmount, "Check if enough ether is sent for this cup");
-
-        uint price = ((collateral - debt) * (100 - (item.discount))) / 100;
+        require(msg.value >= cdpPrice, "Check if enough ether is sent for this cup");
 
         item.active = false;
 
         // give the cup to the buyer, him becoming the lad that owns the cup
         DSProxy(item.owner).execute(marketplaceProxy, 
-            abi.encodeWithSignature("give(bytes32, address)", _cup, msg.sender));
+            abi.encodeWithSignature("give(bytes32,address)", _cup, msg.sender));
 
 
-        item.owner.transfer(price); // transfer money to the seller
+        item.owner.transfer(cdpPriceWithoutFee); // transfer money to the seller
 
         emit Bought(_cup, msg.sender, item.owner, item.discount);
 
@@ -88,6 +86,20 @@ contract Marketplace is DSAuth, DSMath {
 
     function withdraw() public auth {
         msg.sender.transfer(address(this).balance);
+    }
+
+    //TODO: 
+    function getCdpValue(bytes32 _cup) public returns(uint, uint) {
+        uint itemIndex = items[_cup];
+        SaleItem memory item = itemsArr[itemIndex];
+
+        uint collateral = tub.ink(_cup);
+        uint debt = rdiv(tub.tab(_cup), tub.tag());
+
+        uint cdpValue = ((collateral - debt) * (100 - (item.discount - fee))) / 100;
+        uint withoutFee = ((collateral - debt) * (100 - item.discount)) / 100;
+
+        return (cdpValue, withoutFee);
     }
 
     function removeItem(uint itemIndex) internal {
