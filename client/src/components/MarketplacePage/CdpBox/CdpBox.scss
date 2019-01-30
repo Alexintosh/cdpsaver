@@ -2,94 +2,144 @@
 @import '../../../common/text';
 
 .cdp-box-wrapper {
+  background: linear-gradient(180deg, #2B3943 0%, rgba(43, 57, 67, 0.46) 92.86%);
   border-top: 5px solid $green;
   width: 260px;
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
 
-  .deposit-wrapper, .section-wrapper {
-    padding: 20px 20px 10px 20px;
-    background: linear-gradient(180deg, #2B3943 0%, rgba(43, 57, 67, 0.46) 92.86%);
+  .main-section-wrapper {
+    background: linear-gradient(180deg, rgba(55, 176, 111, 0.2) 1.28%, rgba(41, 76, 115, 0.2) 100%);
+    padding: 0;
 
-    .deposit-heading, .section-heading {
-      font-size: $font-size-large;
-      color: $gray;
-      margin-bottom: 10px;
-    }
-
-    .deposited-main, .section-main {
-      margin-bottom: 5px;
+    .box-heading {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
+      justify-content: space-between;
 
-      .deposit-value, .section-value {
-        font-size: 58px;
-        color: white;
-      }
-
-      .deposit-label, .section-label {
-        margin-left: 5px;
-        position: relative;
-        top: 10px;
-        color: $gray;
-      }
-    }
-
-    .deposit-additional, .section-additional {
-      display: flex;
-
-      .additional-item, .section-item {
+      .id-wrapper {
+        padding: 7px 0 0 13px;
         display: flex;
         align-items: center;
-        color: white;
+        color: $gray;
+        text-transform: uppercase;
 
-        span {
+        .id {
+          color: #fff;
+          margin-left: 7px;
+        }
+      }
+
+      .discount-wrapper {
+        background: rgba($green, 0.5);
+        padding: 7px 11px;
+        color: #fff;
+
+        .discount {
+          margin-right: 5px;
+          font-weight: $font-weight-bold;
+        }
+      }
+    }
+
+    .price-wrapper {
+      padding: 19px 13px 22px 13px;
+
+      .price-label {
+        color: $gray;
+        margin-bottom: 1px;
+      }
+
+      .price-eth {
+        display: flex;
+        align-items: flex-start;
+
+        .price-eth-value {
+          color: white;
+          font-size: 50px;
+          margin-right: 2px;
+        }
+
+        .price-eth-label {
           color: $gray;
-          margin-left: 6px;
+          position: relative;
+          top: 8px;
+        }
+      }
+
+      .price-usd {
+        display: flex;
+        align-items: center;
+
+        .price-usd-value {
+          color: #fff;
+          margin-right: 6px;
         }
 
-        &:not(:last-child) {
-          margin-right: 12px;
-        }
+        .price-usd-label { color: $gray; }
       }
     }
   }
 
-  .sections-wrapper {
-    background: linear-gradient(180deg, #2B3943 0%, rgba(43, 57, 67, 0.46) 100%);
+  .bottom-section-wrapper {
+    padding: 12px 12px 28px 12px;
+
+    .value-wrapper {
+      padding-bottom: 14px;
+      border-bottom: 1px solid $green;
+
+      .value-label {
+        color: $gray;
+        margin-bottom: 6px;
+      }
+
+      .value-eth {
+        display: flex;
+        align-items: flex-start;
+
+        .value-eth-value {
+          color: white;
+          font-size: 30px;
+          margin-right: 5px;
+        }
+
+        .value-eth-label {
+          color: $gray;
+          position: relative;
+          top: 3px;
+        }
+      }
+
+      .value-usd {
+        display: flex;
+        align-items: center;
+
+        .value-usd-value {
+          color: #fff;
+          margin-right: 6px;
+        }
+
+        .value-usd-label { color: $gray; }
+      }
+    }
   }
 
-  .section-wrapper {
-    padding-bottom: 13px;
+  .data-wrapper {
+    padding-top: 15px;
 
-    &:first-child {
-      border-bottom: 1px solid rgba(#404D58, 0.3);
-    }
+    .data-item {
+      display: flex;
+      align-items: center;
+      color: #fff;
 
-    .section-heading {
-      opacity: 0.3;
-      margin-bottom: 5px;
-    }
-
-    .section-main {
-
-      .section-value {
-        font-size: 38px;
-        opacity: 0.3;
+      &:first-child {
+        margin-bottom: 2px;
       }
 
-      .section-label {
-        opacity: 0.3;
-        top: 5px;
-      }
-    }
-
-    .section-additional .section-item {
-      color: rgba(255,255,255, 0.3);
-
-      span {
-        opacity: 0.3;
+      .label {
+        color: $gray;
+        margin-right: 11px;
       }
     }
   }

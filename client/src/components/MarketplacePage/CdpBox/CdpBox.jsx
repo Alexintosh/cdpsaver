@@ -1,56 +1,76 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Tooltip } from 'react-tippy';
 import { formatNumber } from '../../../utils/utils';
 
 import './CdpBox.scss';
 
 const CdpBox = ({
   data: {
-    depositedETH, depositedPETH, depositedUSD, generatedDAI, liquidationPrice,
+    depositedETH, depositedPETH, depositedUSD, generatedDAI, liquidationPrice, id, ratio,
   },
 }) => (
   <div className="cdp-box-wrapper">
-    <div className="deposit-wrapper">
-      <div className="deposit-heading">Deposited</div>
-
-      <div className="deposited-main">
-        <div className="deposit-value">{ formatNumber(depositedETH, 3) }</div>
-        <div className="deposit-label">ETH</div>
-      </div>
-
-      <div className="deposit-additional">
-        <div className="additional-item">
-          { formatNumber(depositedPETH, 3) } <span>PETH</span>
+    <div className="main-section-wrapper">
+      <div className="box-heading">
+        <div className="id-wrapper">
+          <span>Cdp id:</span>
+          <span className="id">#{ id }</span>
         </div>
 
-        <div className="additional-item">
-          { formatNumber(depositedUSD, 3) } <span>USD</span>
+        <div className="discount-wrapper">
+          <span className="discount">3%</span>
+          <span>Discount</span>
+        </div>
+      </div>
+
+      <div className="price-wrapper">
+        <div className="price-label">Price:</div>
+
+        <div className="price-eth">
+          <div className="price-eth-value">325.753</div>
+          <div className="price-eth-label">ETH</div>
+        </div>
+
+        <div className="price-usd">
+          <div className="price-usd-value">491.127</div>
+          <div className="price-usd-label">USD</div>
         </div>
       </div>
     </div>
 
-    <div className="sections-wrapper">
-      <div className="section-wrapper">
-        <div className="section-heading">Generated</div>
+    <div className="bottom-section-wrapper">
+      <div className="value-wrapper">
+        <div className="value-label">CDP value:</div>
 
-        <div className="section-main">
-          <div className="section-value">{ formatNumber(generatedDAI, 3) }</div>
-          <div className="section-label">DAI</div>
+        <div className="value-eth">
+          <div className="value-eth-value">325.753</div>
+          <div className="value-eth-label">ETH</div>
         </div>
 
-        <div className="section-additional">
-          <div className="section-item">
-            { formatNumber(generatedDAI, 3) } <span>USD</span>
-          </div>
+        <div className="value-usd">
+          <div className="value-usd-value">491.127</div>
+          <div className="value-usd-label">USD</div>
         </div>
       </div>
 
-      <div className="section-wrapper">
-        <div className="section-heading">Liquidation price (ETH/USD)</div>
+      <div className="data-wrapper">
+        <div className="data-item">
+          <div className="label">Ratio:</div>
+          <div className="value">
+            <Tooltip title={ratio}>
+              { formatNumber(ratio, 2) }%
+            </Tooltip>
+          </div>
+        </div>
 
-        <div className="section-main">
-          <div className="section-value">{ formatNumber(liquidationPrice, 3) }</div>
-          <div className="section-label">USD</div>
+        <div className="data-item">
+          <div className="label">Liquidation price:</div>
+          <div className="value">
+            <Tooltip title={liquidationPrice}>
+              { formatNumber(liquidationPrice, 2) }%
+            </Tooltip>
+          </div>
         </div>
       </div>
     </div>
