@@ -43,10 +43,6 @@ class OnboardingRoutes extends Component {
       if (connectingProvider) message = 'Connecting web3 provider, please wait...';
       if (gettingCdp) message = 'Getting your cdp, please wait...';
 
-      if (hasCdp && this.onboardingWizardLinks.length === 4) {
-        this.onboardingWizardLinks.splice(0, 1);
-      }
-
       return (
         <div className="loader-page-wrapper private">
           <Loader message={message} />
@@ -56,6 +52,10 @@ class OnboardingRoutes extends Component {
 
     if (!loggingIn && !account && !connectingProvider) {
       return (<Redirect to={{ pathname: '/connect', state: { to: '/dashboard/manage' } }} />);
+    }
+
+    if (hasCdp && this.onboardingWizardLinks.length === 4) {
+      this.onboardingWizardLinks.splice(0, 1);
     }
 
     return (

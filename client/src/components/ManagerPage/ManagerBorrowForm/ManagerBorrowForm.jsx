@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {
   Field, reduxForm, formValueSelector, change,
 } from 'redux-form';
+import { Tooltip } from 'react-tippy';
 import InputComponent from '../../Forms/InputComponent';
 import {
   generateDaiAction,
@@ -37,7 +38,9 @@ class ManagerBorrowForm extends Component {
               if (!generatingDai) dispatch(change('managerBorrowForm', 'generateDaiAmount', maxDai));
             }}
           >
-            { gettingMaxDai ? 'Loading...' : `(max ${formatNumber(maxDai, 2)})` }
+            <Tooltip title={maxDai}>
+              { gettingMaxDai ? 'Loading...' : `(max ${formatNumber(maxDai, 2)})` }
+            </Tooltip>
           </div>
           <Field
             id="manager-generate-input"
@@ -69,7 +72,9 @@ class ManagerBorrowForm extends Component {
               if (!withdrawingEth) dispatch(change('managerBorrowForm', 'withdrawEthAmount', maxEthWithdraw));
             }}
           >
-            { gettingMaxEthWithdraw ? 'Loading...' : `(max ${formatNumber(maxEthWithdraw, 2)})` }
+            <Tooltip title={maxEthWithdraw}>
+              { gettingMaxEthWithdraw ? 'Loading...' : `(max ${formatNumber(maxEthWithdraw, 2)})` }
+            </Tooltip>
           </div>
           <Field
             id="manager-withdraw-input"

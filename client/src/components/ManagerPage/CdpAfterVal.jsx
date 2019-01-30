@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Tooltip } from 'react-tippy';
 import { formatNumber } from '../../utils/utils';
 
 const CdpAfterVal = ({
@@ -11,7 +12,11 @@ const CdpAfterVal = ({
       !loading && cdp && (
         <div className="amount-wrapper">
           <span className="after">After:</span>
-          <span className="amount">{ formatNumber(cdp[cdpProp], 2) }{ symbol }</span>
+          <span className="amount">
+            <Tooltip title={cdp[cdpProp]}>
+              { formatNumber(cdp[cdpProp], 2) }{ symbol }
+            </Tooltip>
+          </span>
         </div>
       )
     }

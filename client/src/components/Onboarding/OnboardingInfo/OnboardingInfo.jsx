@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { Tooltip } from 'react-tippy';
 import { formatNumber } from '../../../utils/utils';
 
 import './OnboardingInfo.scss';
@@ -19,7 +20,11 @@ const OnboardingInfo = ({
           <div className="info-row-wrapper">
             <div className="info-item-wrapper">
               <div className="info-label">Liquidation price</div>
-              <div className="info-value">{ formatNumber(cdp.liquidationPrice, 2) }$</div>
+              <div className="info-value">
+                <Tooltip title={cdp.liquidationPrice}>
+                  { formatNumber(cdp.liquidationPrice, 2) }$
+                </Tooltip>
+              </div>
             </div>
 
             <div className="info-item-wrapper">
@@ -29,18 +34,30 @@ const OnboardingInfo = ({
 
             <div className="info-item-wrapper">
               <div className="info-label">Ratio</div>
-              <div className="info-value">{ formatNumber(cdp.ratio, 2) }%</div>
+              <div className="info-value">
+                <Tooltip title={cdp.ratio}>
+                  { formatNumber(cdp.ratio, 2) }%
+                </Tooltip>
+              </div>
             </div>
           </div>
 
           <div className="info-row-small-wrapper">
             <div className="info-label">Debt:</div>
-            <div className="info-value">{ formatNumber(cdp.debtDai, 2) } Dai</div>
+            <div className="info-value">
+              <Tooltip title={cdp.debtDai}>
+                { formatNumber(cdp.debtDai, 2) } Dai
+              </Tooltip>
+            </div>
           </div>
 
           <div className="info-row-small-wrapper">
             <div className="info-label">Collateral amount:</div>
-            <div className="info-value">{ formatNumber(cdp.depositedETH, 2) } Eth</div>
+            <div className="info-value">
+              <Tooltip title={cdp.depositedETH}>
+                { formatNumber(cdp.depositedETH, 2) } Eth
+              </Tooltip>
+            </div>
           </div>
         </div>
 

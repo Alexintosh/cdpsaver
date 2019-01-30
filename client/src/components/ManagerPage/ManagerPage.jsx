@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Tooltip } from 'react-tippy';
 import PieChart from '../PieChart/PieChart';
 import Tabs from '../Tabs/Tabs';
 import DaiIcon from '../Decorative/DaiIcon';
@@ -47,7 +48,9 @@ class ManagerPage extends Component {
                 className="acc"
                 href={`https://${network === 42 ? 'kovan.' : ''}etherscan.io/address/${account}`}
               >
-                { formatAcc(account) }
+                <Tooltip title={account}>
+                  { formatAcc(account) }
+                </Tooltip>
               </a>
             </div>
           </div>
@@ -60,7 +63,11 @@ class ManagerPage extends Component {
                 <div className="info-wrapper-main">
                   <div className="item">
                     <div className="label">Liquidation price</div>
-                    <div className="value">{ formatNumber(cdp.liquidationPrice, 2) }$</div>
+                    <div className="value">
+                      <Tooltip title={cdp.liquidationPrice}>
+                        { formatNumber(cdp.liquidationPrice, 2) }$
+                      </Tooltip>
+                    </div>
                     <CdpAfterVal
                       type={afterType}
                       loading={gettingAfterCdp}
@@ -77,7 +84,11 @@ class ManagerPage extends Component {
 
                   <div className="item">
                     <div className="label">Ratio</div>
-                    <div className="value">{ formatNumber(cdp.ratio, 2) }%</div>
+                    <div className="value">
+                      <Tooltip title={cdp.ratio}>
+                        { formatNumber(cdp.ratio, 2) }%
+                      </Tooltip>
+                    </div>
                     <CdpAfterVal
                       type={afterType}
                       loading={gettingAfterCdp}
@@ -93,7 +104,11 @@ class ManagerPage extends Component {
 
                   <div className="row-val-wrapper">
                     <span className="label">Debt:</span>
-                    <span className="value">{ formatNumber(cdp.debtDai, 2) } Dai</span>
+                    <span className="value">
+                      <Tooltip title={cdp.debtDai}>
+                        { formatNumber(cdp.debtDai, 2) } Dai
+                      </Tooltip>
+                    </span>
                   </div>
                 </div>
 
@@ -102,7 +117,11 @@ class ManagerPage extends Component {
 
                   <div className="row-val-wrapper">
                     <span className="label">Collateral amount:</span>
-                    <span className="value">{ formatNumber(cdp.depositedETH, 2) } Eth</span>
+                    <span className="value">
+                      <Tooltip title={cdp.depositedETH}>
+                        { formatNumber(cdp.depositedETH, 2) } Eth
+                      </Tooltip>
+                    </span>
                   </div>
                 </div>
               </div>

@@ -147,7 +147,7 @@ export const formatNumber = (_num, fixed) => {
 
     if (formated === 'Infinity') return '0';
 
-    return formated;
+    return _num.toFixed(fixed);
   } catch (err) {
     return _num.toFixed(fixed);
   }

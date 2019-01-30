@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Tooltip } from 'react-tippy';
+import { formatNumber } from '../../utils/utils';
 
 import './SaverPage.scss';
-import { formatNumber } from '../../utils/utils';
 
 const SaverPage = ({
   cdp, gettingEthPrice, ethPrice,
@@ -21,28 +22,46 @@ const SaverPage = ({
           <div className="main-items-wrapper">
             <div className="item">
               <div className="label">Liquidation price</div>
-              <div className="value">{ gettingEthPrice ? 'Loading...' : ethPrice }</div>
+              <div className="value">
+                <Tooltip title={cdp.liquidationPrice}>
+                  { formatNumber(cdp.liquidationPrice, 2) }$
+                </Tooltip>
+              </div>
             </div>
 
             <div className="item">
               <div className="label">Current price</div>
-              <div className="value">{ formatNumber(ethPrice, 2) }</div>
+              <div className="value">
+                { gettingEthPrice ? 'Loading...' : ethPrice }
+              </div>
             </div>
 
             <div className="item">
               <div className="label">Ratio</div>
-              <div className="value">{ formatNumber(cdp.ratio, 2) }%</div>
+              <div className="value">
+                <Tooltip title={cdp.ratio}>
+                  { formatNumber(cdp.ratio, 2) }%
+                </Tooltip>
+              </div>
             </div>
           </div>
 
           <div className="row-item-wrapper">
             <span className="label">Debt:</span>
-            <span className="value">{ formatNumber(cdp.debtDai, 2) } Dai</span>
+            <span className="value">
+              <Tooltip title={cdp.debtDai}>
+                { formatNumber(cdp.debtDai, 2) } Dai
+              </Tooltip>
+            </span>
           </div>
 
           <div className="row-item-wrapper">
             <span className="label">Collateral amount:</span>
-            <span className="value">{ formatNumber(cdp.depositedETH, 2) } Eth</span>
+            <span className="value">
+              <Tooltip title={cdp.depositedETH}>
+                { formatNumber(cdp.depositedETH, 2) } Eth
+              </Tooltip>
+            </span>
           </div>
         </div>
 
