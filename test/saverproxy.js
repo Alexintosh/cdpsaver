@@ -8,7 +8,8 @@ const DSProxy = artifacts.require("./DSProxy.sol");
 const SaverAuthority = artifacts.require("./SaverAuthority.sol");
 const KyberWrapper = artifacts.require("./KyberWrapper.sol");
 const SaiProxyInterface = artifacts.require("./SaiProxyInterface.sol");
-
+const TubInterface = artifacts.require("./TubInterface.sol");
+const DSProxyFactoryInterface = artifacts.require("./DSProxyFactoryInterface.sol");
 
 contract("SaverProxy", accounts => {
 
@@ -139,20 +140,43 @@ contract("SaverProxy", accounts => {
   // });
 
   //   it('...should create a new CDP', async () => {
-  //   const daiAmount = web3.utils.toWei("1", 'ether'); //1 dai token
-  //   const ethAmount = "0.05";
+  //     const tubAddr = "0xa71937147b55Deb8a530C7229C442Fd3F31b7db2";
 
-  //   const registryAddr = "0x64a436ae831c1672ae81f674cab8b6775df3475c";
+  //     try {
+  //         const tub = await TubInterface.at(tubAddr);
+  //         const tx = await tub.open({from: accounts[8]});
 
-  //   try {
-  //       const tx = await saiProxy.createOpenLockAndDraw(registryAddr, tubAddr, daiAmount, 
-  //         {from: accounts[2], value: web3.utils.toWei(ethAmount, 'ether')});
+  //         console.log(tx);
+      
+  //     } catch(err) {
+  //       console.log(err);
+  //     }
+  // });
 
-  //       console.log(accounts[2], tx);
-    
-  //   } catch(err) {
-  //     console.log(err);
-  //   }
+  // When user already has a CDP, but does not have a DSProxy address
+  // it('...should migrate a CDP', async () => {
+  //     const tubAddr = "0xa71937147b55Deb8a530C7229C442Fd3F31b7db2";
+  //     const factoryAddress = "0xe11E3b391F7E8bC47247866aF32AF67Dd58Dc800";
+
+  //     const userCDP = "0x00000000000000000000000000000000000000000000000000000000000012e9";
+      
+  //     try {
+  //         const factory = await DSProxyFactoryInterface.at(factoryAddress);
+  //         const tub = await TubInterface.at(tubAddr);
+
+  //         const tx = await factory.build(accounts[8], {from: accounts[8]});
+
+  //         //TODO: figure out if this is the best way to get the proxy address
+  //         const newProxyAddress = tx.receipt.rawLogs[0].address;
+
+  //         console.log("Proxy adresa: ", newProxyAddress, " account: ", accounts[8]);
+  //         console.log("Tip: ", typeof newProxyAddress);
+
+  //         await tub.give(userCDP, newProxyAddress, {from: accounts[8]});
+      
+  //     } catch(err) {
+  //       console.log(err);
+  //     }
   // });
 
   //   it('...should close the cdp', async () => {
