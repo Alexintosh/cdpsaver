@@ -1,10 +1,7 @@
 pragma solidity ^0.5.0;
 
 import "./TokenInterface.sol";
-
-contract PipInterface {
-    function read() public returns (bytes32);
-}
+import "./PipInterface.sol";
 
 contract PepInterface {
     function peek() public returns (bytes32, bool);
