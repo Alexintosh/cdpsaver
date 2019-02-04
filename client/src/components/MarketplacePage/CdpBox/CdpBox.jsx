@@ -9,9 +9,9 @@ import './CdpBox.scss';
 
 const CdpBox = ({
   data: {
-    depositedETH, depositedPETH, depositedUSD, generatedDAI, liquidationPrice, id, ratio,
+    discount, value, price, liquidationPrice, id, ratio,
   },
-  buyingCdp, buyingCdpError, buyCdp,
+  buyingCdp, buyCdp,
 }) => (
   <div className="cdp-box-wrapper">
     <div className="main-section-wrapper">
@@ -22,7 +22,9 @@ const CdpBox = ({
         </div>
 
         <div className="discount-wrapper">
-          <span className="discount">3%</span>
+          <span className="discount">
+            <Tooltip title={discount}>{ formatNumber(discount, 1) }%</Tooltip>
+          </span>
           <span>Discount</span>
         </div>
       </div>
@@ -31,12 +33,16 @@ const CdpBox = ({
         <div className="price-label">Price:</div>
 
         <div className="price-eth">
-          <div className="price-eth-value">325.753</div>
+          <div className="price-eth-value">
+            <Tooltip title={price.eth}>{ formatNumber(price.eth, 3) }</Tooltip>
+          </div>
           <div className="price-eth-label">ETH</div>
         </div>
 
         <div className="price-usd">
-          <div className="price-usd-value">491.127</div>
+          <div className="price-usd-value">
+            <Tooltip title={price.usd}>{ formatNumber(price.usd, 3) }</Tooltip>
+          </div>
           <div className="price-usd-label">USD</div>
         </div>
       </div>
@@ -47,12 +53,12 @@ const CdpBox = ({
         <div className="value-label">CDP value:</div>
 
         <div className="value-eth">
-          <div className="value-eth-value">325.753</div>
+          <div className="value-eth-value">{ formatNumber(value.eth, 3) }</div>
           <div className="value-eth-label">ETH</div>
         </div>
 
         <div className="value-usd">
-          <div className="value-usd-value">491.127</div>
+          <div className="value-usd-value">{ formatNumber(value.usd, 3) }</div>
           <div className="value-usd-label">USD</div>
         </div>
       </div>
@@ -71,7 +77,7 @@ const CdpBox = ({
           <div className="label">Liquidation price:</div>
           <div className="value">
             <Tooltip title={liquidationPrice}>
-              { formatNumber(liquidationPrice, 2) }%
+              { formatNumber(liquidationPrice, 2) }$
             </Tooltip>
           </div>
         </div>
@@ -94,13 +100,11 @@ const CdpBox = ({
 CdpBox.propTypes = {
   data: PropTypes.object.isRequired,
   buyingCdp: PropTypes.bool.isRequired,
-  buyingCdpError: PropTypes.string.isRequired,
   buyCdp: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ marketplace }) => ({
   buyingCdp: marketplace.buyingCdp,
-  buyingCdpError: marketplace.buyingCdpError,
 });
 
 const mapDispatchToProps = {

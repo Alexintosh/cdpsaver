@@ -309,13 +309,18 @@ export const transferCdp = (fromAddress, toAddress, cdpId, proxyAddress) => new 
 /**
  * Calls our marketplace contract and gets cdps that are up for sale
  *
- * @return {Promise<any>}
+ * @return {Promise<Array>}
  */
 export const getItemsOnSale = () => new Promise(async (resolve, reject) => {
   try {
     const contract = await marketplaceContract();
 
-    const res = await contract.methods.getItemsOnSale().call();
+    let res = await contract.methods.getItemsOnSale().call();
+
+    res = res.map(({ cup, discount }) => ({
+      id: window._web3.utils.hexToNumber(cup),
+      discount: parseFloat(discount),
+    }));
 
     resolve(res);
   } catch (err) {

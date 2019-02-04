@@ -23,7 +23,7 @@ const INITIAL_STATE = {
   sellingCdpSuccess: false,
 
   buyingCdp: false,
-  buyingCdpError: false,
+  buyingCdpError: '',
 };
 
 export default (state = INITIAL_STATE, action) => {

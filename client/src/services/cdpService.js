@@ -27,6 +27,7 @@ export const getCdpInfo = (id, useAuth = true) => new Promise(async (resolve, re
       depositedPETH: parseFloat(web3.utils.fromWei(info[1].toString(), 'ether')),
       generatedDAI: parseFloat(web3.utils.fromWei(info[2].toString(), 'ether')),
       debtDai: (await cdp.getDebtValue())._amount,
+      debtUsd: (await cdp.getDebtValue(Maker.USD))._amount,
       depositedETH: (await cdp.getCollateralValue())._amount,
       depositedUSD: (await cdp.getCollateralValue(Maker.USD))._amount,
       liquidationPrice: (await cdp.getLiquidationPrice())._amount,
@@ -43,7 +44,7 @@ export const getCdpInfo = (id, useAuth = true) => new Promise(async (resolve, re
  * Gets Cdp info for an array of ids and returns a Promise
  * @param ids {Array}
  *
- * @return {Promise<any>}
+ * @return {Promise<Array>}
  */
 export const getCdpInfos = ids => new Promise(async (resolve, reject) => {
   try {

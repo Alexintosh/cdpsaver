@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import { getMarketplaceCdpsData } from '../../actions/marketplaceActions';
+import { getMarketplaceCdpsData, sellCdpButtonTooltipText } from '../../actions/marketplaceActions';
 import { openSellCdpModal } from '../../actions/modalActions';
 import { MARKETPLACE_SORT_OPTIONS } from '../../constants/general';
 import CdpBox from './CdpBox/CdpBox';
@@ -12,6 +13,7 @@ import './MarketplacePage.scss';
 
 const MarketplacePage = ({
   cdps, fetchingCdpsError, fetchingCdps, getMarketplaceCdpsData, openSellCdpModal,
+  loggingIn, gettingCdp, cdp,
 }) => {
   const [mounted, setMounted] = useState(false);
   const [orderBy, setOrderBy] = useState(null);
@@ -58,14 +60,20 @@ const MarketplacePage = ({
               </div>
             </div>
 
-            <button
-              onClick={openSellCdpModal}
-              className="button green uppercase"
-              type="button"
+            <Tooltip
+              title={sellCdpButtonTooltipText(loggingIn, gettingCdp, cdp)}
+              disabled={cdp !== null}
             >
-              Sell
-              <span>Cdp</span>
-            </button>
+              <button
+                onClick={openSellCdpModal}
+                disabled={cdp === null}
+                className="button green uppercase"
+                type="button"
+              >
+                Sell
+                <span>Cdp</span>
+              </button>
+            </Tooltip>
           </div>
 
           {
@@ -98,18 +106,29 @@ const MarketplacePage = ({
   );
 };
 
+MarketplacePage.defaultProps = {
+  cdp: null,
+};
+
 MarketplacePage.propTypes = {
   cdps: PropTypes.array.isRequired,
   getMarketplaceCdpsData: PropTypes.func.isRequired,
   fetchingCdps: PropTypes.bool.isRequired,
   fetchingCdpsError: PropTypes.any.isRequired,
   openSellCdpModal: PropTypes.func.isRequired,
+  loggingIn: PropTypes.bool.isRequired,
+  gettingCdp: PropTypes.bool.isRequired,
+  cdp: PropTypes.object,
 };
 
-const mapStateToProps = (({ marketplace }) => ({
+const mapStateToProps = (({ marketplace, general }) => ({
   cdps: marketplace.cdps,
   fetchingCdps: marketplace.fetchingCdps,
   fetchingCdpsError: marketplace.fetchingCdpsError,
+
+  loggingIn: general.loggingIn,
+  gettingCdp: general.gettingCdp,
+  cdp: general.cdp,
 }));
 
 const mapDispatchToProps = {

@@ -152,3 +152,5 @@ export const formatNumber = (_num, fixed) => {
     return _num.toFixed(fixed);
   }
 };
+
+export const convertDaiToEth = (dai, ethPrice) => dai / ethPrice;
