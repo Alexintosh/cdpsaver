@@ -6,5 +6,5 @@ export const setWeb3toMetamask = () => {
 };
 
 export const setupWeb3 = () => {
-  window._web3 = new Web3(clientConfig.providerUrl);
+  window._web3 = new Web3(clientConfig.provider);
 };

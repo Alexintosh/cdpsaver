@@ -6,6 +6,7 @@ import {
   saiSaverProxyAddress,
   DaiErc20Contract,
   MakerErc20Contract,
+  marketplaceContract,
 } from './contractRegistryService';
 import config from '../config/config.json';
 import { numStringToBytes32 } from '../utils/utils';
@@ -300,6 +301,23 @@ export const transferCdp = (fromAddress, toAddress, cdpId, proxyAddress) => new 
     await proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send({ from: fromAddress });
 
     resolve(true);
+  } catch (err) {
+    reject(err);
+  }
+});
+
+/**
+ * Calls our marketplace contract and gets cdps that are up for sale
+ *
+ * @return {Promise<any>}
+ */
+export const getItemsOnSale = () => new Promise(async (resolve, reject) => {
+  try {
+    const contract = await marketplaceContract();
+
+    const res = await contract.methods.getItemsOnSale().call();
+
+    resolve(res);
   } catch (err) {
     reject(err);
   }

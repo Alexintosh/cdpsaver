@@ -13,6 +13,7 @@ import {
   BUY_CDP_FAILURE,
 } from '../actionTypes/marketplaceActionTypes';
 import { getCdpInfos } from '../services/cdpService';
+import { getItemsOnSale } from '../services/ethService';
 
 /**
  * Dispatches action to save formatted Cdp data for an array of added cdp ids
@@ -20,15 +21,15 @@ import { getCdpInfos } from '../services/cdpService';
  * @return {Function}
  */
 export const getMarketplaceCdpsData = () => async (dispatch) => {
-  const mockCdpIds = [4691];
   dispatch({ type: GET_MARKETPLACE_CDP_DATA_REQUEST });
 
   try {
-    const payload = await getCdpInfos(mockCdpIds);
+    const cdpIds = await getItemsOnSale();
+    const payload = await getCdpInfos(cdpIds);
 
     dispatch({ type: GET_MARKETPLACE_CDP_DATA_SUCCESS, payload });
   } catch (err) {
-    dispatch({ type: GET_MARKETPLACE_CDP_DATA_FAILURE, payload: err });
+    dispatch({ type: GET_MARKETPLACE_CDP_DATA_FAILURE, payload: err.message });
   }
 };
 
