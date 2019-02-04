@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import { formatNumber } from '../../../utils/utils';
+import { buyCdp } from '../../../actions/marketplaceActions';
 
 import './CdpBox.scss';
 
@@ -9,6 +11,7 @@ const CdpBox = ({
   data: {
     depositedETH, depositedPETH, depositedUSD, generatedDAI, liquidationPrice, id, ratio,
   },
+  buyingCdp, buyingCdpError, buyCdp,
 }) => (
   <div className="cdp-box-wrapper">
     <div className="main-section-wrapper">
@@ -74,11 +77,34 @@ const CdpBox = ({
         </div>
       </div>
     </div>
+
+    <div className="buy-wrapper">
+      <button
+        type="button"
+        className="button green uppercase"
+        onClick={buyCdp}
+        disabled={buyingCdp}
+      >
+        { buyingCdp ? 'Buying' : 'Buy' }
+      </button>
+    </div>
   </div>
 );
 
 CdpBox.propTypes = {
   data: PropTypes.object.isRequired,
+  buyingCdp: PropTypes.bool.isRequired,
+  buyingCdpError: PropTypes.string.isRequired,
+  buyCdp: PropTypes.func.isRequired,
 };
 
-export default CdpBox;
+const mapStateToProps = ({ marketplace }) => ({
+  buyingCdp: marketplace.buyingCdp,
+  buyingCdpError: marketplace.buyingCdpError,
+});
+
+const mapDispatchToProps = {
+  buyCdp,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CdpBox);

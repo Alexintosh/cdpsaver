@@ -7,6 +7,10 @@ import {
   SELL_CDP_SUCCESS,
   SELL_CDP_FAILURE,
   RESET_SELL_CDP_FORM,
+
+  BUY_CDP_REQUEST,
+  BUY_CDP_SUCCESS,
+  BUY_CDP_FAILURE,
 } from '../actionTypes/marketplaceActionTypes';
 import { getCdpInfos } from '../services/cdpService';
 
@@ -57,4 +61,23 @@ export const sellCdp = ({ sellPrice }) => async (dispatch) => {
  */
 export const resetSellCdpForm = () => (dispatch) => {
   dispatch({ type: RESET_SELL_CDP_FORM });
+};
+
+/**
+ * Buys selected cdp from one user and transfers it to another
+ */
+export const buyCdp = () => async (dispatch) => {
+  dispatch({ type: BUY_CDP_REQUEST });
+
+  const wait = () => new Promise((resolve) => {
+    setTimeout(() => { resolve(); }, 1000);
+  });
+
+  try {
+    const payload = await wait();
+
+    dispatch({ type: BUY_CDP_SUCCESS, payload });
+  } catch (err) {
+    dispatch({ type: BUY_CDP_FAILURE, payload: err.message });
+  }
 };

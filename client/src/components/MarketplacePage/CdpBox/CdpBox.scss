@@ -1,5 +1,6 @@
 @import '../../../common/colors';
 @import '../../../common/text';
+@import '../../../common/variables';
 
 .cdp-box-wrapper {
   background: linear-gradient(180deg, #2B3943 0%, rgba(43, 57, 67, 0.46) 92.86%);
@@ -8,6 +9,29 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+
+  &:hover .buy-wrapper {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .buy-wrapper {
+    @include hover-transition;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    bottom: 0;
+    padding: 72px 68px;
+    background: linear-gradient(180deg, #2B3943 0%, rgba(43, 57, 67, 0.76) 92.86%);
+    z-index: 2;
+
+    .button {
+      width: 124px;
+      height: 44px;
+    }
+  }
 
   .main-section-wrapper {
     background: linear-gradient(180deg, rgba(55, 176, 111, 0.2) 1.28%, rgba(41, 76, 115, 0.2) 100%);
