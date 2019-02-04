@@ -20,3 +20,12 @@ export const DaiErc20Contract = () => new window._web3.eth.Contract(config.DaiEr
 
 export const makerErc20Address = config.MakerErc20.networks[clientConfig.network].address;
 export const MakerErc20Contract = () => new window._web3.eth.Contract(config.MakerErc20.abi, makerErc20Address);
+
+export const marketplaceAddress = config.Marketplace.networks[clientConfig.network].address;
+export const marketplaceContract = config.Marketplace.networks[clientConfig.network].address;
+
+export const marketplaceAuthorityAddress = config.MarketplaceAuthority.networks[clientConfig.network].address;
+export const marketplaceAuthorityContract = config.MarketplaceAuthority.networks[clientConfig.network].address;
+
+export const marketplaceProxyAddress = config.MarketplaceProxyAddress.networks[clientConfig.network].address;
+export const marketplaceProxyContract = config.MarketplaceAuthority.networks[clientConfig.network].address;
