@@ -1,7 +1,7 @@
-const sellCdpFormValidator = ({ sellPrice }) => {
+const sellCdpFormValidator = ({ discount }) => {
   const errors = {};
 
-  if (!sellPrice) errors.sellPrice = 'Required';
+  if (!discount) errors.discount = 'Required';
 
   return errors;
 };

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { isPristine, isInvalid } from 'redux-form';
+import { Tooltip } from 'react-tippy';
+import { isPristine, isInvalid, formValueSelector } from 'redux-form';
 import ModalBody from '../ModalBody';
 import ModalHeader from '../ModalHeader';
 import SellCdpForm from './SellCdpForm/SellCdpForm';
 import { resetSellCdpForm } from '../../../actions/marketplaceActions';
+import { convertDaiToEth, formatNumber } from '../../../utils/utils';
 
 import './SellCdpModal.scss';
 
@@ -16,8 +18,25 @@ class SellCdpModal extends Component {
 
   render() {
     const {
-      closeModal, pristine, invalid, submittingForm, submittingFormSuccess,
+      closeModal, pristine, invalid, submittingForm, submittingFormSuccess, cdp,
+      ethPrice, discount,
     } = this.props;
+
+    const value = {
+      eth: cdp.depositedETH - convertDaiToEth(cdp.debtDai, ethPrice),
+      usd: cdp.depositedUSD - cdp.debtUsd,
+    };
+
+    let price = { eth: 0, usd: 0 };
+
+    if (discount) {
+      price = {
+        eth: value.eth - ((discount / 100) * value.eth),
+        usd: value.usd - ((discount / 100) * value.usd),
+      };
+    }
+
+    const hasDiscount = !isNaN(discount) || discount > 0; /* eslint-disable-line */
 
     return (
       <div className="sell-cdp-modal-wrapper">
@@ -32,7 +51,9 @@ class SellCdpModal extends Component {
                 <div className="info-wrapper">
                   <div className="value-wrapper">
                     <span className="label">Cdp value:</span>
-                    <span className="value">3.6 ETH</span>
+                    <span className="value">
+                      <Tooltip title={value.eth}>{ formatNumber(value.eth, 1) } ETH</Tooltip>
+                    </span>
                   </div>
 
                   <div className="equation">
@@ -46,7 +67,14 @@ class SellCdpModal extends Component {
 
                 <div className="current-sale-price-wrapper">
                   <span className="label">Current sale price:</span>
-                  <span className="value">3.5 ETH</span>
+                  <span className="value">
+                    { !hasDiscount && '-' }
+                    {
+                      hasDiscount && (
+                        <Tooltip title={price.eth}>{ formatNumber(price.eth, 3) } ETH</Tooltip>
+                      )
+                    }
+                  </span>
                 </div>
               </div>
             )
@@ -90,6 +118,8 @@ class SellCdpModal extends Component {
   }
 }
 
+const selector = formValueSelector('sellCdpForm');
+
 SellCdpModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
   resetSellCdpForm: PropTypes.func.isRequired,
@@ -97,13 +127,19 @@ SellCdpModal.propTypes = {
   submittingFormSuccess: PropTypes.bool.isRequired,
   pristine: PropTypes.bool.isRequired,
   invalid: PropTypes.bool.isRequired,
+  cdp: PropTypes.object.isRequired,
+  ethPrice: PropTypes.number.isRequired,
+  discount: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = state => ({
   pristine: isPristine('sellCdpForm')(state),
   invalid: isInvalid('sellCdpForm')(state),
+  discount: parseFloat(selector(state, 'discount')),
   submittingForm: state.marketplace.sellingCdp,
   submittingFormSuccess: state.marketplace.sellingCdpSuccess,
+  cdp: state.general.cdp,
+  ethPrice: state.general.ethPrice,
 });
 
 const mapDispatchToProps = {

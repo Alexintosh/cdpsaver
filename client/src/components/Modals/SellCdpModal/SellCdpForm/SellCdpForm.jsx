@@ -14,7 +14,7 @@ const SellCdpForm = ({ handleSubmit, onSubmit }) => (
   >
     <Field
       id="marketplace-sell-price"
-      name="sellPrice"
+      name="discount"
       placeholder="3"
       type="number"
       labelText="Sell price"
