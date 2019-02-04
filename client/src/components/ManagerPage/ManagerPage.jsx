@@ -79,7 +79,10 @@ class ManagerPage extends Component {
 
                   <div className="item">
                     <div className="label">Current price</div>
-                    <div className="value">{ gettingEthPrice ? 'Loading...' : ethPrice }$</div>
+                    <div className="value">
+                      { gettingEthPrice && 'Loading...' }
+                      { !gettingEthPrice && (<Tooltip title={ethPrice}>{ formatNumber(ethPrice, 2) }$</Tooltip>) }
+                    </div>
                   </div>
 
                   <div className="item">

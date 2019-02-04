@@ -32,7 +32,8 @@ const SaverPage = ({
             <div className="item">
               <div className="label">Current price</div>
               <div className="value">
-                { gettingEthPrice ? 'Loading...' : ethPrice }
+                { gettingEthPrice && 'Loading...' }
+                { !gettingEthPrice && (<Tooltip title={ethPrice}>{ formatNumber(ethPrice, 2) }$</Tooltip>) }
               </div>
             </div>
 

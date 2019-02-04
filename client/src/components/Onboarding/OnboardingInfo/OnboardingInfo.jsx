@@ -29,7 +29,10 @@ const OnboardingInfo = ({
 
             <div className="info-item-wrapper">
               <div className="info-label">Current price</div>
-              <div className="info-value">{ gettingEthPrice ? 'Loading...' : ethPrice }</div>
+              <div className="info-value">
+                { gettingEthPrice && 'Loading...' }
+                { !gettingEthPrice && (<Tooltip title={ethPrice}>{ formatNumber(ethPrice, 2) }$</Tooltip>) }
+              </div>
             </div>
 
             <div className="info-item-wrapper">
