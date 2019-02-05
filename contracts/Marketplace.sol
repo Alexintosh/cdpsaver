@@ -6,6 +6,7 @@ import "./DS/DSMath.sol";
 import "./interfaces/TubInterface.sol";
 import "./interfaces/ProxyRegistryInterface.sol";
 
+
 contract Marketplace is DSAuth, DSMath {
 
     struct SaleItem {
@@ -34,7 +35,7 @@ contract Marketplace is DSAuth, DSMath {
 
     function putOnSale(bytes32 _cup, uint _discount) public {
         require(isOwner(msg.sender, _cup), "msg.sender must be proxy which owns the cup");
-        require(_discount < 100, "can't have 100% discount, just put fixedPrice 0");
+        require(_discount < 10000, "can't have 100% discount, just put fixedPrice 0");
 
         itemsArr.push(SaleItem({
             discount: _discount,
@@ -96,10 +97,25 @@ contract Marketplace is DSAuth, DSMath {
         uint collateral = tub.ink(_cup);
         uint debt = rdiv(tub.tab(_cup), tub.tag());
 
-        uint cdpValue = ((collateral - debt) * (100 - (item.discount - fee))) / 100;
-        uint withoutFee = ((collateral - debt) * (100 - item.discount)) / 100;
+        uint cdpValue = ((collateral - debt) * (10000 - (item.discount - fee))) / 10000;
+        uint withoutFee = ((collateral - debt) * (10000 - item.discount)) / 10000;
 
         return (cdpValue, withoutFee);
+    }
+
+    function getCdpValue2(bytes32 _cup) public returns(uint, uint, uint, uint) {
+        uint itemIndex = items[_cup];
+        SaleItem memory item = itemsArr[itemIndex];
+
+        uint ethPrice = uint(tub.pip().read());
+
+        uint collateral = rmul(tub.ink(_cup), tub.per()); // collateral in Eth
+        uint debt = wdiv(tub.tab(_cup), ethPrice);
+
+        uint cdpValue = ((collateral - debt) * (10000 - (item.discount - fee))) / 10000;
+        uint withoutFee = ((collateral - debt) * (10000 - item.discount)) / 10000;
+
+        return (collateral, debt, cdpValue, ethPrice);
     }
 
     function getItemsOnSale() public view returns(SaleItem[] memory) {
