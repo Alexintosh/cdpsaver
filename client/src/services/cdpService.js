@@ -2,10 +2,33 @@ import Maker from '@makerdao/dai';
 import web3 from 'web3';
 import config from '../config/config.json';
 import clientConfig from '../config/clientConfig.json';
-import { proxyRegistryInterfaceContract, SaiTubContract } from './contractRegistryService';
-import { saiTubContractTools } from '../utils/utils';
+import { marketplaceContract, proxyRegistryInterfaceContract, SaiTubContract } from './contractRegistryService';
+import { numStringToBytes32, saiTubContractTools } from '../utils/utils';
 
 export const maker = Maker.create('http', { url: clientConfig.provider });
+
+/**
+ * Calls the marketplace contract that checks if the cdp is for sale
+ *
+ * @param cdpId
+ *
+ * @return {Promise<Boolean>}
+ */
+const isCdpOnSale = cdpId => new Promise(async (resolve, reject) => {
+  try {
+    const contract = await marketplaceContract();
+    const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
+
+    const arrayPosition = await contract.methods.items(cdpIdBytes32).call();
+    const { cup, active } = await contract.methods.itemsArr(arrayPosition).call();
+
+    if (cup !== cdpIdBytes32) return resolve(false);
+
+    resolve(active);
+  } catch (err) {
+    reject(err);
+  }
+});
 
 /**
  * Fetches multiple Cdp data for a cdp id from the Maker library  and formats them
@@ -34,6 +57,7 @@ export const getCdpInfo = (id, useAuth = true) => new Promise(async (resolve, re
       isSafe: await cdp.isSafe(),
       ratio: await cdp.getCollateralizationRatio(), // cdp.getCollateralizationRatio() returns the USD value of the collateral in the CDP divided by the USD value of the Dai debt for the CDP, e.g. 2.5.
       cdpInstance: cdp,
+      onSale: await isCdpOnSale(id),
     });
   } catch (err) {
     reject(err);

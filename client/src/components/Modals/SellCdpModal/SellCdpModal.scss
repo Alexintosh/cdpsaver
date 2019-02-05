@@ -1,4 +1,5 @@
 @import "../../../common/colors";
+@import "../../../common/text";
 
 .sell-cdp-modal-wrapper {
 
@@ -54,5 +55,9 @@
 
   .modal-controls .button {
     width: 124px;
+  }
+
+  &.error .current-sale-price-wrapper {
+      margin-bottom: 40px;
   }
 }

@@ -11,6 +11,11 @@ import {
   BUY_CDP_REQUEST,
   BUY_CDP_SUCCESS,
   BUY_CDP_FAILURE,
+
+  CANCEL_SELL_CDP_REQUEST,
+  CANCEL_SELL_CDP_SUCCESS,
+  CANCEL_SELL_CDP_FAILURE,
+  RESET_CANCEL_SELL_CDP,
 } from '../actionTypes/marketplaceActionTypes';
 
 const INITIAL_STATE = {
@@ -19,8 +24,12 @@ const INITIAL_STATE = {
   fetchingCdpsError: '',
 
   sellingCdp: false,
-  sellingCdpError: '',
   sellingCdpSuccess: false,
+  sellingCdpError: '',
+
+  canceling: false,
+  cancelingSuccess: false,
+  cancelingError: '',
 
   buyingCdp: false,
   buyingCdpError: '',
@@ -51,8 +60,8 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         sellingCdp: false,
-        sellingCdpError: '',
         sellingCdpSuccess: true,
+        sellingCdpError: '',
       };
 
     case SELL_CDP_FAILURE:
@@ -63,12 +72,39 @@ export default (state = INITIAL_STATE, action) => {
         sellingCdpError: payload,
       };
 
+    case CANCEL_SELL_CDP_REQUEST:
+      return { ...state, canceling: true };
+
+    case CANCEL_SELL_CDP_SUCCESS:
+      return {
+        ...state,
+        canceling: false,
+        cancelingSuccess: true,
+        cancelingError: '',
+      };
+
+    case CANCEL_SELL_CDP_FAILURE:
+      return {
+        ...state,
+        canceling: false,
+        cancelingSuccess: false,
+        cancelingError: payload,
+      };
+
     case RESET_SELL_CDP_FORM:
       return {
         ...state,
         sellingCdp: false,
-        sellingCdpError: '',
         sellingCdpSuccess: false,
+        sellingCdpError: '',
+      };
+
+    case RESET_CANCEL_SELL_CDP:
+      return {
+        ...state,
+        canceling: false,
+        cancelingSuccess: false,
+        cancelingError: '',
       };
 
     case BUY_CDP_REQUEST:

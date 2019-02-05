@@ -10,8 +10,9 @@ import './CdpBox.scss';
 const CdpBox = ({
   data: {
     discount, value, price, liquidationPrice, id, ratio,
+    owner,
   },
-  buyingCdp, buyCdp,
+  buyingCdp, buyCdp, proxyAddress,
 }) => (
   <div className="cdp-box-wrapper">
     <div className="main-section-wrapper">
@@ -85,14 +86,19 @@ const CdpBox = ({
     </div>
 
     <div className="buy-wrapper">
-      <button
-        type="button"
-        className="button green uppercase"
-        onClick={buyCdp}
-        disabled={buyingCdp}
+      <Tooltip
+        title="You can't buy your own CDP"
+        disabled={owner !== proxyAddress}
       >
-        { buyingCdp ? 'Buying' : 'Buy' }
-      </button>
+        <button
+          type="button"
+          className="button green uppercase"
+          onClick={buyCdp}
+          disabled={buyingCdp || owner === proxyAddress}
+        >
+          { buyingCdp ? 'Buying' : 'Buy' }
+        </button>
+      </Tooltip>
     </div>
   </div>
 );
@@ -101,10 +107,12 @@ CdpBox.propTypes = {
   data: PropTypes.object.isRequired,
   buyingCdp: PropTypes.bool.isRequired,
   buyCdp: PropTypes.func.isRequired,
+  proxyAddress: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = ({ marketplace }) => ({
+const mapStateToProps = ({ marketplace, general }) => ({
   buyingCdp: marketplace.buyingCdp,
+  proxyAddress: general.proxyAddress,
 });
 
 const mapDispatchToProps = {
