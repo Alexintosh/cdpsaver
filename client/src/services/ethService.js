@@ -364,3 +364,36 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
     reject(err);
   }
 });
+
+/**
+ * Calls our marketplace contract and cancels the listing of our cdp on it
+ *
+ * @param sendTxFunc {Function}
+ * @param account {String}
+ * @param cdpId {Number}
+ * @param proxyAddress {String}
+ *
+ * @return {Promise<Boolean>}
+ */
+export const cancelSellCdp = (sendTxFunc, account, cdpId, proxyAddress) => new Promise(async (resolve, reject) => {
+  try {
+    const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
+
+    const contract = config.MarketplaceProxy;
+    const contractFunction = contract.abi.find(abi => abi.name === 'cancel');
+
+    const params = [marketplaceAddress, cdpIdBytes32];
+    const txParams = { from: account };
+    const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, params);
+
+    const dsProxyContractAbi = dsProxyContractJson.abi;
+    const proxyContract = new window._web3.eth.Contract(dsProxyContractAbi, proxyAddress);
+
+    const promise = proxyContract.methods['execute(address,bytes)'](marketplaceProxyAddress, data).send(txParams);
+    await sendTxFunc(promise);
+
+    resolve(true);
+  } catch (err) {
+    reject(err);
+  }
+});

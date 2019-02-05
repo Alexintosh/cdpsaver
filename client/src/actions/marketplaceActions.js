@@ -18,7 +18,7 @@ import {
   RESET_CANCEL_SELL_CDP,
 } from '../actionTypes/marketplaceActionTypes';
 import { getCdpInfos, maker } from '../services/cdpService';
-import { getItemsOnSale, sellCdp } from '../services/ethService';
+import { getItemsOnSale, sellCdp, cancelSellCdp } from '../services/ethService';
 import { convertDaiToEth } from '../utils/utils';
 import { sendTx } from './notificationsActions';
 
@@ -151,17 +151,21 @@ export const sellCdpButtonTooltipText = (loggingIn, gettingCdp, cdp) => {
   if (!loggingIn && !gettingCdp && !cdp) return 'You don&#39;t own a cdp';
 };
 
-export const cancelSellCdpAction = () => async (dispatch) => {
+/**
+ * De-lists your CDP on the marketplace page
+ *
+ * @return {Function}
+ */
+export const cancelSellCdpAction = () => async (dispatch, getState) => {
   dispatch({ type: CANCEL_SELL_CDP_REQUEST });
 
-  const wait = () => new Promise((resolve) => {
-    setTimeout(() => { resolve(); }, 1000);
-  });
+  const proxySendHandler = promise => sendTx(promise, 'Cancel CDP sale', dispatch, getState);
+  const { proxyAddress, account, cdp } = getState().general;
 
   try {
-    const payload = await wait();
+    await cancelSellCdp(proxySendHandler, account, cdp.id, proxyAddress);
 
-    dispatch({ type: CANCEL_SELL_CDP_SUCCESS, payload });
+    dispatch({ type: CANCEL_SELL_CDP_SUCCESS, payload: { ...cdp, onSale: false } });
     dispatch(getMarketplaceCdpsData());
   } catch (err) {
     dispatch({ type: CANCEL_SELL_CDP_FAILURE, payload: err.message });
