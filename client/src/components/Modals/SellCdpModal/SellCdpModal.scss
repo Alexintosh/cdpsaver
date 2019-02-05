@@ -57,23 +57,7 @@
     width: 124px;
   }
 
-  &.error {
-
-    .current-sale-price-wrapper {
+  &.error .current-sale-price-wrapper {
       margin-bottom: 40px;
-    }
-
-    .modal-error {
-      display: flex;
-      justify-content: center;
-      background: $dark-gray;
-      font-size: $font-size-large;
-      padding-bottom: 40px;
-      color: $dark-red;
-
-      .error-content {
-        max-width: 500px;
-      }
-    }
   }
 }

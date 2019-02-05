@@ -4,7 +4,7 @@ import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { getMarketplaceCdpsData, sellCdpButtonTooltipText } from '../../actions/marketplaceActions';
-import { openSellCdpModal } from '../../actions/modalActions';
+import { openSellCdpModal, openCancelSellCdplModal } from '../../actions/modalActions';
 import { MARKETPLACE_SORT_OPTIONS } from '../../constants/general';
 import CdpBox from './CdpBox/CdpBox';
 import Loader from '../Loader/Loader';
@@ -13,7 +13,7 @@ import './MarketplacePage.scss';
 
 const MarketplacePage = ({
   cdps, fetchingCdpsError, fetchingCdps, getMarketplaceCdpsData, openSellCdpModal,
-  loggingIn, gettingCdp, cdp,
+  loggingIn, gettingCdp, cdp, openCancelSellCdplModal,
 }) => {
   const [mounted, setMounted] = useState(false);
   const [orderBy, setOrderBy] = useState(null);
@@ -82,7 +82,7 @@ const MarketplacePage = ({
             {
               (cdp && cdp.onSale) && (
                 <button
-                  onClick={() => {}}
+                  onClick={openCancelSellCdplModal}
                   disabled={false}
                   className="button green uppercase cancel"
                   type="button"
@@ -133,6 +133,7 @@ MarketplacePage.propTypes = {
   fetchingCdps: PropTypes.bool.isRequired,
   fetchingCdpsError: PropTypes.any.isRequired,
   openSellCdpModal: PropTypes.func.isRequired,
+  openCancelSellCdplModal: PropTypes.func.isRequired,
   loggingIn: PropTypes.bool.isRequired,
   gettingCdp: PropTypes.bool.isRequired,
   cdp: PropTypes.object,
@@ -149,7 +150,7 @@ const mapStateToProps = (({ marketplace, general }) => ({
 }));
 
 const mapDispatchToProps = {
-  getMarketplaceCdpsData, openSellCdpModal,
+  getMarketplaceCdpsData, openSellCdpModal, openCancelSellCdplModal,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MarketplacePage);

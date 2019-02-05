@@ -11,6 +11,11 @@ import {
   BUY_CDP_REQUEST,
   BUY_CDP_SUCCESS,
   BUY_CDP_FAILURE,
+
+  CANCEL_SELL_CDP_REQUEST,
+  CANCEL_SELL_CDP_SUCCESS,
+  CANCEL_SELL_CDP_FAILURE,
+  RESET_CANCEL_SELL_CDP,
 } from '../actionTypes/marketplaceActionTypes';
 import { getCdpInfos, maker } from '../services/cdpService';
 import { getItemsOnSale, sellCdp } from '../services/ethService';
@@ -106,6 +111,15 @@ export const resetSellCdpForm = () => (dispatch) => {
 };
 
 /**
+ * Resets all values in the marketplace reducer tied to the cancel sell cdp
+ *
+ * @return {Function}
+ */
+export const resetCancelSellCdp = () => (dispatch) => {
+  dispatch({ type: RESET_CANCEL_SELL_CDP });
+};
+
+/**
  * Buys selected cdp from one user and transfers it to another
  */
 export const buyCdp = () => async (dispatch) => {
@@ -135,4 +149,21 @@ export const sellCdpButtonTooltipText = (loggingIn, gettingCdp, cdp) => {
   if (loggingIn && !gettingCdp) return 'Logging in';
   if (loggingIn && gettingCdp) return 'Getting cdp';
   if (!loggingIn && !gettingCdp && !cdp) return 'You don&#39;t own a cdp';
+};
+
+export const cancelSellCdpAction = () => async (dispatch) => {
+  dispatch({ type: CANCEL_SELL_CDP_REQUEST });
+
+  const wait = () => new Promise((resolve) => {
+    setTimeout(() => { resolve(); }, 1000);
+  });
+
+  try {
+    const payload = await wait();
+
+    dispatch({ type: CANCEL_SELL_CDP_SUCCESS, payload });
+    dispatch(getMarketplaceCdpsData());
+  } catch (err) {
+    dispatch({ type: CANCEL_SELL_CDP_FAILURE, payload: err.message });
+  }
 };

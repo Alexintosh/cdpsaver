@@ -3,6 +3,7 @@ import {
   SELL_CDP_MODAL,
   CLOSE_CDP_MODAL,
   TRANSFER_CDP_MODAL,
+  CANCEL_SELL_CDP_MODAL,
 } from '../components/Modals/modalTypes';
 
 /**
@@ -50,4 +51,11 @@ export const openCloseCdpModal = () => async (dispatch) => {
  */
 export const openTransferCdpModal = history => async (dispatch) => {
   dispatch(toggleModal(TRANSFER_CDP_MODAL, { width: 481, history }, true));
+};
+
+/**
+ * Opens confirm cancel modal when the user wants to cancel the sale of his cdp
+ */
+export const openCancelSellCdplModal = () => async (dispatch) => {
+  dispatch(toggleModal(CANCEL_SELL_CDP_MODAL, { width: 481 }, true));
 };
