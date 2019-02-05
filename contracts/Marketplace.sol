@@ -21,7 +21,7 @@ contract Marketplace is DSAuth, DSMath {
 
     address public marketplaceProxy;
 
-    uint public fee = 0; // only for testing
+    uint public fee = 100; //1% fee
 
     ProxyRegistryInterface registry = ProxyRegistryInterface(0x64A436ae831C1672AE81F674CAb8B6775df3475C); //KOVAN
     TubInterface tub = TubInterface(0xa71937147b55Deb8a530C7229C442Fd3F31b7db2);
@@ -35,7 +35,8 @@ contract Marketplace is DSAuth, DSMath {
 
     function putOnSale(bytes32 _cup, uint _discount) public {
         require(isOwner(msg.sender, _cup), "msg.sender must be proxy which owns the cup");
-        require(_discount < 10000, "can't have 100% discount, just put fixedPrice 0");
+        require(_discount < 10000, "can't have 100% discount");
+        require(tub.ink(_cup) > 0 && tub.tab(_cup) > 0, "must have collateral and debt to put on sale");
 
         itemsArr.push(SaleItem({
             discount: _discount,
@@ -115,7 +116,7 @@ contract Marketplace is DSAuth, DSMath {
         uint cdpValue = ((collateral - debt) * (10000 - (item.discount - fee))) / 10000;
         uint withoutFee = ((collateral - debt) * (10000 - item.discount)) / 10000;
 
-        return (collateral, debt, cdpValue, ethPrice);
+        return (collateral, debt, cdpValue, withoutFee);
     }
 
     function getItemsOnSale() public view returns(SaleItem[] memory) {

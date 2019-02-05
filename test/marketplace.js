@@ -48,7 +48,7 @@ contract("SaverProxy", accounts => {
 
     it('...should authorize the cdp for sale and put it in the marketplace contract', async () => {
         try {
-            const discount = 1000;
+            const discount = 900;
             console.log(cdpIdBytes32, discount, proxy.address, marketplace.address, marketplaceAuthority.address);
 
             const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'authorizeAndSell'),
@@ -61,7 +61,7 @@ contract("SaverProxy", accounts => {
             console.log(item);
 
             console.log('Collateral: ' + item[0].toString(), 'Debt: ' + item[1].toString(), 
-            'value: ' + item[2].toString(), ' Eth price: ' + item[3].toString());
+            'value: ' + item[2].toString(), ' without fee: ' + item[3].toString());
 
         } catch(err) {
             console.log(err);
