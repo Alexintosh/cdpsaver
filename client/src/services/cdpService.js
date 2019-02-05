@@ -4,6 +4,7 @@ import config from '../config/config.json';
 import clientConfig from '../config/clientConfig.json';
 import { proxyRegistryInterfaceContract, SaiTubContract } from './contractRegistryService';
 import { saiTubContractTools } from '../utils/utils';
+import { isCdpOnSale } from '../services/ethService';
 
 export const maker = Maker.create('http', { url: clientConfig.provider });
 
@@ -34,7 +35,7 @@ export const getCdpInfo = (id, useAuth = true) => new Promise(async (resolve, re
       isSafe: await cdp.isSafe(),
       ratio: await cdp.getCollateralizationRatio(), // cdp.getCollateralizationRatio() returns the USD value of the collateral in the CDP divided by the USD value of the Dai debt for the CDP, e.g. 2.5.
       cdpInstance: cdp,
-      onSale: false,
+      onSale: await isCdpOnSale(id),
     });
   } catch (err) {
     reject(err);

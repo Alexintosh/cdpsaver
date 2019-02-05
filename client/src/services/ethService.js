@@ -364,3 +364,26 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
     reject(err);
   }
 });
+
+/**
+ * Calls the marketplace contract that checks if the cdp is for sale
+ *
+ * @param cdpId
+ *
+ * @return {Promise<Boolean>}
+ */
+export const isCdpOnSale = cdpId => new Promise(async (resolve, reject) => {
+  try {
+    const contract = await marketplaceContract();
+    const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
+
+    const arrayPosition = await contract.methods.items(cdpIdBytes32).call();
+    const { cup, active } = await contract.methods.itemsArr(arrayPosition).call();
+
+    if (cup !== cdpIdBytes32) return resolve(false);
+
+    resolve(active);
+  } catch (err) {
+    reject(err);
+  }
+});
