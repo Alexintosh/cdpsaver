@@ -23,8 +23,10 @@ contract Marketplace is DSAuth, DSMath {
 
     uint public fee = 100; //1% fee
 
-    ProxyRegistryInterface registry = ProxyRegistryInterface(0x64A436ae831C1672AE81F674CAb8B6775df3475C); //KOVAN
-    TubInterface tub = TubInterface(0xa71937147b55Deb8a530C7229C442Fd3F31b7db2);
+
+    // KOVAN
+    ProxyRegistryInterface public registry = ProxyRegistryInterface(0x64A436ae831C1672AE81F674CAb8B6775df3475C);
+    TubInterface public tub = TubInterface(0xa71937147b55Deb8a530C7229C442Fd3F31b7db2);
 
     event OnSale(bytes32 indexed cup, address indexed lad, uint discount);
     event Bought(bytes32 indexed cup, address indexed newLad, address indexed oldLad, uint discount);
@@ -60,7 +62,7 @@ contract Marketplace is DSAuth, DSMath {
         uint cdpPrice;
         uint cdpPriceWithoutFee;
 
-        (cdpPrice, cdpPriceWithoutFee) = getCdpValue(_cup);
+        (cdpPrice, cdpPriceWithoutFee) = getCdpValue(_cup, item.discount);
 
         require(msg.value >= cdpPrice, "Check if enough ether is sent for this cup");
 
@@ -87,21 +89,23 @@ contract Marketplace is DSAuth, DSMath {
         removeItem(itemIndex);
     }
 
+    // ONLY OWNER
     function withdraw() public auth {
         msg.sender.transfer(address(this).balance);
     }
 
-    function getCdpValue(bytes32 _cup) public returns(uint, uint) {
-        uint itemIndex = items[_cup];
-        SaleItem memory item = itemsArr[itemIndex];
+    function getCdpValue(bytes32 _cup, uint _discount) public returns(uint, uint) {
+        uint ethPrice = uint(tub.pip().read());
 
-        uint collateral = tub.ink(_cup);
-        uint debt = rdiv(tub.tab(_cup), tub.tag());
+        uint collateral = rmul(tub.ink(_cup), tub.per()); // collateral in Eth
+        uint debt = wdiv(tub.tab(_cup), ethPrice); // debt in Eth
 
-        uint cdpValue = ((collateral - debt) * (10000 - (item.discount - fee))) / 10000;
-        uint withoutFee = ((collateral - debt) * (10000 - item.discount)) / 10000;
+        // ((collateral - debt) * (10000 - (_discount - fee))) / 10000;
+        uint cdpPrice = wdiv(wmul(sub(collateral, debt), (sub(10000, sub(_discount, fee)))), 10000);
+        // ((collateral - debt) * (10000 - _discount)) / 10000;
+        uint withoutFee = wdiv(wmul(sub(collateral, debt), sub(10000, _discount)), 10000);
 
-        return (cdpValue, withoutFee);
+        return (cdpPrice, withoutFee);
     }
 
     function getCdpValue2(bytes32 _cup) public returns(uint, uint, uint, uint) {
@@ -111,12 +115,14 @@ contract Marketplace is DSAuth, DSMath {
         uint ethPrice = uint(tub.pip().read());
 
         uint collateral = rmul(tub.ink(_cup), tub.per()); // collateral in Eth
-        uint debt = wdiv(tub.tab(_cup), ethPrice);
+        uint debt = wdiv(tub.tab(_cup), ethPrice); // debt in Eth
 
-        uint cdpValue = ((collateral - debt) * (10000 - (item.discount - fee))) / 10000;
-        uint withoutFee = ((collateral - debt) * (10000 - item.discount)) / 10000;
+        uint cdpPrice2 = ((collateral - debt) * (10000 - (item.discount - fee))) / 10000;
+        uint cdpPrice = mul(sub(collateral, debt), (sub(10000, sub(item.discount, fee)))) / 10000;
+        uint withoutFee2 = ((collateral - debt) * (10000 - item.discount)) / 10000;
+        uint withoutFee = mul(sub(collateral, debt), sub(10000, item.discount)) / 10000;
 
-        return (collateral, debt, cdpValue, withoutFee);
+        return (cdpPrice2, cdpPrice, withoutFee2, withoutFee);
     }
 
     function getItemsOnSale() public view returns(SaleItem[] memory) {
@@ -125,6 +131,7 @@ contract Marketplace is DSAuth, DSMath {
 
     function removeItem(uint itemIndex) internal {
         itemsArr[itemIndex] = itemsArr[itemsArr.length - 1];
+        items[itemsArr[itemsArr.length - 1].cup] = itemIndex;
         delete itemsArr[itemsArr.length - 1];
         itemsArr.length--;
     }
