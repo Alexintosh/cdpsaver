@@ -13,8 +13,9 @@ import {
   BUY_CDP_FAILURE,
 } from '../actionTypes/marketplaceActionTypes';
 import { getCdpInfos, maker } from '../services/cdpService';
-import { getItemsOnSale } from '../services/ethService';
+import { getItemsOnSale, sellCdp } from '../services/ethService';
 import { convertDaiToEth } from '../utils/utils';
+import { sendTx } from './notificationsActions';
 
 /**
  * Formats the cdps from the marketplace contract so that they contain all data that is
@@ -79,19 +80,19 @@ export const getMarketplaceCdpsData = () => async (dispatch, getState) => {
  * @param sellPrice {Number}
  * @return {Function}
  */
-export const sellCdp = ({ sellPrice }) => async (dispatch) => {
+export const sellCdpAction = ({ discount }) => async (dispatch, getState) => {
   dispatch({ type: SELL_CDP_REQUEST });
 
-  const wait = () => new Promise((resolve) => {
-    setTimeout(() => { resolve(); }, 1000);
-  });
+  const proxySendHandler = promise => sendTx(promise, 'Sell CDP', dispatch, getState);
+  const { proxyAddress, account, cdp } = getState().general;
 
   try {
-    await wait();
+    await sellCdp(proxySendHandler, account, cdp.id, discount, proxyAddress);
 
-    dispatch({ type: SELL_CDP_SUCCESS });
+    dispatch({ type: SELL_CDP_SUCCESS, payload: { ...cdp, onSale: true } });
+    dispatch(getMarketplaceCdpsData());
   } catch (err) {
-    dispatch({ type: SELL_CDP_FAILURE, payload: err });
+    dispatch({ type: SELL_CDP_FAILURE, payload: err.message });
   }
 };
 

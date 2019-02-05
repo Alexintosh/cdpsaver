@@ -19,7 +19,7 @@ class SellCdpModal extends Component {
   render() {
     const {
       closeModal, pristine, invalid, submittingForm, submittingFormSuccess, cdp,
-      ethPrice, discount,
+      ethPrice, discount, submittingFormError,
     } = this.props;
 
     const value = {
@@ -39,7 +39,7 @@ class SellCdpModal extends Component {
     const hasDiscount = !isNaN(discount) || discount > 0; /* eslint-disable-line */
 
     return (
-      <div className="sell-cdp-modal-wrapper">
+      <div className={`sell-cdp-modal-wrapper ${submittingFormError ? 'error' : ''}`}>
         <ModalHeader closeModal={closeModal} />
 
         <ModalBody>
@@ -84,12 +84,16 @@ class SellCdpModal extends Component {
             submittingFormSuccess && (
               <div className="modal-content">
                 <h3 className="title">You have successfully put your CDP on sale!</h3>
-
-                <div className="actions-wrapper">Add actions to take after this</div>
               </div>
             )
           }
         </ModalBody>
+
+        {
+          submittingFormError && (
+            <div className="modal-error"><div className="error-content">{submittingFormError}</div></div>
+          )
+        }
 
         <div className="modal-controls">
           {
@@ -100,7 +104,7 @@ class SellCdpModal extends Component {
                 type="submit"
                 className="button green uppercase"
               >
-                Sell
+                { submittingForm ? 'Selling' : 'Sell' }
               </button>
             )
           }
@@ -130,6 +134,7 @@ SellCdpModal.propTypes = {
   cdp: PropTypes.object.isRequired,
   ethPrice: PropTypes.number.isRequired,
   discount: PropTypes.number.isRequired,
+  submittingFormError: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -138,6 +143,7 @@ const mapStateToProps = state => ({
   discount: parseFloat(selector(state, 'discount')),
   submittingForm: state.marketplace.sellingCdp,
   submittingFormSuccess: state.marketplace.sellingCdpSuccess,
+  submittingFormError: state.marketplace.sellingCdpError,
   cdp: state.general.cdp,
   ethPrice: state.general.ethPrice,
 });

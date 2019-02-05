@@ -7,6 +7,9 @@ import {
   DaiErc20Contract,
   MakerErc20Contract,
   marketplaceContract,
+  marketplaceAddress,
+  marketplaceAuthorityAddress,
+  marketplaceProxyAddress,
 } from './contractRegistryService';
 import config from '../config/config.json';
 import { numStringToBytes32 } from '../utils/utils';
@@ -319,10 +322,44 @@ export const getItemsOnSale = () => new Promise(async (resolve, reject) => {
 
     res = res.map(({ cup, discount }) => ({
       id: window._web3.utils.hexToNumber(cup),
-      discount: parseFloat(discount),
+      discount: parseFloat(discount) / 100,
     }));
 
     resolve(res);
+  } catch (err) {
+    reject(err);
+  }
+});
+
+/**
+ * Calls our marketplace contract and lists it as on sale there
+ *
+ * @param sendTxFunc {Function}
+ * @param account {String}
+ * @param cdpId {Number}
+ * @param discount {Number}
+ * @param proxyAddress {String}
+ *
+ * @return {Promise<Boolean>}
+ */
+export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => new Promise(async (resolve, reject) => {
+  try {
+    const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
+
+    const contract = config.MarketplaceProxy;
+    const contractFunction = contract.abi.find(abi => abi.name === 'authorizeAndSell');
+
+    const params = [cdpIdBytes32, discount * 100, proxyAddress, marketplaceAddress, marketplaceAuthorityAddress];
+    const txParams = { from: account };
+    const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, params);
+
+    const dsProxyContractAbi = dsProxyContractJson.abi;
+    const proxyContract = new window._web3.eth.Contract(dsProxyContractAbi, proxyAddress);
+
+    const promise = proxyContract.methods['execute(address,bytes)'](marketplaceProxyAddress, data).send(txParams);
+    await sendTxFunc(promise);
+
+    resolve(true);
   } catch (err) {
     reject(err);
   }

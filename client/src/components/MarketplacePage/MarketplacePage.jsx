@@ -60,20 +60,37 @@ const MarketplacePage = ({
               </div>
             </div>
 
-            <Tooltip
-              title={sellCdpButtonTooltipText(loggingIn, gettingCdp, cdp)}
-              disabled={cdp !== null}
-            >
-              <button
-                onClick={openSellCdpModal}
-                disabled={cdp === null}
-                className="button green uppercase"
-                type="button"
-              >
-                Sell
-                <span>Cdp</span>
-              </button>
-            </Tooltip>
+            {
+              (!cdp || (cdp && !cdp.onSale)) && (
+                <Tooltip
+                  title={sellCdpButtonTooltipText(loggingIn, gettingCdp, cdp)}
+                  disabled={cdp !== null}
+                >
+                  <button
+                    onClick={openSellCdpModal}
+                    disabled={cdp === null}
+                    className="button green uppercase"
+                    type="button"
+                  >
+                    Sell
+                    <span>Cdp</span>
+                  </button>
+                </Tooltip>
+              )
+            }
+
+            {
+              (cdp && cdp.onSale) && (
+                <button
+                  onClick={() => {}}
+                  disabled={false}
+                  className="button green uppercase cancel"
+                  type="button"
+                >
+                  Cancel sell
+                </button>
+              )
+            }
           </div>
 
           {

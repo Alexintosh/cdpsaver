@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import InputComponent from '../../../Forms/InputComponent';
 import sellCdpFormValidator from './sellCdpFormValidator';
-import { sellCdp } from '../../../../actions/marketplaceActions';
+import { sellCdpAction } from '../../../../actions/marketplaceActions';
 
 const SellCdpForm = ({ handleSubmit, onSubmit }) => (
   <form
@@ -37,7 +37,7 @@ const SellCdpFormComp = reduxForm({
 })(SellCdpForm);
 
 const mapDispatchToProps = {
-  onSubmit: sellCdp,
+  onSubmit: sellCdpAction,
 };
 
 export default connect(null, mapDispatchToProps)(SellCdpFormComp);
