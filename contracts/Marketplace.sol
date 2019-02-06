@@ -129,9 +129,22 @@ contract Marketplace is DSAuth, DSMath {
         return itemsArr;
     }
 
+    function isOnSale(bytes32 _cup) public view returns (bool) {
+        uint pos = items[_cup];
+
+        if (itemsArr.length == 0 || pos >= itemsArr.length) {
+            return false;
+        } else {
+            return itemsArr[pos].active == true && itemsArr[pos].cup == _cup;
+        }
+    }
+
     function removeItem(uint itemIndex) internal {
         itemsArr[itemIndex] = itemsArr[itemsArr.length - 1];
+
         items[itemsArr[itemsArr.length - 1].cup] = itemIndex;
+        // items[_cup] = 0;
+
         delete itemsArr[itemsArr.length - 1];
         itemsArr.length--;
     }

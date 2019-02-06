@@ -67,10 +67,10 @@ contract("SaverProxy", accounts => {
 
     it('...should put 2 cdps on sale and cancel the first one', async () => {
         try {
+           
             const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'authorizeAndSell'),
             [cdpIdBytes32, 100, proxy.address, marketplace.address, marketplaceAuthority.address]);
             await proxy.methods['execute(address,bytes)'](marketplaceProxy.address, data, {from: seller});
-
 
             const data2 = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'authorizeAndSell'),
             [cdpSecondIdBytes32, 200, proxy.address, marketplace.address, marketplaceAuthority.address]);
@@ -79,9 +79,16 @@ contract("SaverProxy", accounts => {
             const data3 = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'cancel'),[marketplace.address, cdpIdBytes32]);
             await proxy.methods['execute(address,bytes)'](marketplaceProxy.address, data3, {from: seller});
 
-            const items = await marketplace.getItemsOnSale.call();
+            // const data4 = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'cancel'),[marketplace.address, cdpSecondIdBytes32]);
+            // await proxy.methods['execute(address,bytes)'](marketplaceProxy.address, data4, {from: seller});
 
-            console.log(items);
+            let res = await marketplace.isOnSale.call(cdpIdBytes32);
+
+            console.log('First item is on sale: ' + res);
+
+            res = await marketplace.isOnSale.call(cdpSecondIdBytes32);
+
+            console.log('Second item is on sale: ' + res);
 
         } catch(err) {
             console.log(err);
