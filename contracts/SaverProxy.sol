@@ -15,6 +15,8 @@ contract SaverProxy is DSMath {
     event Repay(address indexed owner, uint collateralAmount, uint daiAmount);
     event Boost(address indexed owner, uint daiAmount, uint collateralAmount);
     
+    // enum {};
+
     //KOVAN
     address constant WETH_ADDRESS = 0xd0A1E359811322d97991E03f863a0C30C2cF029C;
     address constant DAI_ADDRESS = 0xC4375B7De8af5a38a93548eb8453a498222C4fF2;
@@ -130,4 +132,12 @@ contract SaverProxy is DSMath {
         tub.exit(ink);
         tub.gem().withdraw(jam);
     }
+
+    // function getWrapperAddress(uint8 _wrapperType) public view returns (address) {
+    //     if (_wrapperType == 1) {
+    //         return "";
+    //     } else if () {
+    //         return "";
+    //     }
+    // }
 }
