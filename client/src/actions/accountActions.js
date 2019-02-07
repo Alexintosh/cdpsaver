@@ -99,7 +99,7 @@ export const getCdp = () => async (dispatch, getState) => {
     dispatch({ type: GET_CDP_SUCCESS, payload });
     dispatch({ type: ADD_PROXY_ADDRESS, payload: proxyAddress });
   } catch (err) {
-    dispatch({ type: GET_CDP_FAILURE, payload: err });
+    dispatch({ type: GET_CDP_FAILURE, payload: err.message });
   }
 };
 

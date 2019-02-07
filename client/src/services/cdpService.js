@@ -19,12 +19,8 @@ const isCdpOnSale = cdpId => new Promise(async (resolve, reject) => {
     const contract = await marketplaceContract();
     const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
 
-    const arrayPosition = await contract.methods.items(cdpIdBytes32).call();
-    const { cup, active } = await contract.methods.itemsArr(arrayPosition).call();
-
-    if (cup !== cdpIdBytes32) return resolve(false);
-
-    resolve(active);
+    const onSale = await contract.methods.isOnSale(cdpIdBytes32).call();
+    resolve(onSale);
   } catch (err) {
     reject(err);
   }
