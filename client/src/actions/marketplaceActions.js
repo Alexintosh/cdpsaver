@@ -18,9 +18,10 @@ import {
   RESET_CANCEL_SELL_CDP,
 } from '../actionTypes/marketplaceActionTypes';
 import { getCdpInfos, maker } from '../services/cdpService';
-import { getItemsOnSale, sellCdp, cancelSellCdp } from '../services/ethService';
+import { getItemsOnSale, sellCdp, cancelSellCdp, buyCdp } from '../services/ethService';
 import { convertDaiToEth } from '../utils/utils';
 import { sendTx } from './notificationsActions';
+import { getCdp } from './accountActions';
 
 /**
  * Formats the cdps from the marketplace contract so that they contain all data that is
@@ -121,18 +122,22 @@ export const resetCancelSellCdp = () => (dispatch) => {
 
 /**
  * Buys selected cdp from one user and transfers it to another
+ *
+ * @param cdpId {Number}
+ * @param discount {Number}
  */
-export const buyCdp = () => async (dispatch) => {
+export const buyCdpAction = (cdpId, discount) => async (dispatch, getState) => {
   dispatch({ type: BUY_CDP_REQUEST });
 
-  const wait = () => new Promise((resolve) => {
-    setTimeout(() => { resolve(); }, 1000);
-  });
+  const proxySendHandler = promise => sendTx(promise, 'Buy CDP', dispatch, getState);
+  const { account } = getState().general;
 
   try {
-    const payload = await wait();
+    const payload = await buyCdp(proxySendHandler, cdpId, account, discount);
 
     dispatch({ type: BUY_CDP_SUCCESS, payload });
+    dispatch(getMarketplaceCdpsData());
+    dispatch(getCdp());
   } catch (err) {
     dispatch({ type: BUY_CDP_FAILURE, payload: err.message });
   }

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import { formatNumber } from '../../../utils/utils';
-import { buyCdp } from '../../../actions/marketplaceActions';
+import { buyCdpAction } from '../../../actions/marketplaceActions';
 
 import './CdpBox.scss';
 
@@ -12,7 +12,7 @@ const CdpBox = ({
     discount, value, price, liquidationPrice, id, ratio,
     owner,
   },
-  buyingCdp, buyCdp, proxyAddress,
+  buyingCdp, buyCdpAction, proxyAddress,
 }) => (
   <div className="cdp-box-wrapper">
     <div className="main-section-wrapper">
@@ -93,7 +93,7 @@ const CdpBox = ({
         <button
           type="button"
           className="button green uppercase"
-          onClick={buyCdp}
+          onClick={() => { buyCdpAction(id, discount * 100); }}
           disabled={buyingCdp || owner === proxyAddress}
         >
           { buyingCdp ? 'Buying' : 'Buy' }
@@ -106,7 +106,7 @@ const CdpBox = ({
 CdpBox.propTypes = {
   data: PropTypes.object.isRequired,
   buyingCdp: PropTypes.bool.isRequired,
-  buyCdp: PropTypes.func.isRequired,
+  buyCdpAction: PropTypes.func.isRequired,
   proxyAddress: PropTypes.string.isRequired,
 };
 
@@ -116,7 +116,7 @@ const mapStateToProps = ({ marketplace, general }) => ({
 });
 
 const mapDispatchToProps = {
-  buyCdp,
+  buyCdpAction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CdpBox);

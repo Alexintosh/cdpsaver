@@ -31,7 +31,7 @@ import {
   PAYBACK_DAI_SUCCESS,
 } from '../actionTypes/dashboardActionTypes';
 import { LS_ACCOUNT } from '../constants/general';
-import { SELL_CDP_SUCCESS } from '../actionTypes/marketplaceActionTypes';
+import { CANCEL_SELL_CDP_SUCCESS, SELL_CDP_SUCCESS } from '../actionTypes/marketplaceActionTypes';
 
 const lsAccountType = JSON.parse(localStorage.getItem(LS_ACCOUNT));
 
@@ -94,6 +94,7 @@ export default (state = INITIAL_STATE, action) => {
     case REPAY_DAI_SUCCESS:
     case SELL_CDP_SUCCESS:
     case PAYBACK_DAI_SUCCESS:
+    case CANCEL_SELL_CDP_SUCCESS:
       return {
         ...state,
         cdp: {

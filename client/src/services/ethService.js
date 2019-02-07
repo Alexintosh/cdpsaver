@@ -397,3 +397,31 @@ export const cancelSellCdp = (sendTxFunc, account, cdpId, proxyAddress) => new P
     reject(err);
   }
 });
+
+/**
+ * Calls our marketplace contract and buys a cdp
+ *
+ * @param sendTxFunc {Function}
+ * @param account {String}
+ * @param cdpId {Number}
+ * @param discount {Number}
+ *
+ * @return {Promise<Boolean>}
+ */
+export const buyCdp = (sendTxFunc, cdpId, account, discount) => new Promise(async (resolve, reject) => {
+  const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
+
+  try {
+    const contract = await marketplaceContract();
+    const cdpValue = await contract.methods.getCdpValue(cdpIdBytes32, discount).call();
+
+    const txParams = { from: account, value: cdpValue[0].toString() };
+
+    const promise = contract.methods.buy(cdpIdBytes32).send(txParams);
+    await sendTxFunc(promise);
+
+    resolve(true);
+  } catch (err) {
+    reject(err);
+  }
+});
