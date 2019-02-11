@@ -3,7 +3,7 @@ import web3 from 'web3';
 import config from '../config/config.json';
 import clientConfig from '../config/clientConfig.json';
 import { marketplaceContract, proxyRegistryInterfaceContract, SaiTubContract } from './contractRegistryService';
-import { numStringToBytes32, saiTubContractTools } from '../utils/utils';
+import { isEmptyBytes, numStringToBytes32, saiTubContractTools } from '../utils/utils';
 
 export const maker = Maker.create('http', { url: clientConfig.provider });
 
@@ -144,20 +144,22 @@ export const getAddressCdp = (address, tryWithAccount = false) => new Promise(as
   try {
     const proxyAddress = await proxyRegistryInterfaceContract().methods.proxies(address).call();
 
-    if (!proxyAddress && !tryWithAccount) return resolve(null);
+    if (isEmptyBytes(proxyAddress) && !tryWithAccount) return resolve(await getAddressCdp(address, true));
 
     const addressToCheckWith = tryWithAccount ? address : proxyAddress;
 
     const contract = await SaiTubContract();
     let cdpId = await getCdpIdFromLogNewCup(contract, addressToCheckWith);
+    let cdp = null;
 
     // If the cdpId is not found in the LogNewCup event,
     // try searching in the LogNoteEvent
     if (!cdpId) cdpId = await getCdpIdFromLogNote(contract, addressToCheckWith);
-    if (!cdpId) return resolve(await getAddressCdp(address, true));
+    if (!cdpId && !tryWithAccount) return resolve(await getAddressCdp(address, true));
 
-    const cdp = await getCdpInfo(cdpId, true);
-    resolve({ proxyAddress, cdp });
+    if (cdpId) cdp = await getCdpInfo(cdpId, true);
+
+    resolve({ proxyAddress: isEmptyBytes(proxyAddress) ? '' : proxyAddress, cdp });
   } catch (err) {
     reject(err);
   }

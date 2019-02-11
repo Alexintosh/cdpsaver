@@ -29,7 +29,7 @@ class OnboardingRoutes extends Component {
 
   render() {
     const {
-      match, hasCdp, account, connectingProvider, gettingCdp, loggingIn,
+      match, hasCdp, account, connectingProvider, gettingCdp, loggingIn, onboardingFinished,
     } = this.props;
     const showloggingIn = loggingIn && (!connectingProvider && !gettingCdp);
     const showLoader = connectingProvider || gettingCdp || showloggingIn;
@@ -55,6 +55,8 @@ class OnboardingRoutes extends Component {
     if (hasCdp && this.onboardingWizardLinks.length === 3) {
       this.onboardingWizardLinks.splice(0, 1);
     }
+
+    if (hasCdp && onboardingFinished) return (<Redirect to="/dashboard/manage" />);
 
     return (
       <div className="onboarding-wrapper">
@@ -82,18 +84,20 @@ OnboardingRoutes.propTypes = {
   connectingProvider: PropTypes.bool.isRequired,
   gettingCdp: PropTypes.bool.isRequired,
   loggingIn: PropTypes.bool.isRequired,
+  onboardingFinished: PropTypes.bool.isRequired,
 };
 
 const mapDispatchToProps = {
   resetOnboardingWizard,
 };
 
-const mapStateToProps = ({ general }) => ({
+const mapStateToProps = ({ general, onboarding }) => ({
   hasCdp: !!general.cdp,
   account: general.account,
   connectingProvider: general.connectingProvider,
   gettingCdp: general.gettingCdp,
   loggingIn: general.loggingIn,
+  onboardingFinished: onboarding.onboardingFinished,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OnboardingRoutes);

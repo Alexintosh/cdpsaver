@@ -72,13 +72,14 @@ export const sendTx = (txPromise, title, dispatch, getState) => new Promise(asyn
 
         dispatch(changeNotification(id, { tx: hash, description }));
       })
-      .on('receipt', ({ transactionHash }) => {
+      .on('receipt', (receipt) => {
+        const { transactionHash } = receipt;
         const description = `Transaction ${formatTx(transactionHash)} was confirmed`;
 
         dispatch(changeNotification(id, { type: 'success', description }));
         closeThisNotification();
 
-        resolve();
+        resolve(receipt);
       })
       .on('error', (err) => {
         dispatch(changeNotification(id, { tx: '', type: 'error', description: err.message }));

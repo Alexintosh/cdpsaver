@@ -16,13 +16,15 @@
       margin-bottom: 26px;
     }
 
-    .content-text {
+    .content-text, .content-error {
       text-align: center;
       color: $gray;
       line-height: 21px;
       max-width: 550px;
       margin-bottom: 68px;
     }
+
+    .content-error { color: $dark-red; }
 
     .button {
       width: 188px;

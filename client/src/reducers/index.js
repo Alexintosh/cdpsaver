@@ -7,7 +7,7 @@ import modalReducer from './modalReducer';
 import notificationReducer from './notificationReducer';
 import notificationsReducer from './notificationsReducer';
 import dashboardReducer from './dashboardReducer';
-
+import migrateReducer from './migrateReducer';
 
 export default combineReducers({
   form: formReducer,
@@ -18,4 +18,5 @@ export default combineReducers({
   notification: notificationReducer,
   notifications: notificationsReducer,
   dashboard: dashboardReducer,
+  migrate: migrateReducer,
 });

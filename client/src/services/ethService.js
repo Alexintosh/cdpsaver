@@ -10,6 +10,8 @@ import {
   marketplaceAddress,
   marketplaceAuthorityAddress,
   marketplaceProxyAddress,
+  proxyRegistryInterfaceContract,
+  TubInterfaceContract,
 } from './contractRegistryService';
 import config from '../config/config.json';
 import { numStringToBytes32 } from '../utils/utils';
@@ -418,6 +420,50 @@ export const buyCdp = (sendTxFunc, cdpId, account, discount) => new Promise(asyn
     const txParams = { from: account, value: cdpValue[0].toString() };
 
     const promise = contract.methods.buy(cdpIdBytes32).send(txParams);
+    await sendTxFunc(promise);
+
+    resolve(true);
+  } catch (err) {
+    reject(err);
+  }
+});
+
+/**
+ * Creates a DSProxy contract for a user that does not have one
+ *
+ * @param sendTxFunc {Function}
+ * @param account {String}
+ * @return {Promise<{String}>}
+ */
+export const createDSProxy = (sendTxFunc, account) => new Promise(async (resolve, reject) => {
+  try {
+    const contract = await proxyRegistryInterfaceContract();
+
+    const promise = contract.methods.build(account).send({ from: account });
+    await sendTxFunc(promise);
+
+    resolve(true);
+  } catch (err) {
+    reject(err);
+  }
+});
+
+/**
+ * Transfers the cdp from the user to the proxyAddress
+ *
+ * @param sendTxFunc {Function}
+ * @param cdpId {Number}
+ * @param proxyAddress {String}
+ * @param account {String}
+ * @return {Promise<any>}
+ */
+export const migrateCdp = (sendTxFunc, cdpId, proxyAddress, account) => new Promise(async (resolve, reject) => {
+  const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
+
+  try {
+    const contract = await TubInterfaceContract();
+
+    const promise = contract.methods.give(cdpIdBytes32, proxyAddress).send({ from: account });
     await sendTxFunc(promise);
 
     resolve(true);
