@@ -6,7 +6,7 @@ import Loader from '../Loader/Loader';
 
 const PrivateRoute = ({
   component: Component, account, match, connectingProvider, cdp,
-  onboardingFinished, gettingCdp, loggingIn, ...rest
+  onboardingFinished, gettingCdp, loggingIn, migratePage, ...rest
 }) => {
   const showloggingIn = loggingIn && (!connectingProvider && !gettingCdp);
   const showLoader = connectingProvider || gettingCdp || showloggingIn;
@@ -27,6 +27,7 @@ const PrivateRoute = ({
 
   if (!loggingIn && !account) return (<Redirect to={{ pathname: '/connect', state: { to: rest.path } }} />);
   if (!loggingIn && (!cdp || !onboardingFinished)) return (<Redirect to="/onboarding" />);
+  if (!loggingIn && cdp && !migratePage && cdp.owner === account) return (<Redirect to="/migrate" />);
 
   return (
     <Route {...rest} render={props => (<Component {...props} />)} />
@@ -36,6 +37,7 @@ const PrivateRoute = ({
 PrivateRoute.defaultProps = {
   account: '',
   cdp: null,
+  migratePage: false,
 };
 
 PrivateRoute.propTypes = {
@@ -45,6 +47,7 @@ PrivateRoute.propTypes = {
   onboardingFinished: PropTypes.bool.isRequired,
   gettingCdp: PropTypes.bool.isRequired,
   loggingIn: PropTypes.bool.isRequired,
+  migratePage: PropTypes.bool,
   account: PropTypes.string,
   cdp: PropTypes.object,
 };

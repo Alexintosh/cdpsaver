@@ -5,8 +5,11 @@ import PropTypes from 'prop-types';
 import OnboardingWizardMonitoringForm from './OnboardingMonitoringForm/OnboardingMonitoringForm';
 
 import './OnboardingMonitoring.scss';
+import { finishOnboarding } from '../../../actions/onboardingActions';
 
-const OnboardingMonitoring = ({ cdp, subscribingToMonitoringSuccess }) => {
+const OnboardingMonitoring = ({
+  cdp, subscribingToMonitoringSuccess, history, finishOnboarding,
+}) => {
   if (!cdp) return (<Redirect to="/onboarding/create-cdp" />);
 
   return (
@@ -47,9 +50,9 @@ const OnboardingMonitoring = ({ cdp, subscribingToMonitoringSuccess }) => {
             Previous
           </Link>
 
-          <Link to="/onboarding/transfer" className="button green uppercase">
-            Next
-          </Link>
+          <button type="button" className="button green uppercase" onClick={() => { finishOnboarding(history); }}>
+            Finish
+          </button>
         </div>
       </div>
     </div>
@@ -61,6 +64,8 @@ OnboardingMonitoring.defaultProps = {
 };
 
 OnboardingMonitoring.propTypes = {
+  history: PropTypes.object.isRequired,
+  finishOnboarding: PropTypes.func.isRequired,
   cdp: PropTypes.object,
   subscribingToMonitoringSuccess: PropTypes.bool.isRequired,
 };
@@ -70,4 +75,8 @@ const mapStateToProps = ({ general, onboarding }) => ({
   subscribingToMonitoringSuccess: onboarding.subscribingToMonitoringSuccess,
 });
 
-export default connect(mapStateToProps)(OnboardingMonitoring);
+const mapDispatchToProps = {
+  finishOnboarding,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(OnboardingMonitoring);

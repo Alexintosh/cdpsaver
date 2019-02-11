@@ -15,6 +15,7 @@ import MarketplacePage from '../MarketplacePage/MarketplacePage';
 import Notifications from '../Notifications/Notifications';
 import Connect from '../Connect/Connect';
 import TxNotifications from '../TxNotifications/TxNotifications';
+import MigratePage from '../MigratePage/MigratePage';
 
 import './App.scss';
 import '../../common/icons/icons.scss';
@@ -42,6 +43,7 @@ class RoutesWrapper extends Component {
               <Route path="/connect" component={Connect} />
               <Route path="/onboarding" component={OnboardingRoutes} />
               <Route path="/marketplace" component={MarketplacePage} />
+              <PrivateRoute path="/migrate" component={MigratePage} migratePage />
               <PrivateRoute path="/dashboard" component={DashboardRoutes} />
               <Route path="*" component={Page404} />
             </Switch>

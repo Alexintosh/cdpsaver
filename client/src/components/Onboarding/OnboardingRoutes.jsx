@@ -8,7 +8,6 @@ import SubHeaderRoutes from '../SubHeaderRoutes/SubHeaderRoutes';
 import OnboardingCreateCdp from './OnboardingCreateCdp/OnboardingCreateCdp';
 import OnboardingInfo from './OnboardingInfo/OnboardingInfo';
 import OnboardingMonitoring from './OnboardingMonitoring/OnboardingMonitoring';
-import OnboardingTransfer from './OnboardingTransfer/OnboardingTransfer';
 import Loader from '../Loader/Loader';
 
 import './Onboarding.scss';
@@ -21,7 +20,6 @@ class OnboardingRoutes extends Component {
       { label: 'Create CDP', pathname: '/onboarding/create-cdp' },
       { label: 'Info', pathname: '/onboarding/info' },
       { label: 'Monitoring', pathname: '/onboarding/monitoring' },
-      { label: 'Transfer', pathname: '/onboarding/transfer' },
     ];
   }
 
@@ -54,7 +52,7 @@ class OnboardingRoutes extends Component {
       return (<Redirect to={{ pathname: '/connect', state: { to: '/dashboard/manage' } }} />);
     }
 
-    if (hasCdp && this.onboardingWizardLinks.length === 4) {
+    if (hasCdp && this.onboardingWizardLinks.length === 3) {
       this.onboardingWizardLinks.splice(0, 1);
     }
 
@@ -70,7 +68,6 @@ class OnboardingRoutes extends Component {
           />
           <Route path={`${match.path}/info`} component={OnboardingInfo} />
           <Route path={`${match.path}/monitoring`} component={OnboardingMonitoring} />
-          <Route path={`${match.path}/transfer`} component={OnboardingTransfer} />
         </React.Fragment>
       </div>
     );
