@@ -18,7 +18,9 @@ import {
   RESET_CANCEL_SELL_CDP,
 } from '../actionTypes/marketplaceActionTypes';
 import { getCdpInfos, maker } from '../services/cdpService';
-import { getItemsOnSale, sellCdp, cancelSellCdp, buyCdp } from '../services/ethService';
+import {
+  getItemsOnSale, sellCdp, cancelSellCdp, buyCdp,
+} from '../services/ethService';
 import { convertDaiToEth } from '../utils/utils';
 import { sendTx } from './notificationsActions';
 import { getCdp } from './accountActions';

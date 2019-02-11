@@ -89,9 +89,14 @@ export const getCdp = () => async (dispatch, getState) => {
     const { account } = getState().general;
     const { cdp, proxyAddress } = await getAddressCdp(account);
 
-    if (cdp.owner !== proxyAddress) {
-      payload = null;
-    } else {
+    if (!cdp) payload = null;
+
+    // SWITCH TO MIGRATE SCREEN
+    if (cdp.owner === account) {
+      // payload = null;
+    }
+
+    if (cdp) {
       const newData = await getUpdatedCdpInfo(cdp.depositedETH.toNumber(), cdp.debtDai.toNumber());
       payload = { ...cdp, ...newData };
     }

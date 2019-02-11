@@ -131,23 +131,30 @@ export const getCdpIdFromLogNewCup = (contract, address) => new Promise(async (r
 });
 
 /**
- * Checks if the connected user has a cdp for their address
+ * Checks if the connected user has a cdp for their account or proxyAddress
  *
+ * @param address {String}
+ * @param tryWithAccount {Boolean}
+ *
+ * @return {Promise<Object>}
  */
-export const getAddressCdp = address => new Promise(async (resolve, reject) => {
+export const getAddressCdp = (address, tryWithAccount = false) => new Promise(async (resolve, reject) => {
   if (!address) return reject('user has no address');
 
   try {
     const proxyAddress = await proxyRegistryInterfaceContract().methods.proxies(address).call();
 
-    if (!proxyAddress) return resolve(null);
+    if (!proxyAddress && !tryWithAccount) return resolve(null);
+
+    const addressToCheckWith = tryWithAccount ? address : proxyAddress;
 
     const contract = await SaiTubContract();
-    let cdpId = await getCdpIdFromLogNewCup(contract, proxyAddress);
+    let cdpId = await getCdpIdFromLogNewCup(contract, addressToCheckWith);
 
     // If the cdpId is not found in the LogNewCup event,
     // try searching in the LogNoteEvent
-    if (!cdpId) cdpId = await getCdpIdFromLogNote(contract, proxyAddress);
+    if (!cdpId) cdpId = await getCdpIdFromLogNote(contract, addressToCheckWith);
+    if (!cdpId) return resolve(await getAddressCdp(address, true));
 
     const cdp = await getCdpInfo(cdpId, true);
     resolve({ proxyAddress, cdp });
