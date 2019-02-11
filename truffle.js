@@ -27,6 +27,11 @@ module.exports = {
       network_id: '*',
     },
   },
+  compilers: {
+    solc: {
+      // version: "0.4.24",
+    }
+ },
   contracts_build_directory: path.join(__dirname, "client/src/contracts")
 
 }

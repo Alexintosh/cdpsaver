@@ -30,8 +30,6 @@ module.exports = function(deployer, network) {
     deployer.deploy(MarketplaceProxy, {gas: 6720000, overwrite: deployAgain})
     .then(() => {
       return deployer.deploy(Marketplace, MarketplaceProxy.address, {gas: 6720000, overwrite: deployAgain});
-    }).then(() => {
-      return deployer.deploy(MarketplaceAuthority, Marketplace.address, {gas: 6720000, overwrite: deployAgain});
     });
 
   } else {

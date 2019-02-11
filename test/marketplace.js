@@ -40,62 +40,63 @@ contract("SaverProxy", accounts => {
 
   it('...should print some addresses', async () => {
     console.log(`Marketplace addr: ${marketplace.address}, Marketplace authority addr: ${marketplaceAuthority.address},
-    Marketplace proxy addr: ${marketplaceProxy.address}`);
+    Marketplace proxy addr: ${marketplaceProxy.address}, Proxy addr: ${proxy.address}`);
   });
 
-    // it('...should authorize the cdp for sale and put it in the marketplace contract', async () => {
-    //     try {
-    //         const discount = 900;
-    //         console.log(cdpIdBytes32, discount, proxy.address, marketplace.address, marketplaceAuthority.address);
-
-    //         const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'authorizeAndSell'),
-    //         [cdpIdBytes32, discount, proxy.address, marketplace.address, marketplaceAuthority.address]);
-
-    //         await proxy.methods['execute(address,bytes)'](marketplaceProxy.address, data, {from: seller});
-
-    //         const item = await marketplace.getCdpValue2.call(cdpIdBytes32);
-
-    //         console.log(item);
-
-    //         console.log('Collateral: ' + item[0].toString(), 'Debt: ' + item[1].toString(), 
-    //         'value: ' + item[2].toString(), ' without fee: ' + item[3].toString());
-
-    //     } catch(err) {
-    //         console.log(err);
-    //     }
-    // });
-
-    it('...should put 2 cdps on sale and cancel the first one', async () => {
+    it('...should authorize the cdp for sale and put it in the marketplace contract', async () => {
         try {
-            let res = await marketplace.getGovFee.call(cdpIdBytes32);
+            const discount = 900;
+            console.log(cdpIdBytes32, discount, proxy.address, marketplace.address);
 
-            console.log(res.toString());
-            // const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'authorizeAndSell'),
-            // [cdpIdBytes32, 100, proxy.address, marketplace.address, marketplaceAuthority.address]);
-            // await proxy.methods['execute(address,bytes)'](marketplaceProxy.address, data, {from: seller});
+            const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'authorizeAndSell'),
+            [cdpIdBytes32, discount, proxy.address, marketplace.address]);
 
-            // const data2 = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'authorizeAndSell'),
-            // [cdpSecondIdBytes32, 200, proxy.address, marketplace.address, marketplaceAuthority.address]);
-            // await proxy.methods['execute(address,bytes)'](marketplaceProxy.address, data2, {from: seller});
+            await proxy.methods['execute(address,bytes)'](marketplaceProxy.address, data, {from: seller});
 
-            // const data3 = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'cancel'),[marketplace.address, cdpIdBytes32]);
-            // await proxy.methods['execute(address,bytes)'](marketplaceProxy.address, data3, {from: seller});
+            const items = await marketplace.items.call(cdpIdBytes32);
 
-            // // const data4 = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'cancel'),[marketplace.address, cdpSecondIdBytes32]);
-            // // await proxy.methods['execute(address,bytes)'](marketplaceProxy.address, data4, {from: seller});
+            const authority = await proxy.authority.call();
 
-            // let res = await marketplace.isOnSale.call(cdpIdBytes32);
+            console.log('Authority set: ', authority.toString());
 
-            // console.log('First item is on sale: ' + res);
-
-            // res = await marketplace.isOnSale.call(cdpSecondIdBytes32);
-
-            // console.log('Second item is on sale: ' + res);
+            console.log(items);
 
         } catch(err) {
             console.log(err);
         }
     });
+
+    // it('...should put 2 cdps on sale and cancel the first one', async () => {
+    //     try {
+    //         let res = await marketplace.getGovFee.call(cdpIdBytes32);
+
+    //         console.log(res.toString());
+    //         // const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'authorizeAndSell'),
+    //         // [cdpIdBytes32, 100, proxy.address, marketplace.address, marketplaceAuthority.address]);
+    //         // await proxy.methods['execute(address,bytes)'](marketplaceProxy.address, data, {from: seller});
+
+    //         // const data2 = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'authorizeAndSell'),
+    //         // [cdpSecondIdBytes32, 200, proxy.address, marketplace.address, marketplaceAuthority.address]);
+    //         // await proxy.methods['execute(address,bytes)'](marketplaceProxy.address, data2, {from: seller});
+
+    //         // const data3 = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'cancel'),[marketplace.address, cdpIdBytes32]);
+    //         // await proxy.methods['execute(address,bytes)'](marketplaceProxy.address, data3, {from: seller});
+
+    //         // // const data4 = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'cancel'),[marketplace.address, cdpSecondIdBytes32]);
+    //         // // await proxy.methods['execute(address,bytes)'](marketplaceProxy.address, data4, {from: seller});
+
+    //         // let res = await marketplace.isOnSale.call(cdpIdBytes32);
+
+    //         // console.log('First item is on sale: ' + res);
+
+    //         // res = await marketplace.isOnSale.call(cdpSecondIdBytes32);
+
+    //         // console.log('Second item is on sale: ' + res);
+
+    //     } catch(err) {
+    //         console.log(err);
+    //     }
+    // });
 
 //   it('...should fail to buy a cdp on marketplace, because not enough money sent', async () => {
 //     try {
@@ -110,17 +111,19 @@ contract("SaverProxy", accounts => {
 //     }
 //   });
 
-//   it('...should buy a cdp on marketplace', async () => {
-//     try {
-//         const cdpValue = await marketplace.getCdpValue.call(cdpIdBytes32);
+  it('...should buy a cdp on marketplace', async () => {
+    try {
+        const cdpValue = await marketplace.getCdpValue.call(cdpIdBytes32);
 
-//         const txBuy = await marketplace.buy(cdpIdBytes32, {from: buyer, value: cdpValue[0].toString()});
+        console.log('cdpValue ', cdpValue[0].toString());
 
-//         console.log(txBuy);
-//     } catch(err) {
-//         console.log(err);
-//     }
-//   });
+        const txBuy = await marketplace.buy(cdpIdBytes32, {from: buyer, value: cdpValue[0].toString()});
+
+        console.log(txBuy);
+    } catch(err) {
+        console.log(err);
+    }
+  });
 
 //   it('...should remove a cdp to the marketplace', async () => {
 //     try {

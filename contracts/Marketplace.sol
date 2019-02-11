@@ -1,5 +1,4 @@
-pragma solidity ^0.5.0;
-pragma experimental ABIEncoderV2;
+pragma solidity 0.5.0;
 
 import "./DS/DSProxy.sol";
 import "./DS/DSMath.sol";
@@ -11,13 +10,14 @@ contract Marketplace is DSAuth, DSMath {
 
     struct SaleItem {
         address payable owner;
+        address payable proxy;
         uint discount;
-        bytes32 cup;
         bool active;
     }
  
-    mapping (bytes32 => uint) public items;
-    SaleItem[] public itemsArr;
+    mapping (bytes32 => SaleItem) public items;
+    mapping (bytes32 => uint) public itemPos;
+    bytes32[] public itemsArr;
 
     address public marketplaceProxy;
 
@@ -39,22 +39,24 @@ contract Marketplace is DSAuth, DSMath {
         require(_discount < 10000, "can't have 100% discount");
         require(tub.ink(_cup) > 0 && tub.tab(_cup) > 0, "must have collateral and debt to put on sale");
 
-        itemsArr.push(SaleItem({
-            discount: _discount,
-            owner: msg.sender,
-            cup: _cup,
-            active: true
-        }));
+        address payable owner = address(uint160(DSProxy(msg.sender).owner()));
 
-        items[_cup] = itemsArr.length - 1;
+        items[_cup] = SaleItem({
+            discount: _discount,
+            proxy: msg.sender,
+            owner: owner,
+            active: true
+        });
+
+        itemsArr.push(_cup);
+        itemPos[_cup] = itemsArr.length - 1;
 
         emit OnSale(_cup, msg.sender, _discount);
 
     }
 
     function buy(bytes32 _cup) public payable {
-        uint itemIndex = items[_cup];
-        SaleItem storage item = itemsArr[itemIndex];
+        SaleItem storage item = items[_cup];
 
         require(item.active == true, "Check if cup is on sale");
 
@@ -68,15 +70,14 @@ contract Marketplace is DSAuth, DSMath {
         item.active = false;
 
         // give the cup to the buyer, him becoming the lad that owns the cup
-        DSProxy(item.owner).execute(marketplaceProxy, 
+        DSProxy(item.proxy).execute(marketplaceProxy, 
             abi.encodeWithSignature("give(bytes32,address)", _cup, msg.sender));
-
 
         item.owner.transfer(cdpPriceWithoutFee); // transfer money to the seller
 
         emit Bought(_cup, msg.sender, item.owner, item.discount);
 
-        removeItem(itemIndex);
+        removeItem(_cup);
 
     }
 
@@ -84,7 +85,7 @@ contract Marketplace is DSAuth, DSMath {
         require(isOwner(msg.sender, _cup), "msg.sender must proxy which owns the cup");
         require(isOnSale(_cup), "only cancel cdps that are on sale");
         
-        removeItem(items[_cup]);
+        removeItem(_cup);
     }
 
     // ONLY OWNER
@@ -93,40 +94,36 @@ contract Marketplace is DSAuth, DSMath {
     }
 
     function getCdpValue(bytes32 _cup) public returns(uint, uint) {
-        SaleItem memory item = itemsArr[items[_cup]];
-
-        uint ethPrice = uint(tub.pip().read());
+        SaleItem memory item = items[_cup];
 
         uint collateral = rmul(tub.ink(_cup), tub.per()); // collateral in Eth
-        uint govFee = wdiv(rmul(tub.tab(_cup), rdiv(tub.rap(_cup), tub.tab(_cup))), ethPrice);
-        uint debt = add(govFee, wdiv(tub.tab(_cup), ethPrice)); // debt in Eth
+        uint govFee = wdiv(rmul(tub.tab(_cup), rdiv(tub.rap(_cup), tub.tab(_cup))), uint(tub.pip().read()));
+        uint debt = add(govFee, wdiv(tub.tab(_cup), uint(tub.pip().read()))); // debt in Eth
 
+        //TODO: what if discount is less then fee
         uint cdpPrice = mul(sub(collateral, debt), (sub(10000, sub(item.discount, fee)))) / 10000;
         uint withoutFee = mul(sub(collateral, debt), sub(10000, item.discount)) / 10000;
 
         return (cdpPrice, withoutFee);
     }
 
-    function getItemsOnSale() public view returns(SaleItem[] memory) {
+    function getItemsOnSale() public view returns(bytes32[] memory) {
         return itemsArr;
     }
 
     function isOnSale(bytes32 _cup) public view returns (bool) {
-        uint pos = items[_cup];
-
-        if (itemsArr.length == 0 || pos >= itemsArr.length) {
-            return false;
-        } else {
-            return itemsArr[pos].active == true && itemsArr[pos].cup == _cup;
-        }
+        return items[_cup].active;
     }
 
-    function removeItem(uint itemIndex) internal {
-        itemsArr[itemIndex] = itemsArr[itemsArr.length - 1];
+    function removeItem(bytes32 _cup) internal {
+        delete items[_cup];
 
-        items[itemsArr[itemsArr.length - 1].cup] = itemIndex;
+        uint index = itemPos[_cup];
+        itemsArr[index] = itemsArr[itemsArr.length - 1];
 
-        delete itemsArr[itemsArr.length - 1];
+        itemPos[_cup] = 0;
+        itemPos[itemsArr[itemsArr.length - 1]] = index;
+
         itemsArr.length--;
     }
 

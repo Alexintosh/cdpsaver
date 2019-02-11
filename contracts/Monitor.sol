@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity 0.5.0;
 
 import "./interfaces/TubInterface.sol";
 import "./interfaces/ProxyRegistryInterface.sol";
@@ -56,7 +56,7 @@ contract Monitor is DSMath {
         hodlers[address(proxy)].exists = false;
     }
 
-    function saveUser(address payable _user) public {
+    function saveUser(address _user) public {
         DSProxy proxy = registry.proxies(_user);
 
         require(address(proxy) != address(0));
@@ -75,6 +75,7 @@ contract Monitor is DSMath {
          DSProxy reg = registry.proxies(_owner);
          
          require(tub.lad(_cup) == address(reg));
+         require(reg.owner() == msg.sender);
 
          if(address(reg) != address(0x0)) {
              return true;
