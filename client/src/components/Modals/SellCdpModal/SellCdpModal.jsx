@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Tooltip } from 'react-tippy';
 import { isPristine, isInvalid, formValueSelector } from 'redux-form';
 import ModalBody from '../ModalBody';
 import ModalHeader from '../ModalHeader';
 import SellCdpForm from './SellCdpForm/SellCdpForm';
 import { resetSellCdpForm } from '../../../actions/marketplaceActions';
 import { convertDaiToEth, formatNumber } from '../../../utils/utils';
+import TooltipWrapper from '../../TooltipWrapper/TooltipWrapper';
 
 import './SellCdpModal.scss';
 
@@ -52,7 +52,7 @@ class SellCdpModal extends Component {
                   <div className="value-wrapper">
                     <span className="label">Cdp value:</span>
                     <span className="value">
-                      <Tooltip title={value.eth}>{ formatNumber(value.eth, 1) } ETH</Tooltip>
+                      <TooltipWrapper title={value.eth}>{ formatNumber(value.eth, 1) } ETH</TooltipWrapper>
                     </span>
                   </div>
 
@@ -71,7 +71,7 @@ class SellCdpModal extends Component {
                     { !hasDiscount && '-' }
                     {
                       hasDiscount && (
-                        <Tooltip title={price.eth}>{ formatNumber(price.eth, 3) } ETH</Tooltip>
+                        <TooltipWrapper title={price.eth}>{ formatNumber(price.eth, 3) } ETH</TooltipWrapper>
                       )
                     }
                   </span>

@@ -13,7 +13,7 @@ import './MarketplacePage.scss';
 
 const MarketplacePage = ({
   cdps, fetchingCdpsError, fetchingCdps, getMarketplaceCdpsData, openSellCdpModal,
-  loggingIn, gettingCdp, cdp, openCancelSellCdplModal, account,
+  loggingIn, gettingCdp, cdp, openCancelSellCdplModal, account, history,
 }) => {
   const [mounted, setMounted] = useState(false);
   const [orderBy, setOrderBy] = useState(null);
@@ -67,8 +67,12 @@ const MarketplacePage = ({
                   disabled={cdp !== null}
                 >
                   <button
-                    onClick={openSellCdpModal}
-                    disabled={cdp === null || (cdp && cdp.owner === account)}
+                    onClick={() => {
+                      if (cdp && cdp.owner === account) return history.push('/migrate');
+
+                      openSellCdpModal();
+                    }}
+                    disabled={cdp === null}
                     className="button green uppercase"
                     type="button"
                   >
@@ -138,6 +142,7 @@ MarketplacePage.propTypes = {
   loggingIn: PropTypes.bool.isRequired,
   gettingCdp: PropTypes.bool.isRequired,
   cdp: PropTypes.object,
+  history: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (({ marketplace, general }) => ({

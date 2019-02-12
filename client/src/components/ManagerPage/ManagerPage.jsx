@@ -12,6 +12,7 @@ import CdpAfterVal from './CdpAfterVal';
 import { formatAccType, formatAcc, formatNumber } from '../../utils/utils';
 import { getMaxDaiAction, getMaxEthWithdrawAction } from '../../actions/dashboardActions';
 import { openCloseCdpModal, openTransferCdpModal } from '../../actions/modalActions';
+import TooltipWrapper from '../TooltipWrapper/TooltipWrapper';
 
 import './ManagerPage.scss';
 import './action-items.scss';
@@ -64,9 +65,9 @@ class ManagerPage extends Component {
                   <div className="item">
                     <div className="label">Liquidation price</div>
                     <div className="value">
-                      <Tooltip title={cdp.liquidationPrice}>
+                      <TooltipWrapper title={cdp.liquidationPrice}>
                         { formatNumber(cdp.liquidationPrice, 2) }$
-                      </Tooltip>
+                      </TooltipWrapper>
                     </div>
                     <CdpAfterVal
                       type={afterType}
@@ -81,16 +82,20 @@ class ManagerPage extends Component {
                     <div className="label">Current price</div>
                     <div className="value">
                       { gettingEthPrice && 'Loading...' }
-                      { !gettingEthPrice && (<Tooltip title={ethPrice}>{ formatNumber(ethPrice, 2) }$</Tooltip>) }
+                      {
+                        !gettingEthPrice && (
+                          <TooltipWrapper title={ethPrice}>{ formatNumber(ethPrice, 2) }$</TooltipWrapper>
+                        )
+                      }
                     </div>
                   </div>
 
                   <div className="item">
                     <div className="label">Ratio</div>
                     <div className="value">
-                      <Tooltip title={cdp.ratio}>
+                      <TooltipWrapper title={cdp.ratio}>
                         { formatNumber(cdp.ratio, 2) }%
-                      </Tooltip>
+                      </TooltipWrapper>
                     </div>
                     <CdpAfterVal
                       type={afterType}
@@ -108,9 +113,9 @@ class ManagerPage extends Component {
                   <div className="row-val-wrapper">
                     <span className="label">Debt:</span>
                     <span className="value">
-                      <Tooltip title={cdp.debtDai}>
+                      <TooltipWrapper title={cdp.debtDai}>
                         { formatNumber(cdp.debtDai, 2) } Dai
-                      </Tooltip>
+                      </TooltipWrapper>
                     </span>
                   </div>
                 </div>
@@ -121,9 +126,9 @@ class ManagerPage extends Component {
                   <div className="row-val-wrapper">
                     <span className="label">Collateral amount:</span>
                     <span className="value">
-                      <Tooltip title={cdp.depositedETH}>
+                      <TooltipWrapper title={cdp.depositedETH}>
                         { formatNumber(cdp.depositedETH, 2) } Eth
-                      </Tooltip>
+                      </TooltipWrapper>
                     </span>
                   </div>
                 </div>

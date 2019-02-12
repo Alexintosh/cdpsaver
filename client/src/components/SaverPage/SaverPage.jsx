@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Tooltip } from 'react-tippy';
 import { formatNumber } from '../../utils/utils';
+import TooltipWrapper from '../TooltipWrapper/TooltipWrapper';
 
 import './SaverPage.scss';
 
@@ -23,9 +23,9 @@ const SaverPage = ({
             <div className="item">
               <div className="label">Liquidation price</div>
               <div className="value">
-                <Tooltip title={cdp.liquidationPrice}>
+                <TooltipWrapper title={cdp.liquidationPrice}>
                   { formatNumber(cdp.liquidationPrice, 2) }$
-                </Tooltip>
+                </TooltipWrapper>
               </div>
             </div>
 
@@ -33,16 +33,20 @@ const SaverPage = ({
               <div className="label">Current price</div>
               <div className="value">
                 { gettingEthPrice && 'Loading...' }
-                { !gettingEthPrice && (<Tooltip title={ethPrice}>{ formatNumber(ethPrice, 2) }$</Tooltip>) }
+                {
+                  !gettingEthPrice && (
+                    <TooltipWrapper title={ethPrice}>{ formatNumber(ethPrice, 2) }$</TooltipWrapper>
+                  )
+                }
               </div>
             </div>
 
             <div className="item">
               <div className="label">Ratio</div>
               <div className="value">
-                <Tooltip title={cdp.ratio}>
+                <TooltipWrapper title={cdp.ratio}>
                   { formatNumber(cdp.ratio, 2) }%
-                </Tooltip>
+                </TooltipWrapper>
               </div>
             </div>
           </div>
@@ -50,18 +54,18 @@ const SaverPage = ({
           <div className="row-item-wrapper">
             <span className="label">Debt:</span>
             <span className="value">
-              <Tooltip title={cdp.debtDai}>
+              <TooltipWrapper title={cdp.debtDai}>
                 { formatNumber(cdp.debtDai, 2) } Dai
-              </Tooltip>
+              </TooltipWrapper>
             </span>
           </div>
 
           <div className="row-item-wrapper">
             <span className="label">Collateral amount:</span>
             <span className="value">
-              <Tooltip title={cdp.depositedETH}>
+              <TooltipWrapper title={cdp.depositedETH}>
                 { formatNumber(cdp.depositedETH, 2) } Eth
-              </Tooltip>
+              </TooltipWrapper>
             </span>
           </div>
         </div>

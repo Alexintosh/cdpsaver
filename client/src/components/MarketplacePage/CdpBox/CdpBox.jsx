@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import { formatNumber } from '../../../utils/utils';
 import { buyCdpAction } from '../../../actions/marketplaceActions';
+import TooltipWrapper from '../../TooltipWrapper/TooltipWrapper';
 
 import './CdpBox.scss';
 
@@ -24,7 +25,7 @@ const CdpBox = ({
 
         <div className="discount-wrapper">
           <span className="discount">
-            <Tooltip title={discount}>{ formatNumber(discount, 1) }%</Tooltip>
+            <TooltipWrapper title={discount}>{ formatNumber(discount, 1) }%</TooltipWrapper>
           </span>
           <span>Discount</span>
         </div>
@@ -35,14 +36,14 @@ const CdpBox = ({
 
         <div className="price-eth">
           <div className="price-eth-value">
-            <Tooltip title={price.eth}>{ formatNumber(price.eth, 3) }</Tooltip>
+            <TooltipWrapper title={price.eth}>{ formatNumber(price.eth, 3) }</TooltipWrapper>
           </div>
           <div className="price-eth-label">ETH</div>
         </div>
 
         <div className="price-usd">
           <div className="price-usd-value">
-            <Tooltip title={price.usd}>{ formatNumber(price.usd, 3) }</Tooltip>
+            <TooltipWrapper title={price.usd}>{ formatNumber(price.usd, 3) }</TooltipWrapper>
           </div>
           <div className="price-usd-label">USD</div>
         </div>
@@ -68,18 +69,18 @@ const CdpBox = ({
         <div className="data-item">
           <div className="label">Ratio:</div>
           <div className="value">
-            <Tooltip title={ratio}>
+            <TooltipWrapper title={ratio}>
               { formatNumber(ratio, 2) }%
-            </Tooltip>
+            </TooltipWrapper>
           </div>
         </div>
 
         <div className="data-item">
           <div className="label">Liquidation price:</div>
           <div className="value">
-            <Tooltip title={liquidationPrice}>
+            <TooltipWrapper title={liquidationPrice}>
               { formatNumber(liquidationPrice, 2) }$
-            </Tooltip>
+            </TooltipWrapper>
           </div>
         </div>
       </div>
