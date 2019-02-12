@@ -48,8 +48,9 @@ import {
   approveDai, approveMaker, callProxyContract, transferCdp,
 } from '../services/ethService';
 import { getMaxDai, getMaxEthWithdraw, getUpdatedCdpInfo } from '../services/cdpService';
-import { LS_ONBOARDING_FINISHED, MM_DENIED_TX_ERROR } from '../constants/general';
+import { MM_DENIED_TX_ERROR } from '../constants/general';
 import { sendTx } from './notificationsActions';
+import { addToLsState } from '../utils/utils';
 
 /**
  * Resets the provided redux form fileds
@@ -341,7 +342,7 @@ export const transferCdpAction = ({ toAddress }, history, closeModal) => async (
 
     await transferCdp(account, toAddress, cdp.id, proxyAddress);
 
-    localStorage.removeItem(LS_ONBOARDING_FINISHED);
+    addToLsState({ account, onboardingFinished: false });
 
     closeModal();
     dispatch({ type: TRANSFER_CDP_SUCCESS });

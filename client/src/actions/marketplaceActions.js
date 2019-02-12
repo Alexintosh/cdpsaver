@@ -21,7 +21,7 @@ import { getCdpInfos, maker } from '../services/cdpService';
 import {
   getItemsOnSale, sellCdp, cancelSellCdp, buyCdp,
 } from '../services/ethService';
-import { convertDaiToEth } from '../utils/utils';
+import { addToLsState, convertDaiToEth } from '../utils/utils';
 import { sendTx } from './notificationsActions';
 import { getCdp } from './accountActions';
 
@@ -96,6 +96,8 @@ export const sellCdpAction = ({ discount }) => async (dispatch, getState) => {
 
   try {
     await sellCdp(proxySendHandler, account, cdp.id, discount, proxyAddress);
+
+    addToLsState({ account, onboardingFinished: false });
 
     dispatch({ type: SELL_CDP_SUCCESS, payload: { ...cdp, onSale: true } });
     dispatch(getMarketplaceCdpsData());
