@@ -15,19 +15,23 @@ contract MarketplaceProxy {
         tub.give(_cup, _newOwner);
     }
 
-    // TODO: what if the user has an existing authority
-    function authorizeAndSell(bytes32 _cup, uint _discount, address _proxy, address _marketplace) public {
-        // if (address(DSAuth(_proxy).authority) == address(0)) {
-            DSGuard guard = DSGuardFactory(FACTORY_ADDRESS).newGuard();
-            DSAuth(_proxy).setAuthority(DSAuthority(address(guard)));
+    function createAuthorizeAndSell(bytes32 _cup, uint _discount, address _proxy, address _marketplace) public {
+        DSGuard guard = DSGuardFactory(FACTORY_ADDRESS).newGuard();
+        DSAuth(_proxy).setAuthority(DSAuthority(address(guard)));
 
-            guard.permit(_marketplace, _proxy, bytes4(keccak256("execute(address,bytes)")));
-        // } 
+        guard.permit(_marketplace, _proxy, bytes4(keccak256("execute(address,bytes)")));
 
         Marketplace(_marketplace).putOnSale(_cup, _discount);
     }
 
-    function sell(bytes32 _cup, uint _discount, address _proxy, address _marketplace) public {
+    function authorizeAndSell(bytes32 _cup, uint _discount, address _proxy, address _marketplace) public {
+        DSGuard guard = DSGuard(address(DSAuth(_proxy).authority));
+        guard.permit(_marketplace, _proxy, bytes4(keccak256("execute(address,bytes)")));
+
+        Marketplace(_marketplace).putOnSale(_cup, _discount);
+    }
+
+    function sell(bytes32 _cup, uint _discount, address _marketplace) public {
         Marketplace(_marketplace).putOnSale(_cup, _discount);
     }
 
