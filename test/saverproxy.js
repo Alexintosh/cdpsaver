@@ -5,7 +5,6 @@ const SaverProxy = artifacts.require("./SaverProxy.sol");
 const Monitor = artifacts.require("./Monitor.sol");
 const ProxyRegistryInterface = artifacts.require("./ProxyRegistryInterface.sol");
 const DSProxy = artifacts.require("./DSProxy.sol");
-const SaverAuthority = artifacts.require("./SaverAuthority.sol");
 const KyberWrapper = artifacts.require("./KyberWrapper.sol");
 const SaiProxyInterface = artifacts.require("./SaiProxyInterface.sol");
 const TubInterface = artifacts.require("./TubInterface.sol");
@@ -13,7 +12,7 @@ const DSProxyFactoryInterface = artifacts.require("./DSProxyFactoryInterface.sol
 
 contract("SaverProxy", accounts => {
 
-  let saver, monitor, proxy, authority, registry, saiProxy;
+  let saver, monitor, proxy, registry, saiProxy;
   const tubAddr = "0xa71937147b55Deb8a530C7229C442Fd3F31b7db2";
 
   const cdpId = process.env.CDPID;
@@ -22,7 +21,6 @@ contract("SaverProxy", accounts => {
   before(async () => {
     saver = await SaverProxy.deployed();
     monitor = await Monitor.deployed();
-    authority = await SaverAuthority.deployed();
     wrapper = await KyberWrapper.deployed();
     registry = await ProxyRegistryInterface.at("0x64a436ae831c1672ae81f674cab8b6775df3475c");
 
@@ -39,7 +37,7 @@ contract("SaverProxy", accounts => {
   }
 
   it('...should print some addresses', async () => {
-    console.log(`Saver addr: ${saver.address}, Monitor addr: ${monitor.address}, Authority addr: ${authority.address}`);
+    console.log(`Saver addr: ${saver.address}, Monitor addr: ${monitor.address}`);
   });
 
   // it('...should add collateral', async () => {
@@ -247,6 +245,7 @@ contract("SaverProxy", accounts => {
   //     // step 1, subscribe the user
   //     await monitor.subscribe(cdpIdBytes32, minRatio, {from: accounts[0]});
 
+  //TODO: create a DSGUARD and give permission
   //     //step 2, give permission
   //     const tx = await proxy.setAuthority(authority.address, {from: accounts[0]});
   //     //console.log(tx);

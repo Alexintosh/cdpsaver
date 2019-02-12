@@ -15,15 +15,7 @@ module.exports = function(deployer, network) {
     // deployer.deploy(SaverProxy, {gas: 6720000, overwrite: deployAgain}).then(() => {
     //   return deployer.deploy(Monitor, SaverProxy.address, {gas: 6720000, overwrite: deployAgain});
     // }).then(() => {
-    //   return deployer.deploy(SaverAuthority, Monitor.address, {gas: 6720000, overwrite: deployAgain});
-    // }).then(() => {
     //   return deployer.deploy(KyberWrapper, {gas: 6720000, overwrite: deployAgain});
-    // }).then(() => {
-    //   return deployer.deploy(MarketplaceProxy, {gas: 6720000, overwrite: deployAgain});
-    // }).then(() => {
-    //   return deployer.deploy(Marketplace, {gas: 6720000, overwrite: deployAgain});
-    // }).then(() => {
-    //   return deployer.deploy(MarketplaceAuthority, Marketplace.address, {gas: 6720000, overwrite: deployAgain});
     // });
 
     // Only marketplace deploy
