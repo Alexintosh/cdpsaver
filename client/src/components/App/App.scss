@@ -38,12 +38,14 @@ a {
 .sub-heading-wrapper {
   background: $very-dark-gray;
   color: #fff;
+  height: 66px;
 
   .width-container {
-    padding: 23px 10px;
     border-top: 1px solid $green;
     display: flex;
-    align-items: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
 
     .sub-title {
       font-size: $font-size-extra-large;

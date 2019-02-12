@@ -4,6 +4,10 @@
 
 .sub-header-routes-wrapper {
 
+  &.sub-heading-wrapper .width-container {
+    justify-content: flex-start;
+  }
+
   .sub-header-item {
     display: flex;
     align-items: center;
