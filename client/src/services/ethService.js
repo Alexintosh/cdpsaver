@@ -348,7 +348,7 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
     const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
 
     const contract = config.MarketplaceProxy;
-    const contractFunction = contract.abi.find(abi => abi.name === 'authorizeAndSell');
+    const contractFunction = contract.abi.find(abi => abi.name === 'createAuthorizeAndSell');
 
     const params = [cdpIdBytes32, discount * 100, proxyAddress, marketplaceAddress];
     const txParams = { from: account };
