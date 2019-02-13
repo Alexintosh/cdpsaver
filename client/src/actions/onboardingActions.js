@@ -9,14 +9,14 @@ import {
 
   RESET_ONBOARDING_WIZARD,
 
-  FINISH_ONBOARDING,
+  SET_ONBOARDING_FINISHED,
 } from '../actionTypes/onboardingActionTypes';
 import { ADD_PROXY_ADDRESS } from '../actionTypes/generalActionTypes';
 import { subscribeToMonitoringApiRequest } from '../services/apiService';
-import { LS_ONBOARDING_FINISHED } from '../constants/general';
 import { createCdp } from '../services/ethService';
 import { getAddressCdp, getUpdatedCdpInfo } from '../services/cdpService';
 import { sendTx } from './notificationsActions';
+import { addToLsState } from '../utils/utils';
 
 /**
  * Resets the state of the onboarding reducer
@@ -82,10 +82,11 @@ export const submitOnboardingMonitoringForm = formData => async (dispatch) => {
  * @param history
  * @return {Function}
  */
-export const finishOnboarding = history => (dispatch) => {
-  localStorage.setItem(LS_ONBOARDING_FINISHED, JSON.stringify({ onboardingFinished: true }));
-  dispatch({ type: FINISH_ONBOARDING });
+export const finishOnboarding = history => (dispatch, getState) => {
+  const { account } = getState().general;
 
-  // TODO check if here the place the user is redirected to is the place he came from/ was he redirected to onboarding
+  addToLsState({ account, onboardingFinished: true });
+  dispatch({ type: SET_ONBOARDING_FINISHED, payload: true });
+
   history.push('/dashboard/manage');
 };

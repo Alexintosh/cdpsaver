@@ -1,5 +1,6 @@
 import web3 from 'web3';
 import BN from 'bn.js';
+import { LS_CDP_SAVER_STATE } from '../constants/general';
 
 /**
  * Takes two rgb arrays and gradient weight and calculates combined rgb color
@@ -154,3 +155,50 @@ export const formatNumber = (_num, fixed) => {
 };
 
 export const convertDaiToEth = (dai, ethPrice) => dai / ethPrice;
+
+/**
+ * Fetches set ls state if it exists and existing item if it exists
+ * @param account
+ * @return {{oldStateLsVal: Array, existingItem}}
+ */
+export const getLsExistingItemAndState = (account) => {
+  const lsVal = localStorage.getItem(LS_CDP_SAVER_STATE);
+  let oldStateLsVal = null;
+  let existingItem = null;
+  let existingItemIndex = -1;
+
+  if (lsVal) {
+    oldStateLsVal = JSON.parse(lsVal);
+
+    existingItemIndex = oldStateLsVal.findIndex(item => item.account === account);
+    if (existingItemIndex > 0) existingItem = oldStateLsVal[existingItemIndex];
+  }
+
+  return { oldStateLsVal, existingItem, existingItemIndex };
+};
+
+/**
+ * Change or set a state item for each address/account
+ *
+ * @param change {Object}
+ */
+export const addToLsState = (change) => {
+  if (!change.account) throw new Error('You must send account in order to change ls state item value');
+
+  const data = getLsExistingItemAndState(change.account);
+
+  const { existingItem, existingItemIndex } = data;
+  let { oldStateLsVal } = data;
+  let newStateVal = [];
+
+  if (!oldStateLsVal) oldStateLsVal = [];
+
+  if (!existingItem) {
+    newStateVal = [...oldStateLsVal, change];
+  } else {
+    oldStateLsVal[existingItemIndex] = { ...existingItem, ...change };
+    newStateVal = [...oldStateLsVal];
+  }
+
+  localStorage.setItem(LS_CDP_SAVER_STATE, JSON.stringify(newStateVal));
+};

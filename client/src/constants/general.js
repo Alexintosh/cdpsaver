@@ -7,8 +7,8 @@ export const MARKETPLACE_SORT_OPTIONS = [
   { label: 'Dai debt ascending', value: 'liq-dsc' },
 ];
 
-export const LS_ACCOUNT = 'LS_ACCOUNT';
-export const LS_ONBOARDING_FINISHED = 'LS_ONBOARDING_FINISHED';
+export const LS_ACCOUNT = 'Y2Rwc2F2ZXItYWNjb3VudC10eXBl';
+export const LS_CDP_SAVER_STATE = 'ZGVjZW50cmFsaXphdGlvbiByb2Nrcw==';
 
 export const MM_DENIED_TX_ERROR = 'User denied transaction signature';
 

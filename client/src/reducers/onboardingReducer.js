@@ -9,12 +9,10 @@ import {
 
   RESET_ONBOARDING_WIZARD,
 
-  FINISH_ONBOARDING,
+  SET_ONBOARDING_FINISHED,
 } from '../actionTypes/onboardingActionTypes';
-import { LS_ONBOARDING_FINISHED } from '../constants/general';
 import { TRANSFER_CDP_SUCCESS } from '../actionTypes/dashboardActionTypes';
-
-const lsOnboardingFinished = JSON.parse(localStorage.getItem(LS_ONBOARDING_FINISHED));
+import { SELL_CDP_SUCCESS } from '../actionTypes/marketplaceActionTypes';
 
 const INITIAL_STATE = {
   creatingCdp: false,
@@ -26,7 +24,7 @@ const INITIAL_STATE = {
 
   cdpFormSubmitted: false,
 
-  onboardingFinished: !!lsOnboardingFinished,
+  onboardingFinished: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -61,13 +59,14 @@ export default (state = INITIAL_STATE, action) => {
         subscribingToMonitoringError: payload,
       };
 
-    case FINISH_ONBOARDING:
-      return { ...state, onboardingFinished: true };
+    case SET_ONBOARDING_FINISHED:
+      return { ...state, onboardingFinished: payload };
 
     case RESET_ONBOARDING_WIZARD:
       return { ...INITIAL_STATE, onboardingFinished: state.onboardingFinished };
 
     case TRANSFER_CDP_SUCCESS:
+    case SELL_CDP_SUCCESS:
       return { ...INITIAL_STATE, onboardingFinished: false };
 
     default:

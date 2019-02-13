@@ -35,7 +35,12 @@ class ManagerBorrowForm extends Component {
           <div
             className={`max-wrapper ${generatingDai ? 'loading' : ''}`}
             onClick={() => {
-              if (!generatingDai) dispatch(change('managerBorrowForm', 'generateDaiAmount', maxDai));
+              if (!generatingDai) {
+                setAfterValue(maxDai, 'generate');
+                dispatch(change('managerBorrowForm', 'generateDaiAmount', maxDai));
+                dispatch(change('managerBorrowForm', 'withdrawEthAmount', ''));
+                dispatch(change('managerBorrowForm', 'repayDaiAmount', ''));
+              }
             }}
           >
             <TooltipWrapper title={maxDai}>
@@ -69,7 +74,12 @@ class ManagerBorrowForm extends Component {
           <div
             className={`max-wrapper ${withdrawingEth ? 'loading' : ''}`}
             onClick={() => {
-              if (!withdrawingEth) dispatch(change('managerBorrowForm', 'withdrawEthAmount', maxEthWithdraw));
+              if (!withdrawingEth) {
+                setAfterValue(maxEthWithdraw, 'withdraw');
+                dispatch(change('managerBorrowForm', 'withdrawEthAmount', maxEthWithdraw));
+                dispatch(change('managerBorrowForm', 'generateDaiAmount', ''));
+                dispatch(change('managerBorrowForm', 'repayDaiAmount', ''));
+              }
             }}
           >
             <TooltipWrapper title={maxEthWithdraw}>

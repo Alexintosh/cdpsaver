@@ -33,7 +33,7 @@ import {
 import { LS_ACCOUNT } from '../constants/general';
 import { CANCEL_SELL_CDP_SUCCESS, SELL_CDP_SUCCESS } from '../actionTypes/marketplaceActionTypes';
 
-const lsAccountType = JSON.parse(localStorage.getItem(LS_ACCOUNT));
+const lsAccountType = localStorage.getItem(LS_ACCOUNT);
 
 const INITIAL_STATE = {
   loggingIn: false,
@@ -46,7 +46,7 @@ const INITIAL_STATE = {
 
   account: '',
   accountError: '',
-  accountType: lsAccountType ? lsAccountType.accountType : '',
+  accountType: lsAccountType || '',
   balance: 0,
   network: 0,
 

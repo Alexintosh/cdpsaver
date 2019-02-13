@@ -12,14 +12,15 @@ import {
 
   ADD_PROXY_ADDRESS,
 } from '../actionTypes/generalActionTypes';
+import { SET_ONBOARDING_FINISHED } from '../actionTypes/onboardingActionTypes';
+import { LS_ACCOUNT } from '../constants/general';
+import clientConfig from '../config/clientConfig.json';
 import {
   isMetaMaskApproved, getBalance, getAccount, nameOfNetwork, getNetwork, metamaskApprove,
 } from '../services/ethService';
 import { setWeb3toMetamask, setupWeb3 } from '../services/web3Service';
 import { notify } from './noitificationActions';
-import { toDecimal } from '../utils/utils';
-import clientConfig from '../config/clientConfig.json';
-import { LS_ACCOUNT } from '../constants/general';
+import { getLsExistingItemAndState, toDecimal } from '../utils/utils';
 import { maker, getAddressCdp, getUpdatedCdpInfo } from '../services/cdpService';
 
 /**
@@ -64,7 +65,7 @@ export const loginMetaMask = silent => async (dispatch, getState) => {
       },
     });
 
-    localStorage.setItem(LS_ACCOUNT, JSON.stringify({ accountType: 'metamask' }));
+    localStorage.setItem(LS_ACCOUNT, 'metamask');
 
     if (!silent) notify(`Metamask account found ${account}`, 'success')(dispatch);
   } catch (err) {
@@ -103,6 +104,23 @@ export const getCdp = () => async (dispatch, getState) => {
 };
 
 /**
+ * Gets LS state values for account and initializes them in the reducers
+ *
+ * @return {Function}
+ */
+export const setLsValuesToReducer = () => (dispatch, getState) => {
+  const { account } = getState().general;
+
+  if (!account) return;
+  const { existingItem } = getLsExistingItemAndState(account);
+  if (!existingItem) return;
+
+  const { onboardingFinished } = existingItem;
+
+  if (onboardingFinished) dispatch({ type: SET_ONBOARDING_FINISHED, payload: onboardingFinished });
+};
+
+/**
  * If the user has already once successfully added an account this will
  * try a silent login for that account type
  *
@@ -133,6 +151,7 @@ export const silentLogin = () => async (dispatch, getState) => {
     console.log('LOGIN ERROR', err);
   }
 
+  dispatch(setLsValuesToReducer());
   dispatch({ type: LOGIN_FINISHED });
 };
 
@@ -167,5 +186,6 @@ export const normalLogin = (accountType, history, to) => async (dispatch) => {
     console.log('LOGIN ERROR', err);
   }
 
+  dispatch(setLsValuesToReducer());
   dispatch({ type: LOGIN_FINISHED });
 };
