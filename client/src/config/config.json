@@ -62,15 +62,6 @@
       }
     }
   },
-  "MarketplaceAuthority": {
-    "abi": [{"constant":true,"inputs":[],"name":"marketplace","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function","signature":"0xabc8c7af"},{"inputs":[{"name":"_marketplace","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor","signature":"constructor"},{"constant":true,"inputs":[{"name":"src","type":"address"},{"name":"dst","type":"address"},{"name":"sig","type":"bytes4"}],"name":"canCall","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function","signature":"0xb7009613"}],
-    "networks": {
-      "42": {
-        "createdBlock": 10296363,
-        "address": "0x8C06C0CBcb52CF6E2d791c1F5d4BF61728F74d39"
-      }
-    }
-  },
   "MarketplaceProxy": {
     "abi": [{"constant":false,"inputs":[{"name":"_cup","type":"bytes32"},{"name":"_newOwner","type":"address"}],"name":"give","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0xbaa8529c"},{"constant":false,"inputs":[{"name":"_cup","type":"bytes32"},{"name":"_discount","type":"uint256"},{"name":"_proxy","type":"address"},{"name":"_marketplace","type":"address"},{"name":"_authority","type":"address"}],"name":"authorizeAndSell","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0xcbd177c6"},{"constant":false,"inputs":[{"name":"_marketplace","type":"address"},{"name":"_cup","type":"bytes32"}],"name":"cancel","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x9e2ed686"}],
     "networks": {

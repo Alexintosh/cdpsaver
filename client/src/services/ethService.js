@@ -8,7 +8,6 @@ import {
   MakerErc20Contract,
   marketplaceContract,
   marketplaceAddress,
-  marketplaceAuthorityAddress,
   marketplaceProxyAddress,
   proxyRegistryInterfaceContract,
   TubInterfaceContract,
@@ -351,7 +350,7 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
     const contract = config.MarketplaceProxy;
     const contractFunction = contract.abi.find(abi => abi.name === 'authorizeAndSell');
 
-    const params = [cdpIdBytes32, discount * 100, proxyAddress, marketplaceAddress, marketplaceAuthorityAddress];
+    const params = [cdpIdBytes32, discount * 100, proxyAddress, marketplaceAddress];
     const txParams = { from: account };
     const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, params);
 
