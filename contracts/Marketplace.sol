@@ -61,9 +61,9 @@ contract Marketplace is DSAuth, DSMath {
         require(item.active == true, "Check if cup is on sale");
 
         uint cdpPrice;
-        uint cdpPriceWithoutFee;
+        uint ownerFeeAmount;
 
-        (cdpPrice, cdpPriceWithoutFee) = getCdpValue(_cup);
+        (cdpPrice, ownerFeeAmount) = getCdpValue(_cup);
 
         require(msg.value >= cdpPrice, "Check if enough ether is sent for this cup");
 
@@ -73,7 +73,7 @@ contract Marketplace is DSAuth, DSMath {
         DSProxy(item.proxy).execute(marketplaceProxy, 
             abi.encodeWithSignature("give(bytes32,address)", _cup, msg.sender));
 
-        item.owner.transfer(cdpPriceWithoutFee); // transfer money to the seller
+        item.owner.transfer(sub(cdpPrice, ownerFeeAmount)); // transfer money to the seller
 
         emit Bought(_cup, msg.sender, item.owner, item.discount);
 
@@ -100,11 +100,18 @@ contract Marketplace is DSAuth, DSMath {
         uint govFee = wdiv(rmul(tub.tab(_cup), rdiv(tub.rap(_cup), tub.tab(_cup))), uint(tub.pip().read()));
         uint debt = add(govFee, wdiv(tub.tab(_cup), uint(tub.pip().read()))); // debt in Eth
 
-        //TODO: what if discount is less then fee
-        uint cdpPrice = mul(sub(collateral, debt), (sub(10000, sub(item.discount, fee)))) / 10000;
-        uint withoutFee = mul(sub(collateral, debt), sub(10000, item.discount)) / 10000;
+        uint difference = 0;
 
-        return (cdpPrice, withoutFee);
+        if (item.discount > fee) {
+            difference = sub(item.discount, fee);
+        } else {
+            difference = item.discount;
+        }
+
+        uint cdpPrice = mul(sub(collateral, debt), (sub(10000, difference))) / 10000;
+        uint ownerFeeAmount = mul(sub(collateral, debt), fee) / 10000;
+
+        return (cdpPrice, ownerFeeAmount);
     }
 
     function getItemsOnSale() public view returns(bytes32[] memory) {

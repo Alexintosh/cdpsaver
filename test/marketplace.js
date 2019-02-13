@@ -48,18 +48,16 @@ contract("SaverProxy", accounts => {
             const discount = 900;
             console.log(cdpIdBytes32, discount, proxy.address, marketplace.address);
 
-            const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'authorizeAndSell'),
+            const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'createAuthorizeAndSell'),
             [cdpIdBytes32, discount, proxy.address, marketplace.address]);
 
             await proxy.methods['execute(address,bytes)'](marketplaceProxy.address, data, {from: seller});
 
             const items = await marketplace.items.call(cdpIdBytes32);
-
-            const authority = await proxy.authority.call();
-
-            console.log('Authority set: ', authority.toString());
-
             console.log(items);
+
+            const values = await marketplace.getCdpValue.call(cdpIdBytes32);
+            console.log(values[0].toString() + " " +  values[1].toString());
 
         } catch(err) {
             console.log(err);
@@ -98,18 +96,18 @@ contract("SaverProxy", accounts => {
     //     }
     // });
 
-//   it('...should fail to buy a cdp on marketplace, because not enough money sent', async () => {
-//     try {
-//         const cdpValue = await marketplace.getCdpValue.call(cdpIdBytes32);
-//         const lessMoney = cdpValue[0].sub(new web3.utils.BN(1));
+  // it('...should fail to buy a cdp on marketplace, because not enough money sent', async () => {
+  //   try {
+  //       const cdpValue = await marketplace.getCdpValue.call(cdpIdBytes32);
+  //       const lessMoney = cdpValue[0].sub(new web3.utils.BN(1));
 
-//         const txBuy = await marketplace.buy(cdpIdBytes32, {from: buyer, value: lessMoney});
+  //       const txBuy = await marketplace.buy(cdpIdBytes32, {from: buyer, value: lessMoney});
 
-//         console.log(txBuy);
-//     } catch(err) {
-//         console.log(err);
-//     }
-//   });
+  //       console.log(txBuy);
+  //   } catch(err) {
+  //       console.log(err);
+  //   }
+  // });
 
   it('...should buy a cdp on marketplace', async () => {
     try {

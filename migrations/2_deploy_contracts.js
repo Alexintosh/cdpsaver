@@ -9,9 +9,9 @@ const MarketplaceProxy = artifacts.require("./MarketplaceProxy.sol");
 require('dotenv').config();
 
 module.exports = function(deployer, network) {
+  let deployAgain = (process.env.DEPLOY_AGAIN === 'true') ? true : false;
+
   if (network == 'kovan') {
-    let deployAgain = (process.env.DEPLOY_AGAIN === 'true') ? true : false
-    
     // deployer.deploy(SaverProxy, {gas: 6720000, overwrite: deployAgain}).then(() => {
     //   return deployer.deploy(Monitor, SaverProxy.address, {gas: 6720000, overwrite: deployAgain});
     // }).then(() => {
@@ -25,6 +25,9 @@ module.exports = function(deployer, network) {
     });
 
   } else {
-    deployer.deploy(SaverProxy);
+    deployer.deploy(MarketplaceProxy, {gas: 6720000, overwrite: deployAgain})
+    .then(() => {
+      return deployer.deploy(Marketplace, MarketplaceProxy.address, {gas: 6720000, overwrite: deployAgain});
+    });
   }
 };
