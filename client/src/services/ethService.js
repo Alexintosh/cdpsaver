@@ -13,7 +13,7 @@ import {
   TubInterfaceContract,
 } from './contractRegistryService';
 import config from '../config/config.json';
-import { numStringToBytes32 } from '../utils/utils';
+import { isEmptyBytes, numStringToBytes32 } from '../utils/utils';
 import dsProxyContractJson from '../contracts/DSProxy.json';
 import { getCdpInfo, getUpdatedCdpInfo } from './cdpService';
 
@@ -319,14 +319,17 @@ export const getItemsOnSale = () => new Promise(async (resolve, reject) => {
   try {
     const contract = await marketplaceContract();
 
-    let res = await contract.methods.getItemsOnSale().call();
+    const cdpIds = await contract.methods.getItemsOnSale().call();
+    const promises = cdpIds.map(id => contract.methods.items(id).call());
 
-    res = res.map(({ cup, discount }) => ({
-      id: window._web3.utils.hexToNumber(cup),
-      discount: parseFloat(discount) / 100,
-    }));
+    const onPromiseEnd = (res) => {
+      resolve(cdpIds.map((id, index) => ({
+        id: window._web3.utils.hexToNumber(id),
+        discount: parseFloat(res[index].discount) / 100,
+      })));
+    };
 
-    resolve(res);
+    Promise.all(promises).then(onPromiseEnd);
   } catch (err) {
     reject(err);
   }
@@ -345,10 +348,16 @@ export const getItemsOnSale = () => new Promise(async (resolve, reject) => {
  */
 export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => new Promise(async (resolve, reject) => {
   try {
+    let contractFunctionName = 'createAuthorizeAndSell';
     const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
 
     const contract = config.MarketplaceProxy;
-    const contractFunction = contract.abi.find(abi => abi.name === 'createAuthorizeAndSell');
+    const DSProxyContract = await new window._web3.eth.Contract(config.DSProxy.abi, proxyAddress);
+
+    const authorityAddress = await DSProxyContract.methods.authority().call();
+    if (!isEmptyBytes(authorityAddress)) contractFunctionName = 'sell';
+
+    const contractFunction = contract.abi.find(abi => abi.name === contractFunctionName);
 
     const params = [cdpIdBytes32, discount * 100, proxyAddress, marketplaceAddress];
     const txParams = { from: account };

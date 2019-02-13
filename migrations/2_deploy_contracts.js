@@ -1,9 +1,7 @@
 const SaverProxy = artifacts.require("./SaverProxy.sol");
 const Monitor = artifacts.require("./Monitor.sol");
-const SaverAuthority = artifacts.require("./SaverAuthority.sol");
 const KyberWrapper = artifacts.require("./KyberWrapper.sol");
 const Marketplace = artifacts.require("./Marketplace.sol");
-const MarketplaceAuthority = artifacts.require("./MarketplaceAuthority.sol");
 const MarketplaceProxy = artifacts.require("./MarketplaceProxy.sol");
 
 require('dotenv').config();
