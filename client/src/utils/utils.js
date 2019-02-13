@@ -171,7 +171,7 @@ export const getLsExistingItemAndState = (account) => {
     oldStateLsVal = JSON.parse(lsVal);
 
     existingItemIndex = oldStateLsVal.findIndex(item => item.account === account);
-    if (existingItemIndex > 0) existingItem = oldStateLsVal[existingItemIndex];
+    if (existingItemIndex >= 0) existingItem = oldStateLsVal[existingItemIndex];
   }
 
   return { oldStateLsVal, existingItem, existingItemIndex };

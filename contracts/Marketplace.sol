@@ -38,6 +38,7 @@ contract Marketplace is DSAuth, DSMath {
         require(isOwner(msg.sender, _cup), "msg.sender must be proxy which owns the cup");
         require(_discount < 10000, "can't have 100% discount");
         require(tub.ink(_cup) > 0 && tub.tab(_cup) > 0, "must have collateral and debt to put on sale");
+        require(!isOnSale(_cup), "can't put a cdp on sale twice");
 
         address payable owner = address(uint160(DSProxy(msg.sender).owner()));
 
@@ -55,6 +56,7 @@ contract Marketplace is DSAuth, DSMath {
 
     }
 
+    // TODO: check if the owner is the same one as it was when CDP was put on sale
     function buy(bytes32 _cup) public payable {
         SaleItem storage item = items[_cup];
 

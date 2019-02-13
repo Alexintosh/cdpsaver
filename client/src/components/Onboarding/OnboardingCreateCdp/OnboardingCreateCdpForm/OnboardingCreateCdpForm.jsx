@@ -51,7 +51,7 @@ class OnboardingCreateCdpForm extends Component {
           name="ethAmount"
           placeholder="1"
           type="number"
-          labelText="Amount of ETH:"
+          labelText="Add collateral:"
           secondLabelText="ETH"
           component={InputComponent}
           showErrorText
@@ -63,7 +63,7 @@ class OnboardingCreateCdpForm extends Component {
           name="daiAmount"
           placeholder="1"
           type="number"
-          labelText="Amount of DAI:"
+          labelText="Generate DAI:"
           secondLabelText="DAI"
           component={InputComponent}
           showErrorText

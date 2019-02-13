@@ -17,7 +17,7 @@ const SellCdpForm = ({ handleSubmit, onSubmit }) => (
       name="discount"
       placeholder="3"
       type="number"
-      labelText="Sell price"
+      labelText="Discount"
       secondLabelText="%"
       additional={{ min: 1 }}
       component={InputComponent}
