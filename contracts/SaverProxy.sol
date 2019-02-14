@@ -1,14 +1,8 @@
 pragma solidity 0.5.0;
 
 import "./interfaces/TubInterface.sol";
-import "./interfaces/ProxyRegistryInterface.sol";
-import "./interfaces/SaiProxyInterface.sol";
 import "./interfaces/ExchangeInterface.sol";
 import "./DS/DSMath.sol";
-
-contract IVox {
-    function par() public returns (uint); //ref per dai
-}
 
 contract SaverProxy is DSMath {
     
@@ -30,10 +24,10 @@ contract SaverProxy is DSMath {
     address constant TUB_ADDRESS = 0xa71937147b55Deb8a530C7229C442Fd3F31b7db2;
     
     constructor() public {
-        ERC20(DAI_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        ERC20(MKR_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        ERC20(PETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        ERC20(WETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        // ERC20(DAI_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        // ERC20(MKR_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        // ERC20(PETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        // ERC20(WETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
     }
 
     ///@dev User has to own MKR and aprrove the DSProxy address
@@ -41,8 +35,10 @@ contract SaverProxy is DSMath {
     function repay(bytes32 _cup, uint _amount, bool _buyMkr) public {
         TubInterface tub = TubInterface(TUB_ADDRESS);
 
+        uint startingRatio = getRatio(tub, _cup);
+
         if (_amount == 0) {
-            _amount = maxFreeCollateral(tub, VOX_ADDRESS, _cup);
+            _amount = maxFreeCollateral(tub, _cup);
         }
 
         free(tub, _cup, _amount);
@@ -59,6 +55,8 @@ contract SaverProxy is DSMath {
         }
 
         tub.wipe(_cup, daiAmount);
+
+        require(getRatio(tub, _cup) > startingRatio, "ratio must be better off at the end");
 
         emit Repay(msg.sender, _amount, daiAmount);
     }
@@ -77,10 +75,9 @@ contract SaverProxy is DSMath {
         emit Boost(msg.sender, _amount, ethAmount);
     }
 
-
-    // around 50k gas cost
-    function maxFreeCollateral(TubInterface _tub, address _vox, bytes32 _cup) public returns (uint) {
-        return sub(_tub.ink(_cup), wdiv(wmul(wmul(_tub.tab(_cup), rmul(_tub.mat(), WAD)), IVox(_vox).par()), _tub.tag()));
+    function maxFreeCollateral(TubInterface _tub, bytes32 _cup) public returns (uint) {
+        return sub(_tub.ink(_cup), wdiv(wmul(wmul(_tub.tab(_cup), rmul(_tub.mat(), WAD)),
+                VoxInterface(VOX_ADDRESS).par()), _tub.tag()));
     }
     
     function maxFreeDai(TubInterface _tub, bytes32 _cdpId) public returns (uint) {
@@ -121,6 +118,10 @@ contract SaverProxy is DSMath {
         (mkrPrice, ok) = _tub.pep().peek();
 
         return wdiv(feeInDai, uint(mkrPrice));
+    }
+
+    function getRatio(TubInterface _tub, bytes32 _cup) internal returns(uint) {
+        return (wdiv(rmul(rmul(_tub.ink(_cup), _tub.tag()), WAD), _tub.tab(_cup)));
     }
 
     function free(TubInterface tub, bytes32 cup, uint jam) internal {
