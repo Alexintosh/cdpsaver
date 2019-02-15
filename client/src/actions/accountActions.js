@@ -22,6 +22,35 @@ import { setWeb3toMetamask, setupWeb3 } from '../services/web3Service';
 import { notify } from './noitificationActions';
 import { getLsExistingItemAndState, toDecimal } from '../utils/utils';
 import { maker, getAddressCdp, getUpdatedCdpInfo } from '../services/cdpService';
+import { trezorGetAccount } from '../services/trezorService';
+import { listenToAccChange } from './generalActions';
+
+export const loginTrezor = path => async (dispatch) => {
+  dispatch({ type: CONNECT_PROVIDER });
+  const accountType = 'trezor';
+
+  setupWeb3();
+
+  try {
+    const network = await getNetwork();
+    const account = await trezorGetAccount(path);
+    const balance = toDecimal(await getBalance(account));
+
+    dispatch({
+      type: CONNECT_PROVIDER_SUCCESS,
+      payload: {
+        account, accountType, balance, network,
+      },
+    });
+
+    localStorage.setItem(LS_ACCOUNT, 'trezor');
+
+    notify(`Trezor account found ${account}`, 'success')(dispatch);
+  } catch (err) {
+    setupWeb3();
+    dispatch({ type: CONNECT_PROVIDER_FAILURE, payload: err.message });
+  }
+};
 
 /**
  * Tries to connect to the MetaMask web3 provider, also checks if the app is pre-approved
@@ -68,6 +97,7 @@ export const loginMetaMask = silent => async (dispatch, getState) => {
     localStorage.setItem(LS_ACCOUNT, 'metamask');
 
     if (!silent) notify(`Metamask account found ${account}`, 'success')(dispatch);
+    dispatch(listenToAccChange());
   } catch (err) {
     setupWeb3();
     dispatch({ type: CONNECT_PROVIDER_FAILURE, payload: err.message });
@@ -143,7 +173,7 @@ export const silentLogin = () => async (dispatch, getState) => {
       }
 
       default:
-        return false;
+        return dispatch({ type: LOGIN_FINISHED });
     }
 
     await dispatch(getCdp());
@@ -161,10 +191,11 @@ export const silentLogin = () => async (dispatch, getState) => {
  * @param accountType {String}
  * @param history {Object}
  * @param to {String}
+ * @param path {String}
  *
  * @return {Function}
  */
-export const normalLogin = (accountType, history, to) => async (dispatch) => {
+export const normalLogin = (accountType, history, to, path = '') => async (dispatch) => {
   dispatch({ type: LOGIN_STARTED });
 
   await maker.authenticate();
@@ -173,6 +204,12 @@ export const normalLogin = (accountType, history, to) => async (dispatch) => {
     switch (accountType) {
       case 'metamask': {
         await dispatch(loginMetaMask(false));
+        history.push(to);
+        break;
+      }
+
+      case 'trezor': {
+        await dispatch(loginTrezor(path));
         history.push(to);
         break;
       }

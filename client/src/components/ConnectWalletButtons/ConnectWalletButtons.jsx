@@ -14,7 +14,13 @@ const ConnectWalletButtons = ({ handleSwitch, accountType }) => (
       Metamask
     </button>
 
-    <button type="button" className="button green">Trezor</button>
+    <button
+      type="button"
+      className="button green"
+      onClick={() => { handleSwitch('trezor'); }}
+    >
+      Trezor
+    </button>
 
     <button type="button" className="button green">Ledger</button>
   </div>

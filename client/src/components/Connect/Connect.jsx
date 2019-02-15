@@ -32,6 +32,8 @@ class Connect extends Component {
     } = this.props;
     const to = location.state ? location.state.to : '/dashboard/manage';
 
+    console.log('connectingProvider', connectingProvider);
+
     return (
       <div className="connect-wrapper onboarding-page-wrapper">
         <div className="sub-heading-wrapper">
@@ -54,6 +56,37 @@ class Connect extends Component {
             {
               this.state.shown === 'choose' && (
                 <ConnectWalletButtons handleSwitch={this.switch} accountType={accountType} />
+              )
+            }
+
+            {
+              this.state.shown === 'trezor' && (
+                <div className="metamask-login-wrapper trezor-login-wrapper">
+                  <h2>This is a safe way to access your wallet</h2>
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu
+                    pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id.
+                    Sed rhoncus, tortor sed eleifend tristique, tortor mauris molestie elit, et lacinia ipsum quam.
+                  </p>
+
+                  <div className="buttons-wrapper">
+                    <div
+                      className="button uppercase gray"
+                      onClick={() => { this.switch('choose'); }}
+                    >
+                      Cancel
+                    </div>
+
+                    <button
+                      disabled={connectingProvider}
+                      type="button"
+                      className="button uppercase green"
+                      onClick={() => normalLogin('trezor', history, to, "m/44'/60'/0'/0/0")}
+                    >
+                      Connect Trezor
+                    </button>
+                  </div>
+                </div>
               )
             }
 
