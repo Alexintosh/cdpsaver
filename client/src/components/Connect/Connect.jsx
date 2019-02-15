@@ -39,9 +39,7 @@ class Connect extends Component {
         <div className="sub-heading-wrapper">
           <div className="width-container">
             <div className="sub-title">Connect your wallet</div>
-            <div className="sub-text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-            </div>
+            <div className="sub-text" />
           </div>
         </div>
 
@@ -50,7 +48,7 @@ class Connect extends Component {
 
             <div className="connect-heading">Connect your wallet</div>
             <div className="content-text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+            Get started by connecting one of the wallets below
             </div>
 
             {

@@ -52,21 +52,21 @@ class SellCdpModal extends Component {
                   <div className="value-wrapper">
                     <span className="label">Cdp value:</span>
                     <span className="value">
-                      <TooltipWrapper title={value.eth}>{ formatNumber(value.eth, 1) } ETH</TooltipWrapper>
+                      <TooltipWrapper title={value.eth}>{ formatNumber(value.eth, 3) } ETH</TooltipWrapper>
                     </span>
                   </div>
 
                   <div className="equation">
-                    (Collateral - dept = cdp value)
+                    (Collateral - Debt = CDP value)
                   </div>
                 </div>
 
                 <SellCdpForm />
 
-                <div className="form-under-label">Lower than value</div>
+                <div className="form-under-label">After applied discount</div>
 
                 <div className="current-sale-price-wrapper">
-                  <span className="label">Current sale price:</span>
+                  <span className="label">Sale price:</span>
                   <span className="value">
                     { !hasDiscount && '-' }
                     {

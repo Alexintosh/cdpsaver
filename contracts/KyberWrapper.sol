@@ -11,7 +11,7 @@ contract KyberWrapper is ExchangeInterface {
     address constant ETHER_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
     //TODO: watch out for gas price limits
-    function swapEtherToToken (uint _ethAmount, address _tokenAddress) payable external returns(uint) {
+    function swapEtherToToken (uint _ethAmount, address _tokenAddress) external payable returns(uint) {
 
         uint minRate;
         ERC20 ETH_TOKEN_ADDRESS = ERC20(ETHER_ADDRESS);
@@ -51,7 +51,6 @@ contract KyberWrapper is ExchangeInterface {
     }
 
     function() payable external {
-        
     }
 
     function swapTokenToToken (address _srcAddr, address _destAddr, uint srcQty) external returns(uint) {

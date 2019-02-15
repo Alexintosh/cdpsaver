@@ -23,8 +23,9 @@ module.exports = function(deployer, network) {
     });
 
   } else {
-    deployer.deploy(MarketplaceProxy, {gas: 6720000, overwrite: deployAgain})
-    .then(() => {
+    deployer.deploy(SaverProxy, {gas: 6720000, overwrite: deployAgain}).then(() => {
+      return deployer.deploy(MarketplaceProxy, {gas: 6720000, overwrite: deployAgain});
+    }).then(() => {
       return deployer.deploy(Marketplace, MarketplaceProxy.address, {gas: 6720000, overwrite: deployAgain});
     });
   }

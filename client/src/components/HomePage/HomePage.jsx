@@ -24,7 +24,7 @@ const HomePage = () => (
           ea commodo consequat.
         </div>
 
-        <Link to="/dashboard" className="button green">Start monitoring</Link>
+        <Link to="/dashboard" className="button green">Get Started</Link>
       </div>
     </div>
 

@@ -4,7 +4,6 @@ import "./interfaces/TubInterface.sol";
 import "./interfaces/ProxyRegistryInterface.sol";
 import "./interfaces/ERC20.sol";
 import "./DS/DSMath.sol";
-import "./DS/DSProxy.sol";
 
 contract Monitor is DSMath {
 
@@ -34,7 +33,7 @@ contract Monitor is DSMath {
         require(isOwner(msg.sender, _cup));
         require(_minRatio >= MIN_RATIO + 1);
 
-        DSProxy proxy = registry.proxies(msg.sender);
+        DSProxyInterface proxy = registry.proxies(msg.sender);
 
         if (hodlers[address(proxy)].exists) {
             hodlers[address(proxy)].minRatio = _minRatio;
@@ -51,13 +50,13 @@ contract Monitor is DSMath {
     function unsubscribe(bytes32 _cup) public {
         require(isOwner(msg.sender, _cup));
 
-        DSProxy proxy = registry.proxies(msg.sender);
+        DSProxyInterface proxy = registry.proxies(msg.sender);
 
         hodlers[address(proxy)].exists = false;
     }
 
     function saveUser(address _user) public {
-        DSProxy proxy = registry.proxies(_user);
+        DSProxyInterface proxy = registry.proxies(_user);
 
         require(address(proxy) != address(0));
         require(hodlers[address(proxy)].exists);
@@ -72,7 +71,7 @@ contract Monitor is DSMath {
     }
 
     function isOwner(address _owner, bytes32 _cup) internal returns(bool) {
-         DSProxy reg = registry.proxies(_owner);
+         DSProxyInterface reg = registry.proxies(_owner);
          
          require(tub.lad(_cup) == address(reg));
          require(reg.owner() == msg.sender);

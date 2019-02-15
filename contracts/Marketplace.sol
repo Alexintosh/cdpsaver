@@ -1,11 +1,11 @@
 pragma solidity 0.5.0;
 
-import "./DS/DSProxy.sol";
 import "./DS/DSMath.sol";
+import "./DS/DSAuth.sol";
 import "./interfaces/TubInterface.sol";
 import "./interfaces/ProxyRegistryInterface.sol";
 
-
+/// @title Marketplace keeps track of all the CDPs and implements the buy logic through MarketplaceProxy
 contract Marketplace is DSAuth, DSMath {
 
     struct SaleItem {
@@ -21,25 +21,33 @@ contract Marketplace is DSAuth, DSMath {
 
     address public marketplaceProxy;
 
+    // 2 decimal percision when defining the disocunt value
     uint public fee = 100; //1% fee
 
     // KOVAN
     ProxyRegistryInterface public registry = ProxyRegistryInterface(0x64A436ae831C1672AE81F674CAb8B6775df3475C);
     TubInterface public tub = TubInterface(0xa71937147b55Deb8a530C7229C442Fd3F31b7db2);
 
-    event OnSale(bytes32 indexed cup, address indexed lad, uint discount);
-    event Bought(bytes32 indexed cup, address indexed newLad, address indexed oldLad, uint discount);
+    event OnSale(bytes32 indexed cup, address indexed proxy, address owner, uint discount);
+
+    event Bought(bytes32 indexed cup, address indexed newLad, address indexed oldProxy,
+                address oldOwner, uint discount);
 
     constructor(address _marketplaceProxy) public {
         marketplaceProxy = _marketplaceProxy;
     }
 
+    /// @notice User calls this method to put a CDP on sale which he must own
+    /// @dev Must be called by DSProxy contract in order to authorize for sale
+    /// @param _cup Id of the CDP that is being put on sale
+    /// @param _discount Discount of the original value, goes from 0 - 99% with 2 decimal percision
     function putOnSale(bytes32 _cup, uint _discount) public {
         require(isOwner(msg.sender, _cup), "msg.sender must be proxy which owns the cup");
         require(_discount < 10000, "can't have 100% discount");
         require(tub.ink(_cup) > 0 && tub.tab(_cup) > 0, "must have collateral and debt to put on sale");
+        require(!isOnSale(_cup), "can't put a cdp on sale twice");
 
-        address payable owner = address(uint160(DSProxy(msg.sender).owner()));
+        address payable owner = address(uint160(DSProxyInterface(msg.sender).owner()));
 
         items[_cup] = SaleItem({
             discount: _discount,
@@ -51,36 +59,41 @@ contract Marketplace is DSAuth, DSMath {
         itemsArr.push(_cup);
         itemPos[_cup] = itemsArr.length - 1;
 
-        emit OnSale(_cup, msg.sender, _discount);
-
+        emit OnSale(_cup, msg.sender, owner, _discount);
     }
 
+    /// @notice Any user can call this method to buy a CDP
+    /// @dev This will fail if the CDP owner was changed
+    /// @param _cup Id of the CDP you want to buy
     function buy(bytes32 _cup) public payable {
         SaleItem storage item = items[_cup];
 
         require(item.active == true, "Check if cup is on sale");
+        require(item.proxy == tub.lad(_cup), "The owner must stay the same");
 
         uint cdpPrice;
-        uint ownerFeeAmount;
+        uint feeAmount;
 
-        (cdpPrice, ownerFeeAmount) = getCdpValue(_cup);
+        (cdpPrice, feeAmount) = getCdpPrice(_cup);
 
         require(msg.value >= cdpPrice, "Check if enough ether is sent for this cup");
 
         item.active = false;
 
         // give the cup to the buyer, him becoming the lad that owns the cup
-        DSProxy(item.proxy).execute(marketplaceProxy, 
+        DSProxyInterface(item.proxy).execute(marketplaceProxy, 
             abi.encodeWithSignature("give(bytes32,address)", _cup, msg.sender));
 
-        item.owner.transfer(sub(cdpPrice, ownerFeeAmount)); // transfer money to the seller
+        item.owner.transfer(sub(cdpPrice, feeAmount)); // transfer money to the seller
 
-        emit Bought(_cup, msg.sender, item.owner, item.discount);
+        emit Bought(_cup, msg.sender, item.proxy, item.owner, item.discount);
 
         removeItem(_cup);
 
     }
 
+    /// @notice Remove the CDP from the marketplace
+    /// @param _cup Id of the CDP
     function cancel(bytes32 _cup) public {
         require(isOwner(msg.sender, _cup), "msg.sender must proxy which owns the cup");
         require(isOnSale(_cup), "only cancel cdps that are on sale");
@@ -88,12 +101,15 @@ contract Marketplace is DSAuth, DSMath {
         removeItem(_cup);
     }
 
-    // ONLY OWNER
+    /// @notice A only owner functon which withdraws Eth balance
     function withdraw() public auth {
         msg.sender.transfer(address(this).balance);
     }
 
-    function getCdpValue(bytes32 _cup) public returns(uint, uint) {
+    /// @notice Calculates the price of the CDP given the discount and the fee
+    /// @param _cup Id of the CDP
+    /// @return It returns the price of the CDP and the amount needed for the contracts fee
+    function getCdpPrice(bytes32 _cup) public returns(uint, uint) {
         SaleItem memory item = items[_cup];
 
         uint collateral = rmul(tub.ink(_cup), tub.per()); // collateral in Eth
@@ -109,15 +125,19 @@ contract Marketplace is DSAuth, DSMath {
         }
 
         uint cdpPrice = mul(sub(collateral, debt), (sub(10000, difference))) / 10000;
-        uint ownerFeeAmount = mul(sub(collateral, debt), fee) / 10000;
+        uint feeAmount = mul(sub(collateral, debt), fee) / 10000;
 
-        return (cdpPrice, ownerFeeAmount);
+        return (cdpPrice, feeAmount);
     }
 
+    /// @notice Used by front to fetch what is on sale
+    /// @return Returns all CDP ids that are on sale
     function getItemsOnSale() public view returns(bytes32[] memory) {
         return itemsArr;
     }
 
+    /// @notice Helper method to check if a CDP is on sale
+    /// @return True|False depending if it is on sale
     function isOnSale(bytes32 _cup) public view returns (bool) {
         return items[_cup].active;
     }

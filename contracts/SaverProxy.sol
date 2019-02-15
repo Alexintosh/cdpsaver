@@ -1,21 +1,14 @@
 pragma solidity 0.5.0;
 
 import "./interfaces/TubInterface.sol";
-import "./interfaces/ProxyRegistryInterface.sol";
-import "./interfaces/SaiProxyInterface.sol";
 import "./interfaces/ExchangeInterface.sol";
 import "./DS/DSMath.sol";
-
-contract IVox {
-    function par() public returns (uint); //ref per dai
-}
 
 contract SaverProxy is DSMath {
     
     event Repay(address indexed owner, uint collateralAmount, uint daiAmount);
     event Boost(address indexed owner, uint daiAmount, uint collateralAmount);
     
-    // enum {};
 
     //KOVAN
     address constant WETH_ADDRESS = 0xd0A1E359811322d97991E03f863a0C30C2cF029C;
@@ -25,6 +18,8 @@ contract SaverProxy is DSMath {
     address constant REGISTRY_ADDRESS = 0x64A436ae831C1672AE81F674CAb8B6775df3475C;
     address constant SAI_PROXY = 0xADB7c74bCe932fC6C27ddA3Ac2344707d2fBb0E6;
     address constant PETH_ADDRESS = 0xf4d791139cE033Ad35DB2B2201435fAd668B1b64;
+
+    address constant KYBER_WRAPPER = 0xf4d791139cE033Ad35DB2B2201435fAd668B1b64; //TODO: change
 
     address constant TUB_ADDRESS = 0xa71937147b55Deb8a530C7229C442Fd3F31b7db2;
     
@@ -37,17 +32,18 @@ contract SaverProxy is DSMath {
 
     ///@dev User has to own MKR and aprrove the DSProxy address
     //TODO: check so we don't get more eth than need to repay debt
-    function repay(bytes32 _cup, address _wrapper, uint _amount, bool _buyMkr) public {
+    function repay(bytes32 _cup, uint _amount, bool _buyMkr) public {
         TubInterface tub = TubInterface(TUB_ADDRESS);
 
+        uint startingRatio = getRatio(tub, _cup);
+
         if (_amount == 0) {
-            // TODO: save gas cost and calc. on the front?
-            _amount = maxFreeCollateral(tub, VOX_ADDRESS, _cup);
+            _amount = maxFreeCollateral(tub, _cup);
         }
 
         free(tub, _cup, _amount);
 
-        uint daiAmount = ExchangeInterface(_wrapper).swapEtherToToken.
+        uint daiAmount = ExchangeInterface(KYBER_WRAPPER).swapEtherToToken.
                             value(_amount)(_amount, DAI_ADDRESS);
         
         if (_buyMkr) {
@@ -60,10 +56,12 @@ contract SaverProxy is DSMath {
 
         tub.wipe(_cup, daiAmount);
 
+        require(getRatio(tub, _cup) > startingRatio, "ratio must be better off at the end");
+
         emit Repay(msg.sender, _amount, daiAmount);
     }
 
-    function boost(bytes32 _cup, address _wrapper, uint _amount) public {
+    function boost(bytes32 _cup, uint _amount) public {
         TubInterface tub = TubInterface(TUB_ADDRESS);
         
         if (_amount == 0) {
@@ -72,25 +70,24 @@ contract SaverProxy is DSMath {
         
         tub.draw(_cup, _amount);
         
-        uint ethAmount = lockPeth(tub, _cup, _amount, _wrapper);
+        uint ethAmount = lockPeth(tub, _cup, _amount);
         
         emit Boost(msg.sender, _amount, ethAmount);
     }
 
-
-    // around 50k gas cost
-    function maxFreeCollateral(TubInterface _tub, address _vox, bytes32 _cup) public returns (uint) {
-        return sub(_tub.ink(_cup), wdiv(wmul(wmul(_tub.tab(_cup), rmul(_tub.mat(), WAD)), IVox(_vox).par()), _tub.tag()));
+    function maxFreeCollateral(TubInterface _tub, bytes32 _cup) public returns (uint) {
+        return sub(_tub.ink(_cup), wdiv(wmul(wmul(_tub.tab(_cup), rmul(_tub.mat(), WAD)),
+                VoxInterface(VOX_ADDRESS).par()), _tub.tag()));
     }
     
     function maxFreeDai(TubInterface _tub, bytes32 _cdpId) public returns (uint) {
         return (sub(wdiv(rmul(_tub.ink(_cdpId), _tub.tag()), rmul(_tub.mat(), WAD)), _tub.tab(_cdpId))) - 1;
     }
     
-    function lockPeth(TubInterface _tub, bytes32 cup, uint maxDai, address _wrapper) internal returns(uint) {
-        ERC20(DAI_ADDRESS).transferFrom(address(this), _wrapper, maxDai);
+    function lockPeth(TubInterface _tub, bytes32 cup, uint maxDai) internal returns(uint) {
+        ERC20(DAI_ADDRESS).transferFrom(address(this), KYBER_WRAPPER, maxDai);
 
-        uint ethAmount = ExchangeInterface(_wrapper).swapTokenToEther(DAI_ADDRESS, maxDai);
+        uint ethAmount = ExchangeInterface(KYBER_WRAPPER).swapTokenToEther(DAI_ADDRESS, maxDai);
         
         _tub.gem().deposit.value(ethAmount)();
 
@@ -105,7 +102,7 @@ contract SaverProxy is DSMath {
 
     //TODO: precise calc. of the _daiRepay amount
     // function payStabilityFee(TubInterface _tub, bytes32 _cup, uint _daiRepay) internal returns(uint) {
-    //     uint govAmt = feeInMkr(_tub, _cup, daiRepay)
+    //     uint govAmt = feeInMkr(_tub, _cup, _daiRepay);
 
     //     uint mkrAmountInDai = swapTokenToToken(DAI_ADDRESS, MKR_ADDRESS, feeInDai);
 
@@ -123,8 +120,10 @@ contract SaverProxy is DSMath {
         return wdiv(feeInDai, uint(mkrPrice));
     }
 
-    // // SaiProxy methods, small changes
-    // arounc 120k gas cost
+    function getRatio(TubInterface _tub, bytes32 _cup) internal returns(uint) {
+        return (wdiv(rmul(rmul(_tub.ink(_cup), _tub.tag()), WAD), _tub.tab(_cup)));
+    }
+
     function free(TubInterface tub, bytes32 cup, uint jam) internal {
         uint ink = rdiv(jam, tub.per());
         tub.free(cup, ink);
@@ -132,12 +131,4 @@ contract SaverProxy is DSMath {
         tub.exit(ink);
         tub.gem().withdraw(jam);
     }
-
-    // function getWrapperAddress(uint8 _wrapperType) public view returns (address) {
-    //     if (_wrapperType == 1) {
-    //         return "";
-    //     } else if () {
-    //         return "";
-    //     }
-    // }
 }

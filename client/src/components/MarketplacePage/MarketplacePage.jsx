@@ -32,7 +32,7 @@ const MarketplacePage = ({
         <div className="width-container">
           <div className="sub-title">Marketplace</div>
           <div className="sub-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+            Sell and Buy CDPs at discount prices in the Marketplace
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@ const MarketplacePage = ({
                   className="button green uppercase cancel"
                   type="button"
                 >
-                  Cancel sell
+                  Cancel sale
                 </button>
               )
             }
@@ -117,7 +117,7 @@ const MarketplacePage = ({
             !fetchingCdps && !fetchingCdpsError && cdps.length === 0 && (
               <div className="empty-page-wrapper">
                 <i className="icon-empty" />
-                <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit</span>
+                <span>Put your CDP on sale, while your cdp is on sale you are still in control of the CDP</span>
               </div>
             )
           }
