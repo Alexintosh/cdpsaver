@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ConnectWalletButtons from '../ConnectWalletButtons/ConnectWalletButtons';
+import ConnectTrezor from './ConnectTrezor/ConnectTrezor';
 import { normalLogin } from '../../actions/accountActions';
 
 import './Connect.scss';
@@ -30,9 +31,8 @@ class Connect extends Component {
     const {
       normalLogin, connectingProvider, location, history, accountType,
     } = this.props;
+    const { shown } = this.state;
     const to = location.state ? location.state.to : '/dashboard/manage';
-
-    console.log('connectingProvider', connectingProvider);
 
     return (
       <div className="connect-wrapper onboarding-page-wrapper">
@@ -48,49 +48,15 @@ class Connect extends Component {
 
             <div className="connect-heading">Connect your wallet</div>
             <div className="content-text">
-            Get started by connecting one of the wallets below
+              Get started by connecting one of the wallets below
             </div>
 
-            {
-              this.state.shown === 'choose' && (
-                <ConnectWalletButtons handleSwitch={this.switch} accountType={accountType} />
-              )
-            }
+            { shown === 'choose' && (<ConnectWalletButtons handleSwitch={this.switch} accountType={accountType} />) }
+            { shown === 'trezor' && (<ConnectTrezor handleSwitch={this.switch} history={history} to={to} />) }
 
             {
-              this.state.shown === 'trezor' && (
-                <div className="metamask-login-wrapper trezor-login-wrapper">
-                  <h2>This is a safe way to access your wallet</h2>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu
-                    pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id.
-                    Sed rhoncus, tortor sed eleifend tristique, tortor mauris molestie elit, et lacinia ipsum quam.
-                  </p>
-
-                  <div className="buttons-wrapper">
-                    <div
-                      className="button uppercase gray"
-                      onClick={() => { this.switch('choose'); }}
-                    >
-                      Cancel
-                    </div>
-
-                    <button
-                      disabled={connectingProvider}
-                      type="button"
-                      className="button uppercase green"
-                      onClick={() => normalLogin('trezor', history, to, "m/44'/60'/0'/0/0")}
-                    >
-                      Connect Trezor
-                    </button>
-                  </div>
-                </div>
-              )
-            }
-
-            {
-              this.state.shown === 'metamask' && (
-                <div className="metamask-login-wrapper">
+              shown === 'metamask' && (
+                <div className="connect-login-wrapper metamask">
                   <h2>This is a recommended way to access your wallet</h2>
                   <p>
                     MetaMask is a browser extension that allows you to access your wallet

@@ -16,6 +16,7 @@ import config from '../config/config.json';
 import { isEmptyBytes, numStringToBytes32 } from '../utils/utils';
 import dsProxyContractJson from '../contracts/DSProxy.json';
 import { getCdpInfo, getUpdatedCdpInfo } from './cdpService';
+import { signAndSendTrezor } from './trezorService';
 
 export const getAccount = () => (
   new Promise(async (resolve, reject) => {
@@ -99,10 +100,11 @@ export const createCdp = (sendTxFunc, from, ethAmount, _daiAmount) => new Promis
 
   try {
     const contract = await SaiSaverProxyContract();
-    const params = { from, value: window._web3.utils.toWei(ethAmount, 'ether') };
+    const value = window._web3.utils.toWei(ethAmount, 'ether');
     const daiAmount = window._web3.utils.toWei(_daiAmount.toString(), 'ether');
+    const args = [address1, address2, daiAmount];
 
-    const promise = contract.methods.createOpenLockAndDraw(address1, address2, daiAmount).send(params);
+    const promise = signAndSendTrezor(contract, 'createOpenLockAndDraw', args, value, from);
     await sendTxFunc(promise);
 
     resolve(true);
@@ -423,7 +425,7 @@ export const buyCdp = (sendTxFunc, cdpId, account, discount) => new Promise(asyn
 
   try {
     const contract = await marketplaceContract();
-    const cdpValue = await contract.methods.getCdpValue(cdpIdBytes32, discount).call();
+    const cdpValue = await contract.methods.getCdpPrice(cdpIdBytes32, discount).call();
 
     const txParams = { from: account, value: cdpValue[0].toString() };
 

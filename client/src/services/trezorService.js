@@ -35,11 +35,9 @@ const waitForLock = async () => {
   currentlySendingLock = true;
 };
 
-export const signAndSendTrezor = async (efx, abi, ctAddress, action, args, value, address) => {
+export const signAndSendTrezor = async (contract, action, args, value, address) => {
   await waitForLock();
   try {
-    console.log(ctAddress, action, args, value);
-    const contract = new window._web3.eth.Contract(abi, ctAddress);
     const contractCall = contract.methods[action](...args);
 
     const encodedAbi = contractCall.encodeABI();
@@ -56,25 +54,45 @@ export const signAndSendTrezor = async (efx, abi, ctAddress, action, args, value
       to: contractCall._parent._address,
       data: encodedAbi,
       value: window._web3.utils.numberToHex(value),
-      chainId: config.network,
-      v: config.network,
     };
 
+    console.log('rawTx', rawTx);
     const gasLimit = await window._web3.eth.estimateGas(rawTx);
-    rawTx.gasLimit = window._web3.utils.numberToHex(gasLimit);
+    rawTx.gasLimit = window._web3.utils.numberToHex(gasLimit + 20000);
+
+    const gasPrice = await window._web3.eth.getGasPrice();
+    rawTx.gasPrice = window._web3.utils.numberToHex(gasPrice);
+
+    rawTx.chainId = config.network;
 
     console.log('TREZOR rawTx', rawTx);
 
-    const tx2 = new Tx({ rawTx });
+    const response = await trezor.ethereumSignTransaction({
+      path: "m/44'/60'/0'/0/0",
+      transaction: rawTx,
+    });
+    console.log('response', response);
+
+    if (!response.success) throw new Error(response.payload.error);
+
+    const signedTx = response.payload;
+    console.log('TREZOR signedTx', signedTx);
+
+    const tx2 = new Tx({
+      ...rawTx,
+      ...signedTx,
+    });
     console.log('TREZOR tx2', tx2);
 
     lastNonce += 1;
     console.log('TREZOR incrementing nonce');
 
-    return window._web3.eth.sendRawTransaction(`0x${tx2.serialize().toString('hex')}`)
+    return window._web3.eth.sendSignedTransaction(`0x${tx2.serialize().toString('hex')}`)
       .on('transactionHash', (hash) => {
         console.log('HASH', hash);
       });
+  } catch (err) {
+    console.log('ERROR', err);
   } finally {
     console.log('TREZOR releasing lock');
     currentlySendingLock = false;
