@@ -45,11 +45,15 @@ export const updateEthPriceInterval = () => async (dispatch) => {
  * @return {Function}
  */
 export const listenToAccChange = () => (dispatch, getState) => {
-  setInterval(async () => {
-    const { account, connectingProvider } = getState().general;
+  const interval = setInterval(async () => {
+    const { account, connectingProvider, accountType } = getState().general;
 
     if (connectingProvider) return;
     if (!account) return;
+    if (accountType !== 'metamask') {
+      console.log('Acc type', accountType);
+      return clearInterval(interval);
+    }
 
     const accounts = await window._web3.eth.getAccounts();
 
