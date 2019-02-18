@@ -19,9 +19,8 @@ const HomePage = () => (
         </div>
 
         <div className="section-text">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-          dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-          ea commodo consequat.
+        CDP Saver is a web application that aims to help users in protecting their CDPs from liquidation.
+        By providing advanced features through are dashboard, users are able to better manage and protect theri CDPs.
         </div>
 
         <Link to="/dashboard" className="button green">Get Started</Link>
@@ -35,11 +34,10 @@ const HomePage = () => (
             <i className="icon-laptop-gear" />
           </div>
 
-          <div className="section-title">Marketplace</div>
+          <div className="section-title">Dashboard</div>
 
           <div className="section-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua.
+            An easy to use dashboard, which provides advanced features like Repay and Boost.
           </div>
         </div>
 
@@ -48,11 +46,10 @@ const HomePage = () => (
             <i className="icon-laptop-gear" />
           </div>
 
-          <div className="section-title">Monitoring</div>
+          <div className="section-title">Marketplace</div>
 
           <div className="section-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua.
+            Buy and sell other users CDPs at discount prices and save them from liquidation.
           </div>
         </div>
 
@@ -64,8 +61,7 @@ const HomePage = () => (
           <div className="section-title">Saver</div>
 
           <div className="section-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua.
+            By providing constant monitoring, keep your CDP at a certain ratio level and avoid liquidation.
           </div>
         </div>
       </div>

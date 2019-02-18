@@ -120,7 +120,7 @@ class ManagerBorrowForm extends Component {
             name="repayDaiAmount"
             onChange={(e) => { setAfterValue(e.target.value, 'repay'); }}
             labelText="Repay:"
-            secondLabelText="DAI"
+            secondLabelText="ETH"
             additional={{ min: 0 }}
             placeholder="0"
             disabled={repayingDai}

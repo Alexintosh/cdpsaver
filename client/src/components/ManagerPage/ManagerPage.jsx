@@ -36,7 +36,7 @@ class ManagerPage extends Component {
           <div className="width-container">
             <div className="sub-title with-label">
               <div className="label">CDP ID:</div>
-              <div className="value">{ cdp.id }</div>
+              <div className="value">#{ cdp.id }</div>
             </div>
 
             <div className="account-wrapper">
@@ -111,7 +111,7 @@ class ManagerPage extends Component {
                   <DaiIcon />
 
                   <div className="row-val-wrapper">
-                    <span className="label">Debt:</span>
+                    <span className="label">Debt</span>
                     <span className="value">
                       <TooltipWrapper title={cdp.debtDai}>
                         { formatNumber(cdp.debtDai, 2) } Dai
@@ -124,7 +124,7 @@ class ManagerPage extends Component {
                   <EthIcon />
 
                   <div className="row-val-wrapper">
-                    <span className="label">Collateral amount:</span>
+                    <span className="label">Collateral</span>
                     <span className="value">
                       <TooltipWrapper title={cdp.depositedETH}>
                         { formatNumber(cdp.depositedETH, 2) } Eth
@@ -164,7 +164,7 @@ class ManagerPage extends Component {
                   <ManagerBorrowForm />
 
                   <div className="info-text">
-                    *Repay will draw ETH from cdp and repay in DAI, lowering the liq. price
+                    *Repay will draw ETH from CDP and payback the debt, lowering the liquidation price
                   </div>
                 </div>
 
@@ -172,7 +172,7 @@ class ManagerPage extends Component {
                   <ManagerPaybackForm />
 
                   <div className="info-text">
-                    *Boost will draw DAI and buy ETH, increasing the amount ETH in the cdp
+                    *Boost will draw DAI and buy ETH, increasing the amount ETH in the CDP
                   </div>
                 </div>
               </Tabs>

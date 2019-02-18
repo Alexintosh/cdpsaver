@@ -21,12 +21,11 @@ let TransferCdpModal = ({
 
         <div className="sub-header">
           <span className="label">CDP ID:</span>
-          <span className="value">{ cdpId }</span>
+          <span className="value">#{ cdpId }</span>
         </div>
 
         <div className="description">
-          What is the overall collateral ratio of the system (lowest, higest point of the week)
-          How much dai is in the system,How much dai is in the system,
+          By transfering your CDP to a new address you will give up ownership of it
         </div>
 
         <TransferCdpForm history={history} closeModal={closeModal} />
