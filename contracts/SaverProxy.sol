@@ -19,19 +19,18 @@ contract SaverProxy is DSMath {
     address constant SAI_PROXY = 0xADB7c74bCe932fC6C27ddA3Ac2344707d2fBb0E6;
     address constant PETH_ADDRESS = 0xf4d791139cE033Ad35DB2B2201435fAd668B1b64;
 
-    address constant KYBER_WRAPPER = 0xf4d791139cE033Ad35DB2B2201435fAd668B1b64; //TODO: change
+    address constant KYBER_WRAPPER = 0xDde55CD1bf6F83C78516A1fDf3545f6AFD18EfF4;
 
     address constant TUB_ADDRESS = 0xa71937147b55Deb8a530C7229C442Fd3F31b7db2;
     
     constructor() public {
-        // ERC20(DAI_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        // ERC20(MKR_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        // ERC20(PETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        // ERC20(WETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        ERC20(DAI_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        ERC20(MKR_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        ERC20(PETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        ERC20(WETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
     }
 
     ///@dev User has to own MKR and aprrove the DSProxy address
-    //TODO: check so we don't get more eth than need to repay debt
     function repay(bytes32 _cup, uint _amount, bool _buyMkr) public {
         TubInterface tub = TubInterface(TUB_ADDRESS);
 
@@ -67,10 +66,14 @@ contract SaverProxy is DSMath {
         if (_amount == 0) {
             _amount = maxFreeDai(tub, _cup);
         }
+
+        uint startingCollateral = tub.ink(_cup);
         
         tub.draw(_cup, _amount);
         
         uint ethAmount = lockPeth(tub, _cup, _amount);
+
+        require(tub.ink(_cup) > startingCollateral, "collateral must be bigger than starting point");
         
         emit Boost(msg.sender, _amount, ethAmount);
     }
