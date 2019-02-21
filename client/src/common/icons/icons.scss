@@ -2,11 +2,11 @@
 
 @font-face {
   font-family: '#{$icomoon-font-family}';
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?k7dvus');
-  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?k7dvus#iefix') format('embedded-opentype'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?k7dvus') format('truetype'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?k7dvus') format('woff'),
-  url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?k7dvus##{$icomoon-font-family}') format('svg');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?96qd0v');
+  src:  url('#{$icomoon-font-path}/#{$icomoon-font-family}.eot?96qd0v#iefix') format('embedded-opentype'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.ttf?96qd0v') format('truetype'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.woff?96qd0v') format('woff'),
+  url('#{$icomoon-font-path}/#{$icomoon-font-family}.svg?96qd0v##{$icomoon-font-family}') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -26,15 +26,27 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-success-circle {
+.icon-chevron-right {
   &:before {
-    content: $icon-success-circle;
-    color: #fff;
+    content: $icon-chevron-right;
+    color: #939da7;
   }
 }
 .icon-empty {
   &:before {
     content: $icon-empty;
+    color: #37b06f;
+  }
+}
+.icon-laptop-gear {
+  &:before {
+    content: $icon-laptop-gear;
+    color: #939da7;
+  }
+}
+.icon-life-saver {
+  &:before {
+    content: $icon-life-saver;
     color: #37b06f;
   }
 }
@@ -44,15 +56,15 @@
     color: #999;
   }
 }
-.icon-chevron-right {
+.icon-squares {
   &:before {
-    content: $icon-chevron-right;
-    color: #939da7;
+    content: $icon-squares;
+    color: #37b06f;
   }
 }
-.icon-laptop-gear {
+.icon-success-circle {
   &:before {
-    content: $icon-laptop-gear;
-    color: #939da7;
+    content: $icon-success-circle;
+    color: #fff;
   }
 }

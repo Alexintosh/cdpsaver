@@ -43,7 +43,7 @@ const HomePage = () => (
 
         <div className="section-box">
           <div className="section-box-icon-wrapper">
-            <i className="icon-laptop-gear" />
+            <i className="icon-squares" />
           </div>
 
           <div className="section-title">Marketplace</div>
@@ -55,7 +55,7 @@ const HomePage = () => (
 
         <div className="section-box">
           <div className="section-box-icon-wrapper">
-            <i className="icon-laptop-gear" />
+            <i className="icon-life-saver" />
           </div>
 
           <div className="section-title">Saver</div>

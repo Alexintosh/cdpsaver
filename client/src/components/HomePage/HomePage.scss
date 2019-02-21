@@ -79,9 +79,17 @@
         .section-box-icon-wrapper {
           @include flex-center;
           margin-bottom: 25px;
+          width: 100%;
+          height: 48px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
 
           i {
             font-size: 48px;
+
+            &.icon-squares { font-size: 28px; }
+            &.icon-life-saver { font-size: 45px; }
 
             &:before {
               color: $green;
