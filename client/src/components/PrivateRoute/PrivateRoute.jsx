@@ -6,7 +6,7 @@ import Loader from '../Loader/Loader';
 
 const PrivateRoute = ({
   component: Component, account, match, connectingProvider, cdp,
-  onboardingFinished, gettingCdp, loggingIn, migratePage, ...rest
+  gettingCdp, loggingIn, migratePage, ...rest
 }) => {
   const showloggingIn = loggingIn && (!connectingProvider && !gettingCdp);
   const showLoader = connectingProvider || gettingCdp || showloggingIn;
@@ -26,7 +26,7 @@ const PrivateRoute = ({
   }
 
   if (!loggingIn && !account) return (<Redirect to={{ pathname: '/connect', state: { to: rest.path } }} />);
-  if (!loggingIn && (!cdp || !onboardingFinished)) return (<Redirect to="/onboarding" />);
+  if (!loggingIn && !cdp) return (<Redirect to="/onboarding" />);
   if (!loggingIn && cdp && !migratePage && cdp.owner === account) return (<Redirect to="/migrate" />);
 
   return (
@@ -44,7 +44,6 @@ PrivateRoute.propTypes = {
   match: PropTypes.object.isRequired,
   component: PropTypes.func.isRequired,
   connectingProvider: PropTypes.bool.isRequired,
-  onboardingFinished: PropTypes.bool.isRequired,
   gettingCdp: PropTypes.bool.isRequired,
   loggingIn: PropTypes.bool.isRequired,
   migratePage: PropTypes.bool,
@@ -52,13 +51,12 @@ PrivateRoute.propTypes = {
   cdp: PropTypes.object,
 };
 
-const mapStateToProps = ({ general, onboarding }) => ({
+const mapStateToProps = ({ general }) => ({
   account: general.account,
   connectingProvider: general.connectingProvider,
   cdp: general.cdp,
   gettingCdp: general.gettingCdp,
   loggingIn: general.loggingIn,
-  onboardingFinished: onboarding.onboardingFinished,
 });
 
 export default connect(mapStateToProps)(withRouter(PrivateRoute));

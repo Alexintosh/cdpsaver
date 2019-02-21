@@ -6,8 +6,6 @@ import { resetOnboardingWizard } from '../../actions/onboardingActions';
 import OnboardingRedirect from './OnboardingRedirect';
 import SubHeaderRoutes from '../SubHeaderRoutes/SubHeaderRoutes';
 import OnboardingCreateCdp from './OnboardingCreateCdp/OnboardingCreateCdp';
-import OnboardingInfo from './OnboardingInfo/OnboardingInfo';
-import OnboardingMonitoring from './OnboardingMonitoring/OnboardingMonitoring';
 import Loader from '../Loader/Loader';
 
 import './Onboarding.scss';
@@ -18,8 +16,6 @@ class OnboardingRoutes extends Component {
 
     this.onboardingWizardLinks = [
       { label: 'Create CDP', pathname: '/onboarding/create-cdp' },
-      { label: 'Info', pathname: '/onboarding/info' },
-      { label: 'Monitoring', pathname: '/onboarding/monitoring' },
     ];
   }
 
@@ -29,7 +25,7 @@ class OnboardingRoutes extends Component {
 
   render() {
     const {
-      match, hasCdp, account, connectingProvider, gettingCdp, loggingIn, onboardingFinished,
+      match, hasCdp, account, connectingProvider, gettingCdp, loggingIn,
     } = this.props;
     const showloggingIn = loggingIn && (!connectingProvider && !gettingCdp);
     const showLoader = connectingProvider || gettingCdp || showloggingIn;
@@ -52,11 +48,7 @@ class OnboardingRoutes extends Component {
       return (<Redirect to={{ pathname: '/connect', state: { to: '/dashboard/manage' } }} />);
     }
 
-    if (hasCdp && this.onboardingWizardLinks.length === 3) {
-      this.onboardingWizardLinks.splice(0, 1);
-    }
-
-    if (hasCdp && onboardingFinished) return (<Redirect to="/dashboard/manage" />);
+    if (hasCdp) return (<Redirect to="/dashboard/manage" />);
 
     return (
       <div className="onboarding-wrapper">
@@ -68,8 +60,6 @@ class OnboardingRoutes extends Component {
             path={`${match.path}/create-cdp`}
             component={props => <OnboardingCreateCdp hasCdp={hasCdp} {...props} />}
           />
-          <Route path={`${match.path}/info`} component={OnboardingInfo} />
-          <Route path={`${match.path}/monitoring`} component={OnboardingMonitoring} />
         </React.Fragment>
       </div>
     );
@@ -84,20 +74,18 @@ OnboardingRoutes.propTypes = {
   connectingProvider: PropTypes.bool.isRequired,
   gettingCdp: PropTypes.bool.isRequired,
   loggingIn: PropTypes.bool.isRequired,
-  onboardingFinished: PropTypes.bool.isRequired,
 };
 
 const mapDispatchToProps = {
   resetOnboardingWizard,
 };
 
-const mapStateToProps = ({ general, onboarding }) => ({
+const mapStateToProps = ({ general }) => ({
   hasCdp: !!general.cdp,
   account: general.account,
   connectingProvider: general.connectingProvider,
   gettingCdp: general.gettingCdp,
   loggingIn: general.loggingIn,
-  onboardingFinished: onboarding.onboardingFinished,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OnboardingRoutes);

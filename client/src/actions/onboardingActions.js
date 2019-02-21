@@ -52,7 +52,7 @@ export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dis
 
     dispatch({ type: CREATE_CDP_SUCCESS, payload: { ...cdp, ...newInfo } });
     dispatch({ type: ADD_PROXY_ADDRESS, payload: proxyAddress });
-    history.push('/onboarding/info');
+    history.push('/manage');
   } catch (err) {
     dispatch({ type: CREATE_CDP_ERROR, payload: err });
   }
