@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Field, reduxForm } from 'redux-form';
-import Slider from 'rc-slider';
+import { Field, formValueSelector, reduxForm } from 'redux-form';
 import onboardingCreateCdpFormFormValidator from './onboardingCreateCdpFormFormValidator';
 import InputComponent from '../../../Forms/InputComponent';
-import { createCdpAction } from '../../../../actions/onboardingActions';
-import { getRainbowSliderValColor } from '../../../../utils/utils';
-
-import '../../../../common/slider.scss';
+import { createCdpAction, handleCreateCdpInputChange } from '../../../../actions/onboardingActions';
+import { formatNumber, getRainbowSliderValColor } from '../../../../utils/utils';
+import TooltipWrapper from '../../../TooltipWrapper/TooltipWrapper';
 
 class OnboardingCreateCdpForm extends Component {
   constructor(props) {
@@ -17,7 +15,6 @@ class OnboardingCreateCdpForm extends Component {
       currentColor: '',
     };
 
-    this.sliderWidth = 284;
     this.gradients = [
       [0, [255, 0, 0]],
       [49, [255, 141, 0]],
@@ -27,18 +24,30 @@ class OnboardingCreateCdpForm extends Component {
     this.handleSliderValChange = this.handleSliderValChange.bind(this);
   }
 
-  componentDidMount() {
-    // CHANGE THIS IF THERE WILL BE A DIFFERENT DEFAULT SLIDER VALUE
-    this.handleSliderValChange(1);
+  componentWillReceiveProps(newProps) {
+    const { formValues, ratio } = newProps;
+    const { ethAmount, daiAmount } = formValues;
+
+    if (ethAmount && daiAmount) this.handleSliderValChange(ratio);
   }
 
-  handleSliderValChange(val) {
-    const rbgArray = getRainbowSliderValColor(val, this.gradients, this.sliderWidth);
+  handleSliderValChange(_ratio) {
+    let ratio = _ratio;
+    if (_ratio < 150) ratio = 150;
+    if (_ratio > 450) ratio = 450;
+
+    const val = 1 + ((ratio - 150) / (300 / 99));
+
+    const rbgArray = getRainbowSliderValColor(val, this.gradients, 300);
     this.setState({ currentColor: `rgb(${rbgArray.join(',')})` });
   }
 
   render() {
-    const { handleSubmit, onSubmit, history } = this.props;
+    const {
+      handleSubmit, onSubmit, history, formValues, ethPrice,
+      handleCreateCdpInputChange, liquidationPrice, ratio,
+    } = this.props;
+    const { ethAmount, daiAmount } = formValues;
 
     return (
       <form
@@ -49,9 +58,10 @@ class OnboardingCreateCdpForm extends Component {
         <Field
           id="onboarding-create-cdp-eth-amount"
           name="ethAmount"
-          placeholder="0"
+          placeholder="1"
           type="number"
           labelText="Add collateral:"
+          onChange={(e) => { handleCreateCdpInputChange(e.target.value, daiAmount, ethPrice); }}
           secondLabelText="ETH"
           component={InputComponent}
           showErrorText
@@ -61,29 +71,45 @@ class OnboardingCreateCdpForm extends Component {
         <Field
           id="onboarding-create-cdp-dai-amount"
           name="daiAmount"
-          placeholder="0"
+          placeholder="1"
           type="number"
           labelText="Generate DAI:"
           secondLabelText="DAI"
+          onChange={(e) => { handleCreateCdpInputChange(ethAmount, e.target.value, ethPrice); }}
           component={InputComponent}
           showErrorText
         />
-        <div className="slider-wrapper">
-          <Slider
-            ref={this.slider}
-            onChange={this.handleSliderValChange}
-            handleStyle={{ backgroundColor: this.state.currentColor }}
-            min={1}
-            max={100}
-          />
-
-          <div className="liquidation">
-            <div className="label">Liquidation price:</div>
+        <div className="new-stats-wrapper">
+          <div className="stat-wrapper">
+            <div className="label">Ratio:</div>
             <div
               style={{ color: this.state.currentColor }}
               className="value"
             >
-              40%
+              {
+                ethAmount && daiAmount && (
+                  <TooltipWrapper title={ratio}>
+                    { formatNumber(ratio, 2) }%
+                  </TooltipWrapper>
+                )
+              }
+
+              { (!ethAmount || !daiAmount) && '/' }
+            </div>
+          </div>
+
+          <div className="stat-wrapper">
+            <div className="label">Liquidation price:</div>
+            <div className="value">
+              {
+                ethAmount && daiAmount && (
+                  <TooltipWrapper title={liquidationPrice}>
+                    { formatNumber(liquidationPrice, 2) }$
+                  </TooltipWrapper>
+                )
+              }
+
+              { (!ethAmount || !daiAmount) && '/' }
             </div>
           </div>
         </div>
@@ -95,7 +121,12 @@ class OnboardingCreateCdpForm extends Component {
 OnboardingCreateCdpForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  handleCreateCdpInputChange: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
+  formValues: PropTypes.object.isRequired,
+  ethPrice: PropTypes.number.isRequired,
+  liquidationPrice: PropTypes.number.isRequired,
+  ratio: PropTypes.number.isRequired,
 };
 
 const OnboardingWizardCreateCdpFormComp = reduxForm({
@@ -103,10 +134,21 @@ const OnboardingWizardCreateCdpFormComp = reduxForm({
   validate: onboardingCreateCdpFormFormValidator,
 })(OnboardingCreateCdpForm);
 
-const mapStateToProps = () => ({});
+const selector = formValueSelector('onboardingCreateCdpForm');
+
+const mapStateToProps = state => ({
+  formValues: {
+    ethAmount: selector(state, 'ethAmount'),
+    daiAmount: selector(state, 'daiAmount'),
+  },
+  ethPrice: state.general.ethPrice,
+  liquidationPrice: state.onboarding.newCdpLiquidationPrice,
+  ratio: state.onboarding.newCdpRatio,
+});
 
 const mapDispatchToProps = {
   onSubmit: createCdpAction,
+  handleCreateCdpInputChange,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(OnboardingWizardCreateCdpFormComp);

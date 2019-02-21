@@ -10,6 +10,8 @@ import {
   RESET_ONBOARDING_WIZARD,
 
   SET_ONBOARDING_FINISHED,
+
+  SET_CREATE_CDP_CALC_VALUES,
 } from '../actionTypes/onboardingActionTypes';
 import { ADD_PROXY_ADDRESS } from '../actionTypes/generalActionTypes';
 import { subscribeToMonitoringApiRequest } from '../services/apiService';
@@ -46,7 +48,6 @@ export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dis
 
     await createCdp(contractSendHandler, account, ethAmount, parseFloat(daiAmount));
 
-    // TODO SEE IF THIS CAN BE OPTIMIZED,
     const { cdp, proxyAddress } = await getAddressCdp(account);
     const newInfo = await getUpdatedCdpInfo(ethAmount, daiAmount);
 
@@ -56,6 +57,14 @@ export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dis
   } catch (err) {
     dispatch({ type: CREATE_CDP_ERROR, payload: err });
   }
+};
+
+export const handleCreateCdpInputChange = (ethAmount, daiAmount, ethPrice) => async (dispatch) => {
+  if (!ethAmount || !daiAmount) return;
+
+  const payload = await getUpdatedCdpInfo(ethAmount, daiAmount, ethPrice);
+
+  dispatch({ type: SET_CREATE_CDP_CALC_VALUES, payload });
 };
 
 /**
