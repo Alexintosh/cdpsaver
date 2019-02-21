@@ -16,7 +16,6 @@ import config from '../config/config.json';
 import { isEmptyBytes, numStringToBytes32 } from '../utils/utils';
 import dsProxyContractJson from '../contracts/DSProxy.json';
 import { getCdpInfo, getUpdatedCdpInfo } from './cdpService';
-import { signAndSendTrezor } from './trezorService';
 
 export const getAccount = () => (
   new Promise(async (resolve, reject) => {
@@ -84,27 +83,16 @@ export const metamaskApprove = async () => {
   }
 };
 
-/**
- * Calls the SaiSaverProxy contract and sends params to create the cdp
- *
- * @param sendTxFunc {Function}
- * @param from {String}
- * @param ethAmount {String}
- * @param _daiAmount {Number}
- *
- * @return {Promise<Boolean>}
- */
 export const createCdp = (sendTxFunc, from, ethAmount, _daiAmount) => new Promise(async (resolve, reject) => {
   const address1 = proxyRegistryInterfaceAddress;
   const address2 = tubInterfaceAddress;
 
   try {
     const contract = await SaiSaverProxyContract();
-    const value = window._web3.utils.toWei(ethAmount, 'ether');
+    const params = { from, value: window._web3.utils.toWei(ethAmount, 'ether') };
     const daiAmount = window._web3.utils.toWei(_daiAmount.toString(), 'ether');
-    const args = [address1, address2, daiAmount];
 
-    const promise = signAndSendTrezor(contract, 'createOpenLockAndDraw', args, value, from);
+    const promise = contract.methods.createOpenLockAndDraw(address1, address2, daiAmount).send(params);
     await sendTxFunc(promise);
 
     resolve(true);

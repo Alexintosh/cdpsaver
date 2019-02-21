@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ConnectWalletButtons from '../ConnectWalletButtons/ConnectWalletButtons';
-import ConnectTrezor from './ConnectTrezor/ConnectTrezor';
 import { normalLogin } from '../../actions/accountActions';
 
 import './Connect.scss';
@@ -52,7 +51,6 @@ class Connect extends Component {
             </div>
 
             { shown === 'choose' && (<ConnectWalletButtons handleSwitch={this.switch} accountType={accountType} />) }
-            { shown === 'trezor' && (<ConnectTrezor handleSwitch={this.switch} history={history} to={to} />) }
 
             {
               shown === 'metamask' && (
