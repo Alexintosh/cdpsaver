@@ -1,0 +1,16 @@
+@import "../../common/variables";
+@import "../../common/colors";
+
+.monitor-page-wrapper {
+    .coming-soon-container {
+        @include flex-center;
+        flex-direction: column;
+        padding: 33px 0 52px 0;
+        background: linear-gradient(180deg, #2B3943 0%, rgba(43, 57, 67, 0.46) 92.86%);
+
+
+        .coming-soon-form {
+        
+        }
+    }
+}

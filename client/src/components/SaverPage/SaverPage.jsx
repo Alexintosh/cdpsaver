@@ -19,7 +19,7 @@ const SaverPage = ({
     <div className="content-wrapper">
       <div className="width-container">
         <div className="info-section">
-          <div className="main-items-wrapper">
+          {/* <div className="main-items-wrapper">
             <div className="item">
               <div className="label">Liquidation price</div>
               <div className="value">
@@ -107,7 +107,7 @@ const SaverPage = ({
                 <div className="value">100 ETH</div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
