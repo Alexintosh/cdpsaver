@@ -61,23 +61,6 @@ export const getCdpInfo = (id, useAuth = true) => new Promise(async (resolve, re
 });
 
 /**
- * Gets Cdp info for an array of ids and returns a Promise
- * @param ids {Array}
- *
- * @return {Promise<Array>}
- */
-export const getCdpInfos = ids => new Promise(async (resolve, reject) => {
-  try {
-    await maker.authenticate();
-
-    const res = await Promise.all(ids.map(id => getCdpInfo(id, false)));
-    resolve(res);
-  } catch (err) {
-    reject(err);
-  }
-});
-
-/**
  * Calls the SaiTub contract and fetches cdp for proxy address from alternative event
  *
  * @param contract {Object}
@@ -197,6 +180,34 @@ export const getUpdatedCdpInfo = async (ethAmount, daiAmount, _ethPrice = false)
     throw new Error(err);
   }
 };
+
+
+/**
+ * Gets Cdp info for an array of ids and returns a Promise
+ * @param ids {Array}
+ *
+ * @return {Promise<Array>}
+ */
+export const getCdpInfos = ids => new Promise(async (resolve, reject) => {
+  try {
+    await maker.authenticate();
+
+    const res = await Promise.all(ids.map(id => new Promise(async (resolve2, reject2) => {
+      try {
+        const cdp = await getCdpInfo(id, false);
+        const newInfo = await getUpdatedCdpInfo(cdp.depositedETH.toNumber(), cdp.debtDai.toNumber());
+
+        resolve2({ ...cdp, ...newInfo });
+      } catch (err) {
+        reject2(err);
+      }
+    })));
+
+    resolve(res);
+  } catch (err) {
+    reject(err);
+  }
+});
 
 /**
  * Calculates the max amount of dai that the user can withdraw from the cdp

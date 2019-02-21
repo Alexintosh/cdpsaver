@@ -349,7 +349,7 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
 
     const contractFunction = contract.abi.find(abi => abi.name === contractFunctionName);
 
-    const params = [cdpIdBytes32, discount * 100, proxyAddress, marketplaceAddress];
+    const params = [cdpIdBytes32, discount * 100, marketplaceAddress];
     const txParams = { from: account };
     const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, params);
 

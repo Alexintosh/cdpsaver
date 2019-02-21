@@ -19,7 +19,7 @@ const SellCdpForm = ({ handleSubmit, onSubmit }) => (
       type="number"
       labelText="Discount"
       secondLabelText="%"
-      additional={{ min: 1 }}
+      additional={{ min: 1, max: 99 }}
       component={InputComponent}
       showErrorText
     />
