@@ -43,6 +43,10 @@ import {
   PAYBACK_DAI_REQUEST,
   PAYBACK_DAI_SUCCESS,
   PAYBACK_DAI_FAILURE,
+
+  GET_REPAY_MODAL_DATA_REQUEST,
+  GET_REPAY_MODAL_DATA_SUCCESS,
+  GET_REPAY_MODAL_DATA_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 import {
   approveDai, approveMaker, callProxyContract, transferCdp,
@@ -158,11 +162,31 @@ export const withdrawEthAction = amountEth => async (dispatch, getState) => {
 };
 
 /**
+ * Gets all the data that is displayed inside the repay modal
+ *
+ * @param amount {Number}
+ * @return {Function}
+ */
+export const getRepayModalData = amount => async (dispatch, getState) => {
+  dispatch({ type: GET_REPAY_MODAL_DATA_REQUEST });
+
+  try {
+    const { cdp } = getState().general;
+
+    const fee = (await cdp.cdpInstance.getGovernanceFee())._amount.toNumber();
+
+    dispatch({ type: GET_REPAY_MODAL_DATA_SUCCESS, payload: { repayStabilityFee: fee } });
+  } catch (err) {
+    dispatch({ type: GET_REPAY_MODAL_DATA_FAILURE, payload: err.message });
+  }
+};
+
+/**
  * Handles redux actions for the repay dai from cdp smart contract call
  *
  * @return {Function}
  */
-export const repayDaiAction = () => async (dispatch, getState) => {
+export const repayDaiAction = (amount, closeModal) => async (dispatch, getState) => {
   dispatch({ type: REPAY_DAI_REQUEST });
 
   try {
@@ -172,8 +196,11 @@ export const repayDaiAction = () => async (dispatch, getState) => {
     // const payload = await callProxyContract(...params);
 
     dispatch({ type: REPAY_DAI_SUCCESS, payload: cdp });
+    dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });
+
     dispatch(change('managerBorrowForm', 'repayDaiAmount', null));
-    // dispatch(getMaxEthWithdrawAction());
+    dispatch(closeModal());
+    dispatch(getMaxEthWithdrawAction());
   } catch (err) {
     dispatch({ type: REPAY_DAI_FAILURE, payload: err.message });
   }
@@ -264,7 +291,7 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
     }
 
     if (type === 'repay') {
-      // payload.afterCdp = await getUpdatedCdpInfo(depositedEth, cdp.generatedDAI - amount, ethPrice);
+      payload.afterCdp = await getUpdatedCdpInfo(depositedEth - amount, cdp.generatedDAI, ethPrice);
       dispatch(resetFields('managerBorrowForm', { generateDaiAmount: '', withdrawEthAmount: '' }));
     }
 

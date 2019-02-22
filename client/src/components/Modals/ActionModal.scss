@@ -1,0 +1,54 @@
+@import "../../common/colors";
+@import "../../common/text";
+
+.action-modal-wrapper .modal-body {
+
+  .description-section {
+    background: linear-gradient(180deg, #293640 1.28%, #22353C 100%);
+    padding: 43px 20px 29px 20px;
+
+    .title {
+      margin: 0 0 18px 0;
+    }
+
+    .description {
+      color: $gray;
+      max-width: 380px;
+      margin: 0 auto;
+    }
+  }
+
+  .modal-error {
+    background: none;
+    padding-bottom: 0;
+  }
+
+  .data-section {
+    padding: 32px 20px 25px 20px;
+    background: linear-gradient(180deg, rgba(55, 176, 111, 0.2) 1.28%, rgba(41, 76, 115, 0.2) 100%);
+
+    .data-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 9px;
+
+      &.big {
+        flex-direction: column;
+
+        .label { margin-bottom: 2px }
+        .value { font-size: 30px; }
+      }
+
+      .label {
+        color: $gray;
+        margin-right: 4px;
+      }
+
+      .value {
+        color: white;
+        font-size: $font-size-medium;
+      }
+    }
+  }
+}

@@ -42,6 +42,10 @@ import {
   PAYBACK_DAI_REQUEST,
   PAYBACK_DAI_SUCCESS,
   PAYBACK_DAI_FAILURE,
+
+  GET_REPAY_MODAL_DATA_REQUEST,
+  GET_REPAY_MODAL_DATA_SUCCESS,
+  GET_REPAY_MODAL_DATA_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 
 const INITIAL_STATE = {
@@ -65,12 +69,13 @@ const INITIAL_STATE = {
   payingBackDai: false,
   payingBackDaiError: '',
 
-  maxDaiRepay: 0,
-  gettingMaxDaiRepay: false,
-  gettingMaxDaiRepayError: '',
-
   repayingDai: false,
   repayingDaiError: '',
+
+  repayStabilityFee: 0,
+  gettingRepayModalData: false,
+  gettingRepayModalDataSuccess: false,
+  gettingRepayModalDataError: '',
 
   afterType: '',
   afterCdp: null,
@@ -279,6 +284,28 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         transferringCdp: false,
         transferringCdpError: payload,
+      };
+
+    case GET_REPAY_MODAL_DATA_REQUEST:
+      return {
+        ...state,
+        gettingRepayModalData: true,
+        gettingRepayModalDataError: '',
+      };
+
+    case GET_REPAY_MODAL_DATA_SUCCESS:
+      return {
+        ...state,
+        gettingRepayModalData: false,
+        gettingRepayModalDataError: '',
+        ...payload,
+      };
+
+    case GET_REPAY_MODAL_DATA_FAILURE:
+      return {
+        ...state,
+        gettingRepayModalData: false,
+        gettingRepayModalDataError: payload,
       };
 
     default:

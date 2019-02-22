@@ -4,6 +4,7 @@ import {
   CLOSE_CDP_MODAL,
   TRANSFER_CDP_MODAL,
   CANCEL_SELL_CDP_MODAL,
+  REPAY_MODAL,
 } from '../components/Modals/modalTypes';
 
 /**
@@ -40,7 +41,7 @@ export const openSellCdpModal = () => (dispatch) => {
 /**
  * Opens close cdp modal when the user wants to close his cdp
  */
-export const openCloseCdpModal = () => async (dispatch) => {
+export const openCloseCdpModal = () => (dispatch) => {
   dispatch(toggleModal(CLOSE_CDP_MODAL, { width: 481 }, true));
 };
 
@@ -49,13 +50,22 @@ export const openCloseCdpModal = () => async (dispatch) => {
  *
  * @param {Object} history
  */
-export const openTransferCdpModal = history => async (dispatch) => {
+export const openTransferCdpModal = history => (dispatch) => {
   dispatch(toggleModal(TRANSFER_CDP_MODAL, { width: 481, history }, true));
 };
 
 /**
  * Opens confirm cancel modal when the user wants to cancel the sale of his cdp
  */
-export const openCancelSellCdplModal = () => async (dispatch) => {
+export const openCancelSellCdplModal = () => (dispatch) => {
   dispatch(toggleModal(CANCEL_SELL_CDP_MODAL, { width: 481 }, true));
+};
+
+/**
+ * Opens the repay modal where the user confirms if he wants to proceed
+ *
+ * @param {Number} repayDaiAmount
+ */
+export const openRepayModal = repayDaiAmount => async (dispatch) => {
+  dispatch(toggleModal(REPAY_MODAL, { width: 481, repayDaiAmount }, true));
 };

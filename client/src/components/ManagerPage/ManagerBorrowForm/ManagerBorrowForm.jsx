@@ -12,6 +12,7 @@ import {
   repayDaiAction,
   setAfterValue,
 } from '../../../actions/dashboardActions';
+import { openRepayModal } from '../../../actions/modalActions';
 import { formatNumber } from '../../../utils/utils';
 
 class ManagerBorrowForm extends Component {
@@ -23,8 +24,7 @@ class ManagerBorrowForm extends Component {
     const {
       generatingDai, generateDaiAction, formValues, maxDai, gettingMaxDai, dispatch,
       withdrawingEth, withdrawEthAction, maxEthWithdraw, gettingMaxEthWithdraw,
-      setAfterValue, afterType, repayingDai, maxDaiRepay, repayDaiAction,
-      gettingMaxDaiRepay,
+      setAfterValue, afterType, repayingDai, openRepayModal,
     } = this.props;
 
     const { generateDaiAmount, withdrawEthAmount, repayDaiAmount } = formValues;
@@ -112,7 +112,22 @@ class ManagerBorrowForm extends Component {
         </div>
 
         <div className="item">
-          <div className="max-wrapper">(max 280)</div>
+          <div
+            className={`max-wrapper ${repayingDai ? 'loading' : ''}`}
+            onClick={() => {
+            if (!repayingDai) {
+                setAfterValue(maxEthWithdraw, 'repay');
+                dispatch(change('managerBorrowForm', 'withdrawEthAmount', ''));
+                dispatch(change('managerBorrowForm', 'generateDaiAmount', ''));
+                dispatch(change('managerBorrowForm', 'repayDaiAmount', maxEthWithdraw));
+              }
+            }}
+          >
+            <TooltipWrapper title={maxEthWithdraw}>
+              { gettingMaxEthWithdraw ? 'Loading...' : `(max ${formatNumber(maxEthWithdraw, 2)})` }
+            </TooltipWrapper>
+          </div>
+
           <Field
             id="manager-repay-input"
             type="number"
@@ -129,9 +144,9 @@ class ManagerBorrowForm extends Component {
           <button
             type="button"
             className="button gray uppercase"
-            onClick={() => { repayDaiAction(repayDaiAmount); }}
+            onClick={() => { openRepayModal(repayDaiAmount); }}
             disabled={
-              repayingDai || !repayDaiAmount || (repayDaiAmount < 0) || (repayDaiAmount > maxDaiRepay)
+              repayingDai || !repayDaiAmount || (repayDaiAmount < 0) || (repayDaiAmount > maxEthWithdraw)
             }
           >
             Repay
@@ -158,10 +173,8 @@ ManagerBorrowForm.propTypes = {
   maxEthWithdraw: PropTypes.number.isRequired,
   gettingMaxEthWithdraw: PropTypes.bool.isRequired,
 
-  repayDaiAction: PropTypes.func.isRequired,
   repayingDai: PropTypes.bool.isRequired,
-  maxDaiRepay: PropTypes.number.isRequired,
-  gettingMaxDaiRepay: PropTypes.bool.isRequired,
+  openRepayModal: PropTypes.func.isRequired,
 };
 
 const ManagerBorrowFormComp = reduxForm({ form: 'managerBorrowForm' })(ManagerBorrowForm);
@@ -183,14 +196,12 @@ const mapStateToProps = state => ({
   gettingMaxEthWithdraw: state.dashboard.gettingMaxEthWithdraw,
 
   repayingDai: state.dashboard.repayingDai,
-  maxDaiRepay: state.dashboard.maxDaiRepay,
-  gettingMaxDaiRepay: state.dashboard.gettingMaxDaiRepay,
 
   afterType: state.dashboard.afterType,
 });
 
 const mapDispatchToProps = {
-  generateDaiAction, withdrawEthAction, repayDaiAction, setAfterValue,
+  generateDaiAction, withdrawEthAction, repayDaiAction, setAfterValue, openRepayModal,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManagerBorrowFormComp);
