@@ -46,6 +46,7 @@ import {
   GET_REPAY_MODAL_DATA_REQUEST,
   GET_REPAY_MODAL_DATA_SUCCESS,
   GET_REPAY_MODAL_DATA_FAILURE,
+  RESET_REPAY_MODAL,
 } from '../actionTypes/dashboardActionTypes';
 
 const INITIAL_STATE = {
@@ -74,7 +75,6 @@ const INITIAL_STATE = {
 
   repayStabilityFee: 0,
   gettingRepayModalData: false,
-  gettingRepayModalDataSuccess: false,
   gettingRepayModalDataError: '',
 
   afterType: '',
@@ -306,6 +306,16 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         gettingRepayModalData: false,
         gettingRepayModalDataError: payload,
+      };
+
+    case RESET_REPAY_MODAL:
+      return {
+        ...state,
+        repayingDai: false,
+        repayingDaiError: '',
+        repayStabilityFee: 0,
+        gettingRepayModalData: false,
+        gettingRepayModalDataError: '',
       };
 
     default:

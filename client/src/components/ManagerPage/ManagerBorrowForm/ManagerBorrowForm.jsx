@@ -115,7 +115,7 @@ class ManagerBorrowForm extends Component {
           <div
             className={`max-wrapper ${repayingDai ? 'loading' : ''}`}
             onClick={() => {
-            if (!repayingDai) {
+              if (!repayingDai) {
                 setAfterValue(maxEthWithdraw, 'repay');
                 dispatch(change('managerBorrowForm', 'withdrawEthAmount', ''));
                 dispatch(change('managerBorrowForm', 'generateDaiAmount', ''));

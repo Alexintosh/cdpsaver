@@ -3,12 +3,16 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ModalHeader from '../ModalHeader';
 import ModalBody from '../ModalBody';
-import { repayDaiAction, getRepayModalData } from '../../../actions/dashboardActions';
+import { repayDaiAction, getRepayModalData, resetRepayModal } from '../../../actions/dashboardActions';
 import Loader from '../../Loader/Loader';
 
 class RepayModal extends Component {
   componentWillMount() {
     this.props.getRepayModalData(this.props.repayDaiAmount);
+  }
+
+  componentWillUnmount() {
+    this.props.resetRepayModal();
   }
 
   render() {
@@ -93,6 +97,7 @@ RepayModal.propTypes = {
   repayDaiAmount: PropTypes.number.isRequired,
   getRepayModalData: PropTypes.func.isRequired,
   repayDaiAction: PropTypes.func.isRequired,
+  resetRepayModal: PropTypes.func.isRequired,
   gettingRepayModalData: PropTypes.bool.isRequired,
   gettingRepayModalDataError: PropTypes.string.isRequired,
   repayStabilityFee: PropTypes.number.isRequired,
@@ -107,7 +112,7 @@ const mapStateToProps = ({ dashboard }) => ({
 });
 
 const mapDispatchToProps = {
-  getRepayModalData, repayDaiAction,
+  getRepayModalData, repayDaiAction, resetRepayModal,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RepayModal);

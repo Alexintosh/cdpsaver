@@ -47,6 +47,7 @@ import {
   GET_REPAY_MODAL_DATA_REQUEST,
   GET_REPAY_MODAL_DATA_SUCCESS,
   GET_REPAY_MODAL_DATA_FAILURE,
+  RESET_REPAY_MODAL,
 } from '../actionTypes/dashboardActionTypes';
 import {
   approveDai, approveMaker, callProxyContract, transferCdp,
@@ -205,6 +206,13 @@ export const repayDaiAction = (amount, closeModal) => async (dispatch, getState)
     dispatch({ type: REPAY_DAI_FAILURE, payload: err.message });
   }
 };
+
+/**
+ * Resets the state for the repay modal
+ *
+ * @return {Function}
+ */
+export const resetRepayModal = () => (dispatch) => { dispatch({ type: RESET_REPAY_MODAL }); };
 
 /**
  * Handles redux actions for the add eth collateral to the cdp smart contract call
