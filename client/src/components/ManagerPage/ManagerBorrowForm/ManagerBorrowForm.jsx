@@ -64,7 +64,7 @@ class ManagerBorrowForm extends Component {
             type="button"
             className="button gray uppercase"
             onClick={() => { generateDaiAction(generateDaiAmount); }}
-            disabled={generatingDai || !generateDaiAmount || (generateDaiAmount < 0) || (generateDaiAmount > maxDai)}
+            disabled={generatingDai || !generateDaiAmount || (generateDaiAmount <= 0) || (generateDaiAmount > maxDai)}
           >
             { generatingDai ? 'Generating' : 'Generate' }
           </button>
@@ -104,7 +104,7 @@ class ManagerBorrowForm extends Component {
             className="button gray uppercase"
             onClick={() => { withdrawEthAction(withdrawEthAmount); }}
             disabled={
-              withdrawingEth || !withdrawEthAmount || (withdrawEthAmount < 0) || (withdrawEthAmount > maxEthWithdraw)
+              withdrawingEth || !withdrawEthAmount || (withdrawEthAmount <= 0) || (withdrawEthAmount > maxEthWithdraw)
             }
           >
             { withdrawingEth ? 'Withdrawing' : 'Withdraw' }
@@ -144,9 +144,9 @@ class ManagerBorrowForm extends Component {
           <button
             type="button"
             className="button gray uppercase"
-            onClick={() => { openRepayModal(repayDaiAmount); }}
+            onClick={() => { openRepayModal(parseFloat(repayDaiAmount)); }}
             disabled={
-              repayingDai || !repayDaiAmount || (repayDaiAmount < 0) || (repayDaiAmount > maxEthWithdraw)
+              repayingDai || !repayDaiAmount || (repayDaiAmount <= 0) || (repayDaiAmount > maxEthWithdraw)
             }
           >
             Repay

@@ -29,6 +29,7 @@ import {
   WITHDRAW_ETH_SUCCESS,
   REPAY_DAI_SUCCESS,
   PAYBACK_DAI_SUCCESS,
+  BOOST_SUCCESS,
 } from '../actionTypes/dashboardActionTypes';
 import { LS_ACCOUNT } from '../constants/general';
 import { CANCEL_SELL_CDP_SUCCESS, SELL_CDP_SUCCESS } from '../actionTypes/marketplaceActionTypes';
@@ -95,6 +96,7 @@ export default (state = INITIAL_STATE, action) => {
     case SELL_CDP_SUCCESS:
     case PAYBACK_DAI_SUCCESS:
     case CANCEL_SELL_CDP_SUCCESS:
+    case BOOST_SUCCESS:
       return {
         ...state,
         cdp: {

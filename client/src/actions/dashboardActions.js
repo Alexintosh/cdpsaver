@@ -48,6 +48,15 @@ import {
   GET_REPAY_MODAL_DATA_SUCCESS,
   GET_REPAY_MODAL_DATA_FAILURE,
   RESET_REPAY_MODAL,
+
+  GET_BOOST_MODAL_DATA_REQUEST,
+  GET_BOOST_MODAL_DATA_SUCCESS,
+  GET_BOOST_MODAL_DATA_FAILURE,
+  RESET_BOOST_MODAL,
+
+  BOOST_REQUEST,
+  BOOST_SUCCESS,
+  BOOST_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 import {
   approveDai, approveMaker, callProxyContract, transferCdp,
@@ -215,6 +224,58 @@ export const repayDaiAction = (amount, closeModal) => async (dispatch, getState)
 export const resetRepayModal = () => (dispatch) => { dispatch({ type: RESET_REPAY_MODAL }); };
 
 /**
+ * Gets all the data that is displayed inside the boost modal
+ *
+ * @param amount {Number}
+ * @return {Function}
+ */
+export const getBoostModalData = amount => async (dispatch, getState) => {
+  dispatch({ type: GET_BOOST_MODAL_DATA_REQUEST });
+
+  try {
+    // const { cdp } = getState().general;
+
+    // const boostEthAmount = await;
+
+    dispatch({ type: GET_BOOST_MODAL_DATA_SUCCESS, payload: { boostEthAmount: 0.78, boostExchangeRate: 117 } });
+  } catch (err) {
+    dispatch({ type: GET_BOOST_MODAL_DATA_FAILURE, payload: err.message });
+  }
+};
+
+/**
+ * Handles redux actions for the repay dai from cdp smart contract call
+ *
+ * @return {Function}
+ */
+export const boostAction = (amount, closeModal) => async (dispatch, getState) => {
+  dispatch({ type: BOOST_REQUEST });
+
+  try {
+    const { cdp } = getState().general;
+    // const params = [amountDai, cdp.id, proxyAddress, account, 'wipe', ethPrice, false, true];
+
+    // const payload = await callProxyContract(...params);
+
+    dispatch({ type: BOOST_SUCCESS, payload: cdp });
+    dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });
+
+    dispatch(change('managerPaybackForm', 'boostAmount', null));
+    dispatch(closeModal());
+    dispatch(getMaxDaiAction());
+  } catch (err) {
+    dispatch({ type: BOOST_FAILURE, payload: err.message });
+  }
+};
+
+/**
+ * Resets the state for the repay modal
+ *
+ * @return {Function}
+ */
+export const resetBoostModal = () => (dispatch) => { dispatch({ type: RESET_BOOST_MODAL }); };
+
+/**
  * Handles redux actions for the add eth collateral to the cdp smart contract call
  *
  * @param amountEth {String}
@@ -288,6 +349,7 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
 
     if (type !== afterType) payload.afterType = type;
 
+    // BORROW FORM
     if (type === 'generate') {
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth, cdp.generatedDAI + amount, ethPrice);
       dispatch(resetFields('managerBorrowForm', { withdrawEthAmount: '', repayDaiAmount: '' }));
@@ -303,15 +365,21 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
       dispatch(resetFields('managerBorrowForm', { generateDaiAmount: '', withdrawEthAmount: '' }));
     }
 
+    // PAYBACK FORM
+    if (type === 'payback') {
+      const daiAmount = amount > cdp.generatedDAI ? 0 : cdp.generatedDAI - amount;
+      payload.afterCdp = await getUpdatedCdpInfo(depositedEth, daiAmount, ethPrice);
+      dispatch(resetFields('managerPaybackForm', { addCollateralAmount: '', boostAmount: '' }));
+    }
+
     if (type === 'collateral') {
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth + amount, cdp.generatedDAI, ethPrice);
       dispatch(resetFields('managerPaybackForm', { paybackAmount: '', boostAmount: '' }));
     }
 
-    if (type === 'payback') {
-      const daiAmount = amount > cdp.generatedDAI ? 0 : cdp.generatedDAI - amount;
-      payload.afterCdp = await getUpdatedCdpInfo(depositedEth, daiAmount, ethPrice);
-      dispatch(resetFields('managerPaybackForm', { addCollateralAmount: '', boostAmount: '' }));
+    if (type === 'boost') {
+      payload.afterCdp = await getUpdatedCdpInfo(depositedEth, cdp.generatedDAI + amount, ethPrice);
+      dispatch(resetFields('managerPaybackForm', { paybackAmount: '', addCollateralAmount: '' }));
     }
 
     if (type === 'clear') payload.afterCdp = null;

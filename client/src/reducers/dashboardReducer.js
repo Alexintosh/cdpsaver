@@ -47,6 +47,15 @@ import {
   GET_REPAY_MODAL_DATA_SUCCESS,
   GET_REPAY_MODAL_DATA_FAILURE,
   RESET_REPAY_MODAL,
+
+  GET_BOOST_MODAL_DATA_REQUEST,
+  GET_BOOST_MODAL_DATA_SUCCESS,
+  GET_BOOST_MODAL_DATA_FAILURE,
+  RESET_BOOST_MODAL,
+
+  BOOST_REQUEST,
+  BOOST_SUCCESS,
+  BOOST_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 
 const INITIAL_STATE = {
@@ -81,6 +90,14 @@ const INITIAL_STATE = {
   afterCdp: null,
   gettingAfterCdp: false,
   gettingAfterCdpFailure: '',
+
+  boosting: false,
+  boostingError: '',
+
+  boostEthAmount: 0,
+  boostExchangeRate: 0,
+  gettingBoostModalData: false,
+  gettingBoostModalDataError: '',
 
   approvingDai: false,
   approvingDaiError: '',
@@ -317,6 +334,49 @@ export default (state = INITIAL_STATE, action) => {
         gettingRepayModalData: false,
         gettingRepayModalDataError: '',
       };
+
+    case BOOST_REQUEST:
+      return { ...state, boosting: true, boostingError: '' };
+
+    case BOOST_SUCCESS:
+      return { ...state, boosting: false, boostingError: '' };
+
+    case BOOST_FAILURE:
+      return { ...state, boosting: false, boostingError: payload };
+
+    case GET_BOOST_MODAL_DATA_REQUEST:
+      return {
+        ...state,
+        gettingBoostModalData: true,
+        gettingBoostModalDataError: '',
+      };
+
+    case GET_BOOST_MODAL_DATA_SUCCESS:
+      return {
+        ...state,
+        gettingBoostModalData: false,
+        gettingBoostModalDataError: '',
+        ...payload,
+      };
+
+    case GET_BOOST_MODAL_DATA_FAILURE:
+      return {
+        ...state,
+        gettingBoostModalData: false,
+        gettingBoostModalDataError: payload,
+      };
+
+    case RESET_BOOST_MODAL:
+      return {
+        ...state,
+        boosting: false,
+        boostingError: '',
+        boostEthAmount: 0,
+        boostExchangeRate: 0,
+        gettingBoostModalData: false,
+        gettingBoostModalDataError: '',
+      };
+
 
     default:
       return state;

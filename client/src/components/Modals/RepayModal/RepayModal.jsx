@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ModalHeader from '../ModalHeader';
 import ModalBody from '../ModalBody';
-import { repayDaiAction, getRepayModalData, resetRepayModal } from '../../../actions/dashboardActions';
 import Loader from '../../Loader/Loader';
+import { repayDaiAction, getRepayModalData, resetRepayModal } from '../../../actions/dashboardActions';
 
 class RepayModal extends Component {
   componentWillMount() {
@@ -84,7 +84,7 @@ class RepayModal extends Component {
             onClick={() => { repayDaiAction(repayDaiAmount, closeModal); }}
             className="button green uppercase"
           >
-            Repay
+            { repayingDai ? 'Repaying' : 'Repay' }
           </button>
         </div>
       </div>

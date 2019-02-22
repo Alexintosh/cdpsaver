@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Field, formValueSelector, reduxForm } from 'redux-form';
+import {
+  change, Field, formValueSelector, reduxForm,
+} from 'redux-form';
 import InputComponent from '../../Forms/InputComponent';
 import { addCollateralAction, paybackDaiAction, setAfterValue } from '../../../actions/dashboardActions';
+import { openBoostModal } from '../../../actions/modalActions';
+import { formatNumber } from '../../../utils/utils';
+import TooltipWrapper from '../../TooltipWrapper/TooltipWrapper';
 
 class ManagerPaybackForm extends Component {
   componentWillUnmount() {
@@ -13,7 +18,8 @@ class ManagerPaybackForm extends Component {
   render() {
     const {
       formValues, addingCollateral, addCollateralAction, setAfterValue, afterType,
-      paybackDaiAction, payingBackDai,
+      paybackDaiAction, payingBackDai, dispatch, boosting, maxDai, gettingMaxDai,
+      openBoostModal,
     } = this.props;
 
     const { paybackAmount, addCollateralAmount, boostAmount } = formValues;
@@ -37,7 +43,7 @@ class ManagerPaybackForm extends Component {
             type="button"
             className="button gray uppercase variable-width"
             onClick={() => { paybackDaiAction(paybackAmount); }}
-            disabled={payingBackDai || !paybackAmount || paybackAmount < 0}
+            disabled={payingBackDai || !paybackAmount || paybackAmount <= 0}
           >
             { payingBackDai ? 'Paying back' : 'Payback' }
           </button>
@@ -62,25 +68,49 @@ class ManagerPaybackForm extends Component {
             type="button"
             className="button gray uppercase variable-width"
             onClick={() => { addCollateralAction(addCollateralAmount); }}
-            disabled={addingCollateral || !addCollateralAmount || addCollateralAmount < 0}
+            disabled={addingCollateral || !addCollateralAmount || addCollateralAmount <= 0}
           >
             { addingCollateral ? 'Adding collateral' : 'Add collateral' }
           </button>
         </div>
 
         <div className="item">
+          <div
+            className={`max-wrapper ${boosting ? 'loading' : ''}`}
+            onClick={() => {
+              if (!boosting) {
+                setAfterValue(maxDai, 'boost');
+                dispatch(change('managerPaybackForm', 'paybackAmount', ''));
+                dispatch(change('managerPaybackForm', 'addCollateralAmount', ''));
+                dispatch(change('managerPaybackForm', 'boostAmount', maxDai));
+              }
+            }}
+          >
+            <TooltipWrapper title={maxDai}>
+              { gettingMaxDai ? 'Loading...' : `(max ${formatNumber(maxDai, 2)})` }
+            </TooltipWrapper>
+          </div>
+
           <Field
             id="manager-boost-input"
             type="number"
-            wrapperClassName="form-item-wrapper boost"
+            wrapperClassName={`form-item-wrapper boost ${afterType === 'boost' ? 'active' : ''}`}
             name="boostAmount"
             labelText="Boost:"
+            onChange={(e) => { setAfterValue(e.target.value, 'boost'); }}
             secondLabelText="DAI"
             placeholder="0"
             additional={{ min: 0 }}
             component={InputComponent}
           />
-          <button type="button" className="button gray uppercase" disabled={boostAmount < 0}>
+          <button
+            type="button"
+            className="button gray uppercase"
+            onClick={() => { openBoostModal(parseFloat(boostAmount)); }}
+            disabled={
+              boosting || !boostAmount || (boostAmount <= 0) || (boostAmount > maxDai)
+            }
+          >
             Boost
           </button>
         </div>
@@ -91,6 +121,7 @@ class ManagerPaybackForm extends Component {
 
 ManagerPaybackForm.propTypes = {
   formValues: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
   setAfterValue: PropTypes.func.isRequired,
   afterType: PropTypes.string.isRequired,
 
@@ -99,6 +130,11 @@ ManagerPaybackForm.propTypes = {
 
   paybackDaiAction: PropTypes.func.isRequired,
   payingBackDai: PropTypes.bool.isRequired,
+
+  openBoostModal: PropTypes.func.isRequired,
+  maxDai: PropTypes.number.isRequired,
+  gettingMaxDai: PropTypes.bool.isRequired,
+  boosting: PropTypes.bool.isRequired,
 };
 
 const ManagerPaybackFormComp = reduxForm({ form: 'managerPaybackForm' })(ManagerPaybackForm);
@@ -114,11 +150,15 @@ const mapStateToProps = state => ({
   addingCollateral: state.dashboard.addingCollateral,
   payingBackDai: state.dashboard.payingBackDai,
 
+  maxDai: state.dashboard.maxDai,
+  gettingMaxDai: state.dashboard.gettingMaxDai,
+  boosting: state.dashboard.boosting,
+
   afterType: state.dashboard.afterType,
 });
 
 const mapDispatchToProps = {
-  addCollateralAction, paybackDaiAction, setAfterValue,
+  addCollateralAction, paybackDaiAction, setAfterValue, openBoostModal,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManagerPaybackFormComp);

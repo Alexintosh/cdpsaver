@@ -40,6 +40,23 @@
         .value { font-size: 30px; }
       }
 
+      &.desc {
+
+      }
+
+      &.double {
+        margin-bottom: 25px;
+
+        .label {
+          margin-right: 6px;
+          margin-left: 6px;
+        }
+      }
+
+      &.desc {
+        flex-direction: column;
+      }
+
       .label {
         color: $gray;
         margin-right: 4px;

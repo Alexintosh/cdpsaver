@@ -5,6 +5,7 @@ import {
   TRANSFER_CDP_MODAL,
   CANCEL_SELL_CDP_MODAL,
   REPAY_MODAL,
+  BOOST_MODAL,
 } from '../components/Modals/modalTypes';
 
 /**
@@ -68,4 +69,13 @@ export const openCancelSellCdplModal = () => (dispatch) => {
  */
 export const openRepayModal = repayDaiAmount => async (dispatch) => {
   dispatch(toggleModal(REPAY_MODAL, { width: 481, repayDaiAmount }, true));
+};
+
+/**
+ * Opens the boost modal where the user confirms if he wants to proceed
+ *
+ * @param {Number} boostAmount
+ */
+export const openBoostModal = boostAmount => async (dispatch) => {
+  dispatch(toggleModal(BOOST_MODAL, { width: 481, boostAmount }, true));
 };
