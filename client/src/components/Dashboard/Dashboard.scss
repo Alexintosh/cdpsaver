@@ -2,12 +2,23 @@
 @import "../../common/variables";
 @import "../../common/text";
 
-.dashboard-page-wrapper {
+.dashboard-wrapper {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
 
   .sub-heading-wrapper {
+
+    .left a:not(:last-child) { margin-right: 41px; }
+    .right {
+      display: flex;
+
+      .sub-title {
+        padding-right: 14px;
+        border-right: 1px solid $green;
+        margin-right: 14px;
+      }
+    }
 
     .width-container {
       justify-content: space-between;
@@ -39,6 +50,12 @@
       }
     }
   }
+}
+
+.dashboard-page-wrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 
   .content-wrapper {
     background: $gray-6;

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Tooltip } from 'react-tippy';
 import PieChart from '../PieChart/PieChart';
 import Tabs from '../Tabs/Tabs';
 import DaiIcon from '../Decorative/DaiIcon';
@@ -9,7 +8,7 @@ import EthIcon from '../Decorative/EthIcon';
 import ManagerBorrowForm from './ManagerBorrowForm/ManagerBorrowForm';
 import ManagerPaybackForm from './ManagerPaybackForm/ManagerPaybackForm';
 import CdpAfterVal from './CdpAfterVal';
-import { formatAccType, formatAcc, formatNumber } from '../../utils/utils';
+import { formatNumber } from '../../utils/utils';
 import { getMaxDaiAction, getMaxEthWithdrawAction } from '../../actions/dashboardActions';
 import { openCloseCdpModal, openTransferCdpModal } from '../../actions/modalActions';
 import TooltipWrapper from '../TooltipWrapper/TooltipWrapper';
@@ -26,37 +25,12 @@ class ManagerPage extends Component {
 
   render() {
     const {
-      cdp, gettingEthPrice, ethPrice, gettingAfterCdp, afterCdp, afterType, accountType,
-      account, openCloseCdpModal, openTransferCdpModal, history, network,
+      cdp, gettingEthPrice, ethPrice, gettingAfterCdp, afterCdp, afterType,
+      openCloseCdpModal, openTransferCdpModal, history,
     } = this.props;
 
     return (
       <div className="manager-page-wrapper dashboard-page-wrapper">
-        <div className="sub-heading-wrapper">
-          <div className="width-container">
-            <div className="sub-title with-label">
-              <div className="label">CDP ID:</div>
-              <div className="value">#{ cdp.id }</div>
-            </div>
-
-            <div className="account-wrapper">
-              <div className="acc-type">{ formatAccType(accountType) }</div>
-              <div className="connected">Connected:</div>
-
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                className="acc"
-                href={`https://${network === 42 ? 'kovan.' : ''}etherscan.io/address/${account}`}
-              >
-                <Tooltip title={account}>
-                  { formatAcc(account) }
-                </Tooltip>
-              </a>
-            </div>
-          </div>
-        </div>
-
         <div className="content-wrapper">
           <div className="width-container">
             <div className="main-section-wrapper">
@@ -198,12 +172,9 @@ ManagerPage.propTypes = {
   gettingAfterCdp: PropTypes.bool.isRequired,
   afterCdp: PropTypes.object,
   afterType: PropTypes.string,
-  accountType: PropTypes.string.isRequired,
-  account: PropTypes.string.isRequired,
   openCloseCdpModal: PropTypes.func.isRequired,
   openTransferCdpModal: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
-  network: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = ({ general, dashboard }) => ({

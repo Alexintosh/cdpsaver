@@ -2,11 +2,6 @@ import React from 'react';
 
 const MonitoringPage = () => (
   <div className="dashboard-page-wrapper monitor-page-wrapper">
-    <div className="sub-heading-wrapper">
-      <div className="width-container">
-        <div className="sub-title">CDP Monitor</div>
-      </div>
-    </div>
     <div className="content-wrapper">
       <div className="coming-soon-container">
         <div className="coming-soon-header">

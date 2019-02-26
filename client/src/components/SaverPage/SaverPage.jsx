@@ -10,12 +10,6 @@ const SaverPage = ({
   cdp, gettingEthPrice, ethPrice,
 }) => (
   <div className="saver-page-wrapper dashboard-page-wrapper">
-    <div className="sub-heading-wrapper">
-      <div className="width-container">
-        <div className="sub-title">CDP Saver</div>
-      </div>
-    </div>
-
     <div className="content-wrapper">
       <div className="width-container">
         <div className="info-section">
