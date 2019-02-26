@@ -107,8 +107,9 @@
   }
 
   .cdp-list-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, max-content));
+    justify-content: center;
+    grid-gap: 20px;
   }
 }

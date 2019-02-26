@@ -126,14 +126,13 @@ a {
     max-width: 100%;
     min-height: 40px;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: normal;
     line-height: 24px;
     background-color: #eee;
     padding: 10px;
-    border-radius: 3px;
     box-shadow: 0 2px 2px 0 rgba(black, .2);
     &.success {
-      background-color: #4a9c20;
+      background-color: $green;
       color: white;
     }
     &.error {
