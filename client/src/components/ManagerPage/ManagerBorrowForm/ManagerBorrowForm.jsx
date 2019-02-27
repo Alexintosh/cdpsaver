@@ -14,6 +14,7 @@ import {
 } from '../../../actions/dashboardActions';
 import { openRepayModal } from '../../../actions/modalActions';
 import { formatNumber } from '../../../utils/utils';
+import InfoBox from '../../Decorative/InfoBox/InfoBox';
 
 class ManagerBorrowForm extends Component {
   componentWillUnmount() {
@@ -141,16 +142,20 @@ class ManagerBorrowForm extends Component {
             disabled={repayingDai}
             component={InputComponent}
           />
-          <button
-            type="button"
-            className="button gray uppercase"
-            onClick={() => { openRepayModal(parseFloat(repayDaiAmount)); }}
-            disabled={
-              repayingDai || !repayDaiAmount || (repayDaiAmount <= 0) || (repayDaiAmount > maxEthWithdraw)
-            }
-          >
-            Repay
-          </button>
+          <div className="item-button-wrapper">
+            <InfoBox message="Repay will draw ETH from CDP and payback the debt, lowering the liquidation price" />
+
+            <button
+              type="button"
+              className="button gray uppercase"
+              onClick={() => { openRepayModal(parseFloat(repayDaiAmount)); }}
+              disabled={
+                repayingDai || !repayDaiAmount || (repayDaiAmount <= 0) || (repayDaiAmount > maxEthWithdraw)
+              }
+            >
+              Repay
+            </button>
+          </div>
         </div>
       </form>
     );

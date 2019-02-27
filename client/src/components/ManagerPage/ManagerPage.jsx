@@ -136,18 +136,10 @@ class ManagerPage extends Component {
               <Tabs>
                 <div label="Borrow">
                   <ManagerBorrowForm />
-
-                  <div className="info-text">
-                    *Repay will draw ETH from CDP and payback the debt, lowering the liquidation price
-                  </div>
                 </div>
 
                 <div label="Payback">
                   <ManagerPaybackForm />
-
-                  <div className="info-text">
-                    *Boost will draw DAI and buy ETH, increasing the amount ETH in the CDP
-                  </div>
                 </div>
               </Tabs>
             </div>

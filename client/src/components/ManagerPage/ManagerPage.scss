@@ -97,6 +97,10 @@
     margin-bottom: 32px;
   }
 
+  .item-button-wrapper {
+    display: flex;
+  }
+
   .actions-section-wrapper {
 
     .tab-content {
@@ -106,11 +110,6 @@
         display: flex;
         justify-content: space-between;
         margin-bottom: 22px;
-      }
-
-      .info-text {
-        text-align: right;
-        color: white;
       }
     }
   }

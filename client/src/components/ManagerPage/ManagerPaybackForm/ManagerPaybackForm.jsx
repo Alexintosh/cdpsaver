@@ -9,6 +9,7 @@ import { addCollateralAction, paybackDaiAction, setAfterValue } from '../../../a
 import { openBoostModal } from '../../../actions/modalActions';
 import { formatNumber } from '../../../utils/utils';
 import TooltipWrapper from '../../TooltipWrapper/TooltipWrapper';
+import InfoBox from '../../Decorative/InfoBox/InfoBox';
 
 class ManagerPaybackForm extends Component {
   componentWillUnmount() {
@@ -103,16 +104,21 @@ class ManagerPaybackForm extends Component {
             additional={{ min: 0 }}
             component={InputComponent}
           />
-          <button
-            type="button"
-            className="button gray uppercase"
-            onClick={() => { openBoostModal(parseFloat(boostAmount)); }}
-            disabled={
-              boosting || !boostAmount || (boostAmount <= 0) || (boostAmount > maxDai)
-            }
-          >
-            Boost
-          </button>
+
+          <div className="item-button-wrapper">
+            <InfoBox message="Boost will draw DAI and buy ETH, increasing the amount ETH in the CDP" />
+
+            <button
+              type="button"
+              className="button gray uppercase"
+              onClick={() => { openBoostModal(parseFloat(boostAmount)); }}
+              disabled={
+                boosting || !boostAmount || (boostAmount <= 0) || (boostAmount > maxDai)
+              }
+            >
+              Boost
+            </button>
+          </div>
         </div>
       </form>
     );
