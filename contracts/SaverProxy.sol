@@ -19,7 +19,7 @@ contract SaverProxy is DSMath {
     address constant SAI_PROXY = 0xADB7c74bCe932fC6C27ddA3Ac2344707d2fBb0E6;
     address constant PETH_ADDRESS = 0xf4d791139cE033Ad35DB2B2201435fAd668B1b64;
 
-    address constant KYBER_WRAPPER = 0xDde55CD1bf6F83C78516A1fDf3545f6AFD18EfF4;
+    address constant KYBER_WRAPPER = 0x6F95865D93eD781AddC7576901842ee3B689E0f1;
 
     address constant TUB_ADDRESS = 0xa71937147b55Deb8a530C7229C442Fd3F31b7db2;
     
@@ -42,16 +42,22 @@ contract SaverProxy is DSMath {
 
         free(tub, _cup, _amount);
 
-        uint daiAmount = ExchangeInterface(KYBER_WRAPPER).swapEtherToToken.
-                            value(_amount)(_amount, DAI_ADDRESS);
-        
+        uint daiAmount = rmul(_amount, uint(tub.pip().read())); //Amount of dai we can return
+
         if (_buyMkr) {
-            // uint fee = payStabilityFee(tub, _cup, daiAmount);
-            // daiAmount -= fee;
+            uint ethFee = feeInEth(tub, _cup, daiAmount);
+            ExchangeInterface(KYBER_WRAPPER).swapEtherToToken.
+                            value(_amount)(_amount, MKR_ADDRESS);
+
+            _amount -= ethFee;
         } else {
             uint mkrAmount = feeInMkr(tub, _cup, daiAmount);
             ERC20(MKR_ADDRESS).transferFrom(msg.sender, address(this), mkrAmount);
         }
+
+        daiAmount = ExchangeInterface(KYBER_WRAPPER).swapEtherToToken.
+                            value(_amount)(_amount, DAI_ADDRESS);
+        
 
         tub.wipe(_cup, daiAmount);
 
@@ -104,15 +110,23 @@ contract SaverProxy is DSMath {
     }
 
     //TODO: precise calc. of the _daiRepay amount
-    // function payStabilityFee(TubInterface _tub, bytes32 _cup, uint _daiRepay) internal returns(uint) {
-    //     uint govAmt = feeInMkr(_tub, _cup, _daiRepay);
+    function payStabilityFee(TubInterface _tub, bytes32 _cup, uint _daiRepay) internal returns(uint) {
+        uint feeInDai = rmul(_daiRepay, rdiv(_tub.rap(_cup), _tub.tab(_cup)));
 
-    //     uint mkrAmountInDai = swapTokenToToken(DAI_ADDRESS, MKR_ADDRESS, feeInDai);
+        uint mkrAmountInDai = ExchangeInterface(KYBER_WRAPPER).swapTokenToToken(DAI_ADDRESS, MKR_ADDRESS, feeInDai);
 
-    //     return mkrAmountInDai;
-    // }
+        return mkrAmountInDai;
+    }
 
     function feeInMkr(TubInterface _tub, bytes32 _cup, uint _daiRepay) public returns (uint) {
+        uint feeInDai = rmul(_daiRepay, rdiv(_tub.rap(_cup), _tub.tab(_cup)));
+
+        bytes32 ethPrice = _tub.pip().read();
+
+        return wdiv(feeInDai, uint(ethPrice));
+    }
+
+    function feeInEth(TubInterface _tub, bytes32 _cup, uint _daiRepay) public returns (uint) {
         bytes32 mkrPrice;
         bool ok;
 

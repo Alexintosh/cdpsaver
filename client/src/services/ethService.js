@@ -345,11 +345,14 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
     const DSProxyContract = await new window._web3.eth.Contract(config.DSProxy.abi, proxyAddress);
 
     const authorityAddress = await DSProxyContract.methods.authority().call();
-    if (!isEmptyBytes(authorityAddress)) contractFunctionName = 'sell';
+    const params = [cdpIdBytes32, discount * 100, proxyAddress, marketplaceAddress];
+
+    if (!isEmptyBytes(authorityAddress)) {
+      contractFunctionName = 'sell';
+      params.splice(2, 1);
+    }
 
     const contractFunction = contract.abi.find(abi => abi.name === contractFunctionName);
-
-    const params = [cdpIdBytes32, discount * 100, marketplaceAddress];
     const txParams = { from: account };
     const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, params);
 
@@ -404,18 +407,19 @@ export const cancelSellCdp = (sendTxFunc, account, cdpId, proxyAddress) => new P
  * @param sendTxFunc {Function}
  * @param account {String}
  * @param cdpId {Number}
- * @param discount {Number}
  *
  * @return {Promise<Boolean>}
  */
-export const buyCdp = (sendTxFunc, cdpId, account, discount) => new Promise(async (resolve, reject) => {
+export const buyCdp = (sendTxFunc, cdpId, account) => new Promise(async (resolve, reject) => {
   const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
 
   try {
     const contract = await marketplaceContract();
-    const cdpValue = await contract.methods.getCdpPrice(cdpIdBytes32, discount).call();
+    const cdpValue = await contract.methods.getCdpPrice(cdpIdBytes32).call();
 
     const txParams = { from: account, value: cdpValue[0].toString() };
+
+    console.log(`Id: ${cdpId.toString()}, IdBytes: ${cdpIdBytes32}, ${txParams.from}, ${txParams.value}`);
 
     const promise = contract.methods.buy(cdpIdBytes32).send(txParams);
     await sendTxFunc(promise);

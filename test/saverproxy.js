@@ -196,24 +196,24 @@ contract("SaverProxy", accounts => {
   //   }
   // });
 
-  it('...should call the repay feature', async () => {
+  // it('...should call the repay feature', async () => {
 
-    const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaverProxy, 'repay'), [cdpIdBytes32, 0, false]);
+  //   const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(SaverProxy, 'repay'), [cdpIdBytes32, 0, true]);
 
-    const ratio = await monitor.getRatio.call(cdpIdBytes32);
+  //   const ratio = await monitor.getRatio.call(cdpIdBytes32);
 
-    try {
-      console.log('Old Ratio: ', ratio.toString());
+  //   try {
+  //     console.log('Old Ratio: ', ratio.toString());
 
-      const tx = await proxy.methods['execute(address,bytes)'](saver.address, data);
+  //     const tx = await proxy.methods['execute(address,bytes)'](saver.address, data);
 
-      const newRatio = await monitor.getRatio.call(cdpIdBytes32);
-      console.log('New Ratio: ', newRatio.toString());
+  //     const newRatio = await monitor.getRatio.call(cdpIdBytes32);
+  //     console.log('New Ratio: ', newRatio.toString());
 
-    } catch(err) {
-      console.log(err);
-    }
-  });
+  //   } catch(err) {
+  //     console.log(err);
+  //   }
+  // });
 
   it('...should call the boost feature', async () => {
 

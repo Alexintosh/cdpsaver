@@ -27,6 +27,35 @@ const isCdpOnSale = cdpId => new Promise(async (resolve, reject) => {
 });
 
 /**
+ * Helper function to go through the cdp list and find the first one the address owns
+ *
+ * @param contract {Object}
+ * @param arr {String}
+ * @param address {Object}
+ * @param type {String}
+ *
+ * @return {Number} cdpId
+ */
+const findFirstCDP = async (contract, arr, address, type) => {
+  let cdpIds = arr.map(event => event.returnValues[type]);
+
+  cdpIds = [...new Set(cdpIds)];
+  let cdpId = null;
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const id of cdpIds) {
+    // eslint-disable-next-line no-await-in-loop
+    const info = await contract.methods.cups(id).call();
+    if (info.lad === address) {
+      cdpId = id;
+      break;
+    }
+  }
+
+  return cdpId;
+};
+
+/**
  * Fetches multiple Cdp data for a cdp id from the Maker library  and formats them
  * @param id {Number}
  * @param useAuth {Boolean}
@@ -76,12 +105,14 @@ export const getCdpIdFromLogNote = (contract, proxyAddress) => new Promise(async
     contract.getPastEvents('LogNote', {
       filter: { sig, bar },
       fromBlock: config.SaiTub.networks[clientConfig.network].createdBlock,
-    }, (err, res) => {
+    }, async (err, res) => {
       if (err) return reject(err);
 
       if (res.length === 0) return resolve(null);
 
-      resolve(web3.utils.hexToNumber(res[0].returnValues.foo));
+      const cdpId = await findFirstCDP(contract, res, proxyAddress, 'foo');
+
+      return resolve(web3.utils.hexToNumber(cdpId));
     });
   } catch (e) {
     reject(e);
@@ -101,12 +132,14 @@ export const getCdpIdFromLogNewCup = (contract, address) => new Promise(async (r
     contract.getPastEvents('LogNewCup', {
       filter: { lad: address },
       fromBlock: config.SaiTub.networks[clientConfig.network].createdBlock,
-    }, (err, res) => {
+    }, async (err, res) => {
       if (err) return reject(err);
 
       if (res.length === 0) return resolve(null);
 
-      resolve(web3.utils.hexToNumber(res[0].returnValues.cup));
+      const cdpId = await findFirstCDP(contract, res, address, 'cup');
+
+      resolve(web3.utils.hexToNumber(cdpId));
     });
   } catch (e) {
     reject(e);
@@ -117,28 +150,35 @@ export const getCdpIdFromLogNewCup = (contract, address) => new Promise(async (r
  * Checks if the connected user has a cdp for their account or proxyAddress
  *
  * @param address {String}
+ * @param address {Number}
  * @param tryWithAccount {Boolean}
  *
  * @return {Promise<Object>}
  */
-export const getAddressCdp = (address, tryWithAccount = false) => new Promise(async (resolve, reject) => {
+export const getAddressCdp = (address, oldId = null, tryWithAccount = true) => new Promise(async (resolve, reject) => {
   if (!address) return reject('user has no address');
 
   try {
     const proxyAddress = await proxyRegistryInterfaceContract().methods.proxies(address).call();
 
-    if (isEmptyBytes(proxyAddress) && !tryWithAccount) return resolve(await getAddressCdp(address, true));
+    let addressToCheckWith = address;
 
-    const addressToCheckWith = tryWithAccount ? address : proxyAddress;
+    if (!tryWithAccount) {
+      addressToCheckWith = proxyAddress;
+    }
 
     const contract = await SaiTubContract();
     let cdpId = await getCdpIdFromLogNewCup(contract, addressToCheckWith);
     let cdp = null;
 
-    // If the cdpId is not found in the LogNewCup event,
-    // try searching in the LogNoteEvent
-    if (!cdpId) cdpId = await getCdpIdFromLogNote(contract, addressToCheckWith);
-    if (!cdpId && !tryWithAccount) return resolve(await getAddressCdp(address, true));
+    // Also try searching in the LogNoteEvent
+    const newId = await getCdpIdFromLogNote(contract, addressToCheckWith);
+
+    if (newId) cdpId = newId;
+
+    if (tryWithAccount) return resolve(await getAddressCdp(address, cdpId, false));
+
+    if (!cdpId) cdpId = oldId;
 
     if (cdpId) cdp = await getCdpInfo(cdpId, true);
 

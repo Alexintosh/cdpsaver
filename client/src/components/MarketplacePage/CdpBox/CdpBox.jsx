@@ -94,7 +94,7 @@ const CdpBox = ({
         <button
           type="button"
           className="button green uppercase"
-          onClick={() => { buyCdpAction(id, discount * 100); }}
+          onClick={() => { buyCdpAction(id); }}
           disabled={buyingCdp || owner === proxyAddress}
         >
           { buyingCdp ? 'Buying' : 'Buy' }

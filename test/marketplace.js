@@ -11,13 +11,13 @@ const ProxyRegistryInterface = artifacts.require("./ProxyRegistryInterface.sol")
 contract("SaverProxy", accounts => {
 
   let marketplace, marketplaceAuthority, registry;
-  const seller = accounts[1];
-  const buyer  = accounts[0];
+  const seller = accounts[0];
+  const buyer  = accounts[1];
   const tubAddr = "0xa71937147b55Deb8a530C7229C442Fd3F31b7db2";
 
   const cdpId = 4721;
   const cdpSecondIdBytes32 = "0x0000000000000000000000000000000000000000000000000000000000001306";
-  const cdpIdBytes32 = "0x0000000000000000000000000000000000000000000000000000000000001053";
+  const cdpIdBytes32 = "0x0000000000000000000000000000000000000000000000000000000000001059";
 
   before(async () => {
     marketplace = await Marketplace.deployed();
@@ -56,7 +56,7 @@ contract("SaverProxy", accounts => {
             const items = await marketplace.items.call(cdpIdBytes32);
             console.log(items);
 
-            const values = await marketplace.getCdpValue.call(cdpIdBytes32);
+            const values = await marketplace.getCdpPrice.call(cdpIdBytes32);
             console.log(values[0].toString() + " " +  values[1].toString());
 
         } catch(err) {
@@ -111,7 +111,7 @@ contract("SaverProxy", accounts => {
 
   it('...should buy a cdp on marketplace', async () => {
     try {
-        const cdpValue = await marketplace.getCdpValue.call(cdpIdBytes32);
+        const cdpValue = await marketplace.getCdpPrice.call(cdpIdBytes32);
 
         console.log('cdpValue ', cdpValue[0].toString());
 

@@ -7,7 +7,7 @@ import "./interfaces/ExchangeInterface.sol";
 contract KyberWrapper is ExchangeInterface {
 
     // Kovan
-    address constant KYBER_INTERFACE = 0x7e6b8b9510D71BF8EF0f893902EbB9C865eEF4Df;
+    address constant KYBER_INTERFACE = 0x692f391bCc85cefCe8C237C01e1f636BbD70EA4D;
     address constant ETHER_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
     //TODO: watch out for gas price limits
