@@ -24,7 +24,7 @@ class MigratePage extends Component {
           <div className="width-container">
             <div className="sub-title">Migrate</div>
             <div className="sub-text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+              Migrating your CDP will give you an option to interact with our platform
             </div>
           </div>
         </div>
@@ -35,9 +35,9 @@ class MigratePage extends Component {
               <div className="content-title">Migrate CDP #{cdp.id}</div>
 
               <div className="content-text">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu
-                pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id.
-                Sed rhoncus, tortor sed eleifend tristique, tortor mauris molestie elit, et lacinia ipsum quam.
+                Migrate will enable you to interact with the CDP Saver platform. By migrating
+                you will be using the standard DSProxy interface and will be able to interact
+                with other CDP platforms as well.
               </div>
 
               { migratingError && <div className="content-error">{ migratingError }</div> }
