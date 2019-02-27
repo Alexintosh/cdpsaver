@@ -28,26 +28,31 @@ class OnboardingCreateCdpForm extends Component {
     const { formValues, ratio } = newProps;
     const { ethAmount, daiAmount } = formValues;
 
-    if (ethAmount && daiAmount) this.handleSliderValChange(ratio);
+    if ((ethAmount && ethAmount > 0) && (daiAmount && daiAmount > 0)) this.handleSliderValChange(ratio);
   }
 
   handleSliderValChange(_ratio) {
     let ratio = _ratio;
     if (_ratio < 150) ratio = 150;
-    if (_ratio > 450) ratio = 450;
+    if (_ratio > 450) ratio = 250;
 
-    const val = 1 + ((ratio - 150) / (300 / 99));
+    let val = 1 + ((ratio - 150) / (100 / 99));
 
-    const rbgArray = getRainbowSliderValColor(val, this.gradients, 300);
+    if (val > 100) val = 100;
+
+    const rbgArray = getRainbowSliderValColor(val, this.gradients, 250);
     this.setState({ currentColor: `rgb(${rbgArray.join(',')})` });
   }
 
   render() {
     const {
       handleSubmit, onSubmit, history, formValues, ethPrice,
-      handleCreateCdpInputChange, liquidationPrice, ratio,
+      handleCreateCdpInputChange,
     } = this.props;
-    const { ethAmount, daiAmount } = formValues;
+    const ethAmount = parseFloat(formValues.ethAmount);
+    const daiAmount = parseFloat(formValues.daiAmount);
+    const ratio = parseFloat(this.props.ratio);
+    const liquidationPrice = parseFloat(this.props.liquidationPrice);
 
     return (
       <form
@@ -87,14 +92,14 @@ class OnboardingCreateCdpForm extends Component {
               className="value"
             >
               {
-                ethAmount && daiAmount && (
+                ratio > 0 && (
                   <TooltipWrapper title={ratio}>
                     { formatNumber(ratio, 2) }%
                   </TooltipWrapper>
                 )
               }
 
-              { (!ethAmount || !daiAmount) && '/' }
+              { !ratio && <span id="temp1">-</span> }
             </div>
           </div>
 
@@ -102,14 +107,14 @@ class OnboardingCreateCdpForm extends Component {
             <div className="label">Liquidation price:</div>
             <div className="value">
               {
-                ethAmount && daiAmount && (
+                (liquidationPrice > 0) && (
                   <TooltipWrapper title={liquidationPrice}>
                     { formatNumber(liquidationPrice, 2) }$
                   </TooltipWrapper>
                 )
               }
 
-              { (!ethAmount || !daiAmount) && '/' }
+              { !liquidationPrice && <span id="temp2">-</span> }
             </div>
           </div>
         </div>

@@ -8,7 +8,7 @@ import OnboardingWizardCreateCdpForm from './OnboardingCreateCdpForm/OnboardingC
 import './OnboardingCreateCdp.scss';
 
 let OnboardingCreateCdp = ({
-  hasCdp, pristine, invalid, submittingForm, history, cdpFormSubmitted,
+  hasCdp, pristine, invalid, submittingForm, history, cdpFormSubmitted, ratio,
 }) => {
   if (hasCdp || cdpFormSubmitted) return (<Redirect to="/onboarding/info" />);
 
@@ -31,7 +31,7 @@ let OnboardingCreateCdp = ({
         <div className="bottom-controls width-container">
           <button
             type="submit"
-            disabled={pristine || invalid || submittingForm}
+            disabled={pristine || invalid || submittingForm || ratio < 150}
             className="button green uppercase"
             form="onboarding-create-cdp-form"
           >
@@ -50,6 +50,7 @@ OnboardingCreateCdp.propTypes = {
   submittingForm: PropTypes.bool.isRequired,
   history: PropTypes.object.isRequired,
   cdpFormSubmitted: PropTypes.bool.isRequired,
+  ratio: PropTypes.number.isRequired,
 };
 
 OnboardingCreateCdp = reduxForm({
@@ -59,6 +60,7 @@ OnboardingCreateCdp = reduxForm({
 const mapStateToProps = ({ onboarding }) => ({
   submittingForm: onboarding.creatingCdp,
   cdpFormSubmitted: onboarding.cdpFormSubmitted,
+  ratio: parseFloat(onboarding.newCdpRatio),
 });
 
 export default connect(mapStateToProps)(OnboardingCreateCdp);

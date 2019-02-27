@@ -31,6 +31,7 @@
 
       .stat-wrapper {
         display: flex;
+        justify-content: center;
 
         &:not(:last-child) {
           margin-bottom: 10px;
@@ -39,6 +40,12 @@
         .label {
           color: $gray;
           margin-right: 8px;
+        }
+
+        .value {
+          #temp1, #temp2 {
+            color: white;
+          }
         }
       }
     }

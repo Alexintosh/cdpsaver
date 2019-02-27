@@ -59,10 +59,31 @@ export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dis
   }
 };
 
-export const handleCreateCdpInputChange = (ethAmount, daiAmount, ethPrice) => async (dispatch) => {
-  if (!ethAmount || !daiAmount) return;
+/**
+ * Calculates the new ratio and liquidationPrice for the create CDP form
+ *
+ * @param _ethAmount {String}
+ * @param _daiAmount {String}
+ * @param ethPrice {Number}
+ *
+ * @return {Function}
+ */
+export const handleCreateCdpInputChange = (_ethAmount, _daiAmount, ethPrice) => async (dispatch) => {
+  const ethAmount = parseFloat(_ethAmount);
+  const daiAmount = parseFloat(_daiAmount);
 
-  const payload = await getUpdatedCdpInfo(ethAmount, daiAmount, ethPrice);
+  const setPayloadFalse = () => ({ liquidationPrice: 0, ratio: 0 });
+
+  let payload = setPayloadFalse();
+
+  if (!ethAmount || !daiAmount) return dispatch({ type: SET_CREATE_CDP_CALC_VALUES, payload });
+  if ((ethAmount && ethAmount <= 0) || (daiAmount && daiAmount <= 0)) return dispatch({ type: SET_CREATE_CDP_CALC_VALUES, payload }); // eslint-disable-line
+
+  payload = await getUpdatedCdpInfo(ethAmount, daiAmount, ethPrice);
+
+  if (!payload.liquidationPrice || !payload.ratio) payload = setPayloadFalse();
+  if ((payload.liquidationPrice && payload.liquidationPrice <= 0) || (payload.ratio && payload.ratio <= 0)) payload = setPayloadFalse(); // eslint-disable-line
+  if (isNaN(payload.liquidationPrice) || isNaN(payload.ratio)) payload = setPayloadFalse(); // eslint-disable-line
 
   dispatch({ type: SET_CREATE_CDP_CALC_VALUES, payload });
 };
