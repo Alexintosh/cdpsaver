@@ -63,15 +63,25 @@ class BoostModal extends Component {
                         { formatNumber(parseFloat(boostAmount), 2) } DAI
                       </TooltipWrapper>
                     </div>
-                    <div className="label">will be drawn and converted</div>
-                    <div className="value">{ boostEthAmount }</div>
+                    <div className="label">will be drawn and converted to</div>
+                    <div className="value">
+                      <TooltipWrapper title={boostEthAmount}>
+                        { formatNumber(parseFloat(boostEthAmount), 2) } ETH
+                      </TooltipWrapper>
+                    </div>
                   </div>
 
                   <div className="data-item desc">
                     <div className="label">
                       *Disclaimer: This is estimate based on current exchange prices
                     </div>
-                    <div className="value">({ boostExchangeRate } DAI/ETH)</div>
+                    <div className="value">
+                      (
+                      <TooltipWrapper title={boostExchangeRate}>
+                        { `${formatNumber(boostExchangeRate, 2)} DAI/ETH` }
+                      </TooltipWrapper>
+                      )
+                    </div>
                   </div>
                 </React.Fragment>
               )

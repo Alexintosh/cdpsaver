@@ -83,6 +83,8 @@ const INITIAL_STATE = {
   repayingDaiError: '',
 
   repayStabilityFee: 0,
+  repayDaiAmount: 0,
+  repayExchangeRate: 0,
   gettingRepayModalData: false,
   gettingRepayModalDataError: '',
 
@@ -166,7 +168,7 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case REPAY_DAI_REQUEST:
-      return { ...state, repayingDai: true };
+      return { ...state, repayingDai: true, repayingDaiError: '' };
 
     case REPAY_DAI_SUCCESS:
       return {

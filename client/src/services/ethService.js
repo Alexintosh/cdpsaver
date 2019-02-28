@@ -11,6 +11,10 @@ import {
   marketplaceProxyAddress,
   proxyRegistryInterfaceContract,
   TubInterfaceContract,
+  KyberNetworkProxyContract,
+  ethTokenAddress,
+  daiTokenAddress,
+  saverProxyAddress,
 } from './contractRegistryService';
 import config from '../config/config.json';
 import { isEmptyBytes, numStringToBytes32 } from '../utils/utils';
@@ -482,5 +486,99 @@ export const migrateCdp = (sendTxFunc, cdpId, proxyAddress, account) => new Prom
     resolve(true);
   } catch (err) {
     reject(err);
+  }
+});
+
+/**
+ * Fetches rate for exchanging eth with dai
+ *
+ * @param ethAmount {String}
+ *
+ * @return {Promise<Number>}
+ */
+export const getEthDaiKyberExchangeRate = ethAmount => new Promise(async (resolve, reject) => {
+  const wei = ethToWei(ethAmount);
+
+  try {
+    const params = [ethTokenAddress, daiTokenAddress, wei];
+    const contract = await KyberNetworkProxyContract();
+
+    const res = await contract.methods.getExpectedRate(...params).call();
+
+    resolve(parseFloat(weiToEth(res.expectedRate)));
+  } catch (err) {
+    reject(err);
+  }
+});
+
+/**
+ * Fetches rate for exchanging dai with eth
+ *
+ * @param daiAmount {String}
+ *
+ * @return {Promise<Number>}
+ */
+export const getDaiEthKyberExchangeRate = daiAmount => new Promise(async (resolve, reject) => {
+  const wei = ethToWei(daiAmount);
+
+  try {
+    const params = [daiTokenAddress, ethTokenAddress, wei];
+    const contract = await KyberNetworkProxyContract();
+
+    const res = await contract.methods.getExpectedRate(...params).call();
+
+    resolve(parseFloat(weiToEth(res.expectedRate)));
+  } catch (err) {
+    reject(err);
+  }
+});
+
+/**
+ * Calls the proxy contract and handles the action that is specified in the parameters
+ *
+ * @param sendTxFunc {Function}
+ * @param amount {String}
+ * @param cdpId {Number}
+ * @param proxyAddress {String}
+ * @param account {String}
+ * @param funcName {String}
+ * @param ethPrice {Number}
+ * @param sendTrue {Boolean}
+ *
+ * @return {Promise<Object>}
+ */
+export const callSaverProxyContract = (
+  sendTxFunc, amount, cdpId, proxyAddress, account, funcName, ethPrice, sendTrue = false,
+) => new Promise(async (resolve, reject) => {
+  const web3 = window._web3;
+
+  try {
+    const contract = config.SaverProxy;
+    const contractFunction = contract.abi.find(abi => abi.name === funcName);
+
+    const dsProxyContractAbi = dsProxyContractJson.abi;
+    const proxyContract = new window._web3.eth.Contract(dsProxyContractAbi, proxyAddress);
+
+    const amountParam = web3.utils.toWei(amount, 'ether');
+    const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
+
+    const params = [cdpIdBytes32, amountParam];
+    const txParams = { from: account };
+
+    if (sendTrue) params.push(true);
+
+    console.log('params', params);
+
+    const data = web3.eth.abi.encodeFunctionCall(contractFunction, params);
+
+    const promise = proxyContract.methods['execute(address,bytes)'](saverProxyAddress, data).send(txParams);
+    await sendTxFunc(promise, amount);
+
+    const newCdp = await getCdpInfo(cdpId, false);
+    const newCdpInfo = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
+
+    resolve({ ...newCdp, ...newCdpInfo });
+  } catch (err) {
+    reject(err.message);
   }
 });
