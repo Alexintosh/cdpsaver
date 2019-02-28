@@ -565,7 +565,7 @@ export const callSaverProxyContract = (
     const params = [cdpIdBytes32, amountParam];
     const txParams = { from: account };
 
-    if (sendTrue) params.push(true);
+    if (funcName !== 'boost') params.push(sendTrue);
 
     console.log('params', params);
 
