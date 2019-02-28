@@ -59,7 +59,13 @@ import {
   BOOST_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 import {
-  approveDai, approveMaker, callProxyContract, transferCdp, getEthDaiKyberExchangeRate,
+  approveDai,
+  approveMaker,
+  callProxyContract,
+  transferCdp,
+  getEthDaiKyberExchangeRate,
+  getDaiEthKyberExchangeRate,
+  callSaverProxyContract
 } from '../services/ethService';
 import { getMaxDai, getMaxEthWithdraw, getUpdatedCdpInfo } from '../services/cdpService';
 import { MM_DENIED_TX_ERROR } from '../constants/general';
@@ -239,15 +245,14 @@ export const resetRepayModal = () => (dispatch) => { dispatch({ type: RESET_REPA
  * @param amount {Number}
  * @return {Function}
  */
-export const getBoostModalData = amount => async (dispatch, getState) => {
+export const getBoostModalData = amount => async (dispatch) => {
   dispatch({ type: GET_BOOST_MODAL_DATA_REQUEST });
 
   try {
-    // const { cdp } = getState().general;
+    const exchangeRate = await getDaiEthKyberExchangeRate(amount.toString());
+    const boostEthAmount = exchangeRate * amount;
 
-    // const boostEthAmount = await;
-
-    dispatch({ type: GET_BOOST_MODAL_DATA_SUCCESS, payload: { boostEthAmount: 0.78, boostExchangeRate: 117 } });
+    dispatch({ type: GET_BOOST_MODAL_DATA_SUCCESS, payload: { boostEthAmount, boostExchangeRate: exchangeRate } });
   } catch (err) {
     dispatch({ type: GET_BOOST_MODAL_DATA_FAILURE, payload: err.message });
   }
@@ -256,18 +261,23 @@ export const getBoostModalData = amount => async (dispatch, getState) => {
 /**
  * Handles redux actions for the repay dai from cdp smart contract call
  *
+ * @param amountDai {Number}
+ * @param closeModal {Function}
+ *
  * @return {Function}
  */
-export const boostAction = (amount, closeModal) => async (dispatch, getState) => {
+export const boostAction = (amountDai, closeModal) => async (dispatch, getState) => {
   dispatch({ type: BOOST_REQUEST });
 
+  const proxySendHandler = (promise, amount) => sendTx(promise, `Boost ${formatNumber(parseFloat(amount), 2)} DAI`, dispatch, getState); // eslint-disable-line
+
   try {
-    const { cdp } = getState().general;
-    // const params = [amountDai, cdp.id, proxyAddress, account, 'wipe', ethPrice, false, true];
+    const { cdp, proxyAddress, account, ethPrice } = getState().general; // eslint-disable-line
+    const params = [proxySendHandler, amountDai.toString(), cdp.id, proxyAddress, account, 'boost', ethPrice];
 
-    // const payload = await callProxyContract(...params);
+    const payload = await callSaverProxyContract(...params);
 
-    dispatch({ type: BOOST_SUCCESS, payload: cdp });
+    dispatch({ type: BOOST_SUCCESS, payload });
     dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });
 
     dispatch(change('managerPaybackForm', 'boostAmount', null));

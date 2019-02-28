@@ -100,5 +100,14 @@
         "address": "0xC4375B7De8af5a38a93548eb8453a498222C4fF2"
       }
     }
+  },
+  "SaverProxy": {
+    "abi": [{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor","signature":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":false,"name":"collateralAmount","type":"uint256"},{"indexed":false,"name":"daiAmount","type":"uint256"}],"name":"Repay","type":"event","signature":"0x77c6871227e5d2dec8dadd5354f78453203e22e669cd0ec4c19d9a8c5edb31d0"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":false,"name":"daiAmount","type":"uint256"},{"indexed":false,"name":"collateralAmount","type":"uint256"}],"name":"Boost","type":"event","signature":"0xaadc628cb4fd3bb7a62795eb460290459458bdc6f387ffde727c740f42c18337"},{"constant":false,"inputs":[{"name":"_cup","type":"bytes32"},{"name":"_amount","type":"uint256"},{"name":"_buyMkr","type":"bool"}],"name":"repay","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x01ae2ff0"},{"constant":false,"inputs":[{"name":"_cup","type":"bytes32"},{"name":"_amount","type":"uint256"}],"name":"boost","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x23a66a99"},{"constant":false,"inputs":[{"name":"_tub","type":"address"},{"name":"_cup","type":"bytes32"}],"name":"maxFreeCollateral","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0xd325a2c1"},{"constant":false,"inputs":[{"name":"_tub","type":"address"},{"name":"_cdpId","type":"bytes32"}],"name":"maxFreeDai","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x730fd680"},{"constant":false,"inputs":[{"name":"_tub","type":"address"},{"name":"_cup","type":"bytes32"},{"name":"_daiRepay","type":"uint256"}],"name":"feeInMkr","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function","signature":"0x74b98f81"}],
+    "networks": {
+      "42": {
+        "createdBlock": 10408467,
+        "address": "0x80d2B04994A51Fc65C51bb0a09d9D11bF70effb8"
+      }
+    }
   }
 }

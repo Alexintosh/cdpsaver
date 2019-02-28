@@ -19,7 +19,7 @@ class RepayModal extends Component {
 
   render() {
     const {
-      closeModal, repayDaiAmount, repayDaiAction, gettingRepayModalData,
+      closeModal, repayDaiAmount, repayDaiAction, gettingRepayModalData, ethAmount,
       gettingRepayModalDataError, repayStabilityFee, repayingDai, repayExchangeRate,
     } = this.props;
 
@@ -93,7 +93,7 @@ class RepayModal extends Component {
             form="sell-cdp-form"
             type="button"
             disabled={repayingDai}
-            onClick={() => { repayDaiAction(repayDaiAmount, closeModal); }}
+            onClick={() => { repayDaiAction(ethAmount, closeModal); }}
             className="button green uppercase"
           >
             { repayingDai ? 'Repaying' : 'Repay' }

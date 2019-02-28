@@ -34,3 +34,5 @@ export const KyberNetworkProxyContract = () => new window._web3.eth.Contract(con
 export const ethTokenAddress = config.EthToken.networks[clientConfig.network].address;
 
 export const daiTokenAddress = config.DaiToken.networks[clientConfig.network].address;
+
+export const saverProxyAddress = config.SaverProxy.networks[clientConfig.network].address;
