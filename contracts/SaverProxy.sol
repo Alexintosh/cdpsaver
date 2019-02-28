@@ -109,7 +109,6 @@ contract SaverProxy is DSMath {
         return ethAmount;
     }
 
-    //TODO: precise calc. of the _daiRepay amount
     function payStabilityFee(TubInterface _tub, bytes32 _cup, uint _daiRepay) internal returns(uint) {
         uint feeInDai = rmul(_daiRepay, rdiv(_tub.rap(_cup), _tub.tab(_cup)));
 

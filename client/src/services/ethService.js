@@ -345,7 +345,7 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
     const DSProxyContract = await new window._web3.eth.Contract(config.DSProxy.abi, proxyAddress);
 
     const authorityAddress = await DSProxyContract.methods.authority().call();
-    const params = [cdpIdBytes32, discount * 100, proxyAddress, marketplaceAddress];
+    let params = [cdpIdBytes32, discount * 100, marketplaceAddress, proxyAddress];
 
     if (!isEmptyBytes(authorityAddress)) {
       const AuthContract = await new window._web3.eth.Contract(config.DSGuard.abi, authorityAddress);
@@ -353,9 +353,11 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
       const isAuthorized = await
       AuthContract.methods.canCall(marketplaceAddress, proxyAddress, '0x1cff79cd').call();
 
+      console.log(isAuthorized);
+
       if (isAuthorized) {
         contractFunctionName = 'sell';
-        params.splice(2, 1);
+        params = [cdpIdBytes32, discount * 100, marketplaceAddress];
       }
     }
 
@@ -392,7 +394,7 @@ export const cancelSellCdp = (sendTxFunc, account, cdpId, proxyAddress) => new P
     const contract = config.MarketplaceProxy;
     const contractFunction = contract.abi.find(abi => abi.name === 'cancel');
 
-    const params = [marketplaceAddress, cdpIdBytes32];
+    const params = [cdpIdBytes32, marketplaceAddress];
     const txParams = { from: account };
     const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, params);
 
