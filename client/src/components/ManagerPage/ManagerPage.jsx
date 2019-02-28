@@ -134,12 +134,12 @@ class ManagerPage extends Component {
 
             <div className="actions-section-wrapper">
               <Tabs>
-                <div label="Payback">
-                  <ManagerPaybackForm />
-                </div>
-
                 <div label="Borrow">
                   <ManagerBorrowForm />
+                </div>
+
+                <div label="Payback">
+                  <ManagerPaybackForm />
                 </div>
               </Tabs>
             </div>

@@ -205,21 +205,21 @@ export const getRepayModalData = amount => async (dispatch, getState) => {
 /**
  * Handles redux actions for the repay dai from cdp smart contract call
  *
- * @param amountDai {Number}
+ * @param amountEth {Number}
  * @param closeModal {Function}
  *
  * @return {Function}
  */
-export const repayDaiAction = (amountDai, closeModal) => async (dispatch, getState) => {
+export const repayDaiAction = (amountEth, closeModal) => async (dispatch, getState) => {
   dispatch({ type: REPAY_DAI_REQUEST });
 
-  const proxySendHandler = (promise, amount) => sendTx(promise, `Repay ${formatNumber(parseFloat(amount), 2)} DAI`, dispatch, getState); // eslint-disable-line
+  const proxySendHandler = (promise, amount) => sendTx(promise, `Repay ${formatNumber(parseFloat(amount), 2)} ETH`, dispatch, getState); // eslint-disable-line
 
   try {
     const { cdp, proxyAddress, account, ethPrice } = getState().general;  // eslint-disable-line
-    const params = [proxySendHandler, amountDai.toString(), cdp.id, proxyAddress, account, 'wipe', ethPrice, false, true]; // eslint-disable-line
+    const params = [proxySendHandler, amountEth.toString(), cdp.id, proxyAddress, account, 'repay', ethPrice, true]; // eslint-disable-line
 
-    const payload = await callProxyContract(...params);
+    const payload = await callSaverProxyContract(...params);
 
     dispatch({ type: REPAY_DAI_SUCCESS, payload });
     dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });

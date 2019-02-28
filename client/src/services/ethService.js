@@ -541,11 +541,12 @@ export const getDaiEthKyberExchangeRate = daiAmount => new Promise(async (resolv
  * @param account {String}
  * @param funcName {String}
  * @param ethPrice {Number}
+ * @param sendTrue {Boolean}
  *
  * @return {Promise<Object>}
  */
 export const callSaverProxyContract = (
-  sendTxFunc, amount, cdpId, proxyAddress, account, funcName, ethPrice,
+  sendTxFunc, amount, cdpId, proxyAddress, account, funcName, ethPrice, sendTrue = false,
 ) => new Promise(async (resolve, reject) => {
   const web3 = window._web3;
 
@@ -561,6 +562,10 @@ export const callSaverProxyContract = (
 
     const params = [cdpIdBytes32, amountParam];
     const txParams = { from: account };
+
+    if (sendTrue) params.push(true);
+
+    console.log('params', params);
 
     const data = web3.eth.abi.encodeFunctionCall(contractFunction, params);
 
