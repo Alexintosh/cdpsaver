@@ -27,3 +27,10 @@ export const marketplaceContract = () => new window._web3.eth.Contract(config.Ma
 
 export const marketplaceProxyAddress = config.MarketplaceProxy.networks[clientConfig.network].address;
 export const marketplaceProxyContract = () => new window._web3.eth.Contract(config.MarketplaceProxy.abi, marketplaceProxyAddress); // eslint-disable-line
+
+export const kyberNetworkProxyAddress = config.KyberNetworkProxy.networks[clientConfig.network].address;
+export const KyberNetworkProxyContract = () => new window._web3.eth.Contract(config.KyberNetworkProxy.abi, kyberNetworkProxyAddress); // eslint-disable-line
+
+export const ethTokenAddress = config.EthToken.networks[clientConfig.network].address;
+
+export const daiTokenAddress = config.DaiToken.networks[clientConfig.network].address;

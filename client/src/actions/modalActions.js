@@ -65,10 +65,10 @@ export const openCancelSellCdplModal = () => (dispatch) => {
 /**
  * Opens the repay modal where the user confirms if he wants to proceed
  *
- * @param {Number} repayDaiAmount
+ * @param {Number} ethAmount
  */
-export const openRepayModal = repayDaiAmount => async (dispatch) => {
-  dispatch(toggleModal(REPAY_MODAL, { width: 481, repayDaiAmount }, true));
+export const openRepayModal = ethAmount => async (dispatch) => {
+  dispatch(toggleModal(REPAY_MODAL, { width: 481, ethAmount }, true));
 };
 
 /**

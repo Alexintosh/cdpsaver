@@ -11,6 +11,9 @@ import {
   marketplaceProxyAddress,
   proxyRegistryInterfaceContract,
   TubInterfaceContract,
+  KyberNetworkProxyContract,
+  ethTokenAddress,
+  daiTokenAddress,
 } from './contractRegistryService';
 import config from '../config/config.json';
 import { isEmptyBytes, numStringToBytes32 } from '../utils/utils';
@@ -478,6 +481,28 @@ export const migrateCdp = (sendTxFunc, cdpId, proxyAddress, account) => new Prom
     await sendTxFunc(promise);
 
     resolve(true);
+  } catch (err) {
+    reject(err);
+  }
+});
+
+/**
+ * Fetches rate for exchanging eth with dai
+ *
+ * @param ethAmount {String}
+ *
+ * @return {Promise<Number>}
+ */
+export const getEthDaiKyberExchangeRate = ethAmount => new Promise(async (resolve, reject) => {
+  const wei = ethToWei(ethAmount);
+
+  try {
+    const params = [ethTokenAddress, daiTokenAddress, wei];
+    const contract = await KyberNetworkProxyContract();
+
+    const res = await contract.methods.getExpectedRate(...params).call();
+
+    resolve(parseFloat(weiToEth(res.expectedRate)));
   } catch (err) {
     reject(err);
   }

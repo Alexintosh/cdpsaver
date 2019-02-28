@@ -59,12 +59,12 @@ import {
   BOOST_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 import {
-  approveDai, approveMaker, callProxyContract, transferCdp,
+  approveDai, approveMaker, callProxyContract, transferCdp, getEthDaiKyberExchangeRate,
 } from '../services/ethService';
 import { getMaxDai, getMaxEthWithdraw, getUpdatedCdpInfo } from '../services/cdpService';
 import { MM_DENIED_TX_ERROR } from '../constants/general';
 import { sendTx } from './notificationsActions';
-import { addToLsState } from '../utils/utils';
+import { addToLsState, formatNumber } from '../utils/utils';
 
 /**
  * Resets the provided redux form fileds
@@ -174,7 +174,8 @@ export const withdrawEthAction = amountEth => async (dispatch, getState) => {
 /**
  * Gets all the data that is displayed inside the repay modal
  *
- * @param amount {Number}
+ * @param amount {String}
+ *
  * @return {Function}
  */
 export const getRepayModalData = amount => async (dispatch, getState) => {
@@ -184,8 +185,12 @@ export const getRepayModalData = amount => async (dispatch, getState) => {
     const { cdp } = getState().general;
 
     const fee = (await cdp.cdpInstance.getGovernanceFee())._amount.toNumber();
+    const exchangeRate = await getEthDaiKyberExchangeRate(amount);
+    const repayDaiAmount = parseFloat(amount) * exchangeRate;
 
-    dispatch({ type: GET_REPAY_MODAL_DATA_SUCCESS, payload: { repayStabilityFee: fee } });
+    const payload = { repayStabilityFee: fee, repayDaiAmount, repayExchangeRate: exchangeRate };
+
+    dispatch({ type: GET_REPAY_MODAL_DATA_SUCCESS, payload });
   } catch (err) {
     dispatch({ type: GET_REPAY_MODAL_DATA_FAILURE, payload: err.message });
   }
@@ -194,18 +199,23 @@ export const getRepayModalData = amount => async (dispatch, getState) => {
 /**
  * Handles redux actions for the repay dai from cdp smart contract call
  *
+ * @param amountDai {Number}
+ * @param closeModal {Function}
+ *
  * @return {Function}
  */
-export const repayDaiAction = (amount, closeModal) => async (dispatch, getState) => {
+export const repayDaiAction = (amountDai, closeModal) => async (dispatch, getState) => {
   dispatch({ type: REPAY_DAI_REQUEST });
 
+  const proxySendHandler = (promise, amount) => sendTx(promise, `Repay ${formatNumber(parseFloat(amount), 2)} DAI`, dispatch, getState); // eslint-disable-line
+
   try {
-    const { cdp } = getState().general;
-    // const params = [amountDai, cdp.id, proxyAddress, account, 'wipe', ethPrice, false, true];
+    const { cdp, proxyAddress, account, ethPrice } = getState().general;  // eslint-disable-line
+    const params = [proxySendHandler, amountDai.toString(), cdp.id, proxyAddress, account, 'wipe', ethPrice, false, true]; // eslint-disable-line
 
-    // const payload = await callProxyContract(...params);
+    const payload = await callProxyContract(...params);
 
-    dispatch({ type: REPAY_DAI_SUCCESS, payload: cdp });
+    dispatch({ type: REPAY_DAI_SUCCESS, payload });
     dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });
 
     dispatch(change('managerBorrowForm', 'repayDaiAmount', null));
