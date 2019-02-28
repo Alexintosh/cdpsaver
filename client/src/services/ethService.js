@@ -15,6 +15,7 @@ import {
   ethTokenAddress,
   daiTokenAddress,
   saverProxyAddress,
+  PipInterfaceContract,
 } from './contractRegistryService';
 import config from '../config/config.json';
 import { isEmptyBytes, numStringToBytes32 } from '../utils/utils';
@@ -532,6 +533,18 @@ export const getDaiEthKyberExchangeRate = daiAmount => new Promise(async (resolv
     reject(err);
   }
 });
+
+export const getEthPrice = async () => {
+  try {
+    const contract = await PipInterfaceContract();
+    const price = await contract.methods.read().call();
+
+    return (window._web3.utils.hexToNumberString(price) / 1000000000000000000);
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
 
 /**
  * Calls the proxy contract and handles the action that is specified in the parameters

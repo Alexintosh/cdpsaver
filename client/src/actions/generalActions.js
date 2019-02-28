@@ -8,18 +8,15 @@ import {
 } from '../actionTypes/generalActionTypes';
 import { maker } from '../services/cdpService';
 import {
-  getDaiAllowance, getDaiBalance, getMakerAllowance, getMakerBalance, weiToEth,
+  getDaiAllowance, getDaiBalance, getMakerAllowance, getMakerBalance, weiToEth, getEthPrice,
 } from '../services/ethService';
-
 /**
  * Checks the price of Ether and updates it in the state
  *
- * @param priceInterface {Object}
- *
  * @return {Function}
  */
-const updateEthPrice = priceInterface => async (dispatch) => {
-  const ethPrice = (await priceInterface.getEthPrice())._amount;
+const updateEthPrice = () => async (dispatch) => {
+  const ethPrice = await getEthPrice();
   dispatch({ type: GET_ETH_PRICE_SUCCESS, payload: parseFloat(ethPrice.toFixed(2)) });
 };
 
@@ -32,10 +29,9 @@ export const updateEthPriceInterval = () => async (dispatch) => {
   dispatch({ type: GET_ETH_PRICE_REQUEST });
 
   await maker.authenticate();
-  const priceInterface = maker.service('price');
 
-  dispatch(updateEthPrice(priceInterface));
-  setInterval(() => { dispatch(updateEthPrice(priceInterface)); }, 60000);
+  dispatch(updateEthPrice());
+  setInterval(() => { dispatch(updateEthPrice()); }, 60000);
 };
 
 /**
