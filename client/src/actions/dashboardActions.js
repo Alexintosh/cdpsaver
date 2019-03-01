@@ -198,6 +198,7 @@ export const getMaxEthWithdrawAction = () => async (dispatch, getState) => {
  * Handles redux actions for the withdraw eth from cdp smart contract call
  *
  * @param amountEth {String}
+ *
  * @return {Function}
  */
 export const withdrawEthAction = amountEth => async (dispatch, getState) => {
@@ -207,7 +208,7 @@ export const withdrawEthAction = amountEth => async (dispatch, getState) => {
 
   try {
     const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
-    const params = [proxySendHandler, amountEth, cdp.id, proxyAddress, account, 'free', ethPrice];
+    const params = [proxySendHandler, amountEth.toString(), cdp.id, proxyAddress, account, 'free', ethPrice];
 
     const payload = await callProxyContract(...params);
 
