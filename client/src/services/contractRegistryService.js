@@ -39,3 +39,4 @@ export const ethTokenAddress = config.EthToken.networks[clientConfig.network].ad
 export const daiTokenAddress = config.DaiToken.networks[clientConfig.network].address;
 
 export const saverProxyAddress = config.SaverProxy.networks[clientConfig.network].address;
+export const SaverProxyContract = () => new window._web3.eth.Contract(config.SaverProxy.abi, saverProxyAddress); // eslint-disable-line

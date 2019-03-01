@@ -16,6 +16,7 @@ import {
   daiTokenAddress,
   saverProxyAddress,
   PipInterfaceContract,
+  SaverProxyContract,
 } from './contractRegistryService';
 import config from '../config/config.json';
 import { isEmptyBytes, numStringToBytes32 } from '../utils/utils';
@@ -533,6 +534,11 @@ export const getDaiEthKyberExchangeRate = daiAmount => new Promise(async (resolv
   }
 });
 
+/**
+ * Gets the current ETH price
+ *
+ * @return {Promise<String>}
+ */
 export const getEthPrice = async () => {
   try {
     const contract = await PipInterfaceContract();
@@ -540,7 +546,6 @@ export const getEthPrice = async () => {
 
     return (window._web3.utils.hexToNumberString(price) / 1000000000000000000);
   } catch (err) {
-    console.log(err);
     return err;
   }
 };
@@ -594,3 +599,43 @@ export const callSaverProxyContract = (
     reject(err.message);
   }
 });
+
+/**
+ * Gets the max eth that the user is able to send in the repay action
+ *
+ * @param cdpId {Number}
+ *
+ * @return {Promise<void>}
+ */
+export const getMaxEthRepay = async (cdpId) => {
+  try {
+    const contract = await SaverProxyContract();
+    const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
+
+    const data = await contract.methods.maxFreeCollateral(tubInterfaceAddress, cdpIdBytes32).call();
+
+    return parseFloat(weiToEth(data));
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+/**
+ * Gets the max dai that the user is able to send in the boost action
+ *
+ * @param cdpId {Number}
+ *
+ * @return {Promise<void>}
+ */
+export const getMaxDaiBoost = async (cdpId) => {
+  try {
+    const contract = await SaverProxyContract();
+    const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
+
+    const data = await contract.methods.maxFreeDai(tubInterfaceAddress, cdpIdBytes32).call();
+
+    return parseFloat(weiToEth(data));
+  } catch (err) {
+    throw new Error(err);
+  }
+};

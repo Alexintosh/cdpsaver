@@ -19,7 +19,7 @@ class ManagerPaybackForm extends Component {
   render() {
     const {
       formValues, addingCollateral, addCollateralAction, setAfterValue, afterType,
-      paybackDaiAction, payingBackDai, dispatch, boosting, maxDai, gettingMaxDai,
+      paybackDaiAction, payingBackDai, dispatch, boosting, maxDaiBoost, gettingMaxDaiBoost,
       openBoostModal,
     } = this.props;
 
@@ -80,15 +80,15 @@ class ManagerPaybackForm extends Component {
             className={`max-wrapper ${boosting ? 'loading' : ''}`}
             onClick={() => {
               if (!boosting) {
-                setAfterValue(maxDai, 'boost');
+                setAfterValue(maxDaiBoost, 'boost');
                 dispatch(change('managerPaybackForm', 'paybackAmount', ''));
                 dispatch(change('managerPaybackForm', 'addCollateralAmount', ''));
-                dispatch(change('managerPaybackForm', 'boostAmount', maxDai));
+                dispatch(change('managerPaybackForm', 'boostAmount', maxDaiBoost));
               }
             }}
           >
-            <TooltipWrapper title={maxDai}>
-              { gettingMaxDai ? 'Loading...' : `(max ${formatNumber(maxDai, 2)})` }
+            <TooltipWrapper title={maxDaiBoost}>
+              { gettingMaxDaiBoost ? 'Loading...' : `(max ${formatNumber(maxDaiBoost, 2)})` }
             </TooltipWrapper>
           </div>
 
@@ -113,7 +113,7 @@ class ManagerPaybackForm extends Component {
               className="button gray uppercase"
               onClick={() => { openBoostModal(parseFloat(boostAmount)); }}
               disabled={
-                boosting || !boostAmount || (boostAmount <= 0) || (boostAmount > maxDai)
+                boosting || !boostAmount || (boostAmount <= 0) || (boostAmount > maxDaiBoost)
               }
             >
               Boost
@@ -138,8 +138,8 @@ ManagerPaybackForm.propTypes = {
   payingBackDai: PropTypes.bool.isRequired,
 
   openBoostModal: PropTypes.func.isRequired,
-  maxDai: PropTypes.number.isRequired,
-  gettingMaxDai: PropTypes.bool.isRequired,
+  maxDaiBoost: PropTypes.number.isRequired,
+  gettingMaxDaiBoost: PropTypes.bool.isRequired,
   boosting: PropTypes.bool.isRequired,
 };
 
@@ -156,8 +156,8 @@ const mapStateToProps = state => ({
   addingCollateral: state.dashboard.addingCollateral,
   payingBackDai: state.dashboard.payingBackDai,
 
-  maxDai: state.dashboard.maxDai,
-  gettingMaxDai: state.dashboard.gettingMaxDai,
+  maxDaiBoost: state.dashboard.maxDaiBoost,
+  gettingMaxDaiBoost: state.dashboard.gettingMaxDaiBoost,
   boosting: state.dashboard.boosting,
 
   afterType: state.dashboard.afterType,

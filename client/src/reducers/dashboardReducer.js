@@ -56,6 +56,14 @@ import {
   BOOST_REQUEST,
   BOOST_SUCCESS,
   BOOST_FAILURE,
+
+  GET_MAX_ETH_REPAY_REQUEST,
+  GET_MAX_ETH_REPAY_SUCCESS,
+  GET_MAX_ETH_REPAY_FAILURE,
+
+  GET_MAX_DAI_BOOST_REQUEST,
+  GET_MAX_DAI_BOOST_SUCCESS,
+  GET_MAX_DAI_BOOST_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 
 const INITIAL_STATE = {
@@ -82,6 +90,10 @@ const INITIAL_STATE = {
   repayingDai: false,
   repayingDaiError: '',
 
+  maxEthRepay: 0,
+  gettingMaxEthRepay: false,
+  gettingMaxEthRepayError: '',
+
   repayStabilityFee: 0,
   repayDaiAmount: 0,
   repayExchangeRate: 0,
@@ -95,6 +107,10 @@ const INITIAL_STATE = {
 
   boosting: false,
   boostingError: '',
+
+  maxDaiBoost: 0,
+  gettingMaxDaiBoost: false,
+  gettingMaxDaiBoostError: '',
 
   boostEthAmount: 0,
   boostExchangeRate: 0,
@@ -148,6 +164,42 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         gettingMaxDai: false,
         gettingMaxDaiError: payload,
+      };
+
+    case GET_MAX_ETH_REPAY_REQUEST:
+      return { ...state, gettingMaxEthRepay: true, gettingMaxEthRepayError: '' };
+
+    case GET_MAX_ETH_REPAY_SUCCESS:
+      return {
+        ...state,
+        gettingMaxEthRepay: false,
+        gettingMaxEthRepayError: '',
+        maxEthRepay: payload,
+      };
+
+    case GET_MAX_ETH_REPAY_FAILURE:
+      return {
+        ...state,
+        gettingMaxEthRepay: false,
+        gettingMaxEthRepayError: payload,
+      };
+
+    case GET_MAX_DAI_BOOST_REQUEST:
+      return { ...state, gettingMaxDaiBoost: true, gettingMaxDaiBoostError: '' };
+
+    case GET_MAX_DAI_BOOST_SUCCESS:
+      return {
+        ...state,
+        gettingMaxDaiBoost: false,
+        gettingMaxDaiBoostError: '',
+        maxDaiBoost: payload,
+      };
+
+    case GET_MAX_DAI_BOOST_FAILURE:
+      return {
+        ...state,
+        gettingMaxDaiBoost: false,
+        gettingMaxDaiBoostError: payload,
       };
 
     case WITHDRAW_ETH_REQUEST:

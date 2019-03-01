@@ -9,7 +9,12 @@ import ManagerBorrowForm from './ManagerBorrowForm/ManagerBorrowForm';
 import ManagerPaybackForm from './ManagerPaybackForm/ManagerPaybackForm';
 import CdpAfterVal from './CdpAfterVal';
 import { formatNumber } from '../../utils/utils';
-import { getMaxDaiAction, getMaxEthWithdrawAction } from '../../actions/dashboardActions';
+import {
+  getMaxDaiAction,
+  getMaxEthWithdrawAction,
+  getMaxEthRepayAction,
+  getMaxDaiBoostAction,
+} from '../../actions/dashboardActions';
 import { openCloseCdpModal, openTransferCdpModal } from '../../actions/modalActions';
 import TooltipWrapper from '../TooltipWrapper/TooltipWrapper';
 
@@ -21,6 +26,8 @@ class ManagerPage extends Component {
     // TODO optimize this by putting it borrow or payback
     this.props.getMaxDaiAction();
     this.props.getMaxEthWithdrawAction();
+    this.props.getMaxEthRepayAction();
+    this.props.getMaxDaiBoostAction();
   }
 
   render() {
@@ -160,6 +167,8 @@ ManagerPage.propTypes = {
   ethPrice: PropTypes.number.isRequired,
   gettingEthPrice: PropTypes.bool.isRequired,
   getMaxDaiAction: PropTypes.func.isRequired,
+  getMaxEthRepayAction: PropTypes.func.isRequired,
+  getMaxDaiBoostAction: PropTypes.func.isRequired,
   getMaxEthWithdrawAction: PropTypes.func.isRequired,
   gettingAfterCdp: PropTypes.bool.isRequired,
   afterCdp: PropTypes.object,
@@ -182,7 +191,12 @@ const mapStateToProps = ({ general, dashboard }) => ({
 });
 
 const mapDispatchToProps = {
-  getMaxDaiAction, getMaxEthWithdrawAction, openCloseCdpModal, openTransferCdpModal,
+  getMaxDaiAction,
+  getMaxEthWithdrawAction,
+  openCloseCdpModal,
+  openTransferCdpModal,
+  getMaxEthRepayAction,
+  getMaxDaiBoostAction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManagerPage);

@@ -57,6 +57,14 @@ import {
   BOOST_REQUEST,
   BOOST_SUCCESS,
   BOOST_FAILURE,
+
+  GET_MAX_ETH_REPAY_REQUEST,
+  GET_MAX_ETH_REPAY_SUCCESS,
+  GET_MAX_ETH_REPAY_FAILURE,
+
+  GET_MAX_DAI_BOOST_REQUEST,
+  GET_MAX_DAI_BOOST_SUCCESS,
+  GET_MAX_DAI_BOOST_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 import {
   approveDai,
@@ -66,6 +74,8 @@ import {
   getEthDaiKyberExchangeRate,
   getDaiEthKyberExchangeRate,
   callSaverProxyContract,
+  getMaxEthRepay,
+  getMaxDaiBoost,
 } from '../services/ethService';
 import { getMaxDai, getMaxEthWithdraw, getUpdatedCdpInfo } from '../services/cdpService';
 import { MM_DENIED_TX_ERROR } from '../constants/general';
@@ -101,6 +111,40 @@ export const getMaxDaiAction = () => async (dispatch, getState) => {
     dispatch({ type: GET_MAX_DAI_SUCCESS, payload });
   } catch (err) {
     dispatch({ type: GET_MAX_DAI_FAILURE, payload: err.message });
+  }
+};
+
+/**
+ * Handles redux actions for when the number of max eth that can be used to repay debt is calculating
+ *
+ * @return {Function}
+ */
+export const getMaxEthRepayAction = () => async (dispatch, getState) => {
+  dispatch({ type: GET_MAX_ETH_REPAY_REQUEST });
+
+  try {
+    const payload = await getMaxEthRepay(getState().general.cdp.id);
+
+    dispatch({ type: GET_MAX_ETH_REPAY_SUCCESS, payload });
+  } catch (err) {
+    dispatch({ type: GET_MAX_ETH_REPAY_FAILURE, payload: err.message });
+  }
+};
+
+/**
+ * Handles redux actions for when the number of max Dai that can be used to boost cdp ether is calculating
+ *
+ * @return {Function}
+ */
+export const getMaxDaiBoostAction = () => async (dispatch, getState) => {
+  dispatch({ type: GET_MAX_DAI_BOOST_REQUEST });
+
+  try {
+    const payload = await getMaxDaiBoost(getState().general.cdp.id);
+
+    dispatch({ type: GET_MAX_DAI_BOOST_SUCCESS, payload });
+  } catch (err) {
+    dispatch({ type: GET_MAX_DAI_BOOST_FAILURE, payload: err.message });
   }
 };
 
@@ -228,7 +272,7 @@ export const repayDaiAction = (amountEth, closeModal) => async (dispatch, getSta
 
     dispatch(change('managerBorrowForm', 'repayDaiAmount', null));
     dispatch(closeModal());
-    dispatch(getMaxEthWithdrawAction());
+    dispatch(getMaxEthRepayAction());
   } catch (err) {
     dispatch({ type: REPAY_DAI_FAILURE, payload: err.message });
   }
@@ -284,7 +328,7 @@ export const boostAction = (amountDai, closeModal) => async (dispatch, getState)
 
     dispatch(change('managerPaybackForm', 'boostAmount', null));
     dispatch(closeModal());
-    dispatch(getMaxDaiAction());
+    dispatch(getMaxDaiBoostAction());
   } catch (err) {
     dispatch({ type: BOOST_FAILURE, payload: err.message });
   }

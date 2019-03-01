@@ -25,7 +25,7 @@ class ManagerBorrowForm extends Component {
     const {
       generatingDai, generateDaiAction, formValues, maxDai, gettingMaxDai, dispatch,
       withdrawingEth, withdrawEthAction, maxEthWithdraw, gettingMaxEthWithdraw,
-      setAfterValue, afterType, repayingDai, openRepayModal,
+      setAfterValue, afterType, repayingDai, openRepayModal, maxEthRepay, gettingMaxEthRepay,
     } = this.props;
 
     const { generateDaiAmount, withdrawEthAmount, repayDaiAmount } = formValues;
@@ -117,15 +117,15 @@ class ManagerBorrowForm extends Component {
             className={`max-wrapper ${repayingDai ? 'loading' : ''}`}
             onClick={() => {
               if (!repayingDai) {
-                setAfterValue(maxEthWithdraw, 'repay');
+                setAfterValue(maxEthRepay, 'repay');
                 dispatch(change('managerBorrowForm', 'withdrawEthAmount', ''));
                 dispatch(change('managerBorrowForm', 'generateDaiAmount', ''));
-                dispatch(change('managerBorrowForm', 'repayDaiAmount', maxEthWithdraw));
+                dispatch(change('managerBorrowForm', 'repayDaiAmount', maxEthRepay));
               }
             }}
           >
-            <TooltipWrapper title={maxEthWithdraw}>
-              { gettingMaxEthWithdraw ? 'Loading...' : `(max ${formatNumber(maxEthWithdraw, 2)})` }
+            <TooltipWrapper title={maxEthRepay}>
+              { gettingMaxEthRepay ? 'Loading...' : `(max ${formatNumber(maxEthRepay, 2)})` }
             </TooltipWrapper>
           </div>
 
@@ -150,7 +150,7 @@ class ManagerBorrowForm extends Component {
               className="button gray uppercase"
               onClick={() => { openRepayModal(parseFloat(repayDaiAmount)); }}
               disabled={
-                repayingDai || !repayDaiAmount || (repayDaiAmount <= 0) || (repayDaiAmount > maxEthWithdraw)
+                repayingDai || !repayDaiAmount || (repayDaiAmount <= 0) || (repayDaiAmount > maxEthRepay)
               }
             >
               Repay
@@ -179,6 +179,8 @@ ManagerBorrowForm.propTypes = {
   gettingMaxEthWithdraw: PropTypes.bool.isRequired,
 
   repayingDai: PropTypes.bool.isRequired,
+  maxEthRepay: PropTypes.number.isRequired,
+  gettingMaxEthRepay: PropTypes.bool.isRequired,
   openRepayModal: PropTypes.func.isRequired,
 };
 
@@ -201,6 +203,8 @@ const mapStateToProps = state => ({
   gettingMaxEthWithdraw: state.dashboard.gettingMaxEthWithdraw,
 
   repayingDai: state.dashboard.repayingDai,
+  maxEthRepay: state.dashboard.maxEthRepay,
+  gettingMaxEthRepay: state.dashboard.gettingMaxEthRepay,
 
   afterType: state.dashboard.afterType,
 });
