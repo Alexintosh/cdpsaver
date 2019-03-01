@@ -6,6 +6,7 @@ import {
   CANCEL_SELL_CDP_MODAL,
   REPAY_MODAL,
   BOOST_MODAL,
+  PAYBACK_CDP_MODAL,
 } from '../components/Modals/modalTypes';
 
 /**
@@ -78,4 +79,15 @@ export const openRepayModal = ethAmount => async (dispatch) => {
  */
 export const openBoostModal = boostAmount => async (dispatch) => {
   dispatch(toggleModal(BOOST_MODAL, { width: 481, boostAmount }, true));
+};
+
+
+/**
+ * Opens the payback cdp modal when the user wants to payback a part of his debt
+ *
+ * @param paybackAmount {String}
+ *
+ */
+export const openPaybackModal = paybackAmount => async (dispatch) => {
+  dispatch(toggleModal(PAYBACK_CDP_MODAL, { width: 481, paybackAmount }, true));
 };

@@ -7,8 +7,9 @@ import {
   GET_CLOSE_DATA_FAILURE,
 } from '../actionTypes/generalActionTypes';
 import { maker } from '../services/cdpService';
+import { getEthPrice } from '../services/priceService';
 import {
-  getDaiAllowance, getDaiBalance, getMakerAllowance, getMakerBalance, weiToEth, getEthPrice,
+  getDaiAllowance, getDaiBalance, getMakerAllowance, getMakerBalance, weiToEth,
 } from '../services/ethService';
 /**
  * Checks the price of Ether and updates it in the state

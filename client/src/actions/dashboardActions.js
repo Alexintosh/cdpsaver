@@ -378,9 +378,11 @@ export const addCollateralAction = amountEth => async (dispatch, getState) => {
 export const paybackDaiAction = amountDai => async (dispatch, getState) => {
   dispatch({ type: PAYBACK_DAI_REQUEST });
 
+  const proxySendHandler = (promise, amount) => sendTx(promise, `Payback ${amount} DAI`, dispatch, getState);
+
   try {
     const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
-    const params = [amountDai, cdp.id, proxyAddress, account, 'wipe', ethPrice, false, true];
+    const params = [proxySendHandler, amountDai, cdp.id, proxyAddress, account, 'wipe', ethPrice, false, true];
 
     const payload = await callProxyContract(...params);
 

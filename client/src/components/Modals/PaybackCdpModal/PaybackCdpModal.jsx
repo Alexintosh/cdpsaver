@@ -5,10 +5,10 @@ import { getCloseDataAction } from '../../../actions/generalActions';
 import ModalHeader from '../ModalHeader';
 import LockUnlockInterface from '../../LockUnlockInterface/LockUnlockInterface';
 
-import './CloseCdpModal.scss';
+import '../CloseCdpModal/CloseCdpModal.scss';
 import Loader from '../../Loader/Loader';
 
-class CloseCdpModal extends Component {
+class PaybackCdpModal extends Component {
   componentWillMount() {
     this.props.getCloseDataAction();
   }
@@ -26,7 +26,7 @@ class CloseCdpModal extends Component {
         <ModalHeader closeModal={closeModal} actionHeader actionText="Close" />
 
         <div className="modal-content">
-          <h3 className="title">Close CDP</h3>
+          <h3 className="title">Payback</h3>
 
           <div className="container">
             <div className="sub-header">
@@ -74,7 +74,7 @@ class CloseCdpModal extends Component {
                           type="button"
                           className={`button ${cantClose ? 'gray' : 'green'} uppercase`}
                         >
-                          Close cdp
+                          Payback
                         </button>
                       </div>
                     </div>
@@ -85,7 +85,7 @@ class CloseCdpModal extends Component {
                   !enoughMkrToWipe && !enoughEthToWipe && (
                     <div className="container">
                       <div className="no-close">
-                        You do not have enough tokens to close your CDP at this moment.
+                        You do not have enough tokens to payback your CDP at this moment.
                       </div>
                     </div>
                   )
@@ -99,11 +99,11 @@ class CloseCdpModal extends Component {
   }
 }
 
-CloseCdpModal.defaultProps = {
+PaybackCdpModal.defaultProps = {
   enoughEthToWipe: null,
 };
 
-CloseCdpModal.propTypes = {
+PaybackCdpModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
   getCloseDataAction: PropTypes.func.isRequired,
   enoughMkrToWipe: PropTypes.bool,
@@ -129,4 +129,4 @@ const mapDispatchToProps = {
   getCloseDataAction,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(CloseCdpModal);
+export default connect(mapStateToProps, mapDispatchToProps)(PaybackCdpModal);

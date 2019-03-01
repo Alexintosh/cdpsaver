@@ -19,8 +19,9 @@ import {
 } from '../actionTypes/marketplaceActionTypes';
 import { getCdpInfos } from '../services/cdpService';
 import {
-  getItemsOnSale, sellCdp, cancelSellCdp, buyCdp, getEthPrice
+  getItemsOnSale, sellCdp, cancelSellCdp, buyCdp,
 } from '../services/ethService';
+import { getEthPrice } from '../services/priceService';
 import { addToLsState, convertDaiToEth } from '../utils/utils';
 import { sendTx } from './notificationsActions';
 import { getCdp } from './accountActions';

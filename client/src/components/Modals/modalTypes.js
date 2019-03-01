@@ -4,6 +4,7 @@ import TransferCdpModal from './TransferCdpModal/TransferCdpModal';
 import CancelCloseCdpModal from './CancelSellCdpModal/CancelSellCdpModal';
 import RepayModal from './RepayModal/RepayModal';
 import BoostModal from './BoostModal/BoostModal';
+import PaybackCdpModal from './PaybackCdpModal/PaybackCdpModal';
 
 // Register modal types here
 export const SELL_CDP_MODAL = 'SELL_CDP_MODAL';
@@ -12,6 +13,7 @@ export const TRANSFER_CDP_MODAL = 'TRANSFER_CDP_MODAL';
 export const CANCEL_SELL_CDP_MODAL = 'CANCEL_SELL_CDP_MODAL';
 export const REPAY_MODAL = 'REPAY_MODAL';
 export const BOOST_MODAL = 'BOOST_MODAL';
+export const PAYBACK_CDP_MODAL = 'PAYBACK_CDP_MODAL';
 
 export default {
   [SELL_CDP_MODAL]: SellCdpModal,
@@ -20,4 +22,5 @@ export default {
   [CANCEL_SELL_CDP_MODAL]: CancelCloseCdpModal,
   [REPAY_MODAL]: RepayModal,
   [BOOST_MODAL]: BoostModal,
+  [PAYBACK_CDP_MODAL]: PaybackCdpModal,
 };
