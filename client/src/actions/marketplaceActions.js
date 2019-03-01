@@ -17,9 +17,9 @@ import {
   CANCEL_SELL_CDP_FAILURE,
   RESET_CANCEL_SELL_CDP,
 } from '../actionTypes/marketplaceActionTypes';
-import { getCdpInfos, maker } from '../services/cdpService';
+import { getCdpInfos } from '../services/cdpService';
 import {
-  getItemsOnSale, sellCdp, cancelSellCdp, buyCdp,
+  getItemsOnSale, sellCdp, cancelSellCdp, buyCdp, getEthPrice
 } from '../services/ethService';
 import { addToLsState, convertDaiToEth } from '../utils/utils';
 import { sendTx } from './notificationsActions';
@@ -65,11 +65,7 @@ export const getMarketplaceCdpsData = () => async (dispatch, getState) => {
   let { ethPrice } = getState().general;
 
   try {
-    if (!ethPrice) {
-      await maker.authenticate();
-      const price = maker.service('price');
-      ethPrice = (await price.getEthPrice()).toNumber();
-    }
+    if (!ethPrice) ethPrice = parseFloat(await getEthPrice());
 
     const marketplaceCdps = await getItemsOnSale();
     let payload = await getCdpInfos(marketplaceCdps.map(c => c.id));

@@ -355,8 +355,7 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
     if (!isEmptyBytes(authorityAddress)) {
       const AuthContract = await new window._web3.eth.Contract(config.DSGuard.abi, authorityAddress);
 
-      const isAuthorized = await
-      AuthContract.methods.canCall(marketplaceAddress, proxyAddress, '0x1cff79cd').call();
+      const isAuthorized = await AuthContract.methods.canCall(marketplaceAddress, proxyAddress, '0x1cff79cd').call();
 
       console.log(isAuthorized);
 

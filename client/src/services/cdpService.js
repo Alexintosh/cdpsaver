@@ -4,6 +4,7 @@ import config from '../config/config.json';
 import clientConfig from '../config/clientConfig.json';
 import { marketplaceContract, proxyRegistryInterfaceContract, SaiTubContract } from './contractRegistryService';
 import { isEmptyBytes, numStringToBytes32, saiTubContractTools } from '../utils/utils';
+import { getEthPrice } from './ethService';
 
 export const maker = Maker.create('http', { url: clientConfig.provider });
 
@@ -205,7 +206,7 @@ export const getUpdatedCdpInfo = async (ethAmount, daiAmount, _ethPrice = false)
     const price = maker.service('price');
 
     let ethPrice = _ethPrice;
-    if (!ethPrice) ethPrice = (await price.getEthPrice()).toNumber();
+    if (!ethPrice) ethPrice = parseFloat(await getEthPrice());
 
     const peth2wethRatio = await price.getWethToPethRatio();
 
@@ -263,7 +264,7 @@ export const getMaxDai = async (daiDebt, collateral, _ethPrice) => {
     const price = maker.service('price');
 
     let ethPrice = _ethPrice;
-    if (!ethPrice) ethPrice = (await price.getEthPrice()).toNumber();
+    if (!ethPrice) ethPrice = parseFloat(await getEthPrice());
 
     const peth2wethRatio = await price.getWethToPethRatio();
 
@@ -287,7 +288,7 @@ export const getMaxEthWithdraw = async (daiDebt, collateral, _ethPrice) => {
     const price = maker.service('price');
 
     let ethPrice = _ethPrice;
-    if (!ethPrice) ethPrice = (await price.getEthPrice()).toNumber();
+    if (!ethPrice) ethPrice = parseFloat(await getEthPrice());
 
     const peth2wethRatio = await price.getWethToPethRatio();
 
