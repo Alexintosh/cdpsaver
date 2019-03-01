@@ -47,9 +47,9 @@ contract SaverProxy is DSMath {
         if (_buyMkr) {
             uint ethFee = feeInEth(tub, _cup, daiAmount);
             ExchangeInterface(KYBER_WRAPPER).swapEtherToToken.
-                            value(_amount)(_amount, MKR_ADDRESS);
+                            value(ethFee)(ethFee, MKR_ADDRESS);
 
-            _amount -= ethFee;
+            _amount = sub(_amount, ethFee);
         } else {
             uint mkrAmount = feeInMkr(tub, _cup, daiAmount);
             ERC20(MKR_ADDRESS).transferFrom(msg.sender, address(this), mkrAmount);

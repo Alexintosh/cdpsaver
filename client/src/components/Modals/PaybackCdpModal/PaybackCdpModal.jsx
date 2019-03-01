@@ -100,13 +100,12 @@ class PaybackCdpModal extends Component {
 }
 
 PaybackCdpModal.defaultProps = {
-  enoughEthToWipe: null,
 };
 
 PaybackCdpModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
   getCloseDataAction: PropTypes.func.isRequired,
-  enoughMkrToWipe: PropTypes.bool,
+  enoughMkrToWipe: PropTypes.bool.isRequired,
   enoughEthToWipe: PropTypes.bool.isRequired,
   daiUnlocked: PropTypes.bool.isRequired,
   makerUnlocked: PropTypes.bool.isRequired,

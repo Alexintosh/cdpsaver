@@ -598,6 +598,9 @@ export const getMaxEthRepay = async (cdpId) => {
 
     const data = await contract.methods.maxFreeCollateral(tubInterfaceAddress, cdpIdBytes32).call();
 
+    console.log(data.toString());
+    console.log(parseFloat(weiToEth(data)));
+
     return parseFloat(weiToEth(data));
   } catch (err) {
     throw new Error(err);
