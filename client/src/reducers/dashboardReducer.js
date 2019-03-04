@@ -64,6 +64,10 @@ import {
   GET_MAX_DAI_BOOST_REQUEST,
   GET_MAX_DAI_BOOST_SUCCESS,
   GET_MAX_DAI_BOOST_FAILURE,
+
+  CLOSE_CDP_REQUEST,
+  CLOSE_CDP_SUCCESS,
+  CLOSE_CDP_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 
 const INITIAL_STATE = {
@@ -125,6 +129,9 @@ const INITIAL_STATE = {
 
   transferringCdp: false,
   transferringCdpError: '',
+
+  closingCdp: false,
+  closingCdpError: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -429,6 +436,23 @@ export default (state = INITIAL_STATE, action) => {
         boostExchangeRate: 0,
         gettingBoostModalData: false,
         gettingBoostModalDataError: '',
+      };
+
+    case CLOSE_CDP_REQUEST:
+      return { ...state, closingCdp: true, closingCdpError: '' };
+
+    case CLOSE_CDP_SUCCESS:
+      return {
+        ...state,
+        closingCdp: false,
+        closingCdpError: '',
+      };
+
+    case CLOSE_CDP_FAILURE:
+      return {
+        ...state,
+        closingCdp: false,
+        closingCdpError: payload,
       };
 
 

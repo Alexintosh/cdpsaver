@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { getCloseDataAction } from '../../../actions/generalActions';
+import { closeCdpAction } from '../../../actions/dashboardActions';
 import ModalHeader from '../ModalHeader';
 import LockUnlockInterface from '../../LockUnlockInterface/LockUnlockInterface';
 
@@ -16,7 +17,7 @@ class CloseCdpModal extends Component {
   render() {
     const {
       closeModal, enoughMkrToWipe, enoughEthToWipe, daiUnlocked, makerUnlocked, gettingCloseData,
-      gettingCloseDataError, cdpId,
+      gettingCloseDataError, cdpId, closeCdpAction,
     } = this.props;
 
     const cantClose = !daiUnlocked || !makerUnlocked;
@@ -72,6 +73,7 @@ class CloseCdpModal extends Component {
                         <button
                           disabled={cantClose}
                           type="button"
+                          onClick={() => { closeCdpAction(closeModal, history) }}
                           className={`button ${cantClose ? 'gray' : 'green'} uppercase`}
                         >
                           Close cdp
@@ -105,6 +107,7 @@ CloseCdpModal.defaultProps = {
 CloseCdpModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
   getCloseDataAction: PropTypes.func.isRequired,
+  closeCdpAction: PropTypes.func.isRequired,
   enoughMkrToWipe: PropTypes.bool.isRequired,
   enoughEthToWipe: PropTypes.bool.isRequired,
   daiUnlocked: PropTypes.bool.isRequired,
@@ -125,7 +128,7 @@ const mapStateToProps = ({ general }) => ({
 });
 
 const mapDispatchToProps = {
-  getCloseDataAction,
+  getCloseDataAction, closeCdpAction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CloseCdpModal);

@@ -65,6 +65,10 @@ import {
   GET_MAX_DAI_BOOST_REQUEST,
   GET_MAX_DAI_BOOST_SUCCESS,
   GET_MAX_DAI_BOOST_FAILURE,
+
+  CLOSE_CDP_REQUEST,
+  CLOSE_CDP_SUCCESS,
+  CLOSE_CDP_FAILURE,
 } from '../actionTypes/dashboardActionTypes';
 import {
   approveDai,
@@ -528,19 +532,31 @@ export const transferCdpAction = ({ toAddress }, history, closeModal) => async (
   }
 };
 
-export const closeCdpAction = closeModal => async (dispatch, getState) => {
+/**
+ * Closes the currently loaded CDP
+ *
+ * @param closeModal {Function}
+ * @param history {Object}
+ *
+ * @return {Function}
+ */
+export const closeCdpAction = (closeModal, history) => async (dispatch, getState) => {
   dispatch({ type: CLOSE_CDP_REQUEST });
 
-  const proxySendHandler = (promise) => sendTx(promise, `Close CDP`, dispatch, getState);
+  const proxySendHandler = promise => sendTx(promise, 'Close CDP', dispatch, getState);
 
   try {
     const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
-    const params = [proxySendHandler, 0, cdp.id, proxyAddress, account, 'shut', ethPrice, false, true];
+    const params = [proxySendHandler, 0, cdp.id, proxyAddress, account, 'shut', ethPrice, true, true];
 
     await callProxyContract(...params);
 
+    addToLsState({ account, onboardingFinished: false });
+
     dispatch({ type: CLOSE_CDP_SUCCESS });
     closeModal();
+
+    history.push('/onboarding/create-cdp');
   } catch (err) {
     dispatch({ type: CLOSE_CDP_FAILURE, payload: err.message });
   }
