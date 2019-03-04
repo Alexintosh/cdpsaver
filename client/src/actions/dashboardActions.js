@@ -527,3 +527,21 @@ export const transferCdpAction = ({ toAddress }, history, closeModal) => async (
     dispatch({ type: TRANSFER_CDP_FAILURE, payload });
   }
 };
+
+export const closeCdpAction = closeModal => async (dispatch, getState) => {
+  dispatch({ type: CLOSE_CDP_REQUEST });
+
+  const proxySendHandler = (promise) => sendTx(promise, `Close CDP`, dispatch, getState);
+
+  try {
+    const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
+    const params = [proxySendHandler, 0, cdp.id, proxyAddress, account, 'shut', ethPrice, false, true];
+
+    await callProxyContract(...params);
+
+    dispatch({ type: CLOSE_CDP_SUCCESS });
+    closeModal();
+  } catch (err) {
+    dispatch({ type: CLOSE_CDP_FAILURE, payload: err.message });
+  }
+};

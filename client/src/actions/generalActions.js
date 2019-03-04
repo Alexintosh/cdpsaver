@@ -1,3 +1,4 @@
+import Maker from '@makerdao/dai';
 import {
   GET_ETH_PRICE_REQUEST,
   GET_ETH_PRICE_SUCCESS,
@@ -11,6 +12,9 @@ import { getEthPrice } from '../services/priceService';
 import {
   getDaiAllowance, getDaiBalance, getMakerAllowance, getMakerBalance, weiToEth,
 } from '../services/ethService';
+
+const { DAI } = Maker;
+
 /**
  * Checks the price of Ether and updates it in the state
  *
@@ -72,11 +76,11 @@ export const getCloseDataAction = () => async (dispatch, getState) => {
 
   try {
     const daiBalance = await getDaiBalance(account);
-    payload.enoughMkrToWipe = await cdp.cdpInstance.enoughMkrToWipe(daiBalance);
+    payload.enoughMkrToWipe = await cdp.cdpInstance.enoughMkrToWipe(daiBalance, DAI.wei);
 
     // TODO remove ! from line bellow, it was added for testing
     // If he has enough dai and maker tokens to pay check if they are unlocked
-    if (!payload.enoughMkrToWipe) {
+    if (payload.enoughMkrToWipe) {
       const daiAllowance = await getDaiAllowance(account);
       const makerAllowance = await getMakerAllowance(account);
 
