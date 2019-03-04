@@ -11,8 +11,8 @@ const DashboardSubHeader = ({
   <div className="sub-heading-wrapper">
     <div className="width-container">
       <div className="left links-wrapper">
-        <NavLink activeClassName="active" to="/dashboard/saver">CDP Saver</NavLink>
         <NavLink activeClassName="active" to="/dashboard/manage">Manage</NavLink>
+        <NavLink activeClassName="active" to="/dashboard/saver">Saver</NavLink>
         <NavLink activeClassName="active" to="/dashboard/monitoring">Monitoring</NavLink>
       </div>
 
