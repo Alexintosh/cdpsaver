@@ -437,7 +437,8 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
     }
 
     if (type === 'repay') {
-      payload.afterCdp = await getUpdatedCdpInfo(depositedEth - amount, cdp.generatedDAI, ethPrice);
+      const rate = await getEthDaiKyberExchangeRate(amount);
+      payload.afterCdp = await getUpdatedCdpInfo(depositedEth - amount, cdp.generatedDAI - (rate * amount), ethPrice);
       dispatch(resetFields('managerBorrowForm', { generateDaiAmount: '', withdrawEthAmount: '' }));
     }
 
@@ -454,7 +455,11 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
     }
 
     if (type === 'boost') {
-      payload.afterCdp = await getUpdatedCdpInfo(depositedEth, cdp.generatedDAI + amount, ethPrice);
+      const rate = await getDaiEthKyberExchangeRate(amount);
+
+      console.log(rate, amount * rate);
+
+      payload.afterCdp = await getUpdatedCdpInfo(depositedEth + (amount * rate), cdp.generatedDAI + amount, ethPrice);
       dispatch(resetFields('managerPaybackForm', { paybackAmount: '', addCollateralAmount: '' }));
     }
 
