@@ -15,6 +15,7 @@
 
     .description {
       max-width: 380px;
+      margin-top: 5px;
     }
 
     .error-wrapper {
@@ -27,6 +28,10 @@
     flex-direction: column;
     color: white;
 
+    .content-wrapper.can-close-cdp .description {
+      padding-bottom: 20px;
+    }
+
     .title {
       background: $dark-gray;
       font-size: $font-size-extra-large;
@@ -36,7 +41,13 @@
   }
 
   .description {
+    padding-top: 5px;
     background: $dark-gray;
+
+    .text {
+      margin: 0 auto;
+      max-width: 380px;
+    }
   }
 
   .loading-wrapper {

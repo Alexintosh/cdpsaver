@@ -87,9 +87,9 @@ LockUnlockInterface.propTypes = {
   approveDaiAction: PropTypes.func.isRequired,
   approveMakerAction: PropTypes.func.isRequired,
   approvingDai: PropTypes.bool.isRequired,
-  approvingDaiError: PropTypes.bool.isRequired,
+  approvingDaiError: PropTypes.string.isRequired,
   approvingMaker: PropTypes.bool.isRequired,
-  approvingMakerError: PropTypes.bool.isRequired,
+  approvingMakerError: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = ({ general, dashboard }) => ({

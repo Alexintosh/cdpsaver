@@ -66,9 +66,11 @@ export const listenToAccChange = () => (dispatch, getState) => {
 /**
  * Handles fetching of all the data needed to close a cdp
  *
+ * @params paybackData {Boolean}
+ *
  * @return {Function}
  */
-export const getCloseDataAction = () => async (dispatch, getState) => {
+export const getCloseDataAction = (paybackData = false) => async (dispatch, getState) => {
   dispatch({ type: GET_CLOSE_DATA_REQUEST });
 
   const { cdp, account } = getState().general;
@@ -76,9 +78,13 @@ export const getCloseDataAction = () => async (dispatch, getState) => {
 
   try {
     const daiBalance = await getDaiBalance(account);
-    payload.enoughMkrToWipe = await cdp.cdpInstance.enoughMkrToWipe(daiBalance, DAI.wei);
 
-    // TODO remove ! from line bellow, it was added for testing
+    if (paybackData) {
+      payload.enoughMkrToWipe = (await getMakerBalance(account)) > 0;
+    } else {
+      payload.enoughMkrToWipe = await cdp.cdpInstance.enoughMkrToWipe(daiBalance, DAI.wei);
+    }
+
     // If he has enough dai and maker tokens to pay check if they are unlocked
     if (payload.enoughMkrToWipe) {
       const daiAllowance = await getDaiAllowance(account);
@@ -93,7 +99,6 @@ export const getCloseDataAction = () => async (dispatch, getState) => {
       payload.makerBalance = await getMakerBalance(account);
     }
 
-    // TODO do this
     // if (!payload.enoughMkrToWipe) {
     //   // Check if the user can pay in ETH
     //   payload.enoughEthToWipe =

@@ -81,7 +81,6 @@ export const openBoostModal = boostAmount => async (dispatch) => {
   dispatch(toggleModal(BOOST_MODAL, { width: 481, boostAmount }, true));
 };
 
-
 /**
  * Opens the payback cdp modal when the user wants to payback a part of his debt
  *

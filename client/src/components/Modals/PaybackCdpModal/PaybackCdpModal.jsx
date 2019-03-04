@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
 import { getCloseDataAction } from '../../../actions/generalActions';
+import { paybackDaiAction } from '../../../actions/dashboardActions';
 import ModalHeader from '../ModalHeader';
 import LockUnlockInterface from '../../LockUnlockInterface/LockUnlockInterface';
 
@@ -10,13 +11,13 @@ import Loader from '../../Loader/Loader';
 
 class PaybackCdpModal extends Component {
   componentWillMount() {
-    this.props.getCloseDataAction();
+    this.props.getCloseDataAction(true);
   }
 
   render() {
     const {
       closeModal, enoughMkrToWipe, enoughEthToWipe, daiUnlocked, makerUnlocked, gettingCloseData,
-      gettingCloseDataError, cdpId,
+      gettingCloseDataError, cdpId, paybackDaiAction, payingBackDai, paybackAmount,
     } = this.props;
 
     const cantClose = !daiUnlocked || !makerUnlocked;
@@ -55,11 +56,13 @@ class PaybackCdpModal extends Component {
 
           {
             !gettingCloseData && !gettingCloseDataError && (
-              <div className="content-wrapper">
+              <div className={`content-wrapper ${cantClose ? 'no-close-cdp' : 'can-close-cdp'}`}>
                 <div className="container">
                   <div className="description">
-                    What is the overall collateral ratio of the system (lowest, higest point of the week)
-                    How much dai is in the system,How much dai is in the system,
+                    <div className="text">
+                      What is the overall collateral ratio of the system (lowest, higest point of the week)
+                      How much dai is in the system,How much dai is in the system,
+                    </div>
                   </div>
                 </div>
 
@@ -70,8 +73,9 @@ class PaybackCdpModal extends Component {
 
                       <div className="modal-controls">
                         <button
-                          disabled={cantClose}
+                          disabled={cantClose || payingBackDai}
                           type="button"
+                          onClick={() => { paybackDaiAction(paybackAmount, closeModal); }}
                           className={`button ${cantClose ? 'gray' : 'green'} uppercase`}
                         >
                           Payback
@@ -104,17 +108,20 @@ PaybackCdpModal.defaultProps = {
 
 PaybackCdpModal.propTypes = {
   closeModal: PropTypes.func.isRequired,
+  paybackDaiAction: PropTypes.func.isRequired,
   getCloseDataAction: PropTypes.func.isRequired,
   enoughMkrToWipe: PropTypes.bool.isRequired,
   enoughEthToWipe: PropTypes.bool.isRequired,
   daiUnlocked: PropTypes.bool.isRequired,
   makerUnlocked: PropTypes.bool.isRequired,
   gettingCloseData: PropTypes.bool.isRequired,
+  payingBackDai: PropTypes.bool.isRequired,
   gettingCloseDataError: PropTypes.string.isRequired,
   cdpId: PropTypes.number.isRequired,
+  paybackAmount: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = ({ general }) => ({
+const mapStateToProps = ({ general, dashboard }) => ({
   enoughMkrToWipe: general.enoughMkrToWipe,
   enoughEthToWipe: general.enoughEthToWipe,
   daiUnlocked: general.daiUnlocked,
@@ -122,10 +129,11 @@ const mapStateToProps = ({ general }) => ({
   gettingCloseData: general.gettingCloseData,
   gettingCloseDataError: general.gettingCloseDataError,
   cdpId: general.cdp.id,
+  payingBackDai: dashboard.payingBackDai,
 });
 
 const mapDispatchToProps = {
-  getCloseDataAction,
+  getCloseDataAction, paybackDaiAction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(PaybackCdpModal);

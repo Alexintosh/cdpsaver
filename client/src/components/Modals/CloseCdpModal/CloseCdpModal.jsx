@@ -56,11 +56,13 @@ class CloseCdpModal extends Component {
 
           {
             !gettingCloseData && !gettingCloseDataError && (
-              <div className="content-wrapper">
-                <div className="container">
+              <div className={`content-wrapper ${cantClose ? 'no-close-cdp' : 'can-close-cdp'}`}>
+                <div className="contrainer">
                   <div className="description">
-                    What is the overall collateral ratio of the system (lowest, higest point of the week)
-                    How much dai is in the system,How much dai is in the system,
+                    <div className="text">
+                      What is the overall collateral ratio of the system (lowest, higest point of the week)
+                      How much dai is in the system,How much dai is in the system,
+                    </div>
                   </div>
                 </div>
 

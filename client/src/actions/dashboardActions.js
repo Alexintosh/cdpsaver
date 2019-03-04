@@ -377,10 +377,11 @@ export const addCollateralAction = amountEth => async (dispatch, getState) => {
  * Handles redux actions for return dai to the cdp smart contract call
  *
  * @param amountDai {String}
+ * @param closeModal {Function}
  *
  * @return {Function}
  */
-export const paybackDaiAction = amountDai => async (dispatch, getState) => {
+export const paybackDaiAction = (amountDai, closeModal) => async (dispatch, getState) => {
   dispatch({ type: PAYBACK_DAI_REQUEST });
 
   const proxySendHandler = (promise, amount) => sendTx(promise, `Payback ${amount} DAI`, dispatch, getState);
@@ -393,6 +394,8 @@ export const paybackDaiAction = amountDai => async (dispatch, getState) => {
 
     dispatch({ type: PAYBACK_DAI_SUCCESS, payload });
     dispatch(change('managerPaybackForm', 'paybackAmount', null));
+
+    closeModal();
   } catch (err) {
     dispatch({ type: PAYBACK_DAI_FAILURE, payload: err.message });
   }
