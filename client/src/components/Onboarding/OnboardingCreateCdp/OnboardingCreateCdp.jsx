@@ -22,7 +22,7 @@ let OnboardingCreateCdp = ({
             <span>CDP</span>
           </div>
           <div className="content-text">
-            Creating a CDP will enable you to generate DAI by providing collateral in ETH
+            Creating a CDP allows you to generate Dai by providing collateral in ETH.
           </div>
 
           <OnboardingWizardCreateCdpForm history={history} />

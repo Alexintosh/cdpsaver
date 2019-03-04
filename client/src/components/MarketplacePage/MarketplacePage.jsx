@@ -32,7 +32,7 @@ const MarketplacePage = ({
         <div className="width-container">
           <div className="sub-title">Marketplace</div>
           <div className="sub-text">
-            Sell and Buy CDPs at discount prices in the Marketplace
+          Buy and sell CDPs at discount prices in the Marketplace.
           </div>
         </div>
       </div>

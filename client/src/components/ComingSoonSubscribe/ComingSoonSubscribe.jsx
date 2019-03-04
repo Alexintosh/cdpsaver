@@ -16,11 +16,11 @@ class ComingSoonSubscribe extends Component {
 
     return (
       <div className="coming-soon-subscribe-wrapper">
-        <div className="title">{title} feature coming soon</div>
+        <div className="title">{title} feature coming soon...</div>
 
         <div className="description">
-          What is the overall collateral ratio of the system (lowest, higest point of the week) How much dai is in the
-          system,How much dai is in the system,
+        This feature is currently in development.
+        You can subscribe below to receive a notification as soon as it goes live!
         </div>
 
         { !submittingFormSuccess && <ComingSoonSubscribeForm /> }

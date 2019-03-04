@@ -4,15 +4,10 @@ export const subscribeToMonitoringApiRequest = (/* formData */) => new Promise((
   }, 500);
 });
 
-export const subscribeComingSoonApiCall = ({ email }) => fetch('https://cdpsaver.us20.list-manage.com/subscribe/', {
+export const subscribeComingSoonApiCall = ({ email }) => fetch('https://formspree.io/nesa993@gmail.com', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    email_address: email,
-    status: 'subscribed',
-    merge_fields: {
-      FNAME: 'Aleksandar',
-      LNAME: 'Vučić',
-    },
+    email,
   }),
 });

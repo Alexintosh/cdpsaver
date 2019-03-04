@@ -9,10 +9,10 @@ import { subscribeComingSoonAction } from '../../../actions/generalActions';
 const ComingSoonSubscribeForm = ({
   handleSubmit, onSubmit, pristine, invalid, submittingForm, submittingFormError,
 }) => (
-  <form onSubmit={handleSubmit((e) => { onSubmit(e); })} className="form-wrapper">
+  <form action="https://formspree.io/nesa993@gmail.com" method="POST" className="form-wrapper">
     <Field
       id="subscribe-email"
-      name="email"
+      name="name"
       placeholder="Email"
       labelText="Email address:"
       component={InputComponent}
