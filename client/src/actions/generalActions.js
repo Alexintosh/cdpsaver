@@ -6,9 +6,15 @@ import {
   GET_CLOSE_DATA_REQUEST,
   GET_CLOSE_DATA_SUCCESS,
   GET_CLOSE_DATA_FAILURE,
+
+  SUBSCRIBE_COMING_SOON_REQUEST,
+  SUBSCRIBE_COMING_SOON_SUCCESS,
+  SUBSCRIBE_COMING_SOON_FAILURE,
+  RESET_SUBSCRIBE_COMING_SOON,
 } from '../actionTypes/generalActionTypes';
 import { maker } from '../services/cdpService';
 import { getEthPrice } from '../services/priceService';
+import { subscribeComingSoonApiCall } from '../services/apiService';
 import {
   getDaiAllowance, getDaiBalance, getMakerAllowance, getMakerBalance, weiToEth,
 } from '../services/ethService';
@@ -108,4 +114,29 @@ export const getCloseDataAction = (paybackData = false) => async (dispatch, getS
   } catch (e) {
     dispatch({ type: GET_CLOSE_DATA_FAILURE, payload: e.message });
   }
+};
+
+/**
+ * Sends the users email from the feature subscribe form to the mailchimp account
+ *
+ * @param email {String}
+ * @return {*}
+ */
+export const subscribeComingSoonAction = ({ email }) => async (dispatch) => {
+  dispatch({ type: SUBSCRIBE_COMING_SOON_REQUEST });
+
+  try {
+    await subscribeComingSoonApiCall(email);
+
+    dispatch({ type: SUBSCRIBE_COMING_SOON_SUCCESS });
+  } catch (e) {
+    dispatch({ type: SUBSCRIBE_COMING_SOON_FAILURE, payload: e.message });
+  }
+};
+
+/**
+ * Resets the subscribeComingSoon state in the reducer
+ */
+export const resetSubscribeComingSoon = () => (dispatch) => {
+  dispatch({ type: RESET_SUBSCRIBE_COMING_SOON });
 };

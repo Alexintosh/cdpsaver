@@ -18,6 +18,11 @@ import {
   GET_CLOSE_DATA_REQUEST,
   GET_CLOSE_DATA_SUCCESS,
   GET_CLOSE_DATA_FAILURE,
+
+  SUBSCRIBE_COMING_SOON_REQUEST,
+  SUBSCRIBE_COMING_SOON_SUCCESS,
+  SUBSCRIBE_COMING_SOON_FAILURE,
+  RESET_SUBSCRIBE_COMING_SOON,
 } from '../actionTypes/generalActionTypes';
 import { CREATE_CDP_SUCCESS } from '../actionTypes/onboardingActionTypes';
 import {
@@ -30,6 +35,7 @@ import {
   REPAY_DAI_SUCCESS,
   PAYBACK_DAI_SUCCESS,
   BOOST_SUCCESS,
+  CLOSE_CDP_SUCCESS,
 } from '../actionTypes/dashboardActionTypes';
 import { LS_ACCOUNT } from '../constants/general';
 import { CANCEL_SELL_CDP_SUCCESS, SELL_CDP_SUCCESS } from '../actionTypes/marketplaceActionTypes';
@@ -64,6 +70,10 @@ const INITIAL_STATE = {
   enoughEthToWipe: false,
   gettingCloseData: false,
   gettingCloseDataError: '',
+
+  subscribingComingSoon: false,
+  subscribingComingSoonSuccess: false,
+  subscribingComingSoonError: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -97,6 +107,7 @@ export default (state = INITIAL_STATE, action) => {
     case PAYBACK_DAI_SUCCESS:
     case CANCEL_SELL_CDP_SUCCESS:
     case BOOST_SUCCESS:
+    case CLOSE_CDP_SUCCESS:
       return {
         ...state,
         cdp: {
@@ -177,6 +188,33 @@ export default (state = INITIAL_STATE, action) => {
 
     case TRANSFER_CDP_SUCCESS:
       return { ...state, cdp: null, proxyAddress: '' };
+
+    case SUBSCRIBE_COMING_SOON_REQUEST:
+      return { ...state, subscribingComingSoon: true, subscribingComingSoonError: '' };
+
+    case SUBSCRIBE_COMING_SOON_SUCCESS:
+      return {
+        ...state,
+        subscribingComingSoon: false,
+        subscribingComingSoonSuccess: true,
+        subscribingComingSoonError: '',
+      };
+
+    case SUBSCRIBE_COMING_SOON_FAILURE:
+      return {
+        ...state,
+        subscribingComingSoon: false,
+        subscribingComingSoonSuccess: false,
+        subscribingComingSoonError: payload,
+      };
+
+    case RESET_SUBSCRIBE_COMING_SOON:
+      return {
+        ...state,
+        subscribingComingSoon: false,
+        subscribingComingSoonSuccess: false,
+        subscribingComingSoonError: '',
+      };
 
     default:
       return state;

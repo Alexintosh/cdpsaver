@@ -356,7 +356,7 @@ export const resetBoostModal = () => (dispatch) => { dispatch({ type: RESET_BOOS
 export const addCollateralAction = amountEth => async (dispatch, getState) => {
   dispatch({ type: ADD_COLLATERAL_REQUEST });
 
-  const proxySendHandler = (promise, amount) => sendTx(promise, `Add collateral ${amount} ETH`, dispatch, getState);
+  const proxySendHandler = (promise, amount) => sendTx(promise, `Add collateral: ${amount} ETH`, dispatch, getState);
 
   try {
     const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
@@ -516,10 +516,12 @@ export const approveMakerAction = () => async (dispatch, getState) => {
 export const transferCdpAction = ({ toAddress }, history, closeModal) => async (dispatch, getState) => {
   dispatch({ type: TRANSFER_CDP_REQUEST });
 
+  const proxySendHandler = promise => sendTx(promise, 'Transfer CDP', dispatch, getState);
+
   try {
     const { account, cdp, proxyAddress } = getState().general;
 
-    await transferCdp(account, toAddress, cdp.id, proxyAddress);
+    await transferCdp(proxySendHandler, account, toAddress, cdp.id, proxyAddress);
 
     addToLsState({ account, onboardingFinished: false });
 

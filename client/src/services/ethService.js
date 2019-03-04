@@ -15,7 +15,6 @@ import {
   ethTokenAddress,
   daiTokenAddress,
   saverProxyAddress,
-  PipInterfaceContract,
   SaverProxyContract,
 } from './contractRegistryService';
 import config from '../config/config.json';
@@ -278,6 +277,7 @@ export const approveMaker = address => new Promise(async (resolve, reject) => {
 /**
  * Transfers the cdp from one address to another address
  *
+ * @param sendTxFunc {Function}
  * @param fromAddress {String}
  * @param toAddress {String}
  * @param cdpId {Number}
@@ -285,7 +285,9 @@ export const approveMaker = address => new Promise(async (resolve, reject) => {
  *
  * @return {Promise<Boolean>}
  */
-export const transferCdp = (fromAddress, toAddress, cdpId, proxyAddress) => new Promise(async (resolve, reject) => {
+export const transferCdp = (
+  sendTxFunc, fromAddress, toAddress, cdpId, proxyAddress,
+) => new Promise(async (resolve, reject) => {
   try {
     const contract = config.SaiSaverProxy;
     const contractFunction = contract.abi.find(abi => abi.name === 'give');
@@ -298,7 +300,9 @@ export const transferCdp = (fromAddress, toAddress, cdpId, proxyAddress) => new 
     const params = [saiTubAddress, cdpIdBytes32, toAddress];
     const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, params);
 
-    await proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send({ from: fromAddress });
+    const promise = proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send({ from: fromAddress }); // eslint-disable-line
+
+    await sendTxFunc(promise);
 
     resolve(true);
   } catch (err) {
@@ -597,9 +601,6 @@ export const getMaxEthRepay = async (cdpId) => {
     const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
 
     const data = await contract.methods.maxFreeCollateral(tubInterfaceAddress, cdpIdBytes32).call();
-
-    console.log(data.toString());
-    console.log(parseFloat(weiToEth(data)));
 
     return parseFloat(weiToEth(data));
   } catch (err) {

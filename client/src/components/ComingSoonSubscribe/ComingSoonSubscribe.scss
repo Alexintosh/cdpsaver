@@ -1,0 +1,60 @@
+@import "../../common/colors";
+@import "../../common/text";
+
+.coming-soon-subscribe-wrapper {
+  margin-top: 185px;
+  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  color: white;
+
+  .title {
+    font-size: 28px;
+    margin-bottom: 36px;
+  }
+
+  .description {
+    color: $gray;
+    margin: 0 auto;
+    margin-bottom: 36px;
+    max-width: 380px;
+  }
+
+  .form-wrapper .form-item-wrapper.wrapper-error .input-values {
+    padding: 14px 19px;
+  }
+
+  .success {
+    max-width: 400px;
+    margin: 0 auto;
+    color: $green;
+    font-size: $font-size-extra-large;
+  }
+
+  .form-wrapper {
+    max-width: 300px;
+    margin: 0 auto;
+
+    .submit-error {
+      margin: 20px 0;
+      color: $dark-red;
+    }
+
+    .form-item-wrapper {
+      padding: 0;
+    }
+
+    .input-values {
+      padding: 14px 19px;
+      flex-direction: column;
+
+      label { margin-bottom: 2px; }
+
+      input {
+        font-size: $font-size-regular - 0.1;
+        text-align: left;
+      }
+    }
+  }
+}

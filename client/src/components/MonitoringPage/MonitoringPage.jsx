@@ -1,21 +1,10 @@
 import React from 'react';
+import ComingSoonSubscribe from '../ComingSoonSubscribe/ComingSoonSubscribe';
 
 const MonitoringPage = () => (
   <div className="dashboard-page-wrapper monitor-page-wrapper">
     <div className="content-wrapper">
-      <div className="coming-soon-container">
-        <div className="coming-soon-header">
-          Saver feature is coming soon...
-        </div>
-
-        <div className="coming-soon-form">
-          <input placeholder="email" />
-          <button type="button" className="" onClick={() => {}}>
-              Subscribe
-          </button>
-        </div>
-
-      </div>
+      <ComingSoonSubscribe title="Monitoring" />
     </div>
   </div>
 );
