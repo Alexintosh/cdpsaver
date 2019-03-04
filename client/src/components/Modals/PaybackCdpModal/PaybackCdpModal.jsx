@@ -31,8 +31,8 @@ class PaybackCdpModal extends Component {
 
           <div className="container">
             <div className="sub-header">
-              <span className="label">CDP ID:</span>
-              <span className="value">{ cdpId }</span>
+              <span className="label">CDP ID: </span>
+              <span className="value">#{ cdpId }</span>
             </div>
           </div>
 
@@ -60,8 +60,8 @@ class PaybackCdpModal extends Component {
                 <div className="container">
                   <div className="description">
                     <div className="text">
-                      What is the overall collateral ratio of the system (lowest, higest point of the week)
-                      How much dai is in the system,How much dai is in the system,
+                      Paying back your debt will lower your liquidation price. While paying
+                      the debt in Dai you will also be paying the governance fee in MKR.
                     </div>
                   </div>
                 </div>

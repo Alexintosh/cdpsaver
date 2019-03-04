@@ -16,7 +16,7 @@ const PrivateRoute = ({
 
     if (loggingIn) message = 'Logging in, please wait...';
     if (connectingProvider) message = 'Connecting web3 provider, please wait...';
-    if (gettingCdp) message = 'Getting your cdp, please wait...';
+    if (gettingCdp) message = 'Getting your CDP, please wait...';
 
     return (
       <div className="loader-page-wrapper private">

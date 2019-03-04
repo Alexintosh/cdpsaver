@@ -19,8 +19,8 @@ const HomePage = () => (
         </div>
 
         <div className="section-text">
-        CDP Saver is a web application that aims to help users in protecting their CDPs from liquidation.
-        By providing advanced features through are dashboard, users are able to better manage and protect theri CDPs.
+        CDP Saver is a web application that aims to help users protect their CDPs from liquidation.
+        Using advanced features through our dashboard, users are able to better manage and protect their CDPs.
         </div>
 
         <Link to="/dashboard" className="button green">Get Started</Link>
@@ -37,7 +37,7 @@ const HomePage = () => (
           <div className="section-title">Dashboard</div>
 
           <div className="section-text">
-            An easy to use dashboard, which provides advanced features like Repay and Boost.
+          An easy to use Dashboard that includes advanced features such as Repay and Boost.
           </div>
         </div>
 
@@ -49,7 +49,7 @@ const HomePage = () => (
           <div className="section-title">Marketplace</div>
 
           <div className="section-text">
-            Buy and sell other users CDPs at discount prices and save them from liquidation.
+          A place to sell yours or buy other users&apos; CDPs at discount prices and save them from liquidation.
           </div>
         </div>
 
@@ -61,7 +61,7 @@ const HomePage = () => (
           <div className="section-title">Saver</div>
 
           <div className="section-text">
-            By providing constant monitoring, keep your CDP at a certain ratio level and avoid liquidation.
+          An automated tool to keep your CDP at a certain ratio level and avoid liquidation.
           </div>
         </div>
       </div>

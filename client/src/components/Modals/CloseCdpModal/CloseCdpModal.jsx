@@ -31,8 +31,8 @@ class CloseCdpModal extends Component {
 
           <div className="container">
             <div className="sub-header">
-              <span className="label">CDP ID:</span>
-              <span className="value">{ cdpId }</span>
+              <span className="label">CDP ID: </span>
+              <span className="value">#{ cdpId }</span>
             </div>
           </div>
 
@@ -60,8 +60,8 @@ class CloseCdpModal extends Component {
                 <div className="contrainer">
                   <div className="description">
                     <div className="text">
-                      What is the overall collateral ratio of the system (lowest, higest point of the week)
-                      How much dai is in the system,How much dai is in the system,
+                    Closing your CDP requires paying back all of your Dai and MKR debt.
+                    By closing the CDP you will no longer be able to interact with it.
                     </div>
                   </div>
                 </div>

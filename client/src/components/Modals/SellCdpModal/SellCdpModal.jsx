@@ -50,7 +50,7 @@ class SellCdpModal extends Component {
 
                 <div className="info-wrapper">
                   <div className="value-wrapper">
-                    <span className="label">Cdp value:</span>
+                    <span className="label">CDP value:</span>
                     <span className="value">
                       <TooltipWrapper title={value.eth}>{ formatNumber(value.eth, 3) } ETH</TooltipWrapper>
                     </span>

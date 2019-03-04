@@ -32,8 +32,8 @@ class RepayModal extends Component {
             <h3 className="title">Repay</h3>
 
             <div className="description">
-              What is the overall collateral ratio of the system (lowest, highest point of the week) How much dai is
-              in the system,How much dai is in the system,
+            Repaying will draw Ether from your CDP and buy Dai to repay the debt, both in a single transaction.
+            This will increase your liquidation price and ratio.
             </div>
           </div>
 
@@ -72,12 +72,12 @@ class RepayModal extends Component {
 
                   <div className="data-item desc">
                     <div className="label">
-                      *Disclaimer: This is estimate based on current exchange prices
+                      *Disclaimer: This is an estimate based on current exchange rates.
                     </div>
                     <div className="value">
                       (
                       <TooltipWrapper title={repayExchangeRate}>
-                        { `${formatNumber(repayExchangeRate, 2)} DAI/ETH` }
+                        { `${formatNumber(repayExchangeRate, 2)} ETH/DAI` }
                       </TooltipWrapper>
                       )
                     </div>

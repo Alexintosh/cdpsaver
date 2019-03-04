@@ -32,8 +32,8 @@ class BoostModal extends Component {
             <h3 className="title">Boost</h3>
 
             <div className="description">
-              What is the overall collateral ratio of the system (lowest, highest point of the week) How much dai is
-              in the system,How much dai is in the system,
+            Boosting will draw Dai and buy more Ether, both in a single transaction.
+            This will increase the amount of Ether in your CDP.
             </div>
           </div>
 
@@ -73,12 +73,12 @@ class BoostModal extends Component {
 
                   <div className="data-item desc">
                     <div className="label">
-                      *Disclaimer: This is estimate based on current exchange prices
+                      *Disclaimer: This is an estimate based on current exchange rates.
                     </div>
                     <div className="value">
                       (
                       <TooltipWrapper title={boostExchangeRate}>
-                        { `${formatNumber(boostExchangeRate, 2)} DAI/ETH` }
+                        { `${formatNumber(boostExchangeRate, 4)} DAI/ETH` }
                       </TooltipWrapper>
                       )
                     </div>

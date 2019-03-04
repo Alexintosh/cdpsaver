@@ -25,7 +25,7 @@ let TransferCdpModal = ({
         </div>
 
         <div className="description">
-          By transfering your CDP to a new address you will give up ownership of it
+          By transfering your CDP to a new address you will give up ownership of it.
         </div>
 
         <TransferCdpForm history={history} closeModal={closeModal} />
