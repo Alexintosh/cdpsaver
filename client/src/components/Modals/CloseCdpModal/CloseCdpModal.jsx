@@ -17,7 +17,7 @@ class CloseCdpModal extends Component {
   render() {
     const {
       closeModal, enoughMkrToWipe, enoughEthToWipe, daiUnlocked, makerUnlocked, gettingCloseData,
-      gettingCloseDataError, cdpId, closeCdpAction,
+      gettingCloseDataError, cdpId, closeCdpAction, history, closingCdp,
     } = this.props;
 
     const cantClose = !daiUnlocked || !makerUnlocked;
@@ -71,9 +71,9 @@ class CloseCdpModal extends Component {
 
                       <div className="modal-controls">
                         <button
-                          disabled={cantClose}
+                          disabled={cantClose || closingCdp}
                           type="button"
-                          onClick={() => { closeCdpAction(closeModal, history) }}
+                          onClick={() => { closeCdpAction(closeModal, history); }}
                           className={`button ${cantClose ? 'gray' : 'green'} uppercase`}
                         >
                           Close cdp
@@ -113,17 +113,20 @@ CloseCdpModal.propTypes = {
   daiUnlocked: PropTypes.bool.isRequired,
   makerUnlocked: PropTypes.bool.isRequired,
   gettingCloseData: PropTypes.bool.isRequired,
+  closingCdp: PropTypes.bool.isRequired,
   gettingCloseDataError: PropTypes.string.isRequired,
   cdpId: PropTypes.number.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = ({ general }) => ({
+const mapStateToProps = ({ general, dashboard }) => ({
   enoughMkrToWipe: general.enoughMkrToWipe,
   enoughEthToWipe: general.enoughEthToWipe,
   daiUnlocked: general.daiUnlocked,
   makerUnlocked: general.makerUnlocked,
   gettingCloseData: general.gettingCloseData,
   gettingCloseDataError: general.gettingCloseDataError,
+  closingCdp: dashboard.closingCdp,
   cdpId: general.cdp.id,
 });
 

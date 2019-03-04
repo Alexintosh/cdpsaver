@@ -126,7 +126,7 @@ class ManagerPage extends Component {
             </div>
 
             <div className="bottom-controls">
-              <button type="button" className="button gray uppercase" onClick={openCloseCdpModal}>
+              <button type="button" className="button gray uppercase" onClick={() => { openCloseCdpModal(history); }}>
                 Close
               </button>
 

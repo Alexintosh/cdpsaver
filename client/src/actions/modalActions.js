@@ -43,8 +43,8 @@ export const openSellCdpModal = () => (dispatch) => {
 /**
  * Opens close cdp modal when the user wants to close his cdp
  */
-export const openCloseCdpModal = () => (dispatch) => {
-  dispatch(toggleModal(CLOSE_CDP_MODAL, { width: 481 }, true));
+export const openCloseCdpModal = history => (dispatch) => {
+  dispatch(toggleModal(CLOSE_CDP_MODAL, { history, width: 481 }, true));
 };
 
 /**

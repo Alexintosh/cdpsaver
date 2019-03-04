@@ -547,7 +547,7 @@ export const closeCdpAction = (closeModal, history) => async (dispatch, getState
 
   try {
     const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
-    const params = [proxySendHandler, 0, cdp.id, proxyAddress, account, 'shut', ethPrice, true, true];
+    const params = [proxySendHandler, '0', cdp.id, proxyAddress, account, 'shut', ethPrice, true, true];
 
     await callProxyContract(...params);
 
