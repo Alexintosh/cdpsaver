@@ -165,7 +165,7 @@ export const generateDaiAction = amountDai => async (dispatch, getState) => {
 
   try {
     const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
-    const params = [proxySendHandler, amountDai, cdp.id, proxyAddress, account, 'draw', ethPrice];
+    const params = [proxySendHandler, amountDai.toString(), cdp.id, proxyAddress, account, 'draw', ethPrice];
 
     const payload = await callProxyContract(...params);
 
@@ -360,7 +360,7 @@ export const addCollateralAction = amountEth => async (dispatch, getState) => {
 
   try {
     const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
-    const params = [proxySendHandler, amountEth, cdp.id, proxyAddress, account, 'lock', ethPrice, true];
+    const params = [proxySendHandler, amountEth.toString(), cdp.id, proxyAddress, account, 'lock', ethPrice, true];
 
     const payload = await callProxyContract(...params);
 
@@ -388,7 +388,7 @@ export const paybackDaiAction = (amountDai, closeModal) => async (dispatch, getS
 
   try {
     const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
-    const params = [proxySendHandler, amountDai, cdp.id, proxyAddress, account, 'wipe', ethPrice, false, true];
+    const params = [proxySendHandler, amountDai.toString(), cdp.id, proxyAddress, account, 'wipe', ethPrice, false, true]; // eslint-disable-line
 
     const payload = await callProxyContract(...params);
 

@@ -5,23 +5,38 @@ import TooltipWrapper from '../TooltipWrapper/TooltipWrapper';
 
 const CdpAfterVal = ({
   type, loading, cdp, cdpProp, symbol,
-}) => (
-  <div className={`after-value ${type}`}>
-    { loading && 'Loading...' }
-    {
-      !loading && cdp && (
-        <div className="amount-wrapper">
-          <span className="after">After:</span>
-          <span className="amount">
-            <TooltipWrapper title={cdp[cdpProp]}>
-              { formatNumber(cdp[cdpProp], 2) }{ symbol }
-            </TooltipWrapper>
-          </span>
-        </div>
-      )
+}) => {
+  let val = 0;
+  let valLabel = 0;
+
+  if (!loading && cdp) {
+    val = cdp[cdpProp];
+    valLabel = `${formatNumber(cdp[cdpProp], 2)}${symbol}`;
+
+    if (val === 0 || val === Infinity) {
+      val = '-';
+      valLabel = '-';
     }
-  </div>
-);
+  }
+
+  return (
+    <div className={`after-value ${type}`}>
+      { loading && 'Loading...' }
+      {
+        !loading && cdp && (
+          <div className="amount-wrapper">
+            <span className="after">After:</span>
+            <span className="amount">
+              <TooltipWrapper title={val}>
+                {valLabel}
+              </TooltipWrapper>
+            </span>
+          </div>
+        )
+      }
+    </div>
+  );
+};
 
 CdpAfterVal.defaultProps = {
   cdp: null,
