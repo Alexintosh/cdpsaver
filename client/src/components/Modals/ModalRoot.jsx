@@ -20,12 +20,14 @@ const ModalRoot = ({
   return (
     <Modal modalOpen={modalOpen} closeModal={closeFunc} width={modalProps.width} className={modalProps.className}>
       {
-        SpecificModal ? (
-          <SpecificModal
-            modalType={modalType}
-            closeModal={closeFunc}
-            {...modalProps}
-          />) : null
+        SpecificModal ?
+          (
+            <SpecificModal
+              modalType={modalType}
+              closeModal={closeFunc}
+              {...modalProps}
+            />
+          ) : null
       }
     </Modal>
   );

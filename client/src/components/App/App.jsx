@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, Provider } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { updateEthPriceInterval } from '../../actions/generalActions';
 import { silentLogin } from '../../actions/accountActions';
@@ -27,31 +27,36 @@ class RoutesWrapper extends Component {
   }
 
   render() {
+    const { store } = this.props;
+
     return (
-      <BrowserRouter>
-        <div className="app">
-          <Header />
-          <Notifications />
-          <TxNotifications />
+      <Provider store={store}>
+        <BrowserRouter>
+          <div className="app">
+            <Header />
+            <Notifications />
+            <TxNotifications />
 
-          <Switch>
-            <Route exact path="/" component={HomePage} />
-            <Route path="/connect" component={Connect} />
-            <Route path="/onboarding" component={OnboardingRoutes} />
-            <Route path="/marketplace" component={MarketplacePage} />
-            <PrivateRoute path="/migrate" component={MigratePage} migratePage />
-            <PrivateRoute path="/dashboard" component={DashboardRoutes} />
-            <Route path="*" component={Page404} />
-          </Switch>
+            <Switch>
+              <Route exact path="/" component={HomePage} />
+              <Route path="/connect" component={Connect} />
+              <Route path="/onboarding" component={OnboardingRoutes} />
+              <Route path="/marketplace" component={MarketplacePage} />
+              <PrivateRoute path="/migrate" component={MigratePage} migratePage />
+              <PrivateRoute path="/dashboard" component={DashboardRoutes} />
+              <Route path="*" component={Page404} />
+            </Switch>
 
-          <ModalRoot />
-        </div>
-      </BrowserRouter>
+            <ModalRoot />
+          </div>
+        </BrowserRouter>
+      </Provider>
     );
   }
 }
 
 RoutesWrapper.propTypes = {
+  store: PropTypes.object.isRequired,
   silentLogin: PropTypes.func.isRequired,
   updateEthPriceInterval: PropTypes.func.isRequired,
 };
