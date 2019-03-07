@@ -602,7 +602,11 @@ export const getMaxEthRepay = async (cdpId) => {
 
     const data = await contract.methods.maxFreeCollateral(tubInterfaceAddress, cdpIdBytes32).call();
 
-    return parseFloat(weiToEth(data));
+    let maxRepay = parseFloat(weiToEth(data));
+
+    maxRepay -= (maxRepay / 100);
+
+    return maxRepay;
   } catch (err) {
     throw new Error(err);
   }
@@ -622,7 +626,11 @@ export const getMaxDaiBoost = async (cdpId) => {
 
     const data = await contract.methods.maxFreeDai(tubInterfaceAddress, cdpIdBytes32).call();
 
-    return parseFloat(weiToEth(data));
+    let maxDai = parseFloat(weiToEth(data));
+
+    maxDai -= (maxDai / 100);
+
+    return maxDai;
   } catch (err) {
     throw new Error(err);
   }
