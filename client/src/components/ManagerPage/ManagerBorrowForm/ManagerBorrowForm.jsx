@@ -13,7 +13,7 @@ import {
   setAfterValue,
 } from '../../../actions/dashboardActions';
 import { openRepayModal } from '../../../actions/modalActions';
-import { formatNumber } from '../../../utils/utils';
+import { formatNumber, notGraterThan } from '../../../utils/utils';
 import InfoBox from '../../Decorative/InfoBox/InfoBox';
 
 class ManagerBorrowForm extends Component {
@@ -53,10 +53,13 @@ class ManagerBorrowForm extends Component {
             type="number"
             wrapperClassName={`form-item-wrapper generate ${afterType === 'generate' ? 'active' : ''}`}
             name="generateDaiAmount"
-            onChange={(e) => { setAfterValue(e.target.value, 'generate'); }}
+            onChange={(e) => {
+              if (e.target.value <= maxDai) setAfterValue(e.target.value, 'generate');
+            }}
             labelText="Generate:"
             secondLabelText="DAI"
             placeholder="0"
+            normalize={val => notGraterThan(val, maxDai)}
             additional={{ max: maxDai, min: 0 }}
             disabled={generatingDai}
             component={InputComponent}
@@ -92,10 +95,13 @@ class ManagerBorrowForm extends Component {
             type="number"
             wrapperClassName={`form-item-wrapper withdraw ${afterType === 'withdraw' ? 'active' : ''}`}
             name="withdrawEthAmount"
-            onChange={(e) => { setAfterValue(e.target.value, 'withdraw'); }}
+            onChange={(e) => {
+              if (e.target.value <= maxEthWithdraw) setAfterValue(e.target.value, 'withdraw');
+            }}
             labelText="Withdraw:"
             secondLabelText="ETH"
             placeholder="0"
+            normalize={val => notGraterThan(val, maxEthWithdraw)}
             additional={{ max: maxEthWithdraw, min: 0 }}
             disabled={withdrawingEth}
             component={InputComponent}
@@ -134,10 +140,13 @@ class ManagerBorrowForm extends Component {
             type="number"
             wrapperClassName={`form-item-wrapper repay ${afterType === 'repay' ? 'active' : ''}`}
             name="repayDaiAmount"
-            onChange={(e) => { setAfterValue(e.target.value, 'repay'); }}
+            onChange={(e) => {
+              if (e.target.value <= maxEthRepay) setAfterValue(e.target.value, 'repay');
+            }}
             labelText="Repay:"
             secondLabelText="ETH"
-            additional={{ min: 0 }}
+            normalize={val => notGraterThan(val, maxEthRepay)}
+            additional={{ min: 0, max: maxEthRepay }}
             placeholder="0"
             disabled={repayingDai}
             component={InputComponent}

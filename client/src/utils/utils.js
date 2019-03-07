@@ -202,3 +202,9 @@ export const addToLsState = (change) => {
 
   localStorage.setItem(LS_CDP_SAVER_STATE, JSON.stringify(newStateVal));
 };
+
+export const notGraterThan = (val, max) => {
+  if (val > max) return max;
+
+  return val;
+};

@@ -7,7 +7,7 @@ import {
 import InputComponent from '../../Forms/InputComponent';
 import { addCollateralAction, setAfterValue } from '../../../actions/dashboardActions';
 import { openBoostModal, openPaybackModal } from '../../../actions/modalActions';
-import { formatNumber } from '../../../utils/utils';
+import { formatNumber, notGraterThan } from '../../../utils/utils';
 import TooltipWrapper from '../../TooltipWrapper/TooltipWrapper';
 import InfoBox from '../../Decorative/InfoBox/InfoBox';
 
@@ -50,11 +50,14 @@ class ManagerPaybackForm extends Component {
             type="number"
             wrapperClassName={`form-item-wrapper payback ${afterType === 'payback' ? 'active' : ''}`}
             name="paybackAmount"
-            onChange={(e) => { setAfterValue(e.target.value, 'payback'); }}
+            onChange={(e) => {
+              if (e.target.value <= debtDai) setAfterValue(e.target.value, 'payback');
+            }}
             labelText="Payback:"
             secondLabelText="DAI"
             placeholder="0"
-            additional={{ min: 0 }}
+            normalize={val => notGraterThan(val, debtDai)}
+            additional={{ min: 0, max: debtDai }}
             component={InputComponent}
           />
           <button
@@ -115,10 +118,13 @@ class ManagerPaybackForm extends Component {
             wrapperClassName={`form-item-wrapper boost ${afterType === 'boost' ? 'active' : ''}`}
             name="boostAmount"
             labelText="Boost:"
-            onChange={(e) => { setAfterValue(e.target.value, 'boost'); }}
+            onChange={(e) => {
+              if (e.target.value <= maxDaiBoost) setAfterValue(e.target.value, 'boost');
+            }}
             secondLabelText="DAI"
             placeholder="0"
-            additional={{ min: 0 }}
+            normalize={val => notGraterThan(val, maxDaiBoost)}
+            additional={{ min: 0, max: maxDaiBoost }}
             component={InputComponent}
           />
 
