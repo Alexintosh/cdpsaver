@@ -6,7 +6,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const { favicon, appManifest, entry, resolve } = require('./webpack.shared');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const MinifyPlugin = require("babel-minify-webpack-plugin");
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 
 module.exports = {
@@ -47,7 +46,7 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          'style-loader',
           {
             loader: 'css-loader'
           },
@@ -91,7 +90,6 @@ module.exports = {
 
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.optimize.ModuleConcatenationPlugin(),
-    new MinifyPlugin(),
     new ImageminPlugin({ test: /\.(jpe?g|png|gif|svg)$/i })
   ],
   optimization: {
