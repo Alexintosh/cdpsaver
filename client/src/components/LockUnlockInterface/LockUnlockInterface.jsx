@@ -18,7 +18,7 @@ const LockUnlockInterface = ({
     <div className="lock-item">
       <div className="currency">DAI</div>
 
-      <div className="balance">{ daiBalance.toFixed(2) }</div>
+      <div className="balance">{ parseFloat(daiBalance).toFixed(2) }</div>
 
       {
         !approvingDai && daiUnlocked && (
@@ -49,7 +49,7 @@ const LockUnlockInterface = ({
     <div className="lock-item">
       <div className="currency">MKR</div>
 
-      <div className="balance">{ makerBalance.toFixed(2) }</div>
+      <div className="balance">{ parseFloat(makerBalance).toFixed(2) }</div>
 
       {
         !approvingMaker && makerUnlocked && (

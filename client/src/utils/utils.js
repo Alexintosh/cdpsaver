@@ -148,9 +148,9 @@ export const formatNumber = (_num, fixed) => {
 
     if (formated === 'Infinity') return '0';
 
-    return _num.toFixed(fixed);
+    return parseFloat(_num).toFixed(fixed);
   } catch (err) {
-    return _num.toFixed(fixed);
+    return parseFloat(_num).toFixed(fixed);
   }
 };
 
@@ -202,3 +202,5 @@ export const addToLsState = (change) => {
 
   localStorage.setItem(LS_CDP_SAVER_STATE, JSON.stringify(newStateVal));
 };
+
+export const underOrMax = (val, max) => val > max ? max : val; // eslint-disable-line

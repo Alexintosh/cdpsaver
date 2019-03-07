@@ -28,7 +28,7 @@ const { DAI } = Maker;
  */
 const updateEthPrice = () => async (dispatch) => {
   const ethPrice = await getEthPrice();
-  dispatch({ type: GET_ETH_PRICE_SUCCESS, payload: parseFloat(ethPrice.toFixed(2)) });
+  dispatch({ type: GET_ETH_PRICE_SUCCESS, payload: parseFloat(parseFloat(ethPrice).toFixed(2)) });
 };
 
 /**

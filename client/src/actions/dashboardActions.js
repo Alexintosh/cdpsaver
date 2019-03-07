@@ -438,7 +438,10 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
 
     if (type === 'repay') {
       const rate = await getEthDaiKyberExchangeRate(amount);
-      payload.afterCdp = await getUpdatedCdpInfo(depositedEth - amount, cdp.generatedDAI - (rate * amount), ethPrice);
+      const daiAmount = (rate * amount) > cdp.generatedDAI ? 0 : cdp.generatedDAI - (rate * amount);
+
+      console.log(depositedEth - amount);
+      payload.afterCdp = await getUpdatedCdpInfo(depositedEth - amount, daiAmount, ethPrice);
       dispatch(resetFields('managerBorrowForm', { generateDaiAmount: '', withdrawEthAmount: '' }));
     }
 
