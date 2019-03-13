@@ -88,7 +88,7 @@ export const metamaskApprove = async () => {
   }
 };
 
-export const createCdp = (sendTxFunc, from, ethAmount, _daiAmount) => new Promise(async (resolve, reject) => {
+export const createCdpAndProxy = (sendTxFunc, from, ethAmount, _daiAmount) => new Promise(async (resolve, reject) => {
   const address1 = proxyRegistryInterfaceAddress;
   const address2 = tubInterfaceAddress;
 
@@ -102,6 +102,33 @@ export const createCdp = (sendTxFunc, from, ethAmount, _daiAmount) => new Promis
 
     resolve(true);
   } catch (err) {
+    reject(err);
+  }
+});
+
+// eslint-disable-next-line max-len
+export const createCdp = (sendTxFunc, from, ethAmount, _daiAmount, proxyAddress) => new Promise(async (resolve, reject) => {
+  const tubAddress = tubInterfaceAddress;
+
+  try {
+    const contract = config.SaiSaverProxy;
+
+    const txParams = { from, value: window._web3.utils.toWei(ethAmount, 'ether') };
+    const daiAmount = window._web3.utils.toWei(_daiAmount.toString(), 'ether');
+
+    const proxyContract = new window._web3.eth.Contract(dsProxyContractJson.abi, proxyAddress);
+
+    const contractFunction = contract.abi.reverse().find(abi => abi.name === 'lockAndDraw');
+
+    const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, [tubAddress, daiAmount]);
+
+    const promise = proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send(txParams);
+
+    await sendTxFunc(promise);
+
+    resolve(true);
+  } catch (err) {
+    console.log(err);
     reject(err);
   }
 });
@@ -378,6 +405,7 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
     const proxyContract = new window._web3.eth.Contract(dsProxyContractAbi, proxyAddress);
 
     const promise = proxyContract.methods['execute(address,bytes)'](marketplaceProxyAddress, data).send(txParams);
+
     await sendTxFunc(promise);
 
     resolve(true);

@@ -15,7 +15,7 @@ import {
 } from '../actionTypes/onboardingActionTypes';
 import { ADD_PROXY_ADDRESS } from '../actionTypes/generalActionTypes';
 import { subscribeToMonitoringApiRequest } from '../services/apiService';
-import { createCdp } from '../services/ethService';
+import { createCdpAndProxy, createCdp } from '../services/ethService';
 import { getAddressCdp, getUpdatedCdpInfo } from '../services/cdpService';
 import { sendTx } from './notificationsActions';
 import { addToLsState } from '../utils/utils';
@@ -44,11 +44,15 @@ export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dis
   const contractSendHandler = promise => sendTx(promise, 'Create CDP', dispatch, getState);
 
   try {
-    const { account } = getState().general;
+    const { account, proxyAddress } = getState().general;
 
-    await createCdp(contractSendHandler, account, ethAmount, parseFloat(daiAmount));
+    if (proxyAddress) {
+      await createCdp(contractSendHandler, account, ethAmount, parseFloat(daiAmount), proxyAddress);
+    } else {
+      await createCdpAndProxy(contractSendHandler, account, ethAmount, parseFloat(daiAmount));
+    }
 
-    const { cdp, proxyAddress } = await getAddressCdp(account);
+    const { cdp } = await getAddressCdp(account);
     const newInfo = await getUpdatedCdpInfo(ethAmount, daiAmount);
 
     dispatch({ type: CREATE_CDP_SUCCESS, payload: { ...cdp, ...newInfo } });

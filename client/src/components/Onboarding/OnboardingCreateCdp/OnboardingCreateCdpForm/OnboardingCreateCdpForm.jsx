@@ -63,7 +63,7 @@ class OnboardingCreateCdpForm extends Component {
         <Field
           id="onboarding-create-cdp-eth-amount"
           name="ethAmount"
-          placeholder="1"
+          placeholder="0"
           type="number"
           labelText="Add collateral:"
           onChange={(e) => { handleCreateCdpInputChange(e.target.value, daiAmount, ethPrice); }}
@@ -76,7 +76,7 @@ class OnboardingCreateCdpForm extends Component {
         <Field
           id="onboarding-create-cdp-dai-amount"
           name="daiAmount"
-          placeholder="1"
+          placeholder="0"
           type="number"
           labelText="Generate DAI:"
           secondLabelText="DAI"
