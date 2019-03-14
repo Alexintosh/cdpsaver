@@ -84,6 +84,8 @@ export const getCdpInfo = (id, useAuth = true) => new Promise(async (resolve, re
       ratio: await cdp.getCollateralizationRatio(), // cdp.getCollateralizationRatio() returns the USD value of the collateral in the CDP divided by the USD value of the Dai debt for the CDP, e.g. 2.5.
       cdpInstance: cdp,
       onSale: await isCdpOnSale(id),
+      governanceFee: (await cdp.getGovernanceFee())._amount,
+      governanceFeeInUsd: (await cdp.getGovernanceFee(Maker.USD))._amount,
     });
   } catch (err) {
     reject(err);

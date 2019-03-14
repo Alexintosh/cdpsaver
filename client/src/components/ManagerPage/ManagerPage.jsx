@@ -5,10 +5,11 @@ import PieChart from '../PieChart/PieChart';
 import Tabs from '../Tabs/Tabs';
 import DaiIcon from '../Decorative/DaiIcon';
 import EthIcon from '../Decorative/EthIcon';
+import MkrIcon from '../Decorative/MkrIcon';
 import ManagerBorrowForm from './ManagerBorrowForm/ManagerBorrowForm';
 import ManagerPaybackForm from './ManagerPaybackForm/ManagerPaybackForm';
 import CdpAfterVal from './CdpAfterVal';
-import { formatNumber } from '../../utils/utils';
+import { formatNumber, formatStabilityFee } from '../../utils/utils';
 import {
   getMaxDaiAction,
   getMaxEthWithdrawAction,
@@ -22,6 +23,14 @@ import './ManagerPage.scss';
 import './action-items.scss';
 
 class ManagerPage extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showMkr: true,
+    };
+  }
+
   componentWillMount() {
     // TODO optimize this by putting it borrow or payback
     this.props.getMaxDaiAction();
@@ -30,11 +39,20 @@ class ManagerPage extends Component {
     this.props.getMaxDaiBoostAction();
   }
 
+  convertStabilityFee() {
+    this.setState({
+      // eslint-disable-next-line react/no-access-state-in-setstate
+      showMkr: !this.state.showMkr,
+    });
+  }
+
   render() {
     const {
       cdp, gettingEthPrice, ethPrice, gettingAfterCdp, afterCdp, afterType,
       openCloseCdpModal, openTransferCdpModal, history,
     } = this.props;
+
+    const stabilityFee = this.state.showMkr ? cdp.governanceFee : cdp.governanceFeeInUsd;
 
     return (
       <div className="manager-page-wrapper dashboard-page-wrapper">
@@ -110,6 +128,39 @@ class ManagerPage extends Component {
                       <TooltipWrapper title={cdp.depositedETH}>
                         { formatNumber(cdp.depositedETH, 2) } Eth
                       </TooltipWrapper>
+                    </span>
+                  </div>
+                </div>
+
+                <div className="row-item-wrapper">
+                  <MkrIcon />
+
+                  <div className="row-val-wrapper">
+                    <span className="label">Stability Fee</span>
+                    <span className="value">
+                      <TooltipWrapper title={stabilityFee}>
+                        {
+                          formatStabilityFee(stabilityFee)
+                        }
+                      </TooltipWrapper>
+
+                      <span className="stability-label-group">
+                        <span
+                          // eslint-disable-next-line prefer-template
+                          className={'stability-label ' + (this.state.showMkr ? ' active' : ' inactive')}
+                          onClick={() => this.convertStabilityFee()}
+                        >
+                        MKR
+                        </span>
+                        <span className="divder"> | </span>
+                        <span
+                          // eslint-disable-next-line prefer-template
+                          className={'stability-label ' + (this.state.showMkr ? ' inactive' : ' active')}
+                          onClick={() => this.convertStabilityFee()}
+                        >
+                        USD
+                        </span>
+                      </span>
                     </span>
                   </div>
                 </div>

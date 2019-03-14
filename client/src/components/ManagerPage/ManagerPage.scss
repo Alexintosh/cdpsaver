@@ -66,12 +66,39 @@
         .row-val-wrapper {
           display: flex;
           flex-direction: column;
+
+          .stability-label {
+            font-family: Montserrat;
+            font-weight: 600;
+            font-size: 12px;
+            line-height: normal;
+            text-align: center;
+            letter-spacing: -0.03em;
+            cursor: pointer;
+          }
+
+          .active {
+            color: white;
+          }
+
+          .divder {
+            color: #3DAF71;
+          }
+
+          .inactive {
+            color: #939DA6;
+          }
+
+          .stability-label-group {
+            margin-left: 25px;
+          }
         }
 
         .value {
           margin-left: 3px;
           color: white;
         }
+
       }
     }
   }
