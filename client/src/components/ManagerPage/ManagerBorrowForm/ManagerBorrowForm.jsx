@@ -64,14 +64,17 @@ class ManagerBorrowForm extends Component {
             disabled={generatingDai}
             component={InputComponent}
           />
-          <button
-            type="button"
-            className="button gray uppercase"
-            onClick={() => { generateDaiAction(generateDaiAmount); }}
-            disabled={generatingDai || !generateDaiAmount || (generateDaiAmount <= 0) || (generateDaiAmount > maxDai)}
-          >
-            { generatingDai ? 'Generating' : 'Generate' }
-          </button>
+          <div className="item-button-wrapper">
+            <InfoBox message="Generate will draw more Dai from the CDP" />
+            <button
+              type="button"
+              className="button gray uppercase"
+              onClick={() => { generateDaiAction(generateDaiAmount); }}
+              disabled={generatingDai || !generateDaiAmount || (generateDaiAmount <= 0) || (generateDaiAmount > maxDai)}
+            >
+              { generatingDai ? 'Generating' : 'Generate' }
+            </button>
+          </div>
         </div>
 
         <div className="item">
@@ -106,16 +109,19 @@ class ManagerBorrowForm extends Component {
             disabled={withdrawingEth}
             component={InputComponent}
           />
-          <button
-            type="button"
-            className="button gray uppercase"
-            onClick={() => { withdrawEthAction(withdrawEthAmount); }}
-            disabled={
-              withdrawingEth || !withdrawEthAmount || (withdrawEthAmount <= 0) || (withdrawEthAmount > maxEthWithdraw)
-            }
-          >
-            { withdrawingEth ? 'Withdrawing' : 'Withdraw' }
-          </button>
+          <div className="item-button-wrapper">
+            <InfoBox message="Withdraw will take collateral (Ether) from the CDP" />
+            <button
+              type="button"
+              className="button gray uppercase"
+              onClick={() => { withdrawEthAction(withdrawEthAmount); }}
+              disabled={
+                withdrawingEth || !withdrawEthAmount || (withdrawEthAmount <= 0) || (withdrawEthAmount > maxEthWithdraw)
+              }
+            >
+              { withdrawingEth ? 'Withdrawing' : 'Withdraw' }
+            </button>
+          </div>
         </div>
 
         <div className="item">

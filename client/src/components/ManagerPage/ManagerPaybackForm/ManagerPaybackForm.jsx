@@ -60,14 +60,18 @@ class ManagerPaybackForm extends Component {
             additional={{ min: 0, max: debtDai }}
             component={InputComponent}
           />
-          <button
-            type="button"
-            className="button gray uppercase variable-width"
-            onClick={() => { openPaybackModal(paybackAmount); }}
-            disabled={payingBackDai || !paybackAmount || paybackAmount <= 0 || (paybackAmount > debtDai)}
-          >
-            { payingBackDai ? 'Paying back' : 'Payback' }
-          </button>
+
+          <div className="item-button-wrapper">
+            <InfoBox message="Payback will return the debt in Dai" />
+            <button
+              type="button"
+              className="button gray uppercase variable-width"
+              onClick={() => { openPaybackModal(paybackAmount); }}
+              disabled={payingBackDai || !paybackAmount || paybackAmount <= 0 || (paybackAmount > debtDai)}
+            >
+              { payingBackDai ? 'Paying back' : 'Payback' }
+            </button>
+          </div>
         </div>
 
         <div className="item">
@@ -85,14 +89,17 @@ class ManagerPaybackForm extends Component {
             component={InputComponent}
           />
 
-          <button
-            type="button"
-            className="button gray uppercase variable-width"
-            onClick={() => { addCollateralAction(addCollateralAmount); }}
-            disabled={addingCollateral || !addCollateralAmount || addCollateralAmount <= 0}
-          >
-            { addingCollateral ? 'Adding collateral' : 'Add collateral' }
-          </button>
+          <div className="item-button-wrapper">
+            <InfoBox message="Will add more collateral (Ether) and increase the ratio" />
+            <button
+              type="button"
+              className="button gray uppercase variable-width"
+              onClick={() => { addCollateralAction(addCollateralAmount); }}
+              disabled={addingCollateral || !addCollateralAmount || addCollateralAmount <= 0}
+            >
+              { addingCollateral ? 'Adding collateral' : 'Add collateral' }
+            </button>
+          </div>
         </div>
 
         <div className="item">
