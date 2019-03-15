@@ -14,8 +14,8 @@ const CdpAfterVal = ({
     valLabel = `${formatNumber(cdp[cdpProp], 2)}${symbol}`;
 
     if (val === 0 || val === Infinity) {
-      val = '-';
-      valLabel = '-';
+      val = '0';
+      valLabel = '0';
     }
   }
 
@@ -27,8 +27,8 @@ const CdpAfterVal = ({
           <div className="amount-wrapper">
             <span className="after">After:</span>
             <span className="amount">
-              <TooltipWrapper title={val}>
-                {valLabel}
+              <TooltipWrapper title={type}>
+                {(type === 'repay' || type === 'boost') ? '~' : ''}{valLabel}
               </TooltipWrapper>
             </span>
           </div>
