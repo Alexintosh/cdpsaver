@@ -4,6 +4,7 @@ import { Tooltip } from 'react-tippy';
 import PropTypes from 'prop-types';
 import { NavLink, withRouter } from 'react-router-dom';
 import { formatAcc, formatAccType } from '../../utils/utils';
+import CdpSelect from '../CdpSelect/CdpSelect';
 
 const DashboardSubHeader = ({
   cdp, accountType, account, network,
@@ -17,11 +18,6 @@ const DashboardSubHeader = ({
       </div>
 
       <div className="right">
-        <div className="sub-title with-label">
-          <div className="label">CDP ID:</div>
-          <div className="value">#{ cdp.id }</div>
-        </div>
-
         <div className="account-wrapper">
           <div className="acc-type">{ formatAccType(accountType) }</div>
           <div className="connected">Connected:</div>
@@ -37,6 +33,8 @@ const DashboardSubHeader = ({
             </Tooltip>
           </a>
         </div>
+
+        <CdpSelect />
       </div>
     </div>
   </div>

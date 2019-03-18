@@ -11,8 +11,10 @@ import {
   SUBSCRIBE_COMING_SOON_SUCCESS,
   SUBSCRIBE_COMING_SOON_FAILURE,
   RESET_SUBSCRIBE_COMING_SOON,
+
+  SWITCH_CDP,
 } from '../actionTypes/generalActionTypes';
-import { maker } from '../services/cdpService';
+import { getUpdatedCdpInfo, maker } from '../services/cdpService';
 import { getEthPrice } from '../services/priceService';
 import { subscribeComingSoonApiCall } from '../services/apiService';
 import {
@@ -139,4 +141,22 @@ export const subscribeComingSoonAction = ({ email }) => async (dispatch) => {
  */
 export const resetSubscribeComingSoon = () => (dispatch) => {
   dispatch({ type: RESET_SUBSCRIBE_COMING_SOON });
+};
+
+/**
+ * Changes the current cdp with another one in the whole state
+ *
+ * @param value {Object}
+ *
+ * @return {Function}
+ */
+export const changeSelectedCdp = ({ value }) => async (dispatch, getState) => {
+  const { cdps, ethPrice } = getState().general;
+  const newCdpIndex = cdps.findIndex(_cdp => _cdp.id === value);
+
+  const newCdp = cdps[newCdpIndex];
+  const newData = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
+  const payload = { ...newCdp, ...newData };
+
+  dispatch({ type: SWITCH_CDP, payload });
 };

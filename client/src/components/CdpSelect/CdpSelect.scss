@@ -1,0 +1,45 @@
+@import "../../common/colors";
+@import "../../common/text";
+
+.cdp-select-wrapper {
+  display: flex;
+  align-items: center;
+
+  .label {
+    color: $gray;
+    margin-right: 10px;
+  }
+
+  .select {
+    background: linear-gradient(180deg, #2B3943 0%, rgba(43, 57, 67, 0.46) 92.86%);
+
+    .select__control {
+      cursor: pointer;
+      border-radius: 0;
+      width: 105px;
+      border: none;
+      background: none;
+
+      .select__value-container {
+        justify-content: flex-end;
+      }
+
+      .select__dropdown-indicator {
+        color: white;
+
+        &:hover {
+          color: lighten($gray, 20);
+        }
+      }
+
+      .select__single-value {
+        font-size: $font-size-medium;
+        color: white;
+      }
+
+      .select__indicator-separator {
+        display: none;
+      }
+    }
+  }
+}

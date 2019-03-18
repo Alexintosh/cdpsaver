@@ -1,7 +1,21 @@
 @import "../../common/variables";
 @import "../../common/colors";
+@import "../../common/text";
 
 .migrate-page-wrapper {
+
+  .sub-title {
+    display: flex;
+    align-items: center;
+
+    span:last-child {
+      margin-left: 5px;
+      font-size: $font-size-medium;
+      color: $gray;
+      position: relative;
+      top: 1px;
+    }
+  }
 
   .main-section-wrapper {
     background: linear-gradient(180deg, #2B3943 0%, rgba(43, 57, 67, 0.46) 92.86%);

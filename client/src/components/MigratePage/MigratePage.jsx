@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { migrateCdpAction, resetMigrateCdp } from '../../actions/migrateActions';
+import CdpSelect from '../CdpSelect/CdpSelect';
 
 import './MigratePage.scss';
 
@@ -22,9 +23,14 @@ class MigratePage extends Component {
       <div className="migrate-page-wrapper dashboard-page-wrapper">
         <div className="sub-heading-wrapper">
           <div className="width-container">
-            <div className="sub-title">Migrate</div>
+            <div className="sub-title">
+              <span>Migrate</span>
+              <span>
+                - Migrating your CDP will give you an option to interact with our platform
+              </span>
+            </div>
             <div className="sub-text">
-              Migrating your CDP will give you an option to interact with our platform
+              <CdpSelect />
             </div>
           </div>
         </div>

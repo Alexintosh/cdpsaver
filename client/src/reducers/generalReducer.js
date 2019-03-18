@@ -7,6 +7,10 @@ import {
   GET_CDP_SUCCESS,
   GET_CDP_FAILURE,
 
+  GET_CDPS_SUCCESS,
+
+  SWITCH_CDP,
+
   LOGIN_STARTED,
   LOGIN_FINISHED,
 
@@ -46,6 +50,7 @@ const INITIAL_STATE = {
   loggingIn: false,
 
   cdp: null,
+  cdps: [],
   gettingCdp: false,
   gettingCdpError: '',
 
@@ -107,6 +112,7 @@ export default (state = INITIAL_STATE, action) => {
     case PAYBACK_DAI_SUCCESS:
     case CANCEL_SELL_CDP_SUCCESS:
     case BOOST_SUCCESS:
+    case SWITCH_CDP:
     case CLOSE_CDP_SUCCESS:
       return {
         ...state,
@@ -215,6 +221,9 @@ export default (state = INITIAL_STATE, action) => {
         subscribingComingSoonSuccess: false,
         subscribingComingSoonError: '',
       };
+
+    case GET_CDPS_SUCCESS:
+      return { ...state, cdps: payload };
 
     default:
       return state;

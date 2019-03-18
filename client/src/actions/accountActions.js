@@ -11,6 +11,7 @@ import {
   LOGIN_FINISHED,
 
   ADD_PROXY_ADDRESS,
+  GET_CDPS_SUCCESS,
 } from '../actionTypes/generalActionTypes';
 import { SET_ONBOARDING_FINISHED } from '../actionTypes/onboardingActionTypes';
 import { LS_ACCOUNT } from '../constants/general';
@@ -90,7 +91,7 @@ export const getCdp = () => async (dispatch, getState) => {
     let payload = {};
 
     const { account } = getState().general;
-    const { cdp, proxyAddress } = await getAddressCdp(account);
+    const { cdp, cdps, proxyAddress } = await getAddressCdp(account);
 
     if (!cdp) payload = null;
     else {
@@ -99,6 +100,7 @@ export const getCdp = () => async (dispatch, getState) => {
     }
 
     dispatch({ type: GET_CDP_SUCCESS, payload });
+    dispatch({ type: GET_CDPS_SUCCESS, payload: cdps });
     dispatch({ type: ADD_PROXY_ADDRESS, payload: proxyAddress });
   } catch (err) {
     dispatch({ type: GET_CDP_FAILURE, payload: err.message });
