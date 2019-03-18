@@ -463,9 +463,7 @@ export const buyCdp = (sendTxFunc, cdpId, account) => new Promise(async (resolve
     const contract = await marketplaceContract();
     const cdpValue = await contract.methods.getCdpPrice(cdpIdBytes32).call();
 
-    console.log(cdpValue[0].toString());
-
-    const txParams = { from: account, value: '82118093668024885' };
+    const txParams = { from: account, value: cdpValue[0].toString() };
 
     console.log(`Id: ${cdpId.toString()}, IdBytes: ${cdpIdBytes32}, ${txParams.from}, ${txParams.value}`);
 
