@@ -37,23 +37,20 @@ const isCdpOnSale = cdpId => new Promise(async (resolve, reject) => {
  *
  * @return {Number} cdpId
  */
-const findFirstCDP = async (contract, arr, address, type) => {
-  let cdpIds = arr.map(event => event.returnValues[type]);
+const findCDPs = async (contract, arr, address, type) => {
+  const cdpIds = arr.map(event => event.returnValues[type]);
 
-  cdpIds = [...new Set(cdpIds)];
-  let cdpId = null;
+  const promises = cdpIds.map(id => new Promise(async (resolve, reject) => {
+    try {
+      const info = await contract.methods.cups(id).call();
 
-  // eslint-disable-next-line no-restricted-syntax
-  for (const id of cdpIds) {
-    // eslint-disable-next-line no-await-in-loop
-    const info = await contract.methods.cups(id).call();
-    if (info.lad === address) {
-      cdpId = id;
-      break;
+      resolve(info.lad === address ? web3.utils.hexToNumber(id) : null);
+    } catch (err) {
+      reject(err);
     }
-  }
+  }));
 
-  return cdpId;
+  return (await Promise.all(promises)).filter(id => id !== null);
 };
 
 /**
@@ -111,11 +108,11 @@ export const getCdpIdFromLogNote = (contract, proxyAddress) => new Promise(async
     }, async (err, res) => {
       if (err) return reject(err);
 
-      if (res.length === 0) return resolve(null);
+      if (res.length === 0) return resolve([]);
 
-      const cdpId = await findFirstCDP(contract, res, proxyAddress, 'foo');
+      const cdpIds = await findCDPs(contract, res, proxyAddress, 'foo');
 
-      return resolve(web3.utils.hexToNumber(cdpId));
+      resolve(cdpIds);
     });
   } catch (e) {
     reject(e);
@@ -138,11 +135,11 @@ export const getCdpIdFromLogNewCup = (contract, address) => new Promise(async (r
     }, async (err, res) => {
       if (err) return reject(err);
 
-      if (res.length === 0) return resolve(null);
+      if (res.length === 0) return resolve([]);
 
-      const cdpId = await findFirstCDP(contract, res, address, 'cup');
+      const cdpIds = await findCDPs(contract, res, address, 'cup');
 
-      resolve(web3.utils.hexToNumber(cdpId));
+      resolve(cdpIds);
     });
   } catch (e) {
     reject(e);
@@ -153,39 +150,32 @@ export const getCdpIdFromLogNewCup = (contract, address) => new Promise(async (r
  * Checks if the connected user has a cdp for their account or proxyAddress
  *
  * @param address {String}
- * @param address {Number}
- * @param tryWithAccount {Boolean}
  *
  * @return {Promise<Object>}
  */
-export const getAddressCdp = (address, oldId = null, tryWithAccount = true) => new Promise(async (resolve, reject) => {
+export const getAddressCdp = address => new Promise(async (resolve, reject) => {
   if (!address) return reject('user has no address');
 
   try {
     const proxyAddress = await proxyRegistryInterfaceContract().methods.proxies(address).call();
 
-    let addressToCheckWith = address;
-
-    if (!tryWithAccount) {
-      addressToCheckWith = proxyAddress;
-    }
-
     const contract = await SaiTubContract();
-    let cdpId = await getCdpIdFromLogNewCup(contract, addressToCheckWith);
-    let cdp = null;
 
-    // Also try searching in the LogNoteEvent
-    const newId = await getCdpIdFromLogNote(contract, addressToCheckWith);
+    const logCupAddressCdpIds = await getCdpIdFromLogNewCup(contract, address);
+    const logNoteAddressCdpIds = await getCdpIdFromLogNote(contract, address);
 
-    if (newId) cdpId = newId;
+    const logCupProxyAddressCdpIds = await getCdpIdFromLogNewCup(contract, proxyAddress);
+    const logNoteProxyAddressCdpIds = await getCdpIdFromLogNote(contract, proxyAddress);
 
-    if (tryWithAccount) return resolve(await getAddressCdp(address, cdpId, false));
+    const cdpIds = [...logCupAddressCdpIds, ...logNoteAddressCdpIds, ...logCupProxyAddressCdpIds, ...logNoteProxyAddressCdpIds]; // eslint-disable-line
+    const promises = cdpIds.map(id => getCdpInfo(id, true));
 
-    if (!cdpId) cdpId = oldId;
+    const cdps = await Promise.all(promises);
 
-    if (cdpId) cdp = await getCdpInfo(cdpId, true);
+    // TODO switch this with the selected cdp from local storage
+    const cdp = cdps[0] || null;
 
-    resolve({ proxyAddress: isEmptyBytes(proxyAddress) ? '' : proxyAddress, cdp });
+    resolve({ proxyAddress: isEmptyBytes(proxyAddress) ? '' : proxyAddress, cdp, cdps });
   } catch (err) {
     reject(err);
   }
