@@ -389,11 +389,11 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
 
       const isAuthorized = await AuthContract.methods.canCall(marketplaceAddress, proxyAddress, '0x1cff79cd').call();
 
-      console.log(isAuthorized);
-
       if (isAuthorized) {
         contractFunctionName = 'sell';
         params = [cdpIdBytes32, discount * 100, marketplaceAddress];
+      } else {
+        contractFunctionName = 'authorizeAndSell';
       }
     }
 

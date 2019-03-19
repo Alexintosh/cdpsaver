@@ -24,10 +24,10 @@ contract SaverProxy is DSMath {
     address public constant TUB_ADDRESS = 0xa71937147b55Deb8a530C7229C442Fd3F31b7db2;
 
     constructor() public {
-        ERC20(DAI_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        ERC20(MKR_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        ERC20(PETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        ERC20(WETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        // ERC20(DAI_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        // ERC20(MKR_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        // ERC20(PETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        // ERC20(WETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
     }
 
     ///@dev User has to own MKR and aprrove the DSProxy address

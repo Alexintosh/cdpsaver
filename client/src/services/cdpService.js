@@ -28,7 +28,7 @@ const isCdpOnSale = cdpId => new Promise(async (resolve, reject) => {
 });
 
 /**
- * Helper function to go through the cdp list and find the first one the address owns
+ * Helper function to go through the cdp list and find all the CDPs the address owns
  *
  * @param contract {Object}
  * @param arr {String}
@@ -112,6 +112,8 @@ export const getCdpIdFromLogNote = (contract, proxyAddress) => new Promise(async
 
       const cdpIds = await findCDPs(contract, res, proxyAddress, 'foo');
 
+      console.log('Log note: ', cdpIds.length);
+
       resolve(cdpIds);
     });
   } catch (e) {
@@ -138,6 +140,8 @@ export const getCdpIdFromLogNewCup = (contract, address) => new Promise(async (r
       if (res.length === 0) return resolve([]);
 
       const cdpIds = await findCDPs(contract, res, address, 'cup');
+
+      console.log('New cup: ', cdpIds.length);
 
       resolve(cdpIds);
     });
@@ -167,7 +171,8 @@ export const getAddressCdp = address => new Promise(async (resolve, reject) => {
     const logCupProxyAddressCdpIds = await getCdpIdFromLogNewCup(contract, proxyAddress);
     const logNoteProxyAddressCdpIds = await getCdpIdFromLogNote(contract, proxyAddress);
 
-    const cdpIds = [...logCupAddressCdpIds, ...logNoteAddressCdpIds, ...logCupProxyAddressCdpIds, ...logNoteProxyAddressCdpIds]; // eslint-disable-line
+    const cdpIds = [...new Set([...logCupAddressCdpIds, ...logNoteAddressCdpIds, ...logCupProxyAddressCdpIds, ...logNoteProxyAddressCdpIds])]; // eslint-disable-line
+
     const promises = cdpIds.map(id => getCdpInfo(id, true));
 
     const cdps = await Promise.all(promises);
