@@ -13,73 +13,66 @@ contract Monitor is DSMath {
 
     address public saverProxy;
 
-    struct CupHolder {
-        bytes32 cup;
+    struct CdpHolder {
         uint minRatio;
-        uint timeCreated;
-        bool exists;
+        uint slippageLimit;
+        address owner;
     }
 
-    uint constant MIN_RATIO = 150;
+    mapping(bytes32 => CdpHolder) public holders;
 
-    mapping(address => CupHolder) public hodlers;
+    event Subscribed(address indexed owner, bytes32 cdpId);
+    event CdpRepay(bytes32 indexed cdpId, address indexed caller);
 
     constructor(address _saverProxy) public {
         saverProxy = _saverProxy;
     }
 
-    //TODO: what if user changes the proxy or cdp changes owners??
-    function subscribe(bytes32 _cup, uint _minRatio) public {
-        require(isOwner(msg.sender, _cup));
-        require(_minRatio >= MIN_RATIO + 1);
+    /// @dev User should be owner of CDP and have a DSProxy controlling it
+    function subscribe(bytes32 _cdpId, uint _minRatio, uint _slippageLimit) public {
+        require(isOwner(msg.sender, _cdpId));
 
-        DSProxyInterface proxy = registry.proxies(msg.sender);
+        holders[_cdpId] = CdpHolder({
+            minRatio: _minRatio,
+            slippageLimit: _slippageLimit,
+            owner: msg.sender
+        });
 
-        if (hodlers[address(proxy)].exists) {
-            hodlers[address(proxy)].minRatio = _minRatio;
-        } else {
-            hodlers[address(proxy)] = CupHolder({
-                cup: _cup,
-                minRatio: _minRatio,
-                timeCreated: now,
-                exists: true
-            });
-        }
+        emit Subscribed(msg.sender, _cdpId);
     }
 
-    function unsubscribe(bytes32 _cup) public {
-        require(isOwner(msg.sender, _cup));
+    function unsubscribe(bytes32 _cdpId) public {
+        require(isOwner(msg.sender, _cdpId));
 
-        DSProxyInterface proxy = registry.proxies(msg.sender);
-
-        hodlers[address(proxy)].exists = false;
+        delete holders[_cdpId];
     }
 
-    function saveUser(address _user) public {
-        DSProxyInterface proxy = registry.proxies(_user);
+    /// @dev Should be callable by anyone
+    function saveCdp(bytes32 _cdpId) public {
+        CdpHolder memory holder = holders[_cdpId];
 
-        require(address(proxy) != address(0));
-        require(hodlers[address(proxy)].exists);
-        require(getRatio(hodlers[address(proxy)].cup) <= hodlers[address(proxy)].minRatio);
+        require(holder.owner != address(0));
 
-        proxy.execute(saverProxy, abi.encodeWithSignature("repay(uint256)", uint(hodlers[address(proxy)].cup)));
+        DSProxyInterface proxy = registry.proxies(holder.owner);
 
+        require(getRatio(_cdpId) <= holders[_cdpId].minRatio);
+
+        proxy.execute(saverProxy, abi.encodeWithSignature("repay(bytes32,uint256,bool)", _cdpId, 0, true));
+
+        emit CdpRepay(_cdpId, msg.sender);
     }
 
     function getRatio(bytes32 _cdpId) public returns(uint) {
         return (wdiv(rmul(rmul(tub.ink(_cdpId), tub.tag()), WAD), tub.tab(_cdpId)))/10000000;
     }
 
-    function isOwner(address _owner, bytes32 _cup) internal returns(bool) {
-         DSProxyInterface reg = registry.proxies(_owner);
-         
-         require(tub.lad(_cup) == address(reg));
-         require(reg.owner() == msg.sender);
-
-         if(address(reg) != address(0x0)) {
-             return true;
-         }
+    function isOwner(address _owner, bytes32 _cdpId) internal returns(bool) {
+        DSProxyInterface proxy = registry.proxies(_owner);
         
-        return false;
+        require(address(proxy) != address(0));
+        require(tub.lad(_cdpId) == address(proxy));
+        require(proxy.owner() == msg.sender);
+        
+        return true;
     }
 }
