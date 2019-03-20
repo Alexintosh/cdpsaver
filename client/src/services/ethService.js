@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import {
   SaiSaverProxyContract,
   proxyRegistryInterfaceAddress,
@@ -404,6 +405,8 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
     const dsProxyContractAbi = dsProxyContractJson.abi;
     const proxyContract = new window._web3.eth.Contract(dsProxyContractAbi, proxyAddress);
 
+    console.log(contractFunctionName);
+
     const promise = proxyContract.methods['execute(address,bytes)'](marketplaceProxyAddress, data).send(txParams);
 
     await sendTxFunc(promise);
@@ -456,7 +459,7 @@ export const cancelSellCdp = (sendTxFunc, account, cdpId, proxyAddress) => new P
  *
  * @return {Promise<Boolean>}
  */
-export const buyCdp = (sendTxFunc, cdpId, account) => new Promise(async (resolve, reject) => {
+export const buyCdp = (sendTxFunc, cdpId, account, proxyAddress) => new Promise(async (resolve, reject) => {
   const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
 
   try {
@@ -465,9 +468,11 @@ export const buyCdp = (sendTxFunc, cdpId, account) => new Promise(async (resolve
 
     const txParams = { from: account, value: cdpValue[0].toString() };
 
-    console.log(`Id: ${cdpId.toString()}, IdBytes: ${cdpIdBytes32}, ${txParams.from}, ${txParams.value}`);
+    const newOwner = proxyAddress || account;
 
-    const promise = contract.methods.buy(cdpIdBytes32).send(txParams);
+    console.log(cdpIdBytes32, cdpValue[0].toString(), newOwner);
+
+    const promise = contract.methods.buy(cdpIdBytes32, newOwner).send(txParams);
     await sendTxFunc(promise);
 
     resolve(true);

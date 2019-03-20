@@ -65,7 +65,7 @@ contract Marketplace is DSAuth, DSMath {
     /// @notice Any user can call this method to buy a CDP
     /// @dev This will fail if the CDP owner was changed
     /// @param _cup Id of the CDP you want to buy
-    function buy(bytes32 _cup) public payable {
+    function buy(bytes32 _cup, address _newOwner) public payable {
         SaleItem storage item = items[_cup];
 
         require(item.active == true, "Check if cup is on sale");
@@ -82,7 +82,7 @@ contract Marketplace is DSAuth, DSMath {
 
         // give the cup to the buyer, him becoming the lad that owns the cup
         DSProxyInterface(item.proxy).execute(marketplaceProxy, 
-            abi.encodeWithSignature("give(bytes32,address)", _cup, msg.sender));
+            abi.encodeWithSignature("give(bytes32,address)", _cup, _newOwner));
 
         item.owner.transfer(sub(cdpPrice, feeAmount)); // transfer money to the seller
 

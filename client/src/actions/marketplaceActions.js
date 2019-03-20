@@ -131,10 +131,10 @@ export const buyCdpAction = (cdpId, discount) => async (dispatch, getState) => {
   dispatch({ type: BUY_CDP_REQUEST });
 
   const proxySendHandler = promise => sendTx(promise, 'Buy CDP', dispatch, getState);
-  const { account } = getState().general;
+  const { account, proxyAddress } = getState().general;
 
   try {
-    const payload = await buyCdp(proxySendHandler, cdpId, account, discount);
+    const payload = await buyCdp(proxySendHandler, cdpId, account, proxyAddress, discount);
 
     dispatch({ type: BUY_CDP_SUCCESS, payload });
     dispatch(getMarketplaceCdpsData());
