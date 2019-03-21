@@ -27,6 +27,8 @@ import {
   SUBSCRIBE_COMING_SOON_SUCCESS,
   SUBSCRIBE_COMING_SOON_FAILURE,
   RESET_SUBSCRIBE_COMING_SOON,
+
+  CDP_IN_CDPS_CHANGED,
 } from '../actionTypes/generalActionTypes';
 import { CREATE_CDP_SUCCESS } from '../actionTypes/onboardingActionTypes';
 import {
@@ -223,6 +225,7 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case GET_CDPS_SUCCESS:
+    case CDP_IN_CDPS_CHANGED:
       return { ...state, cdps: payload };
 
     default:

@@ -6,6 +6,10 @@
   .modal-body {
     display: flex;
     align-items: center;
+
+    .modal-content .title.success {
+      margin-bottom: 57px;
+    }
   }
 
   .modal-content {
@@ -46,7 +50,7 @@
 
   .current-sale-price-wrapper {
     font-size: 20px;
-    margin-bottom: 88px;
+    margin-bottom: 32px;
 
     .value {
       margin-left: 4px;
@@ -56,9 +60,5 @@
 
   .modal-controls .button {
     width: 124px;
-  }
-
-  &.error .current-sale-price-wrapper {
-      margin-bottom: 40px;
   }
 }

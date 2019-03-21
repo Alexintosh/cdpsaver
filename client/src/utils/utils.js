@@ -1,4 +1,3 @@
-import web3 from 'web3';
 import BN from 'bn.js';
 import { LS_CDP_SAVER_STATE } from '../constants/general';
 
@@ -68,10 +67,10 @@ export const isEmptyBytes = string => string === '0x0000000000000000000000000000
 
 export const saiTubContractTools = {
   u: (e, t, n) => new Array(t - e.length + 1).join(n || "0") + e, // eslint-disable-line
-  formatMethodName: e => web3.utils.sha3(e).substring(0, 10),
+  formatMethodName: e => window._web3.utils.sha3(e).substring(0, 10),
   formatProxyAddress: (e) => {
     const t = !(arguments.length > 1 && void 0 !== arguments[1]) || arguments[1]; // eslint-disable-line
-    let n = web3.utils.toHex(e);
+    let n = window._web3.utils.toHex(e);
 
     return n = n.replace('0x', ''), // eslint-disable-line
       n = saiTubContractTools.u(n, 64), // eslint-disable-line

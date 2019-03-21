@@ -5,6 +5,37 @@
   display: flex;
   align-items: center;
 
+  &.form-item {
+    border: 1px solid #61717E;
+    padding: 19px 23px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+
+    .label {
+      font-size: $font-size-small + 0.1;
+    }
+
+    .select {
+      background: none;
+
+      .select__control {
+        min-height: 25px;
+
+        .select__value-container {
+          padding: 0 8px;
+
+          .select__single-value {
+            font-size: $font-size-extra-large;
+          }
+        }
+
+        .select__dropdown-indicator {
+          padding: 3px;
+        }
+      }
+    }
+  }
+
   .label {
     color: $gray;
     margin-right: 10px;
@@ -12,6 +43,19 @@
 
   .select {
     background: linear-gradient(180deg, #2B3943 0%, rgba(43, 57, 67, 0.46) 92.86%);
+
+    .select__menu {
+      border-radius: 0;
+
+      .select__menu-list {
+        padding: 0;
+
+        .select__option {
+          color: black;
+          text-align: left;
+        }
+      }
+    }
 
     .select__control {
       cursor: pointer;

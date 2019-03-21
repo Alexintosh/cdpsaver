@@ -94,16 +94,13 @@
     }
 
     .button {
-      margin-right: 10px;
       width: 124px;
+
+      &.cancel { margin-right: 10px; }
 
       span {
         margin-left: 4px;
         font-weight: bold;
-      }
-
-      &.cancel {
-        width: auto;
       }
     }
   }
