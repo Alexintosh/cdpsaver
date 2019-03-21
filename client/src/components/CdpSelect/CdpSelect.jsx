@@ -28,7 +28,7 @@ const CdpSelect = ({ cdps, cdp, changeSelectedCdp }) => {
 CdpSelect.propTypes = {
   cdps: PropTypes.array.isRequired,
   cdp: PropTypes.object.isRequired,
-  changeSelectedCdp: PropTypes.object.isRequired,
+  changeSelectedCdp: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ general }) => ({

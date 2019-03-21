@@ -29,9 +29,19 @@ class ManagerPage extends Component {
     this.state = {
       showMkr: true,
     };
+
+    this.init = this.init.bind(this);
   }
 
   componentWillMount() {
+    this.init();
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.cdp.id !== this.props.cdp.id) this.init();
+  }
+
+  init() {
     // TODO optimize this by putting it borrow or payback
     this.props.getMaxDaiAction();
     this.props.getMaxEthWithdrawAction();

@@ -1,5 +1,4 @@
 import Maker from '@makerdao/dai';
-import web3 from 'web3';
 import config from '../config/config.json';
 import clientConfig from '../config/clientConfig.json';
 import { marketplaceContract, proxyRegistryInterfaceContract, SaiTubContract } from './contractRegistryService';
@@ -44,7 +43,7 @@ const findCDPs = async (contract, arr, address, type) => {
     try {
       const info = await contract.methods.cups(id).call();
 
-      resolve(info.lad === address ? web3.utils.hexToNumber(id) : null);
+      resolve(info.lad === address ? window._web3.utils.hexToNumber(id) : null);
     } catch (err) {
       reject(err);
     }
@@ -70,8 +69,8 @@ export const getCdpInfo = (id, useAuth = true) => new Promise(async (resolve, re
     resolve({
       id,
       owner: info[0],
-      depositedPETH: parseFloat(web3.utils.fromWei(info[1].toString(), 'ether')),
-      generatedDAI: parseFloat(web3.utils.fromWei(info[2].toString(), 'ether')),
+      depositedPETH: parseFloat(window._web3.utils.fromWei(info[1].toString(), 'ether')),
+      generatedDAI: parseFloat(window._web3.utils.fromWei(info[2].toString(), 'ether')),
       debtDai: (await cdp.getDebtValue())._amount,
       debtUsd: (await cdp.getDebtValue(Maker.USD))._amount,
       depositedETH: (await cdp.getCollateralValue())._amount,
