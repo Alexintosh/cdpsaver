@@ -35,9 +35,11 @@ export const closeModal = () => (dispatch) => {
 
 /**
  * Opens confirm remove modal when the user wants to sell his cdp
+ *
+ * @param proxyCdps {Array}
  */
-export const openSellCdpModal = () => (dispatch) => {
-  dispatch(toggleModal(SELL_CDP_MODAL, { width: 750 }, true));
+export const openSellCdpModal = proxyCdps => (dispatch) => {
+  dispatch(toggleModal(SELL_CDP_MODAL, { width: 750, proxyCdps }, true));
 };
 
 /**
@@ -58,9 +60,11 @@ export const openTransferCdpModal = history => (dispatch) => {
 
 /**
  * Opens confirm cancel modal when the user wants to cancel the sale of his cdp
+ *
+ * @param proxyCdps {Array}
  */
-export const openCancelSellCdplModal = () => (dispatch) => {
-  dispatch(toggleModal(CANCEL_SELL_CDP_MODAL, { width: 481 }, true));
+export const openCancelSellCdplModal = proxyCdps => (dispatch) => {
+  dispatch(toggleModal(CANCEL_SELL_CDP_MODAL, { width: 481, proxyCdps }, true));
 };
 
 /**

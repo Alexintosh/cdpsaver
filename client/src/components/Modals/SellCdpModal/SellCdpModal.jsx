@@ -6,20 +6,29 @@ import ModalBody from '../ModalBody';
 import ModalHeader from '../ModalHeader';
 import SellCdpForm from './SellCdpForm/SellCdpForm';
 import { resetSellCdpForm } from '../../../actions/marketplaceActions';
+import { changeSelectedCdp } from '../../../actions/generalActions';
 import { convertDaiToEth, formatNumber } from '../../../utils/utils';
 import TooltipWrapper from '../../TooltipWrapper/TooltipWrapper';
+import CdpSelect from '../../CdpSelect/CdpSelect';
 
 import './SellCdpModal.scss';
 
 class SellCdpModal extends Component {
+  componentWillMount() {
+    const { cdp, proxyCdps } = this.props;
+    const isInProxys = (proxyCdps.findIndex(_cdp => _cdp.id === cdp.id)) !== -1;
+
+    if (!isInProxys) this.props.changeSelectedCdp({ value: proxyCdps[0].id });
+  }
+
   componentWillUnmount() {
     this.props.resetSellCdpForm();
   }
 
   render() {
     const {
-      closeModal, pristine, invalid, submittingForm, submittingFormSuccess, cdp,
-      ethPrice, discount, submittingFormError,
+      closeModal, pristine, invalid, submittingForm, submittingFormSuccess,
+      ethPrice, discount, submittingFormError, proxyCdps, cdp,
     } = this.props;
 
     const value = {
@@ -36,7 +45,7 @@ class SellCdpModal extends Component {
       };
     }
 
-    const hasDiscount = !isNaN(discount) || discount > 0; /* eslint-disable-line */
+    const hasDiscount = !isNaN(discount) || discount > 0; // eslint-disable-line
 
     return (
       <div className={`sell-cdp-modal-wrapper ${submittingFormError ? 'error' : ''}`}>
@@ -61,6 +70,8 @@ class SellCdpModal extends Component {
                   </div>
                 </div>
 
+                <CdpSelect additionalClasses="form-item" customCdps={proxyCdps} labelText="CDP ID" />
+
                 <SellCdpForm />
 
                 <div className="form-under-label">After applied discount</div>
@@ -83,7 +94,7 @@ class SellCdpModal extends Component {
           {
             submittingFormSuccess && (
               <div className="modal-content">
-                <h3 className="title">You have successfully put your CDP on sale!</h3>
+                <h3 className="title success">You have successfully put your CDP on sale!</h3>
               </div>
             )
           }
@@ -132,8 +143,10 @@ SellCdpModal.propTypes = {
   pristine: PropTypes.bool.isRequired,
   invalid: PropTypes.bool.isRequired,
   cdp: PropTypes.object.isRequired,
+  proxyCdps: PropTypes.array.isRequired,
   ethPrice: PropTypes.number.isRequired,
   discount: PropTypes.number.isRequired,
+  changeSelectedCdp: PropTypes.func.isRequired,
   submittingFormError: PropTypes.string.isRequired,
 };
 
@@ -149,7 +162,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  resetSellCdpForm,
+  resetSellCdpForm, changeSelectedCdp,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SellCdpModal);

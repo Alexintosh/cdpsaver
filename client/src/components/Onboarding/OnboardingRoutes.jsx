@@ -48,14 +48,14 @@ class OnboardingRoutes extends Component {
       return (<Redirect to={{ pathname: '/connect', state: { to: '/dashboard/manage' } }} />);
     }
 
-    if (hasCdp) return (<Redirect to="/dashboard/manage" />);
-
     return (
       <div className="onboarding-wrapper">
         <SubHeaderRoutes data={this.onboardingWizardLinks} />
 
         <React.Fragment>
-          <Route path={match.path} exact component={props => <OnboardingRedirect hasCdp={hasCdp} {...props} />} />
+          {/*
+            <Route path={match.path} exact component={props => <OnboardingRedirect hasCdp={hasCdp} {...props} />} />
+          */}
           <Route
             path={`${match.path}/create-cdp`}
             component={props => <OnboardingCreateCdp hasCdp={hasCdp} {...props} />}

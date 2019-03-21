@@ -69,7 +69,9 @@
       .title {
         color: white;
         font-size: 20px;
-        margin: 57px 0 32px 0;
+        margin: 57px auto 32px auto;
+        font-weight: normal;
+        max-width: 300px;
       }
 
       .sub-header {
@@ -93,7 +95,7 @@
       justify-content: center;
       background: $dark-gray;
       font-size: $font-size-large;
-      padding-bottom: 40px;
+      padding-bottom: 32px;
       color: $dark-red;
 
       .error-content {

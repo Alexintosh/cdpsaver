@@ -13,7 +13,8 @@ import './MarketplacePage.scss';
 
 const MarketplacePage = ({
   cdps, fetchingCdpsError, fetchingCdps, getMarketplaceCdpsData, openSellCdpModal,
-  loggingIn, gettingCdp, cdp, openCancelSellCdplModal, account, history,
+  loggingIn, gettingCdp, openCancelSellCdplModal, userCdps,
+  proxyAddress,
 }) => {
   const [mounted, setMounted] = useState(false);
   const [orderBy, setOrderBy] = useState(null);
@@ -26,13 +27,23 @@ const MarketplacePage = ({
     }
   });
 
+  // Proxy cdps is put here because user owned cpds can't call
+  // our marketplace smart contract
+  const proxyCdps = userCdps.filter(_cdp => _cdp.owner === proxyAddress);
+  const onSaleCdps = proxyCdps.filter(_cdp => _cdp.onSale);
+  const notOnSaleCdps = proxyCdps.filter(_cdp => !_cdp.onSale);
+
+  const hasCdp = proxyCdps.length > 0;
+  const allOnSale = proxyCdps.length === onSaleCdps.length;
+  const atLeastOneOnSale = onSaleCdps.length > 0;
+
   return (
     <div className="marketplace-page-wrapper dashboard-page-wrapper">
       <div className="sub-heading-wrapper">
         <div className="width-container">
           <div className="sub-title">Marketplace</div>
           <div className="sub-text">
-          Buy and sell CDPs at discount prices in the Marketplace.
+            Buy and sell CDPs at discount prices in the Marketplace.
           </div>
         </div>
       </div>
@@ -60,41 +71,36 @@ const MarketplacePage = ({
               </div>
             </div>
 
-            {
-              (!cdp || (cdp && !cdp.onSale)) && (
-                <Tooltip
-                  title={sellCdpButtonTooltipText(loggingIn, gettingCdp, cdp)}
-                  disabled={cdp !== null}
-                >
+            <div className="actions-wrapper">
+              {
+                atLeastOneOnSale && (
                   <button
-                    onClick={() => {
-                      if (cdp && cdp.owner === account) return history.push('/migrate');
-
-                      openSellCdpModal();
-                    }}
-                    disabled={cdp === null}
-                    className="button green uppercase"
+                    onClick={() => { openCancelSellCdplModal(onSaleCdps); }}
+                    disabled={false}
+                    className="button green uppercase cancel"
                     type="button"
                   >
-                    Sell
-                    <span>Cdp</span>
+                    Cancel
+                    <span>sell</span>
                   </button>
-                </Tooltip>
-              )
-            }
+                )
+              }
 
-            {
-              (cdp && cdp.onSale) && (
+              <Tooltip
+                title={sellCdpButtonTooltipText(loggingIn, gettingCdp, hasCdp, allOnSale)}
+                disabled={hasCdp}
+              >
                 <button
-                  onClick={openCancelSellCdplModal}
-                  disabled={false}
-                  className="button green uppercase cancel"
+                  onClick={() => { openSellCdpModal(notOnSaleCdps); }}
+                  disabled={!hasCdp || allOnSale}
+                  className="button green uppercase"
                   type="button"
                 >
-                  Cancel sale
+                  Sell
+                  <span>Cdp</span>
                 </button>
-              )
-            }
+              </Tooltip>
+            </div>
           </div>
 
           {
@@ -127,13 +133,10 @@ const MarketplacePage = ({
   );
 };
 
-MarketplacePage.defaultProps = {
-  cdp: null,
-};
-
 MarketplacePage.propTypes = {
   cdps: PropTypes.array.isRequired,
-  account: PropTypes.string.isRequired,
+  userCdps: PropTypes.array.isRequired,
+  proxyAddress: PropTypes.string.isRequired,
   getMarketplaceCdpsData: PropTypes.func.isRequired,
   fetchingCdps: PropTypes.bool.isRequired,
   fetchingCdpsError: PropTypes.any.isRequired,
@@ -141,8 +144,6 @@ MarketplacePage.propTypes = {
   openCancelSellCdplModal: PropTypes.func.isRequired,
   loggingIn: PropTypes.bool.isRequired,
   gettingCdp: PropTypes.bool.isRequired,
-  cdp: PropTypes.object,
-  history: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (({ marketplace, general }) => ({
@@ -152,8 +153,9 @@ const mapStateToProps = (({ marketplace, general }) => ({
 
   loggingIn: general.loggingIn,
   gettingCdp: general.gettingCdp,
-  cdp: general.cdp,
+  userCdps: general.cdps,
   account: general.account,
+  proxyAddress: general.proxyAddress,
 }));
 
 const mapDispatchToProps = {

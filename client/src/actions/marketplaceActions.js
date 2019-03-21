@@ -17,12 +17,13 @@ import {
   CANCEL_SELL_CDP_FAILURE,
   RESET_CANCEL_SELL_CDP,
 } from '../actionTypes/marketplaceActionTypes';
+import { CDP_IN_CDPS_CHANGED } from '../actionTypes/generalActionTypes';
 import { getCdpInfos } from '../services/cdpService';
 import {
   getItemsOnSale, sellCdp, cancelSellCdp, buyCdp,
 } from '../services/ethService';
 import { getEthPrice } from '../services/priceService';
-import { addToLsState, convertDaiToEth } from '../utils/utils';
+import { convertDaiToEth } from '../utils/utils';
 import { sendTx } from './notificationsActions';
 import { getCdp } from './accountActions';
 
@@ -80,6 +81,24 @@ export const getMarketplaceCdpsData = () => async (dispatch, getState) => {
 };
 
 /**
+ * Switches the passed cdp with the same cdp in the cdps array in the general reducer
+ *
+ * @param cdp {Object}
+ *
+ * @return {Function}
+ */
+const changeCdpInCdps = cdp => (dispatch, getState) => {
+  const { cdps } = getState().general;
+
+  const cdpIndex = cdps.findIndex(_cdp => _cdp.id === cdp.id);
+  const newCdps = [...cdps];
+
+  newCdps.splice(cdpIndex, 1, cdp);
+
+  dispatch({ type: CDP_IN_CDPS_CHANGED, payload: newCdps });
+};
+
+/**
  * Lists your CDP on the marketplace page
  *
  * @param sellPrice {Number}
@@ -94,9 +113,10 @@ export const sellCdpAction = ({ discount }) => async (dispatch, getState) => {
   try {
     await sellCdp(proxySendHandler, account, cdp.id, discount, proxyAddress);
 
-    addToLsState({ account, onboardingFinished: false });
+    const payload = { ...cdp, onSale: true };
 
-    dispatch({ type: SELL_CDP_SUCCESS, payload: { ...cdp, onSale: true } });
+    dispatch(changeCdpInCdps(payload));
+    dispatch({ type: SELL_CDP_SUCCESS, payload });
     dispatch(getMarketplaceCdpsData());
   } catch (err) {
     dispatch({ type: SELL_CDP_FAILURE, payload: err.message });
@@ -150,11 +170,13 @@ export const buyCdpAction = (cdpId, discount) => async (dispatch, getState) => {
  * @param loggingIn {Boolean}
  * @param gettingCdp {Boolean}
  * @param cdp {Object}
+ * @param allOnSale {Boolean}
  */
-export const sellCdpButtonTooltipText = (loggingIn, gettingCdp, cdp) => {
+export const sellCdpButtonTooltipText = (loggingIn, gettingCdp, cdp, allOnSale) => {
   if (loggingIn && !gettingCdp) return 'Logging in';
   if (loggingIn && gettingCdp) return 'Getting cdp';
   if (!loggingIn && !gettingCdp && !cdp) return 'You don&#39;t own a cdp';
+  if (!loggingIn && !gettingCdp && cdp && allOnSale) return 'All your cdps are on sale';
 };
 
 /**
@@ -171,7 +193,10 @@ export const cancelSellCdpAction = () => async (dispatch, getState) => {
   try {
     await cancelSellCdp(proxySendHandler, account, cdp.id, proxyAddress);
 
-    dispatch({ type: CANCEL_SELL_CDP_SUCCESS, payload: { ...cdp, onSale: false } });
+    const payload = { ...cdp, onSale: false };
+
+    dispatch(changeCdpInCdps(payload));
+    dispatch({ type: CANCEL_SELL_CDP_SUCCESS, payload });
     dispatch(getMarketplaceCdpsData());
   } catch (err) {
     dispatch({ type: CANCEL_SELL_CDP_FAILURE, payload: err.message });

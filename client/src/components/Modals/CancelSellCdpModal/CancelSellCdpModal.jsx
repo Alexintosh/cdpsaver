@@ -4,21 +4,30 @@ import PropTypes from 'prop-types';
 import ModalBody from '../ModalBody';
 import ModalHeader from '../ModalHeader';
 import { cancelSellCdpAction, resetCancelSellCdp } from '../../../actions/marketplaceActions';
+import { changeSelectedCdp } from '../../../actions/generalActions';
+import CdpSelect from '../../CdpSelect/CdpSelect';
 
 import './CancelSellCdpModal.scss';
 
 class CancelSellCdpModal extends Component {
+  componentWillMount() {
+    const { cdp, proxyCdps } = this.props;
+    const isInProxys = (proxyCdps.findIndex(_cdp => _cdp.id === cdp.id)) !== -1;
+
+    if (!isInProxys) this.props.changeSelectedCdp({ value: proxyCdps[0].id });
+  }
+
   componentWillUnmount() {
     this.props.resetCancelSellCdp();
   }
 
   render() {
     const {
-      closeModal, canceling, cancelingSuccess, cancelingError, cancelSellCdpAction,
+      closeModal, canceling, cancelingSuccess, cancelingError, cancelSellCdpAction, proxyCdps,
     } = this.props;
 
     return (
-      <div className={`cancel-sell-cdp-modal-wrapper ${cancelingSuccess ? 'error' : ''}`}>
+      <div id="cancel-sell-cdp-modal-wrapper">
         <ModalHeader closeModal={closeModal} />
 
         <ModalBody>
@@ -26,6 +35,14 @@ class CancelSellCdpModal extends Component {
             !cancelingSuccess && (
               <div className="modal-content">
                 <h3 className="title">Cancel sale and remove from the marketplace</h3>
+
+                <CdpSelect additionalClasses="form-item" customCdps={proxyCdps} labelText="CDP ID" />
+
+                {
+                  cancelingError && (
+                    <div className="modal-error"><div className="error-content">{cancelingError}</div></div>
+                  )
+                }
               </div>
             )
           }
@@ -33,17 +50,11 @@ class CancelSellCdpModal extends Component {
           {
             cancelingSuccess && (
               <div className="modal-content">
-                <h3 className="title">You have successfully canceled the sale of your CDP!</h3>
+                <h3 className="title success">You have successfully canceled the sale of your CDP!</h3>
               </div>
             )
           }
         </ModalBody>
-
-        {
-          cancelingError && (
-            <div className="modal-error"><div className="error-content">{cancelingError}</div></div>
-          )
-        }
 
         <div className="modal-controls">
           {
@@ -78,15 +89,21 @@ CancelSellCdpModal.propTypes = {
   cancelingSuccess: PropTypes.bool.isRequired,
   cancelingError: PropTypes.string.isRequired,
   cancelSellCdpAction: PropTypes.func.isRequired,
+  changeSelectedCdp: PropTypes.func.isRequired,
   resetCancelSellCdp: PropTypes.func.isRequired,
+  proxyCdps: PropTypes.array.isRequired,
+  cdp: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = ({ marketplace }) => ({
+const mapStateToProps = ({ marketplace, general }) => ({
   canceling: marketplace.canceling,
   cancelingSuccess: marketplace.cancelingSuccess,
   cancelingError: marketplace.cancelingError,
+  cdp: general.cdp,
 });
 
-const mapDispatchToProps = { cancelSellCdpAction, resetCancelSellCdp };
+const mapDispatchToProps = {
+  cancelSellCdpAction, resetCancelSellCdp, changeSelectedCdp,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(CancelSellCdpModal);

@@ -6,13 +6,16 @@ import { changeSelectedCdp } from '../../actions/generalActions';
 
 import './CdpSelect.scss';
 
-const CdpSelect = ({ cdps, cdp, changeSelectedCdp }) => {
+const CdpSelect = ({
+  cdps, cdp, changeSelectedCdp, labelText, customCdps, additionalClasses,
+}) => {
+  const cdpsArray = customCdps.length > 0 ? customCdps : cdps;
   const value = { label: cdp.id, value: cdp.id };
-  const options = cdps.map(_cdp => ({ label: _cdp.id, value: _cdp.id }));
+  const options = cdpsArray.map(_cdp => ({ label: _cdp.id, value: _cdp.id }));
 
   return (
-    <div className="cdp-select-wrapper">
-      <div className="label">Current CDP ID:</div>
+    <div className={`cdp-select-wrapper ${additionalClasses}`}>
+      <div className="label">{ labelText }</div>
 
       <Select
         className="select main-select main-select-small"
@@ -25,10 +28,19 @@ const CdpSelect = ({ cdps, cdp, changeSelectedCdp }) => {
   );
 };
 
+CdpSelect.defaultProps = {
+  labelText: 'Current CDP ID:',
+  customCdps: [],
+  additionalClasses: '',
+};
+
 CdpSelect.propTypes = {
   cdps: PropTypes.array.isRequired,
   cdp: PropTypes.object.isRequired,
   changeSelectedCdp: PropTypes.func.isRequired,
+  customCdps: PropTypes.array,
+  labelText: PropTypes.string,
+  additionalClasses: PropTypes.string,
 };
 
 const mapStateToProps = ({ general }) => ({
