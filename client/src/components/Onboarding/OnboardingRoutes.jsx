@@ -53,9 +53,7 @@ class OnboardingRoutes extends Component {
         <SubHeaderRoutes data={this.onboardingWizardLinks} />
 
         <React.Fragment>
-          {/*
-            <Route path={match.path} exact component={props => <OnboardingRedirect hasCdp={hasCdp} {...props} />} />
-          */}
+          <Route path={match.path} exact component={props => <OnboardingRedirect {...props} />} />
           <Route
             path={`${match.path}/create-cdp`}
             component={props => <OnboardingCreateCdp hasCdp={hasCdp} {...props} />}
@@ -68,7 +66,6 @@ class OnboardingRoutes extends Component {
 
 OnboardingRoutes.propTypes = {
   account: PropTypes.string.isRequired,
-  hasCdp: PropTypes.bool.isRequired,
   match: PropTypes.object.isRequired,
   resetOnboardingWizard: PropTypes.func.isRequired,
   connectingProvider: PropTypes.bool.isRequired,
@@ -81,7 +78,6 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = ({ general }) => ({
-  hasCdp: !!general.cdp,
   account: general.account,
   connectingProvider: general.connectingProvider,
   gettingCdp: general.gettingCdp,
