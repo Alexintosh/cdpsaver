@@ -4,11 +4,10 @@ import "./interfaces/TubInterface.sol";
 import "./interfaces/ExchangeInterface.sol";
 import "./DS/DSMath.sol";
 
+/// @title SaverProxy implements advanced dashboard features repay/boost
 contract SaverProxy is DSMath {
-    
     event Repay(address indexed owner, uint collateralAmount, uint daiAmount);
     event Boost(address indexed owner, uint daiAmount, uint collateralAmount);
-    
 
     //KOVAN
     address public constant WETH_ADDRESS = 0xd0A1E359811322d97991E03f863a0C30C2cF029C;
@@ -24,20 +23,22 @@ contract SaverProxy is DSMath {
     address public constant TUB_ADDRESS = 0xa71937147b55Deb8a530C7229C442Fd3F31b7db2;
 
     constructor() public {
-        // ERC20(DAI_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        // ERC20(MKR_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        // ERC20(PETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        // ERC20(WETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-    }
-
-    ///@dev User has to own MKR and aprrove the DSProxy address
-    function repay(bytes32 _cup, uint _amount, bool _buyMkr) public {
-        TubInterface tub = TubInterface(TUB_ADDRESS);
-
         ERC20(DAI_ADDRESS).approve(TUB_ADDRESS, uint(-1));
         ERC20(MKR_ADDRESS).approve(TUB_ADDRESS, uint(-1));
         ERC20(PETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
         ERC20(WETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+    }
+
+    /// @notice Withdraws Eth collateral, swaps Eth -> Dai with Kyber, and pays back the debt in Dai
+    /// @dev If
+    function repay(bytes32 _cup, uint _amount, bool _buyMkr) public {
+        TubInterface tub = TubInterface(TUB_ADDRESS);
+
+        approveTub(DAI_ADDRESS);
+        approveTub(MKR_ADDRESS);
+        approveTub(PETH_ADDRESS);
+        approveTub(WETH_ADDRESS);
+
         uint startingRatio = getRatio(tub, _cup);
 
         if (_amount == 0) {
@@ -141,6 +142,12 @@ contract SaverProxy is DSMath {
         (mkrPrice, ok) = _tub.pep().peek();
 
         return wdiv(feeInDai, uint(mkrPrice));
+    }
+
+    function approveTub(address _tokenAddress) internal {
+        if (ERC20(_tokenAddress).allowance(msg.sender, _tokenAddress) != uint(-1)) {
+            ERC20(_tokenAddress).approve(TUB_ADDRESS, uint(-1));
+        }
     }
 
     function getRatio(TubInterface _tub, bytes32 _cup) internal returns(uint) {

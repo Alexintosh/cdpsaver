@@ -483,7 +483,9 @@ export const approveDaiAction = () => async (dispatch, getState) => {
   dispatch({ type: APPROVE_DAI_REQUEST });
 
   try {
-    await approveDai(getState().general.account);
+    const { account, proxyAddress } = getState().general;
+
+    await approveDai(account, proxyAddress);
 
     dispatch({ type: APPROVE_DAI_SUCCESS });
   } catch (err) {
@@ -501,8 +503,10 @@ export const approveDaiAction = () => async (dispatch, getState) => {
 export const approveMakerAction = () => async (dispatch, getState) => {
   dispatch({ type: APPROVE_MAKER_REQUEST });
 
+  const { account, proxyAddress } = getState().general;
+
   try {
-    await approveMaker(getState().general.account);
+    await approveMaker(account, proxyAddress);
 
     dispatch({ type: APPROVE_MAKER_SUCCESS });
   } catch (err) {

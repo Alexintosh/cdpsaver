@@ -196,11 +196,11 @@ export const callProxyContract = (
  * @param address {String}
  * @return {Promise<Number>}
  */
-export const getDaiAllowance = address => new Promise(async (resolve, reject) => {
+export const getDaiAllowance = (address, proxyAddress) => new Promise(async (resolve, reject) => {
   const contract = await DaiErc20Contract();
 
   try {
-    const data = await contract.methods.allowance(address, tubInterfaceAddress).call();
+    const data = await contract.methods.allowance(address, proxyAddress).call();
 
     resolve(parseFloat(weiToEth(data)));
   } catch (err) {
@@ -232,13 +232,13 @@ export const getDaiBalance = address => new Promise(async (resolve, reject) => {
  * @param address {String}
  * @return {Promise<Boolean>}
  */
-export const approveDai = address => new Promise(async (resolve, reject) => {
+export const approveDai = (address, proxyAddress) => new Promise(async (resolve, reject) => {
   const contract = await DaiErc20Contract();
 
   const num = ethToWei(Number.MAX_SAFE_INTEGER.toString());
 
   try {
-    await contract.methods.approve(tubInterfaceAddress, num).send({ from: address });
+    await contract.methods.approve(proxyAddress, num).send({ from: address });
 
     resolve(true);
   } catch (err) {
@@ -252,11 +252,11 @@ export const approveDai = address => new Promise(async (resolve, reject) => {
  * @param address {String}
  * @return {Promise<Number>}
  */
-export const getMakerAllowance = address => new Promise(async (resolve, reject) => {
+export const getMakerAllowance = (address, proxyAddress) => new Promise(async (resolve, reject) => {
   const contract = await MakerErc20Contract();
 
   try {
-    const data = await contract.methods.allowance(address, tubInterfaceAddress).call();
+    const data = await contract.methods.allowance(address, proxyAddress).call();
 
     resolve(parseFloat(weiToEth(data)));
   } catch (err) {
@@ -288,13 +288,13 @@ export const getMakerBalance = address => new Promise(async (resolve, reject) =>
  * @param address {String}
  * @return {Promise<Boolean>}
  */
-export const approveMaker = address => new Promise(async (resolve, reject) => {
+export const approveMaker = (address, proxyAddress) => new Promise(async (resolve, reject) => {
   const contract = await MakerErc20Contract();
 
   const num = ethToWei(Number.MAX_SAFE_INTEGER.toString());
 
   try {
-    await contract.methods.approve(tubInterfaceAddress, num).send({ from: address });
+    await contract.methods.approve(proxyAddress, num).send({ from: address });
 
     resolve(true);
   } catch (err) {

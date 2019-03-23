@@ -11,14 +11,8 @@ const ProxyRegistryInterface = artifacts.require("./ProxyRegistryInterface.sol")
 contract("SaverProxy", accounts => {
 
   let marketplace, marketplaceAuthority, registry;
-  const seller = accounts[0];
-  const buyer  = accounts[1];
   const tubAddr = "0xa71937147b55Deb8a530C7229C442Fd3F31b7db2";
-
-  const cdpId = 4721;
-  const cdpSecondIdBytes32 = "0x0000000000000000000000000000000000000000000000000000000000001306";
-  const cdpIdBytes32 = "0x0000000000000000000000000000000000000000000000000000000000001059";
-
+  
   before(async () => {
     marketplace = await Marketplace.deployed();
     marketplaceProxy = await MarketplaceProxy.deployed();
@@ -38,31 +32,51 @@ contract("SaverProxy", accounts => {
     return abi.find(abi => abi.name === functionName);
   }
 
+  function createCDP() {
+      try {
+          const tub = await TubInterface.at(tubAddr);
+          const tx = await tub.open({from: accounts[8]});
+
+          console.log(tx);
+      
+      } catch(err) {
+        console.log(err);
+      }
+  }
+
   it('...should print some addresses', async () => {
     console.log(`Marketplace addr: ${marketplace.address}, Marketplace authority addr: ${marketplaceAuthority.address},
     Marketplace proxy addr: ${marketplaceProxy.address}, Proxy addr: ${proxy.address}`);
   });
 
-    it('...should authorize the cdp for sale and put it in the marketplace contract', async () => {
-        try {
-            const discount = 900;
-            console.log(cdpIdBytes32, discount, proxy.address, marketplace.address);
+  it('...should create CDPs which we can use for buy/sale', async () => {
+    try {
 
-            const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'createAuthorizeAndSell'),
-            [cdpIdBytes32, discount, proxy.address, marketplace.address]);
+    } catch(err) {
+      console.log(err);
+    }
+  });
 
-            await proxy.methods['execute(address,bytes)'](marketplaceProxy.address, data, {from: seller});
+    // it('...should authorize the cdp for sale and put it in the marketplace contract', async () => {
+    //     try {
+    //         const discount = 900;
+    //         console.log(cdpIdBytes32, discount, proxy.address, marketplace.address);
 
-            const items = await marketplace.items.call(cdpIdBytes32);
-            console.log(items);
+    //         const data = web3.eth.abi.encodeFunctionCall(getAbiFunction(MarketplaceProxy, 'createAuthorizeAndSell'),
+    //         [cdpIdBytes32, discount, proxy.address, marketplace.address]);
 
-            const values = await marketplace.getCdpPrice.call(cdpIdBytes32);
-            console.log(values[0].toString() + " " +  values[1].toString());
+    //         await proxy.methods['execute(address,bytes)'](marketplaceProxy.address, data, {from: seller});
 
-        } catch(err) {
-            console.log(err);
-        }
-    });
+    //         const items = await marketplace.items.call(cdpIdBytes32);
+    //         console.log(items);
+
+    //         const values = await marketplace.getCdpPrice.call(cdpIdBytes32);
+    //         console.log(values[0].toString() + " " +  values[1].toString());
+
+    //     } catch(err) {
+    //         console.log(err);
+    //     }
+    // });
 
     // it('...should put 2 cdps on sale and cancel the first one', async () => {
     //     try {
@@ -109,19 +123,19 @@ contract("SaverProxy", accounts => {
   //   }
   // });
 
-  it('...should buy a cdp on marketplace', async () => {
-    try {
-        const cdpValue = await marketplace.getCdpPrice.call(cdpIdBytes32);
+  // it('...should buy a cdp on marketplace', async () => {
+  //   try {
+  //       const cdpValue = await marketplace.getCdpPrice.call(cdpIdBytes32);
 
-        console.log('cdpValue ', cdpValue[0].toString());
+  //       console.log('cdpValue ', cdpValue[0].toString());
 
-        const txBuy = await marketplace.buy(cdpIdBytes32, {from: buyer, value: cdpValue[0].toString()});
+  //       const txBuy = await marketplace.buy(cdpIdBytes32, {from: buyer, value: cdpValue[0].toString()});
 
-        console.log(txBuy);
-    } catch(err) {
-        console.log(err);
-    }
-  });
+  //       console.log(txBuy);
+  //   } catch(err) {
+  //       console.log(err);
+  //   }
+  // });
 
 //   it('...should remove a cdp to the marketplace', async () => {
 //     try {

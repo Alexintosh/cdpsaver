@@ -81,7 +81,7 @@ export const listenToAccChange = () => (dispatch, getState) => {
 export const getCloseDataAction = (paybackData = false) => async (dispatch, getState) => {
   dispatch({ type: GET_CLOSE_DATA_REQUEST });
 
-  const { cdp, account } = getState().general;
+  const { cdp, account, proxyAddress } = getState().general;
   const payload = {};
 
   try {
@@ -95,8 +95,8 @@ export const getCloseDataAction = (paybackData = false) => async (dispatch, getS
 
     // If he has enough dai and maker tokens to pay check if they are unlocked
     if (payload.enoughMkrToWipe) {
-      const daiAllowance = await getDaiAllowance(account);
-      const makerAllowance = await getMakerAllowance(account);
+      const daiAllowance = await getDaiAllowance(account, proxyAddress);
+      const makerAllowance = await getMakerAllowance(account, proxyAddress);
 
       const governanceFee = (await cdp.cdpInstance.getGovernanceFee())._amount;
 
