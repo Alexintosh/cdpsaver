@@ -535,16 +535,26 @@ export const transferCdpAction = ({ toAddress }, history, closeModal) => async (
   const proxySendHandler = promise => sendTx(promise, 'Transfer CDP', dispatch, getState);
 
   try {
-    const { account, cdp, proxyAddress } = getState().general;
+    const {
+      account, cdp, cdps, proxyAddress,
+    } = getState().general;
 
     await transferCdp(proxySendHandler, account, toAddress, cdp.id, proxyAddress);
+    await (() => new Promise((resolve) => { setTimeout(() => { resolve(true); }, 5000); }))();
 
     addToLsState({ account, onboardingFinished: false });
 
-    closeModal();
-    dispatch({ type: TRANSFER_CDP_SUCCESS });
+    const newCdps = [...cdps];
+    const closedCdpIndex = cdps.findIndex(_cdp => _cdp.id === cdp.id);
+    newCdps.splice(closedCdpIndex, 1);
 
-    history.push('/onboarding/create-cdp');
+    const newCdp = newCdps.length > 0 ? newCdps[0] : null;
+
+    closeModal();
+    dispatch({ type: TRANSFER_CDP_SUCCESS, payload: { cdps: newCdps, cdp: newCdp } });
+
+    if (newCdp === null) history.push('/onboarding/create-cdp');
+    else history.push('/dashboard/manage');
   } catch (err) {
     console.log('err', err);
     const payload = err.message.includes(MM_DENIED_TX_ERROR) ? '' : err.message;
@@ -567,7 +577,9 @@ export const closeCdpAction = (closeModal, history) => async (dispatch, getState
   const proxySendHandler = promise => sendTx(promise, 'Close CDP', dispatch, getState);
 
   try {
-    const { cdp, cdps, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
+    const {
+      cdp, cdps, account, proxyAddress, ethPrice,
+    } = getState().general;
     const params = [proxySendHandler, '0', cdp.id, proxyAddress, account, 'shut', ethPrice, true, true];
 
     await callProxyContract(...params);

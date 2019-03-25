@@ -193,9 +193,6 @@ export default (state = INITIAL_STATE, action) => {
     case APPROVE_MAKER_SUCCESS:
       return { ...state, makerUnlocked: true };
 
-    case TRANSFER_CDP_SUCCESS:
-      return { ...state, cdp: null, proxyAddress: '' };
-
     case SUBSCRIBE_COMING_SOON_REQUEST:
       return { ...state, subscribingComingSoon: true, subscribingComingSoonError: '' };
 
@@ -229,6 +226,7 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, cdps: payload };
 
     case CLOSE_CDP_SUCCESS:
+    case TRANSFER_CDP_SUCCESS:
       return { ...state, cdps: payload.cdps, cdp: payload.cdp };
 
     default:
