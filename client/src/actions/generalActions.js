@@ -20,6 +20,7 @@ import { subscribeComingSoonApiCall } from '../services/apiService';
 import {
   getDaiAllowance, getDaiBalance, getMakerAllowance, getMakerBalance, weiToEth,
 } from '../services/ethService';
+import { addToLsState } from '../utils/utils';
 
 const { DAI } = Maker;
 
@@ -151,12 +152,14 @@ export const resetSubscribeComingSoon = () => (dispatch) => {
  * @return {Function}
  */
 export const changeSelectedCdp = ({ value }) => async (dispatch, getState) => {
-  const { cdps, ethPrice } = getState().general;
+  const { cdps, ethPrice, account } = getState().general;
   const newCdpIndex = cdps.findIndex(_cdp => _cdp.id === value);
 
   const newCdp = cdps[newCdpIndex];
   const newData = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
   const payload = { ...newCdp, ...newData };
+
+  addToLsState({ account, cdpId: newCdp.id });
 
   dispatch({ type: SWITCH_CDP, payload });
 };

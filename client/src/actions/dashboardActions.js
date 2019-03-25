@@ -542,13 +542,13 @@ export const transferCdpAction = ({ toAddress }, history, closeModal) => async (
     await transferCdp(proxySendHandler, account, toAddress, cdp.id, proxyAddress);
     await (() => new Promise((resolve) => { setTimeout(() => { resolve(true); }, 5000); }))();
 
-    addToLsState({ account, onboardingFinished: false });
-
     const newCdps = [...cdps];
     const closedCdpIndex = cdps.findIndex(_cdp => _cdp.id === cdp.id);
     newCdps.splice(closedCdpIndex, 1);
 
     const newCdp = newCdps.length > 0 ? newCdps[0] : null;
+
+    addToLsState({ account, onboardingFinished: false, cdpId: newCdp ? newCdp.id : -1 });
 
     closeModal();
     dispatch({ type: TRANSFER_CDP_SUCCESS, payload: { cdps: newCdps, cdp: newCdp } });
@@ -584,13 +584,13 @@ export const closeCdpAction = (closeModal, history) => async (dispatch, getState
 
     await callProxyContract(...params);
 
-    addToLsState({ account, onboardingFinished: false });
-
     const newCdps = [...cdps];
     const closedCdpIndex = cdps.findIndex(_cdp => _cdp.id === cdp.id);
     newCdps.splice(closedCdpIndex, 1);
 
     const newCdp = newCdps.length > 0 ? newCdps[0] : null;
+
+    addToLsState({ account, onboardingFinished: false, cdpId: newCdp ? newCdp.id : -1 });
 
     dispatch({ type: CLOSE_CDP_SUCCESS, payload: { cdps: newCdps, cdp: newCdp } });
     closeModal();

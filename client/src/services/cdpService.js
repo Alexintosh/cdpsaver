@@ -2,7 +2,7 @@ import Maker from '@makerdao/dai';
 import config from '../config/config.json';
 import clientConfig from '../config/clientConfig.json';
 import { marketplaceContract, proxyRegistryInterfaceContract, SaiTubContract } from './contractRegistryService';
-import { isEmptyBytes, numStringToBytes32, saiTubContractTools } from '../utils/utils';
+import { getLsExistingItemAndState, isEmptyBytes, numStringToBytes32, saiTubContractTools } from '../utils/utils';
 import { getEthPrice } from './priceService';
 
 export const maker = Maker.create('http', { url: clientConfig.provider });
@@ -176,8 +176,10 @@ export const getAddressCdp = address => new Promise(async (resolve, reject) => {
 
     const cdps = await Promise.all(promises);
 
-    // TODO switch this with the selected cdp from local storage
-    const cdp = cdps[0] || null;
+    const { existingItem } = getLsExistingItemAndState(address);
+    const lsCdpIndex = existingItem && existingItem.cdpId ? cdps.findIndex(c => existingItem.cdpId === c.id) : -1;
+
+    const cdp = lsCdpIndex !== -1 ? cdps[lsCdpIndex] : (cdps[0] || null);
 
     resolve({ proxyAddress: isEmptyBytes(proxyAddress) ? '' : proxyAddress, cdp, cdps });
   } catch (err) {
