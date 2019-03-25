@@ -134,9 +134,13 @@ export const subscribeComingSoonAction = ({ email }) => async (dispatch) => {
   dispatch({ type: SUBSCRIBE_COMING_SOON_REQUEST });
 
   try {
-    await subscribeComingSoonApiCall(email);
+    const res = await subscribeComingSoonApiCall(email);
 
-    dispatch({ type: SUBSCRIBE_COMING_SOON_SUCCESS });
+    if (!res.ok) {
+      dispatch({ type: SUBSCRIBE_COMING_SOON_FAILURE, payload: 'Unable to send email' });
+    } else {
+      dispatch({ type: SUBSCRIBE_COMING_SOON_SUCCESS });
+    }
   } catch (e) {
     dispatch({ type: SUBSCRIBE_COMING_SOON_FAILURE, payload: e.message });
   }
@@ -179,6 +183,7 @@ export const submitContactUs = (data, closeModal) => async (dispatch) => {
   dispatch({ type: SUBMIT_CONTACT_US_REQUEST });
 
   try {
+    console.log(data);
     await contactUsApiCall(data);
 
     dispatch({ type: SUBMIT_CONTACT_US_SUCCESS });

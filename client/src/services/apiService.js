@@ -4,7 +4,7 @@ export const subscribeToMonitoringApiRequest = (/* formData */) => new Promise((
   }, 500);
 });
 
-export const subscribeComingSoonApiCall = ({ email }) => fetch('https://formspree.io/nesa993@gmail.com', {
+export const subscribeComingSoonApiCall = email => fetch('https://cdpsaver.com/api/subscribe', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
@@ -12,8 +12,8 @@ export const subscribeComingSoonApiCall = ({ email }) => fetch('https://formspre
   }),
 });
 
-export const contactUsApiCall = () => new Promise((resolve) => {
-  setTimeout(() => {
-    resolve(true);
-  }, 500);
+export const contactUsApiCall = data => fetch('https://cdpsaver.com/api/send_email', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(data),
 });
