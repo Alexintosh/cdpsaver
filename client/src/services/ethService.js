@@ -466,6 +466,7 @@ export const cancelSellCdp = (sendTxFunc, account, cdpId, proxyAddress) => new P
  * @param sendTxFunc {Function}
  * @param account {String}
  * @param cdpId {Number}
+ * @param proxyAddress {String}
  *
  * @return {Promise<Boolean>}
  */

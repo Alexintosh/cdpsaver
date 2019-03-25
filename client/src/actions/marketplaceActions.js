@@ -145,16 +145,15 @@ export const resetCancelSellCdp = () => (dispatch) => {
  * Buys selected cdp from one user and transfers it to another
  *
  * @param cdpId {Number}
- * @param discount {Number}
  */
-export const buyCdpAction = (cdpId, discount) => async (dispatch, getState) => {
+export const buyCdpAction = cdpId => async (dispatch, getState) => {
   dispatch({ type: BUY_CDP_REQUEST });
 
   const proxySendHandler = promise => sendTx(promise, 'Buy CDP', dispatch, getState);
   const { account, proxyAddress } = getState().general;
 
   try {
-    const payload = await buyCdp(proxySendHandler, cdpId, account, proxyAddress, discount);
+    const payload = await buyCdp(proxySendHandler, cdpId, account, proxyAddress);
 
     dispatch({ type: BUY_CDP_SUCCESS, payload });
     dispatch(getMarketplaceCdpsData());
