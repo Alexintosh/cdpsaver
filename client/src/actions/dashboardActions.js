@@ -482,10 +482,12 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
 export const approveDaiAction = () => async (dispatch, getState) => {
   dispatch({ type: APPROVE_DAI_REQUEST });
 
+  const notificationPromise = promise => sendTx(promise, 'Approve DAI', dispatch, getState);
+
   try {
     const { account, proxyAddress } = getState().general;
 
-    await approveDai(account, proxyAddress);
+    await approveDai(account, proxyAddress, notificationPromise);
 
     dispatch({ type: APPROVE_DAI_SUCCESS });
   } catch (err) {
@@ -503,10 +505,12 @@ export const approveDaiAction = () => async (dispatch, getState) => {
 export const approveMakerAction = () => async (dispatch, getState) => {
   dispatch({ type: APPROVE_MAKER_REQUEST });
 
+  const notificationPromise = promise => sendTx(promise, 'Approve MKR', dispatch, getState);
+
   const { account, proxyAddress } = getState().general;
 
   try {
-    await approveMaker(account, proxyAddress);
+    await approveMaker(account, proxyAddress, notificationPromise);
 
     dispatch({ type: APPROVE_MAKER_SUCCESS });
   } catch (err) {
@@ -563,17 +567,24 @@ export const closeCdpAction = (closeModal, history) => async (dispatch, getState
   const proxySendHandler = promise => sendTx(promise, 'Close CDP', dispatch, getState);
 
   try {
-    const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
+    const { cdp, cdps, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
     const params = [proxySendHandler, '0', cdp.id, proxyAddress, account, 'shut', ethPrice, true, true];
 
     await callProxyContract(...params);
 
     addToLsState({ account, onboardingFinished: false });
 
-    dispatch({ type: CLOSE_CDP_SUCCESS });
+    const newCdps = [...cdps];
+    const closedCdpIndex = cdps.findIndex(_cdp => _cdp.id === cdp.id);
+    newCdps.splice(closedCdpIndex, 1);
+
+    const newCdp = newCdps.length > 0 ? newCdps[0] : null;
+
+    dispatch({ type: CLOSE_CDP_SUCCESS, payload: { cdps: newCdps, cdp: newCdp } });
     closeModal();
 
-    history.push('/onboarding/create-cdp');
+    if (newCdp === null) history.push('/onboarding/create-cdp');
+    else history.push('/dashboard/manage');
   } catch (err) {
     dispatch({ type: CLOSE_CDP_FAILURE, payload: err.message });
   }

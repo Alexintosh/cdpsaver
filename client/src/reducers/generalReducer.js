@@ -115,7 +115,6 @@ export default (state = INITIAL_STATE, action) => {
     case CANCEL_SELL_CDP_SUCCESS:
     case BOOST_SUCCESS:
     case SWITCH_CDP:
-    case CLOSE_CDP_SUCCESS:
       return {
         ...state,
         cdp: {
@@ -228,6 +227,9 @@ export default (state = INITIAL_STATE, action) => {
     case CDP_IN_CDPS_CHANGED:
     case ADD_CDP_TO_CDPS:
       return { ...state, cdps: payload };
+
+    case CLOSE_CDP_SUCCESS:
+      return { ...state, cdps: payload.cdps, cdp: payload.cdp };
 
     default:
       return state;

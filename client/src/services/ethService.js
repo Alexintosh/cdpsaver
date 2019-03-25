@@ -230,15 +230,20 @@ export const getDaiBalance = address => new Promise(async (resolve, reject) => {
  * Approves that dai can be used for the users address on the dai erc20 contract
  *
  * @param address {String}
+ * @param proxyAddress {String}
+ * @param sendTxFunc {Function}
+ *
  * @return {Promise<Boolean>}
  */
-export const approveDai = (address, proxyAddress) => new Promise(async (resolve, reject) => {
+export const approveDai = (address, proxyAddress, sendTxFunc) => new Promise(async (resolve, reject) => {
   const contract = await DaiErc20Contract();
 
   const num = ethToWei(Number.MAX_SAFE_INTEGER.toString());
 
   try {
-    await contract.methods.approve(proxyAddress, num).send({ from: address });
+    const promise = contract.methods.approve(proxyAddress, num).send({ from: address });
+
+    await sendTxFunc(promise);
 
     resolve(true);
   } catch (err) {
@@ -286,15 +291,20 @@ export const getMakerBalance = address => new Promise(async (resolve, reject) =>
  * Approves that maker can be used for the users address on the dai erc20 contract
  *
  * @param address {String}
+ * @param proxyAddress {String}
+ * @param sendTxFunc {Function}
+ *
  * @return {Promise<Boolean>}
  */
-export const approveMaker = (address, proxyAddress) => new Promise(async (resolve, reject) => {
+export const approveMaker = (address, proxyAddress, sendTxFunc) => new Promise(async (resolve, reject) => {
   const contract = await MakerErc20Contract();
 
   const num = ethToWei(Number.MAX_SAFE_INTEGER.toString());
 
   try {
-    await contract.methods.approve(proxyAddress, num).send({ from: address });
+    const promise = contract.methods.approve(proxyAddress, num).send({ from: address });
+
+    await sendTxFunc(promise);
 
     resolve(true);
   } catch (err) {
