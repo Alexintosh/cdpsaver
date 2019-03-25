@@ -29,6 +29,11 @@ import {
   RESET_SUBSCRIBE_COMING_SOON,
 
   CDP_IN_CDPS_CHANGED,
+
+  SUBMIT_CONTACT_US_REQUEST,
+  SUBMIT_CONTACT_US_SUCCESS,
+  SUBMIT_CONTACT_US_FAILURE,
+  RESET_CONTACT_US,
 } from '../actionTypes/generalActionTypes';
 import { CREATE_CDP_SUCCESS, ADD_CDP_TO_CDPS } from '../actionTypes/onboardingActionTypes';
 import {
@@ -81,6 +86,9 @@ const INITIAL_STATE = {
   subscribingComingSoon: false,
   subscribingComingSoonSuccess: false,
   subscribingComingSoonError: '',
+
+  sendingContactUs: false,
+  sendingContactUsError: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -218,6 +226,30 @@ export default (state = INITIAL_STATE, action) => {
         subscribingComingSoon: false,
         subscribingComingSoonSuccess: false,
         subscribingComingSoonError: '',
+      };
+
+    case SUBMIT_CONTACT_US_REQUEST:
+      return { ...state, sendingContactUs: true, sendingContactUsError: '' };
+
+    case SUBMIT_CONTACT_US_SUCCESS:
+      return {
+        ...state,
+        sendingContactUs: false,
+        sendingContactUsError: '',
+      };
+
+    case SUBMIT_CONTACT_US_FAILURE:
+      return {
+        ...state,
+        sendingContactUs: false,
+        sendingContactUsError: payload,
+      };
+
+    case RESET_CONTACT_US:
+      return {
+        ...state,
+        sendingContactUs: false,
+        sendingContactUsError: '',
       };
 
     case GET_CDPS_SUCCESS:

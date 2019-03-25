@@ -7,6 +7,7 @@ import {
   REPAY_MODAL,
   BOOST_MODAL,
   PAYBACK_CDP_MODAL,
+  CONTACT_US_MODAL,
 } from '../components/Modals/modalTypes';
 
 /**
@@ -93,4 +94,12 @@ export const openBoostModal = boostAmount => async (dispatch) => {
  */
 export const openPaybackModal = paybackAmount => async (dispatch) => {
   dispatch(toggleModal(PAYBACK_CDP_MODAL, { width: 481, paybackAmount }, true));
+};
+
+/**
+ * Opens the contact us modal that sends an email to the specified address
+ * @return {Function}
+ */
+export const openContactUsModal = () => (dispatch) => {
+  dispatch(toggleModal(CONTACT_US_MODAL, { width: 481 }, true));
 };

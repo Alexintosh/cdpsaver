@@ -1,0 +1,53 @@
+@import "../../../common/colors";
+@import "../../../common/text";
+
+.contact-us-modal-wrapper {
+
+  .modal-body {
+    padding-bottom: 31px;
+  }
+
+  .title {
+    margin-bottom: 11px;
+  }
+
+  .description {
+    color: $gray;
+    margin: 0 auto 25px auto;
+    max-width: 360px;
+  }
+
+  .form-wrapper {
+    max-width: 300px;
+    margin: 0 auto;
+    padding-bottom: 31px;
+
+    .submit-error {
+      color: $dark-red;
+    }
+
+    .form-item-wrapper {
+      padding: 0;
+    }
+
+    .form-item-wrapper.wrapper-error .input-values {
+      padding: 14px 19px;
+    }
+
+    .form-item-wrapper.form-item-wrapper-textarea {
+      height: 211px;
+    }
+
+    .input-values {
+      padding: 14px 19px;
+      flex-direction: column;
+
+      label { margin-bottom: 2px; }
+
+      input {
+        font-size: $font-size-regular - 0.1;
+        text-align: left;
+      }
+    }
+  }
+}

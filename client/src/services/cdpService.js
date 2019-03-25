@@ -2,7 +2,9 @@ import Maker from '@makerdao/dai';
 import config from '../config/config.json';
 import clientConfig from '../config/clientConfig.json';
 import { marketplaceContract, proxyRegistryInterfaceContract, SaiTubContract } from './contractRegistryService';
-import { getLsExistingItemAndState, isEmptyBytes, numStringToBytes32, saiTubContractTools } from '../utils/utils';
+import {
+  getLsExistingItemAndState, isEmptyBytes, numStringToBytes32, saiTubContractTools,
+} from '../utils/utils';
 import { getEthPrice } from './priceService';
 
 export const maker = Maker.create('http', { url: clientConfig.provider });

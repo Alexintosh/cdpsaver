@@ -13,10 +13,15 @@ import {
   RESET_SUBSCRIBE_COMING_SOON,
 
   SWITCH_CDP,
+
+  SUBMIT_CONTACT_US_REQUEST,
+  SUBMIT_CONTACT_US_SUCCESS,
+  SUBMIT_CONTACT_US_FAILURE,
+  RESET_CONTACT_US,
 } from '../actionTypes/generalActionTypes';
 import { getUpdatedCdpInfo, maker } from '../services/cdpService';
 import { getEthPrice } from '../services/priceService';
-import { subscribeComingSoonApiCall } from '../services/apiService';
+import { subscribeComingSoonApiCall, contactUsApiCall } from '../services/apiService';
 import {
   getDaiAllowance, getDaiBalance, getMakerAllowance, getMakerBalance, weiToEth,
 } from '../services/ethService';
@@ -163,3 +168,27 @@ export const changeSelectedCdp = ({ value }) => async (dispatch, getState) => {
 
   dispatch({ type: SWITCH_CDP, payload });
 };
+
+/**
+ * Sends an email through our server
+ *
+ * @param data {Object}
+ * @param closeModal {Function}
+ */
+export const submitContactUs = (data, closeModal) => async (dispatch) => {
+  dispatch({ type: SUBMIT_CONTACT_US_REQUEST });
+
+  try {
+    await contactUsApiCall(data);
+
+    dispatch({ type: SUBMIT_CONTACT_US_SUCCESS });
+    closeModal();
+  } catch (e) {
+    dispatch({ type: SUBMIT_CONTACT_US_FAILURE, payload: e.message });
+  }
+};
+
+/**
+ * Resets the subscribeComingSoon state in the reducer
+ */
+export const resetContactUs = () => (dispatch) => { dispatch({ type: RESET_CONTACT_US }); };

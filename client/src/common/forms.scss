@@ -67,5 +67,17 @@
       border-top: 1px solid $dark-red;
       padding: 10px 23px;
     }
+
+    &.form-item-wrapper-textarea {
+
+      .input-values { flex-grow: 1; }
+
+      textarea {
+        resize: none;
+        text-align: left;
+        flex-grow: 1;
+        font-size: $font-size-small + 0.1;
+      }
+    }
   }
 }

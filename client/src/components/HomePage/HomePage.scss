@@ -5,6 +5,7 @@
 
 .homepage-wrapper {
   position: relative;
+  background: $very-dark-gray;
 
   .section {
     background: $very-dark-gray;
@@ -66,7 +67,8 @@
     }
 
     &.features-section {
-      background: $darker-gray;
+      background: linear-gradient(180deg, #202931 78.63%, rgba(32, 41, 49, 0) 100%);
+      height: 600px;
 
       .width-container {
         @include flex-center;
@@ -100,6 +102,38 @@
         .section-title {
           margin-bottom: 25px;
         }
+      }
+    }
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: $font-size-small + 0.1;
+    padding-bottom: 65px;
+
+    .decenter-wrapper {
+      margin-right: 250px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      img {
+        width: 50px;
+        height: 50px;
+        margin: 15px 0;
+      }
+    }
+
+    .contact-link {
+      @include hover-transition;
+      cursor: pointer;
+      text-decoration: underline;
+
+      &:hover {
+        opacity: 0.7;
       }
     }
   }

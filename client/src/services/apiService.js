@@ -11,3 +11,9 @@ export const subscribeComingSoonApiCall = ({ email }) => fetch('https://formspre
     email,
   }),
 });
+
+export const contactUsApiCall = () => new Promise((resolve) => {
+  setTimeout(() => {
+    resolve(true);
+  }, 500);
+});
