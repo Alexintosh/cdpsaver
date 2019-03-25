@@ -7,6 +7,7 @@ import InputComponent from '../../../Forms/InputComponent';
 import { createCdpAction, handleCreateCdpInputChange } from '../../../../actions/onboardingActions';
 import { formatNumber, getRainbowSliderValColor } from '../../../../utils/utils';
 import TooltipWrapper from '../../../TooltipWrapper/TooltipWrapper';
+import { MIN_ETH_COLLATERAL } from '../../../../constants/general';
 
 class OnboardingCreateCdpForm extends Component {
   constructor(props) {
@@ -65,6 +66,7 @@ class OnboardingCreateCdpForm extends Component {
           name="ethAmount"
           placeholder="0"
           type="number"
+          additional={{ min: MIN_ETH_COLLATERAL }}
           labelText="Add collateral:"
           onChange={(e) => { handleCreateCdpInputChange(e.target.value, daiAmount, ethPrice); }}
           secondLabelText="ETH"

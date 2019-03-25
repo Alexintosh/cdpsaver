@@ -24,3 +24,5 @@ export const MOCK_CDP = {
   isSafe: true,
   ratio: 3.2135773574432274,
 };
+
+export const MIN_ETH_COLLATERAL = 0.005;
