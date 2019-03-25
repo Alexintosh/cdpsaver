@@ -12,6 +12,8 @@ import {
   SET_ONBOARDING_FINISHED,
 
   SET_CREATE_CDP_CALC_VALUES,
+
+  ADD_CDP_TO_CDPS,
 } from '../actionTypes/onboardingActionTypes';
 import { ADD_PROXY_ADDRESS } from '../actionTypes/generalActionTypes';
 import { subscribeToMonitoringApiRequest } from '../services/apiService';
@@ -44,7 +46,7 @@ export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dis
   const contractSendHandler = promise => sendTx(promise, 'Create CDP', dispatch, getState);
 
   try {
-    const { account, proxyAddress } = getState().general;
+    const { account, proxyAddress, cdps } = getState().general;
 
     if (proxyAddress) {
       await createCdp(contractSendHandler, account, ethAmount, parseFloat(daiAmount), proxyAddress);
@@ -52,14 +54,17 @@ export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dis
       await createCdpAndProxy(contractSendHandler, account, ethAmount, parseFloat(daiAmount));
     }
 
-    const { cdp } = await getAddressCdp(account);
+    const cdpsData = await getAddressCdp(account);
     const newInfo = await getUpdatedCdpInfo(ethAmount, daiAmount);
 
+    const cdp = (cdpsData.cdps.filter(c => (cdps.findIndex(_c => c.id === _c.id)) === -1))[0];
+
     dispatch({ type: CREATE_CDP_SUCCESS, payload: { ...cdp, ...newInfo } });
+    dispatch({ type: ADD_CDP_TO_CDPS, payload: cdpsData.cdps });
     dispatch({ type: ADD_PROXY_ADDRESS, payload: proxyAddress });
     history.push('/dashboard/manage');
   } catch (err) {
-    dispatch({ type: CREATE_CDP_ERROR, payload: err });
+    dispatch({ type: CREATE_CDP_ERROR, payload: err.message });
   }
 };
 

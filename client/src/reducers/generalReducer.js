@@ -30,7 +30,7 @@ import {
 
   CDP_IN_CDPS_CHANGED,
 } from '../actionTypes/generalActionTypes';
-import { CREATE_CDP_SUCCESS } from '../actionTypes/onboardingActionTypes';
+import { CREATE_CDP_SUCCESS, ADD_CDP_TO_CDPS } from '../actionTypes/onboardingActionTypes';
 import {
   ADD_COLLATERAL_SUCCESS,
   APPROVE_DAI_SUCCESS,
@@ -226,6 +226,7 @@ export default (state = INITIAL_STATE, action) => {
 
     case GET_CDPS_SUCCESS:
     case CDP_IN_CDPS_CHANGED:
+    case ADD_CDP_TO_CDPS:
       return { ...state, cdps: payload };
 
     default:
