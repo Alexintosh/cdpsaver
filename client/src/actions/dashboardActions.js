@@ -420,6 +420,7 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
     const { afterType } = getState().dashboard;
     const { ethPrice, cdp } = getState().general;
     const depositedEth = cdp.depositedETH.toNumber();
+    const debtDai = cdp.debtDai.toNumber();
 
     const payload = {};
 
@@ -428,11 +429,17 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
     // BORROW FORM
     if (type === 'generate') {
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth, cdp.generatedDAI + amount, ethPrice);
+      payload.afterCdp.debtDai = debtDai + amount;
+      payload.afterCdp.depositedETH = depositedEth;
+
       dispatch(resetFields('managerBorrowForm', { withdrawEthAmount: '', repayDaiAmount: '' }));
     }
 
     if (type === 'withdraw') {
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth - amount, cdp.generatedDAI, ethPrice);
+      payload.afterCdp.debtDai = debtDai;
+      payload.afterCdp.depositedETH = depositedEth - amount;
+
       dispatch(resetFields('managerBorrowForm', { generateDaiAmount: '', repayDaiAmount: '' }));
     }
 
@@ -440,8 +447,10 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
       const rate = await getEthDaiKyberExchangeRate(amount);
       const daiAmount = (rate * amount) > cdp.generatedDAI ? 0 : cdp.generatedDAI - (rate * amount);
 
-      console.log(depositedEth - amount);
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth - amount, daiAmount, ethPrice);
+      payload.afterCdp.debtDai = debtDai - daiAmount;
+      payload.afterCdp.depositedETH = depositedEth - amount;
+
       dispatch(resetFields('managerBorrowForm', { generateDaiAmount: '', withdrawEthAmount: '' }));
     }
 
@@ -449,20 +458,27 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
     if (type === 'payback') {
       const daiAmount = amount > cdp.generatedDAI ? 0 : cdp.generatedDAI - amount;
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth, daiAmount, ethPrice);
+      payload.afterCdp.debtDai = debtDai - amount;
+      payload.afterCdp.depositedETH = depositedEth;
+
       dispatch(resetFields('managerPaybackForm', { addCollateralAmount: '', boostAmount: '' }));
     }
 
     if (type === 'collateral') {
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth + amount, cdp.generatedDAI, ethPrice);
+      payload.afterCdp.debtDai = debtDai;
+      payload.afterCdp.depositedETH = depositedEth + amount;
+
       dispatch(resetFields('managerPaybackForm', { paybackAmount: '', boostAmount: '' }));
     }
 
     if (type === 'boost') {
       const rate = await getDaiEthKyberExchangeRate(amount);
 
-      console.log(rate, amount * rate);
-
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth + (amount * rate), cdp.generatedDAI + amount, ethPrice);
+      payload.afterCdp.debtDai = debtDai + amount;
+      payload.afterCdp.depositedETH = depositedEth + (amount * rate);
+
       dispatch(resetFields('managerPaybackForm', { paybackAmount: '', addCollateralAmount: '' }));
     }
 

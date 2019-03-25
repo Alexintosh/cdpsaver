@@ -9,9 +9,15 @@
     background: linear-gradient(180deg, #2B3943 0%, rgba(43, 57, 67, 0.46) 92.86%);
     border-bottom: 1px solid $green;
 
+    .after-value {
+      &.generate, &.payback { .amount { color: $purple; } }
+      &.withdraw, &.collateral { .amount { color: $yellow; } }
+      &.repay, &.boost { .amount { color: $blue; } }
+    }
+
     .main-subsection {
       flex-grow: 1;
-      padding: 37px 48px 24px 32px;
+      padding: 37px 48px 44px 32px;
 
       .info-wrapper-main {
         display: flex;
@@ -32,10 +38,6 @@
 
           .after-value {
             position: absolute;
-
-            &.generate, &.payback { .amount { color: $purple; } }
-            &.withdraw, &.collateral { .amount { color: $yellow; } }
-            &.repay, &.boost { .amount { color: $blue; } }
 
             .amount-wrapper {
               display: flex;
@@ -58,17 +60,38 @@
         align-items: center;
         font-size: $font-size-extra-large;
         color: $gray;
+        position: relative;
 
         &:not(:last-child) { margin-right: 25px; }
 
         svg { margin-right: 20px; }
+
+        .after-value {
+          position: absolute;
+          bottom: -20px;
+          font-size: $font-size-regular;
+
+          .amount-wrapper {
+            display: flex;
+            align-items: center;
+
+            .after {
+              font-size: $font-size-regular;
+              margin-right: 5px;
+            }
+
+            .amount {
+              font-size: $font-size-regular + 0.1;
+            }
+          }
+        }
 
         .row-val-wrapper {
           display: flex;
           flex-direction: column;
 
           .stability-label {
-            font-family: Montserrat;
+            font-family: $main-font;
             font-weight: 600;
             font-size: 12px;
             line-height: normal;

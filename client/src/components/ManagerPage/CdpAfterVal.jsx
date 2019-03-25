@@ -19,6 +19,8 @@ const CdpAfterVal = ({
     }
   }
 
+  const repayDaiDebt = type === 'repay' && cdpProp === 'debtDai';
+
   return (
     <div className={`after-value ${type}`}>
       { loading && 'Loading...' }
@@ -27,8 +29,8 @@ const CdpAfterVal = ({
           <div className="amount-wrapper">
             <span className="after">After:</span>
             <span className="amount">
-              <TooltipWrapper title={type}>
-                {(type === 'repay' || type === 'boost') ? '~' : ''}{valLabel}
+              <TooltipWrapper title={val}>
+                {((type === 'repay' || type === 'boost') && !repayDaiDebt) ? '~' : ''}{valLabel}
               </TooltipWrapper>
             </span>
           </div>

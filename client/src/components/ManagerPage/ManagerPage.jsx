@@ -126,6 +126,13 @@ class ManagerPage extends Component {
                         { formatNumber(cdp.debtDai, 2) } Dai
                       </TooltipWrapper>
                     </span>
+
+                    <CdpAfterVal
+                      type={afterType}
+                      loading={gettingAfterCdp}
+                      cdp={afterCdp}
+                      cdpProp="debtDai"
+                    />
                   </div>
                 </div>
 
@@ -139,6 +146,13 @@ class ManagerPage extends Component {
                         { formatNumber(cdp.depositedETH, 2) } Eth
                       </TooltipWrapper>
                     </span>
+
+                    <CdpAfterVal
+                      type={afterType}
+                      loading={gettingAfterCdp}
+                      cdp={afterCdp}
+                      cdpProp="depositedETH"
+                    />
                   </div>
                 </div>
 
