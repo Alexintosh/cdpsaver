@@ -25,7 +25,7 @@ class OnboardingRoutes extends Component {
 
   render() {
     const {
-      match, hasCdp, account, connectingProvider, gettingCdp, loggingIn,
+      match, account, connectingProvider, gettingCdp, loggingIn,
     } = this.props;
     const showloggingIn = loggingIn && (!connectingProvider && !gettingCdp);
     const showLoader = connectingProvider || gettingCdp || showloggingIn;
@@ -56,7 +56,7 @@ class OnboardingRoutes extends Component {
           <Route path={match.path} exact component={props => <OnboardingRedirect {...props} />} />
           <Route
             path={`${match.path}/create-cdp`}
-            component={props => <OnboardingCreateCdp hasCdp={hasCdp} {...props} />}
+            component={props => <OnboardingCreateCdp {...props} />}
           />
         </React.Fragment>
       </div>

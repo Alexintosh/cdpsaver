@@ -13,6 +13,7 @@ const Header = () => (
 
       <div className="links-wrapper">
         <NavLink activeClassName="active" to="/marketplace">Marketplace</NavLink>
+        <NavLink activeClassName="active" to="/onboarding/create-cdp">Create CDP</NavLink>
         <NavLink activeClassName="active" to="/dashboard">Dashboard</NavLink>
       </div>
     </div>
