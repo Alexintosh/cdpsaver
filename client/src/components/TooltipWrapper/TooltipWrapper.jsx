@@ -13,7 +13,7 @@ const TooltipWrapper = ({ title, disabled, children }) => {
   };
 
   return (
-    <Tooltip hideOnClick={false} title={copiedText || title} disable={disabled}>
+    <Tooltip hideOnClick={false} title={copiedText || title} disabled={disabled}>
       <CopyToClipboard text={title} onCopy={handleCopyClick}>
         <span>{children}</span>
       </CopyToClipboard>

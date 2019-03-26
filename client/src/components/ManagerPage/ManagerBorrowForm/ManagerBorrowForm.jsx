@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  Field, reduxForm, formValueSelector, change,
+  Field, reduxForm, formValueSelector, change, getFormMeta,
 } from 'redux-form';
 import InputComponent from '../../Forms/InputComponent';
 import TooltipWrapper from '../../TooltipWrapper/TooltipWrapper';
@@ -15,6 +15,28 @@ import {
 import { openRepayModal } from '../../../actions/modalActions';
 import { formatNumber, notGraterThan } from '../../../utils/utils';
 import InfoBox from '../../Decorative/InfoBox/InfoBox';
+import CdpAction from '../CdpAction/CdpAction';
+
+/**
+ * Switches between reasons why a button is disabled
+ *
+ * @param executingAction {Boolean}
+ * @param noValue {Boolean}
+ * @param valueUnderZero {Boolean}
+ * @param overMax {Boolean}
+ *
+ * @return {String}
+ */
+const getErrorText = (executingAction, noValue, valueUnderZero, overMax = false) => {
+  let err = '';
+
+  if (overMax) err = 'Value is larger than the max value';
+  if (valueUnderZero) err = 'Value can&#39;t be less than 0';
+  if (noValue) err = 'No value entered';
+  if (executingAction) err = 'Executing action';
+
+  return err;
+};
 
 class ManagerBorrowForm extends Component {
   componentWillUnmount() {
@@ -32,50 +54,29 @@ class ManagerBorrowForm extends Component {
 
     return (
       <form className="action-items-wrapper form-wrapper" onSubmit={() => {}}>
-        <div className="item">
-          <div
-            className={`max-wrapper ${generatingDai ? 'loading' : ''}`}
-            onClick={() => {
-              if (!generatingDai) {
-                setAfterValue(maxDai, 'generate');
-                dispatch(change('managerBorrowForm', 'generateDaiAmount', maxDai));
-                dispatch(change('managerBorrowForm', 'withdrawEthAmount', ''));
-                dispatch(change('managerBorrowForm', 'repayDaiAmount', ''));
-              }
-            }}
-          >
-            <TooltipWrapper title={maxDai}>
-              { gettingMaxDai ? 'Loading...' : `(max ${formatNumber(maxDai, 2)})` }
-            </TooltipWrapper>
-          </div>
-          <Field
-            id="manager-generate-input"
-            type="number"
-            wrapperClassName={`form-item-wrapper generate ${afterType === 'generate' ? 'active' : ''}`}
-            name="generateDaiAmount"
-            onChange={(e) => {
-              if (e.target.value <= maxDai) setAfterValue(e.target.value, 'generate');
-            }}
-            labelText="Generate:"
-            secondLabelText="DAI"
-            placeholder="0"
-            normalize={val => notGraterThan(val, maxDai)}
-            additional={{ max: maxDai, min: 0 }}
-            disabled={generatingDai}
-            component={InputComponent}
-          />
-          <div className="item-button-wrapper">
-            <InfoBox message="Generate will draw more Dai from the CDP" />
-            <button
-              type="button"
-              className="button gray uppercase"
-              onClick={() => { generateDaiAction(generateDaiAmount); }}
-              disabled={generatingDai || !generateDaiAmount || (generateDaiAmount <= 0) || (generateDaiAmount > maxDai)}
-            >
-              { generatingDai ? 'Generating' : 'Generate' }
-            </button>
-          </div>
-        </div>
+        <CdpAction
+          disabled={generatingDai || !generateDaiAmount || (generateDaiAmount <= 0) || (generateDaiAmount > maxDai)}
+          actionExecuting={generatingDai}
+          setValToMax={() => {
+            setAfterValue(maxDai, 'generate');
+            dispatch(change('managerBorrowForm', 'generateDaiAmount', maxDai));
+            dispatch(change('managerBorrowForm', 'withdrawEthAmount', ''));
+            dispatch(change('managerBorrowForm', 'repayDaiAmount', ''));
+          }}
+          maxVal={maxDai}
+          gettingMaxVal={gettingMaxDai}
+          type="generate"
+          executingLabel="Generating"
+          toExecuteLabel="Generate"
+          info="Generate will draw more Dai from the CDP"
+          name="generateDaiAmount"
+          id="manager-generate-input"
+          symbol="DAI"
+          errorText={
+            getErrorText(generatingDai, !generateDaiAmount, generateDaiAmount <= 0, generateDaiAmount > maxDai)
+          }
+          executeAction={() => { generateDaiAction(generateDaiAmount); }}
+        />
 
         <div className="item">
           <div
@@ -204,6 +205,7 @@ const ManagerBorrowFormComp = reduxForm({ form: 'managerBorrowForm' })(ManagerBo
 const selector = formValueSelector('managerBorrowForm');
 
 const mapStateToProps = state => ({
+  formMeta: getFormMeta('managerBorrowForm')(state),
   formValues: {
     generateDaiAmount: selector(state, 'generateDaiAmount'),
     withdrawEthAmount: selector(state, 'withdrawEthAmount'),
