@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  Field, reduxForm, formValueSelector, change, getFormMeta,
+  reduxForm, formValueSelector, change, getFormMeta,
 } from 'redux-form';
-import InputComponent from '../../Forms/InputComponent';
-import TooltipWrapper from '../../TooltipWrapper/TooltipWrapper';
 import {
   generateDaiAction,
   withdrawEthAction,
@@ -13,8 +11,6 @@ import {
   setAfterValue,
 } from '../../../actions/dashboardActions';
 import { openRepayModal } from '../../../actions/modalActions';
-import { formatNumber, notGraterThan } from '../../../utils/utils';
-import InfoBox from '../../Decorative/InfoBox/InfoBox';
 import CdpAction from '../CdpAction/CdpAction';
 
 /**
@@ -31,7 +27,7 @@ const getErrorText = (executingAction, noValue, valueUnderZero, overMax = false)
   let err = '';
 
   if (overMax) err = 'Value is larger than the max value';
-  if (valueUnderZero) err = 'Value can&#39;t be less than 0';
+  if (valueUnderZero) err = 'Value can\'t be less than 0';
   if (noValue) err = 'No value entered';
   if (executingAction) err = 'Executing action';
 
@@ -47,7 +43,7 @@ class ManagerBorrowForm extends Component {
     const {
       generatingDai, generateDaiAction, formValues, maxDai, gettingMaxDai, dispatch,
       withdrawingEth, withdrawEthAction, maxEthWithdraw, gettingMaxEthWithdraw,
-      setAfterValue, afterType, repayingDai, openRepayModal, maxEthRepay, gettingMaxEthRepay,
+      setAfterValue, repayingDai, openRepayModal, maxEthRepay, gettingMaxEthRepay,
     } = this.props;
 
     const { generateDaiAmount, withdrawEthAmount, repayDaiAmount } = formValues;
@@ -78,101 +74,53 @@ class ManagerBorrowForm extends Component {
           executeAction={() => { generateDaiAction(generateDaiAmount); }}
         />
 
-        <div className="item">
-          <div
-            className={`max-wrapper ${withdrawingEth ? 'loading' : ''}`}
-            onClick={() => {
-              if (!withdrawingEth) {
-                setAfterValue(maxEthWithdraw, 'withdraw');
-                dispatch(change('managerBorrowForm', 'withdrawEthAmount', maxEthWithdraw));
-                dispatch(change('managerBorrowForm', 'generateDaiAmount', ''));
-                dispatch(change('managerBorrowForm', 'repayDaiAmount', ''));
-              }
-            }}
-          >
-            <TooltipWrapper title={maxEthWithdraw}>
-              { gettingMaxEthWithdraw ? 'Loading...' : `(max ${formatNumber(maxEthWithdraw, 2)})` }
-            </TooltipWrapper>
-          </div>
-          <Field
-            id="manager-withdraw-input"
-            type="number"
-            wrapperClassName={`form-item-wrapper withdraw ${afterType === 'withdraw' ? 'active' : ''}`}
-            name="withdrawEthAmount"
-            onChange={(e) => {
-              if (e.target.value <= maxEthWithdraw) setAfterValue(e.target.value, 'withdraw');
-            }}
-            labelText="Withdraw:"
-            secondLabelText="ETH"
-            placeholder="0"
-            normalize={val => notGraterThan(val, maxEthWithdraw)}
-            additional={{ max: maxEthWithdraw, min: 0 }}
-            disabled={withdrawingEth}
-            component={InputComponent}
-          />
-          <div className="item-button-wrapper">
-            <InfoBox message="Withdraw will take collateral (Ether) from the CDP" />
-            <button
-              type="button"
-              className="button gray uppercase"
-              onClick={() => { withdrawEthAction(withdrawEthAmount); }}
-              disabled={
-                withdrawingEth || !withdrawEthAmount || (withdrawEthAmount <= 0) || (withdrawEthAmount > maxEthWithdraw)
-              }
-            >
-              { withdrawingEth ? 'Withdrawing' : 'Withdraw' }
-            </button>
-          </div>
-        </div>
+        <CdpAction
+          disabled={
+            withdrawingEth || !withdrawEthAmount || (withdrawEthAmount <= 0) || (withdrawEthAmount > maxEthWithdraw)
+          }
+          actionExecuting={withdrawingEth}
+          setValToMax={() => {
+            setAfterValue(maxEthWithdraw, 'withdraw');
+            dispatch(change('managerBorrowForm', 'withdrawEthAmount', maxEthWithdraw));
+            dispatch(change('managerBorrowForm', 'generateDaiAmount', ''));
+            dispatch(change('managerBorrowForm', 'repayDaiAmount', ''));
+          }}
+          maxVal={maxEthWithdraw}
+          gettingMaxVal={gettingMaxEthWithdraw}
+          type="withdraw"
+          executingLabel="Withdrawing"
+          toExecuteLabel="Withdraw"
+          info="Withdraw will take collateral (Ether) from the CDP"
+          name="withdrawEthAmount"
+          id="manager-withdraw-input"
+          symbol="ETH"
+          errorText={
+            getErrorText(withdrawingEth, !withdrawEthAmount, withdrawEthAmount <= 0, withdrawEthAmount > maxEthWithdraw)
+          }
+          executeAction={() => { withdrawEthAction(withdrawEthAmount); }}
+        />
 
-        <div className="item">
-          <div
-            className={`max-wrapper ${repayingDai ? 'loading' : ''}`}
-            onClick={() => {
-              if (!repayingDai) {
-                setAfterValue(maxEthRepay, 'repay');
-                dispatch(change('managerBorrowForm', 'withdrawEthAmount', ''));
-                dispatch(change('managerBorrowForm', 'generateDaiAmount', ''));
-                dispatch(change('managerBorrowForm', 'repayDaiAmount', maxEthRepay));
-              }
-            }}
-          >
-            <TooltipWrapper title={maxEthRepay}>
-              { gettingMaxEthRepay ? 'Loading...' : `(max ${formatNumber(maxEthRepay, 2)})` }
-            </TooltipWrapper>
-          </div>
-
-          <Field
-            id="manager-repay-input"
-            type="number"
-            wrapperClassName={`form-item-wrapper repay ${afterType === 'repay' ? 'active' : ''}`}
-            name="repayDaiAmount"
-            onChange={(e) => {
-              if (e.target.value <= maxEthRepay) setAfterValue(e.target.value, 'repay');
-            }}
-            labelText="Repay:"
-            secondLabelText="ETH"
-            normalize={val => notGraterThan(val, maxEthRepay)}
-            additional={{ min: 0, max: maxEthRepay }}
-            placeholder="0"
-            disabled={repayingDai}
-            component={InputComponent}
-          />
-          <div className="item-button-wrapper">
-            <InfoBox message="Repay will draw ETH from CDP and payback the debt, lowering the liquidation price" />
-
-            <button
-              type="button"
-              className="button gray uppercase"
-              onClick={() => { openRepayModal(parseFloat(repayDaiAmount)); }}
-              disabled={
-                repayingDai || !repayDaiAmount || (repayDaiAmount <= 0) || (repayDaiAmount > maxEthRepay)
-              }
-            >
-              Repay
-            </button>
-          </div>
-        </div>
+        <CdpAction
+          disabled={repayingDai || !repayDaiAmount || (repayDaiAmount <= 0) || (repayDaiAmount > maxEthRepay)}
+          actionExecuting={repayingDai}
+          setValToMax={() => {
+            setAfterValue(maxEthRepay, 'repay');
+            dispatch(change('managerBorrowForm', 'withdrawEthAmount', ''));
+            dispatch(change('managerBorrowForm', 'generateDaiAmount', ''));
+            dispatch(change('managerBorrowForm', 'repayDaiAmount', maxEthRepay));
+          }}
+          maxVal={maxEthRepay}
+          gettingMaxVal={gettingMaxEthRepay}
+          type="repay"
+          executingLabel="Repaying"
+          toExecuteLabel="Repay"
+          info="Repay will draw ETH from CDP and payback the debt, lowering the liquidation price"
+          name="repayDaiAmount"
+          id="manager-repay-input"
+          symbol="ETH"
+          errorText={getErrorText(repayingDai, !repayDaiAmount, repayDaiAmount <= 0, repayDaiAmount > maxEthRepay)}
+          executeAction={() => { openRepayModal(parseFloat(repayDaiAmount)); }}
+        />
       </form>
     );
   }
@@ -182,7 +130,6 @@ ManagerBorrowForm.propTypes = {
   formValues: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   setAfterValue: PropTypes.func.isRequired,
-  afterType: PropTypes.string.isRequired,
 
   generateDaiAction: PropTypes.func.isRequired,
   generatingDai: PropTypes.bool.isRequired,
@@ -222,8 +169,6 @@ const mapStateToProps = state => ({
   repayingDai: state.dashboard.repayingDai,
   maxEthRepay: state.dashboard.maxEthRepay,
   gettingMaxEthRepay: state.dashboard.gettingMaxEthRepay,
-
-  afterType: state.dashboard.afterType,
 });
 
 const mapDispatchToProps = {

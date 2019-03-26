@@ -59,7 +59,7 @@ const CdpAction = ({
     <div className="item-button-wrapper">
       <InfoBox message={info} />
 
-      <Tooltip title={errorText}>
+      <Tooltip title={errorText} disabled={!disabled}>
         <button
           type="button"
           className="button gray uppercase"
@@ -75,7 +75,6 @@ const CdpAction = ({
 
 CdpAction.defaultProps = {
   disabled: false,
-  value: '',
   errorText: '',
 };
 
