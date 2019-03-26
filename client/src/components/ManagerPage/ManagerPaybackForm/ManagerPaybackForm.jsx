@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  change, Field, formValueSelector, reduxForm,
+  change, formValueSelector, reduxForm,
 } from 'redux-form';
-import InputComponent from '../../Forms/InputComponent';
 import { addCollateralAction, setAfterValue } from '../../../actions/dashboardActions';
 import { openBoostModal, openPaybackModal } from '../../../actions/modalActions';
-import { formatNumber, notGraterThan } from '../../../utils/utils';
-import TooltipWrapper from '../../TooltipWrapper/TooltipWrapper';
-import InfoBox from '../../Decorative/InfoBox/InfoBox';
+import { getManageActionErrorText } from '../../../utils/utils';
+import CdpAction from '../CdpAction/CdpAction';
 
 class ManagerPaybackForm extends Component {
   componentWillUnmount() {
@@ -18,7 +16,7 @@ class ManagerPaybackForm extends Component {
 
   render() {
     const {
-      formValues, addingCollateral, addCollateralAction, setAfterValue, afterType,
+      formValues, addingCollateral, addCollateralAction, setAfterValue,
       openPaybackModal, payingBackDai, dispatch, boosting, maxDaiBoost, gettingMaxDaiBoost,
       openBoostModal, cdp,
     } = this.props;
@@ -28,128 +26,67 @@ class ManagerPaybackForm extends Component {
 
     return (
       <form className="action-items-wrapper form-wrapper" onSubmit={() => {}}>
-        <div className="item">
-          <div
-            className={`max-wrapper ${payingBackDai ? 'loading' : ''}`}
-            onClick={() => {
-              if (!payingBackDai) {
-                setAfterValue(debtDai, 'payback');
-                dispatch(change('managerPaybackForm', 'paybackAmount', debtDai));
-                dispatch(change('managerPaybackForm', 'addCollateralAmount', ''));
-                dispatch(change('managerPaybackForm', 'boostAmount', ''));
-              }
-            }}
-          >
-            <TooltipWrapper title={debtDai}>
-              (max {formatNumber(debtDai, 2)})
-            </TooltipWrapper>
-          </div>
+        <CdpAction
+          disabled={payingBackDai || !paybackAmount || paybackAmount <= 0 || (paybackAmount > debtDai)}
+          actionExecuting={payingBackDai}
+          setValToMax={() => {
+            setAfterValue(debtDai, 'payback');
+            dispatch(change('managerPaybackForm', 'paybackAmount', debtDai));
+            dispatch(change('managerPaybackForm', 'addCollateralAmount', ''));
+            dispatch(change('managerPaybackForm', 'boostAmount', ''));
+          }}
+          maxVal={debtDai.toNumber()}
+          gettingMaxVal={false}
+          type="payback"
+          executingLabel="Paying back"
+          toExecuteLabel="Payback"
+          info="Payback will return the debt in Dai"
+          name="paybackAmount"
+          id="manager-payback-input"
+          symbol="DAI"
+          errorText={getManageActionErrorText(payingBackDai, !paybackAmount, paybackAmount <= 0, paybackAmount > debtDai)} // eslint-disable-line
+          executeAction={() => { openPaybackModal(paybackAmount); }}
+        />
 
-          <Field
-            id="manager-payback-input"
-            type="number"
-            wrapperClassName={`form-item-wrapper payback ${afterType === 'payback' ? 'active' : ''}`}
-            name="paybackAmount"
-            onChange={(e) => {
-              if (e.target.value <= debtDai) setAfterValue(e.target.value, 'payback');
-            }}
-            labelText="Payback:"
-            secondLabelText="DAI"
-            placeholder="0"
-            normalize={val => notGraterThan(val, debtDai)}
-            additional={{ min: 0, max: debtDai }}
-            component={InputComponent}
-          />
+        <CdpAction
+          disabled={addingCollateral || !addCollateralAmount || addCollateralAmount <= 0}
+          actionExecuting={addingCollateral}
+          setValToMax={() => {}}
+          maxVal={0}
+          gettingMaxVal={false}
+          type="collateral"
+          executingLabel="Adding collateral"
+          toExecuteLabel="Add collateral"
+          info="Will add more collateral (Ether) and increase the ratio"
+          name="addCollateralAmount"
+          id="manager-add-collateral-input"
+          symbol="ETH"
+          errorText={getManageActionErrorText(addingCollateral, !addCollateralAmount, addCollateralAmount <= 0)}
+          executeAction={() => { addCollateralAction(addCollateralAmount); }}
+          noMax
+        />
 
-          <div className="item-button-wrapper">
-            <InfoBox message="Payback will return the debt in Dai" />
-            <button
-              type="button"
-              className="button gray uppercase variable-width"
-              onClick={() => { openPaybackModal(paybackAmount); }}
-              disabled={payingBackDai || !paybackAmount || paybackAmount <= 0 || (paybackAmount > debtDai)}
-            >
-              { payingBackDai ? 'Paying back' : 'Payback' }
-            </button>
-          </div>
-        </div>
-
-        <div className="item">
-          <Field
-            id="manager-add-collateral-input"
-            type="number"
-            wrapperClassName={`form-item-wrapper collateral ${afterType === 'collateral' ? 'active' : ''}`}
-            name="addCollateralAmount"
-            onChange={(e) => { setAfterValue(e.target.value, 'collateral'); }}
-            labelText="Add collateral:"
-            secondLabelText="ETH"
-            placeholder="0"
-            additional={{ min: 0 }}
-            disabled={addingCollateral}
-            component={InputComponent}
-          />
-
-          <div className="item-button-wrapper">
-            <InfoBox message="Will add more collateral (Ether) and increase the ratio" />
-            <button
-              type="button"
-              className="button gray uppercase variable-width"
-              onClick={() => { addCollateralAction(addCollateralAmount); }}
-              disabled={addingCollateral || !addCollateralAmount || addCollateralAmount <= 0}
-            >
-              { addingCollateral ? 'Adding collateral' : 'Add collateral' }
-            </button>
-          </div>
-        </div>
-
-        <div className="item">
-          <div
-            className={`max-wrapper ${boosting ? 'loading' : ''}`}
-            onClick={() => {
-              if (!boosting) {
-                setAfterValue(maxDaiBoost, 'boost');
-                dispatch(change('managerPaybackForm', 'paybackAmount', ''));
-                dispatch(change('managerPaybackForm', 'addCollateralAmount', ''));
-                dispatch(change('managerPaybackForm', 'boostAmount', maxDaiBoost));
-              }
-            }}
-          >
-            <TooltipWrapper title={maxDaiBoost}>
-              { gettingMaxDaiBoost ? 'Loading...' : `(max ${formatNumber(maxDaiBoost, 2)})` }
-            </TooltipWrapper>
-          </div>
-
-          <Field
-            id="manager-boost-input"
-            type="number"
-            wrapperClassName={`form-item-wrapper boost ${afterType === 'boost' ? 'active' : ''}`}
-            name="boostAmount"
-            labelText="Boost:"
-            onChange={(e) => {
-              if (e.target.value <= maxDaiBoost) setAfterValue(e.target.value, 'boost');
-            }}
-            secondLabelText="DAI"
-            placeholder="0"
-            normalize={val => notGraterThan(val, maxDaiBoost)}
-            additional={{ min: 0, max: maxDaiBoost }}
-            component={InputComponent}
-          />
-
-          <div className="item-button-wrapper">
-            <InfoBox message="Boost will draw DAI and buy ETH, increasing the amount ETH in the CDP" />
-
-            <button
-              type="button"
-              className="button gray uppercase"
-              onClick={() => { openBoostModal(parseFloat(boostAmount)); }}
-              disabled={
-                boosting || !boostAmount || (boostAmount <= 0) || (boostAmount > maxDaiBoost)
-              }
-            >
-              Boost
-            </button>
-          </div>
-        </div>
+        <CdpAction
+          disabled={boosting || !boostAmount || (boostAmount <= 0) || (boostAmount > maxDaiBoost)}
+          actionExecuting={payingBackDai}
+          setValToMax={() => {
+            setAfterValue(maxDaiBoost, 'boost');
+            dispatch(change('managerPaybackForm', 'paybackAmount', ''));
+            dispatch(change('managerPaybackForm', 'addCollateralAmount', ''));
+            dispatch(change('managerPaybackForm', 'boostAmount', maxDaiBoost));
+          }}
+          maxVal={maxDaiBoost}
+          gettingMaxVal={gettingMaxDaiBoost}
+          type="boost"
+          executingLabel="Boosting"
+          toExecuteLabel="Boost"
+          info="Boost will draw DAI and buy ETH, increasing the amount ETH in the CDP"
+          name="boostAmount"
+          id="manager-boost-input"
+          symbol="DAI"
+          errorText={getManageActionErrorText(boosting, !boostAmount, boostAmount <= 0, boostAmount > maxDaiBoost)} // eslint-disable-line
+          executeAction={() => { openBoostModal(parseFloat(boostAmount)); }}
+        />
       </form>
     );
   }
@@ -159,7 +96,6 @@ ManagerPaybackForm.propTypes = {
   formValues: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   setAfterValue: PropTypes.func.isRequired,
-  afterType: PropTypes.string.isRequired,
 
   addCollateralAction: PropTypes.func.isRequired,
   addingCollateral: PropTypes.bool.isRequired,
@@ -191,8 +127,6 @@ const mapStateToProps = state => ({
   maxDaiBoost: state.dashboard.maxDaiBoost,
   gettingMaxDaiBoost: state.dashboard.gettingMaxDaiBoost,
   boosting: state.dashboard.boosting,
-
-  afterType: state.dashboard.afterType,
 
   cdp: state.general.cdp,
 });

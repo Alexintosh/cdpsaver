@@ -222,3 +222,25 @@ export const notGraterThan = (val, max) => {
 
   return val;
 };
+
+
+/**
+ * Switches between reasons why a button is disabled
+ *
+ * @param executingAction {Boolean}
+ * @param noValue {Boolean}
+ * @param valueUnderZero {Boolean}
+ * @param overMax {Boolean}
+ *
+ * @return {String}
+ */
+export const getManageActionErrorText = (executingAction, noValue, valueUnderZero, overMax = false) => {
+  let err = '';
+
+  if (overMax) err = 'Value is larger than the max value';
+  if (valueUnderZero) err = 'Value can\'t be less than 0';
+  if (noValue) err = 'No value entered';
+  if (executingAction) err = 'Executing action';
+
+  return err;
+};

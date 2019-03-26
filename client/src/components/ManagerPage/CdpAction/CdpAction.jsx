@@ -26,56 +26,75 @@ const CdpAction = ({
   symbol,
   executeAction,
   errorText,
-}) => (
-  <div className="item">
-    <div
-      className={`max-wrapper ${actionExecuting ? 'loading' : ''}`}
-      onClick={() => {
-        if (!actionExecuting) setValToMax();
-      }}
-    >
-      <TooltipWrapper title={maxVal}>
-        { gettingMaxVal ? 'Loading...' : `(max ${formatNumber(maxVal, 2)})` }
-      </TooltipWrapper>
+  noMax,
+}) => {
+  const additional = { min: 0 };
+  let normalizeFunc = val => val;
+
+  if (!noMax) {
+    additional.max = maxVal;
+    normalizeFunc = val => notGraterThan(val, maxVal);
+  }
+
+  return (
+    <div className={`item ${type}`}>
+      {
+        !noMax && (
+          <div
+            className={`max-wrapper ${actionExecuting ? 'loading' : ''}`}
+            onClick={() => {
+              if (!actionExecuting) setValToMax();
+            }}
+          >
+            <TooltipWrapper title={maxVal}>
+              { gettingMaxVal ? 'Loading...' : `(max ${formatNumber(maxVal, 2)})` }
+            </TooltipWrapper>
+          </div>
+        )
+      }
+
+      <Field
+        id={id}
+        type="number"
+        wrapperClassName={`form-item-wrapper ${type} ${afterType === type ? 'active' : ''}`}
+        name={name}
+        onChange={(e) => {
+          const normVal = normalizeFunc(e.target.value);
+
+          if (noMax) setAfterValue(normVal, type);
+          if (!noMax && (normVal <= maxVal)) setAfterValue(normVal, type);
+        }}
+        labelText={`${toExecuteLabel}:`}
+        secondLabelText={symbol}
+        placeholder="0"
+        normalize={normalizeFunc}
+        additional={additional}
+        disabled={actionExecuting}
+        component={InputComponent}
+      />
+
+      <div className="item-button-wrapper">
+        <InfoBox message={info} />
+
+        <Tooltip title={errorText} disabled={!disabled}>
+          <button
+            type="button"
+            className="button gray uppercase"
+            onClick={() => { executeAction(); }}
+            disabled={disabled}
+          >
+            { actionExecuting ? executingLabel : toExecuteLabel }
+          </button>
+        </Tooltip>
+      </div>
     </div>
-
-    <Field
-      id={id}
-      type="number"
-      wrapperClassName={`form-item-wrapper ${type} ${afterType === type ? 'active' : ''}`}
-      name={name}
-      onChange={(e) => {
-        if (e.target.value <= maxVal) setAfterValue(e.target.value, type);
-      }}
-      labelText={`${toExecuteLabel}:`}
-      secondLabelText={symbol}
-      placeholder="0"
-      normalize={val => notGraterThan(val, maxVal)}
-      additional={{ max: maxVal, min: 0 }}
-      disabled={actionExecuting}
-      component={InputComponent}
-    />
-
-    <div className="item-button-wrapper">
-      <InfoBox message={info} />
-
-      <Tooltip title={errorText} disabled={!disabled}>
-        <button
-          type="button"
-          className="button gray uppercase"
-          onClick={() => { executeAction(); }}
-          disabled={disabled}
-        >
-          { actionExecuting ? executingLabel : toExecuteLabel }
-        </button>
-      </Tooltip>
-    </div>
-  </div>
-);
+  );
+};
 
 CdpAction.defaultProps = {
   disabled: false,
   errorText: '',
+  noMax: false,
 };
 
 CdpAction.propTypes = {
@@ -94,6 +113,7 @@ CdpAction.propTypes = {
   symbol: PropTypes.string.isRequired,
   executeAction: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
+  noMax: PropTypes.bool,
   errorText: PropTypes.string,
 };
 

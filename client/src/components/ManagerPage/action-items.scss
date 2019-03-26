@@ -11,10 +11,12 @@
     max-width: 310px;
     width: 100%;
 
+    &.collateral .button {
+      width: auto;
+    }
+
     .button {
       width: 124px;
-
-      &.variable-width { width: auto; }
     }
 
     .form-item-wrapper {

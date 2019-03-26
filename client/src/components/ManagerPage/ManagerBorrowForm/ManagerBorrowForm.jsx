@@ -11,28 +11,8 @@ import {
   setAfterValue,
 } from '../../../actions/dashboardActions';
 import { openRepayModal } from '../../../actions/modalActions';
+import { getManageActionErrorText } from '../../../utils/utils';
 import CdpAction from '../CdpAction/CdpAction';
-
-/**
- * Switches between reasons why a button is disabled
- *
- * @param executingAction {Boolean}
- * @param noValue {Boolean}
- * @param valueUnderZero {Boolean}
- * @param overMax {Boolean}
- *
- * @return {String}
- */
-const getErrorText = (executingAction, noValue, valueUnderZero, overMax = false) => {
-  let err = '';
-
-  if (overMax) err = 'Value is larger than the max value';
-  if (valueUnderZero) err = 'Value can\'t be less than 0';
-  if (noValue) err = 'No value entered';
-  if (executingAction) err = 'Executing action';
-
-  return err;
-};
 
 class ManagerBorrowForm extends Component {
   componentWillUnmount() {
@@ -68,9 +48,7 @@ class ManagerBorrowForm extends Component {
           name="generateDaiAmount"
           id="manager-generate-input"
           symbol="DAI"
-          errorText={
-            getErrorText(generatingDai, !generateDaiAmount, generateDaiAmount <= 0, generateDaiAmount > maxDai)
-          }
+          errorText={getManageActionErrorText(generatingDai, !generateDaiAmount, generateDaiAmount <= 0, generateDaiAmount > maxDai)} // eslint-disable-line
           executeAction={() => { generateDaiAction(generateDaiAmount); }}
         />
 
@@ -94,9 +72,7 @@ class ManagerBorrowForm extends Component {
           name="withdrawEthAmount"
           id="manager-withdraw-input"
           symbol="ETH"
-          errorText={
-            getErrorText(withdrawingEth, !withdrawEthAmount, withdrawEthAmount <= 0, withdrawEthAmount > maxEthWithdraw)
-          }
+          errorText={getManageActionErrorText(withdrawingEth, !withdrawEthAmount, withdrawEthAmount <= 0, withdrawEthAmount > maxEthWithdraw)}  // eslint-disable-line
           executeAction={() => { withdrawEthAction(withdrawEthAmount); }}
         />
 
@@ -118,7 +94,7 @@ class ManagerBorrowForm extends Component {
           name="repayDaiAmount"
           id="manager-repay-input"
           symbol="ETH"
-          errorText={getErrorText(repayingDai, !repayDaiAmount, repayDaiAmount <= 0, repayDaiAmount > maxEthRepay)}
+          errorText={getManageActionErrorText(repayingDai, !repayDaiAmount, repayDaiAmount <= 0, repayDaiAmount > maxEthRepay)}  // eslint-disable-line
           executeAction={() => { openRepayModal(parseFloat(repayDaiAmount)); }}
         />
       </form>
