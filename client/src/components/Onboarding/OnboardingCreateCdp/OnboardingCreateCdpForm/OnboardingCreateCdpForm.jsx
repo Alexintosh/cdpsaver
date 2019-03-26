@@ -60,6 +60,7 @@ class OnboardingCreateCdpForm extends Component {
         id="onboarding-create-cdp-form"
         onSubmit={handleSubmit((e) => { onSubmit(e, history); })}
         className="form-wrapper"
+        noValidate
       >
         <Field
           id="onboarding-create-cdp-eth-amount"
