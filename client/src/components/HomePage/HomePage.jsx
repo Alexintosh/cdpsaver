@@ -6,7 +6,6 @@ import { openContactUsModal } from '../../actions/modalActions';
 
 import './HomePage.scss';
 import sectionBg from './sectionBg.png';
-import decenterLogo from './decenter-logo.png';
 
 const HomePage = ({ openContactUsModal }) => (
   <div className="homepage-wrapper">
@@ -74,7 +73,9 @@ const HomePage = ({ openContactUsModal }) => (
     <div className="footer">
       <div className="decenter-wrapper">
         <div>Developed by</div>
-        <img src={decenterLogo} alt="Decenter logo" />
+        <a target="_blank" rel="noopener noreferrer" href="https://decenter.com/">
+          <div className="logo" />
+        </a>
         <div>© 2019 Decenter</div>
         <div>All rights reserved</div>
       </div>
