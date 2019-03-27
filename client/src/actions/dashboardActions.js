@@ -262,13 +262,15 @@ export const getRepayModalData = amount => async (dispatch, getState) => {
 export const repayDaiAction = (amountEth, closeModal) => async (dispatch, getState) => {
   dispatch({ type: REPAY_DAI_REQUEST });
 
-  const proxySendHandler = (promise, amount) => sendTx(promise, `Repay ${formatNumber(parseFloat(amount), 2)} ETH`, dispatch, getState); // eslint-disable-line
+  const proxySendHandler = (promise) => sendTx(promise, `Repay ${formatNumber(parseFloat(amountEth), 2)} ETH`, dispatch, getState); // eslint-disable-line
 
   try {
     const { cdp, proxyAddress, account, ethPrice } = getState().general;  // eslint-disable-line
-    const params = [proxySendHandler, amountEth.toString(), cdp.id, proxyAddress, account, 'repay', ethPrice, true]; // eslint-disable-line
+    const { maxEthRepay } = getState().dashboard;
 
-    console.log(amountEth.toString());
+    const amountParam = amountEth === maxEthRepay ? 0 : maxEthRepay; // zero means that the max value should be used on the contract
+
+    const params = [proxySendHandler, amountParam.toString(), cdp.id, proxyAddress, account, 'repay', ethPrice, true]; // eslint-disable-line
 
     const payload = await callSaverProxyContract(...params);
 
@@ -320,11 +322,15 @@ export const getBoostModalData = amount => async (dispatch) => {
 export const boostAction = (amountDai, closeModal) => async (dispatch, getState) => {
   dispatch({ type: BOOST_REQUEST });
 
-  const proxySendHandler = (promise, amount) => sendTx(promise, `Boost ${formatNumber(parseFloat(amount), 2)} DAI`, dispatch, getState); // eslint-disable-line
+  const proxySendHandler = (promise) => sendTx(promise, `Boost ${formatNumber(parseFloat(amountDai), 2)} DAI`, dispatch, getState); // eslint-disable-line
 
   try {
     const { cdp, proxyAddress, account, ethPrice } = getState().general; // eslint-disable-line
-    const params = [proxySendHandler, amountDai.toString(), cdp.id, proxyAddress, account, 'boost', ethPrice];
+    const { maxDaiBoost } = getState().dashboard; // eslint-disable-line
+
+    const amountParam = amountDai === maxDaiBoost ? 0 : maxDaiBoost; // zero means that the max value should be used on the contract
+
+    const params = [proxySendHandler, amountParam.toString(), cdp.id, proxyAddress, account, 'boost', ethPrice];
 
     const payload = await callSaverProxyContract(...params);
 
