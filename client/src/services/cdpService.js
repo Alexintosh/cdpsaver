@@ -268,9 +268,9 @@ export const getMaxDai = async (daiDebt, collateral, _ethPrice) => {
 
     const peth2wethRatio = await price.getWethToPethRatio();
 
-    let maxDai = (((collateral * ethPrice) * peth2wethRatio) / (150 / 100)) - daiDebt;
+    const maxDai = (((collateral * ethPrice) * peth2wethRatio) / (150.1 / 100)) - daiDebt;
 
-    maxDai -= (maxDai / 100); // go over the 150% ratio a little bit
+    console.log(maxDai);
 
     return maxDai;
   } catch (err) {
@@ -296,9 +296,7 @@ export const getMaxEthWithdraw = async (daiDebt, collateral, _ethPrice) => {
 
     const peth2wethRatio = await price.getWethToPethRatio();
 
-    let maxEth = collateral - (((150 / 100) * daiDebt) / (ethPrice * peth2wethRatio));
-
-    maxEth -= (maxEth / 100); // go over the 150% ratio a little bit
+    const maxEth = collateral - (((150.1 / 100) * daiDebt) / (ethPrice * peth2wethRatio));
 
     return maxEth;
   } catch (err) {
