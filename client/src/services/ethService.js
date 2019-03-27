@@ -612,9 +612,10 @@ export const callSaverProxyContract = (
     const params = [cdpIdBytes32, amountParam];
     const txParams = { from: account };
 
-    if (funcName !== 'boost') params.push(sendTrue);
-
-    console.log('params', params);
+    if (funcName === 'repay') {
+      params.push(sendTrue);
+      params.push(account);
+    }
 
     const data = web3.eth.abi.encodeFunctionCall(contractFunction, params);
 

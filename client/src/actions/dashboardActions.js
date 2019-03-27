@@ -262,15 +262,13 @@ export const getRepayModalData = amount => async (dispatch, getState) => {
 export const repayDaiAction = (amountEth, closeModal) => async (dispatch, getState) => {
   dispatch({ type: REPAY_DAI_REQUEST });
 
-  const proxySendHandler = (promise) => sendTx(promise, `Repay ${formatNumber(parseFloat(amountEth), 2)} ETH`, dispatch, getState); // eslint-disable-line
+  const proxySendHandler = (promise, amount) => sendTx(promise, `Repay ${formatNumber(parseFloat(amount), 2)} ETH`, dispatch, getState); // eslint-disable-line
 
   try {
     const { cdp, proxyAddress, account, ethPrice } = getState().general;  // eslint-disable-line
-    const { maxEthRepay } = getState().dashboard;
+    const params = [proxySendHandler, amountEth.toString(), cdp.id, proxyAddress, account, 'repay', ethPrice, true]; // eslint-disable-line
 
-    const amountParam = amountEth === maxEthRepay ? 0 : maxEthRepay; // zero means that the max value should be used on the contract
-
-    const params = [proxySendHandler, amountParam.toString(), cdp.id, proxyAddress, account, 'repay', ethPrice, true]; // eslint-disable-line
+    console.log(amountEth.toString());
 
     const payload = await callSaverProxyContract(...params);
 
@@ -322,15 +320,11 @@ export const getBoostModalData = amount => async (dispatch) => {
 export const boostAction = (amountDai, closeModal) => async (dispatch, getState) => {
   dispatch({ type: BOOST_REQUEST });
 
-  const proxySendHandler = (promise) => sendTx(promise, `Boost ${formatNumber(parseFloat(amountDai), 2)} DAI`, dispatch, getState); // eslint-disable-line
+  const proxySendHandler = (promise, amount) => sendTx(promise, `Boost ${formatNumber(parseFloat(amount), 2)} DAI`, dispatch, getState); // eslint-disable-line
 
   try {
     const { cdp, proxyAddress, account, ethPrice } = getState().general; // eslint-disable-line
-    const { maxDaiBoost } = getState().dashboard; // eslint-disable-line
-
-    const amountParam = amountDai === maxDaiBoost ? 0 : maxDaiBoost; // zero means that the max value should be used on the contract
-
-    const params = [proxySendHandler, amountParam.toString(), cdp.id, proxyAddress, account, 'boost', ethPrice];
+    const params = [proxySendHandler, amountDai.toString(), cdp.id, proxyAddress, account, 'boost', ethPrice];
 
     const payload = await callSaverProxyContract(...params);
 
@@ -426,7 +420,6 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
     const { afterType } = getState().dashboard;
     const { ethPrice, cdp } = getState().general;
     const depositedEth = cdp.depositedETH.toNumber();
-    const debtDai = cdp.debtDai.toNumber();
 
     const payload = {};
 
@@ -435,17 +428,11 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
     // BORROW FORM
     if (type === 'generate') {
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth, cdp.generatedDAI + amount, ethPrice);
-      payload.afterCdp.debtDai = debtDai + amount;
-      payload.afterCdp.depositedETH = depositedEth;
-
       dispatch(resetFields('managerBorrowForm', { withdrawEthAmount: '', repayDaiAmount: '' }));
     }
 
     if (type === 'withdraw') {
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth - amount, cdp.generatedDAI, ethPrice);
-      payload.afterCdp.debtDai = debtDai;
-      payload.afterCdp.depositedETH = depositedEth - amount;
-
       dispatch(resetFields('managerBorrowForm', { generateDaiAmount: '', repayDaiAmount: '' }));
     }
 
@@ -453,10 +440,8 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
       const rate = await getEthDaiKyberExchangeRate(amount);
       const daiAmount = (rate * amount) > cdp.generatedDAI ? 0 : cdp.generatedDAI - (rate * amount);
 
+      console.log(depositedEth - amount);
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth - amount, daiAmount, ethPrice);
-      payload.afterCdp.debtDai = debtDai - daiAmount;
-      payload.afterCdp.depositedETH = depositedEth - amount;
-
       dispatch(resetFields('managerBorrowForm', { generateDaiAmount: '', withdrawEthAmount: '' }));
     }
 
@@ -464,27 +449,20 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
     if (type === 'payback') {
       const daiAmount = amount > cdp.generatedDAI ? 0 : cdp.generatedDAI - amount;
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth, daiAmount, ethPrice);
-      payload.afterCdp.debtDai = debtDai - amount;
-      payload.afterCdp.depositedETH = depositedEth;
-
       dispatch(resetFields('managerPaybackForm', { addCollateralAmount: '', boostAmount: '' }));
     }
 
     if (type === 'collateral') {
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth + amount, cdp.generatedDAI, ethPrice);
-      payload.afterCdp.debtDai = debtDai;
-      payload.afterCdp.depositedETH = depositedEth + amount;
-
       dispatch(resetFields('managerPaybackForm', { paybackAmount: '', boostAmount: '' }));
     }
 
     if (type === 'boost') {
       const rate = await getDaiEthKyberExchangeRate(amount);
 
-      payload.afterCdp = await getUpdatedCdpInfo(depositedEth + (amount * rate), cdp.generatedDAI + amount, ethPrice);
-      payload.afterCdp.debtDai = debtDai + amount;
-      payload.afterCdp.depositedETH = depositedEth + (amount * rate);
+      console.log(rate, amount * rate);
 
+      payload.afterCdp = await getUpdatedCdpInfo(depositedEth + (amount * rate), cdp.generatedDAI + amount, ethPrice);
       dispatch(resetFields('managerPaybackForm', { paybackAmount: '', addCollateralAmount: '' }));
     }
 

@@ -31,7 +31,7 @@ contract SaverProxy is DSMath {
 
     /// @notice Withdraws Eth collateral, swaps Eth -> Dai with Kyber, and pays back the debt in Dai
     /// @dev If
-    function repay(bytes32 _cup, uint _amount, bool _buyMkr) public {
+    function repay(bytes32 _cup, uint _amount, bool _buyMkr, address _userAddr) public {
         TubInterface tub = TubInterface(TUB_ADDRESS);
 
         approveTub(DAI_ADDRESS);
@@ -64,9 +64,17 @@ contract SaverProxy is DSMath {
                             value(_amount)(_amount, DAI_ADDRESS);
         
 
-        tub.wipe(_cup, daiAmount);
+        uint daiDebt;
+        ( , ,daiDebt, ) = tub.cups(_cup);
 
-        require(getRatio(tub, _cup) > startingRatio, "ratio must be better off at the end");
+        if (daiAmount > daiDebt) {
+            tub.wipe(_cup, daiDebt);
+            ERC20(DAI_ADDRESS).transfer(_userAddr, sub(daiAmount, daiDebt));
+        } else {
+            tub.wipe(_cup, daiAmount);
+            require(getRatio(tub, _cup) > startingRatio, "ratio must be better off at the end");
+
+        }
 
         emit Repay(msg.sender, _amount, daiAmount);
     }

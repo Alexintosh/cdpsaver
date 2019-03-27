@@ -15,10 +15,10 @@ module.exports = function(deployer, network) {
     // deployer.deploy(Monitor, {gas: 6720000, overwrite: deployAgain});
 
     // Only marketplace deploy
-    deployer.deploy(MarketplaceProxy, {gas: 6720000, overwrite: deployAgain})
-    .then(() => {
-      return deployer.deploy(Marketplace, MarketplaceProxy.address, {gas: 6720000, overwrite: deployAgain});
-    });
+    // deployer.deploy(MarketplaceProxy, {gas: 6720000, overwrite: deployAgain})
+    // .then(() => {
+    //   return deployer.deploy(Marketplace, MarketplaceProxy.address, {gas: 6720000, overwrite: deployAgain});
+    // });
 
   } else {
     deployer.deploy(SaverProxy, {gas: 6720000, overwrite: deployAgain}).then(() => {
