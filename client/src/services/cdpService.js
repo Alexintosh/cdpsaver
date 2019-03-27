@@ -71,11 +71,11 @@ export const getCdpInfo = (id, useAuth = true) => new Promise(async (resolve, re
     resolve({
       id,
       owner: info[0],
-      depositedPETH: parseFloat(window._web3.utils.fromWei(info[1].toString(), 'ether')),
       generatedDAI: parseFloat(window._web3.utils.fromWei(info[2].toString(), 'ether')),
       debtDai: (await cdp.getDebtValue())._amount,
       debtUsd: (await cdp.getDebtValue(Maker.USD))._amount,
       depositedETH: (await cdp.getCollateralValue())._amount,
+      depositedPETH: (await cdp.getCollateralValue(Maker.PETH))._amount,
       depositedUSD: (await cdp.getCollateralValue(Maker.USD))._amount,
       liquidationPrice: (await cdp.getLiquidationPrice())._amount,
       isSafe: await cdp.isSafe(),
