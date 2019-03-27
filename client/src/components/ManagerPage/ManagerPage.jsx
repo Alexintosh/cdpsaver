@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Tooltip } from 'react-tippy';
 import PieChart from '../PieChart/PieChart';
 import Tabs from '../Tabs/Tabs';
 import DaiIcon from '../Decorative/DaiIcon';
@@ -28,9 +29,12 @@ class ManagerPage extends Component {
 
     this.state = {
       showMkr: true,
+      showEth: true,
     };
 
     this.init = this.init.bind(this);
+    this.convertStabilityFee = this.convertStabilityFee.bind(this);
+    this.convertCollateral = this.convertCollateral.bind(this);
   }
 
   componentWillMount() {
@@ -50,10 +54,11 @@ class ManagerPage extends Component {
   }
 
   convertStabilityFee() {
-    this.setState({
-      // eslint-disable-next-line react/no-access-state-in-setstate
-      showMkr: !this.state.showMkr,
-    });
+    this.setState(prevState => ({ showMkr: !prevState.showMkr }));
+  }
+
+  convertCollateral() {
+    this.setState(prevState => ({ showEth: !prevState.showEth }));
   }
 
   render() {
@@ -61,8 +66,10 @@ class ManagerPage extends Component {
       cdp, gettingEthPrice, ethPrice, gettingAfterCdp, afterCdp, afterType,
       openCloseCdpModal, openTransferCdpModal, history,
     } = this.props;
+    const { showMkr, showEth } = this.state;
 
-    const stabilityFee = this.state.showMkr ? cdp.governanceFee : cdp.governanceFeeInUsd;
+    const stabilityFee = showMkr ? cdp.governanceFee : cdp.governanceFeeInUsd;
+    const collateral = showEth ? cdp.depositedETH : cdp.depositedPETH;
 
     return (
       <div className="manager-page-wrapper dashboard-page-wrapper">
@@ -120,7 +127,12 @@ class ManagerPage extends Component {
                   <DaiIcon />
 
                   <div className="row-val-wrapper">
-                    <span className="label">Debt</span>
+                    <Tooltip>
+                      <span className="label">
+                        <i className="icon icon-Info-circle" />
+                        Debt
+                      </span>
+                    </Tooltip>
                     <span className="value">
                       <TooltipWrapper title={cdp.debtDai}>
                         { formatNumber(cdp.debtDai, 2) } Dai
@@ -136,14 +148,38 @@ class ManagerPage extends Component {
                   </div>
                 </div>
 
-                <div className="row-item-wrapper">
+                <div className="row-item-wrapper with-switch">
                   <EthIcon />
 
                   <div className="row-val-wrapper">
-                    <span className="label">Collateral</span>
+                    <div className="label-wrapper">
+                      <Tooltip>
+                        <span className="label">
+                          <i className="icon icon-Info-circle" />
+                          Collateral in
+                        </span>
+                      </Tooltip>
+
+                      <span className="stability-label-group">
+                        <span
+                          className={`stability-label ${showEth ? 'active' : 'inactive'}`}
+                          onClick={() => this.convertCollateral()}
+                        >
+                          ETH
+                        </span>
+                        <span className="divder"> | </span>
+                        <span
+                          className={`stability-label ${showEth ? 'inactive' : 'active'}`}
+                          onClick={() => this.convertCollateral()}
+                        >
+                          PETH
+                        </span>
+                      </span>
+                    </div>
+
                     <span className="value">
-                      <TooltipWrapper title={cdp.depositedETH}>
-                        { formatNumber(cdp.depositedETH, 2) } Eth
+                      <TooltipWrapper title={collateral}>
+                        { formatNumber(collateral, 2) }
                       </TooltipWrapper>
                     </span>
 
@@ -156,41 +192,45 @@ class ManagerPage extends Component {
                   </div>
                 </div>
 
-                <div className="row-item-wrapper">
+                <div className="row-item-wrapper  with-switch">
                   <MkrIcon />
 
                   <div className="row-val-wrapper">
-                    <span className="label">Stability Fee</span>
-                    <span className="value">
-                      <TooltipWrapper title={stabilityFee}>
-                        {
-                          formatStabilityFee(stabilityFee)
-                        }
-                      </TooltipWrapper>
+                    <div className="label-wrapper">
+                      <Tooltip>
+                        <span className="label">
+                          <i className="icon icon-Info-circle" />
+                          Stability fee in
+                        </span>
+                      </Tooltip>
 
                       <span className="stability-label-group">
                         <span
-                          // eslint-disable-next-line prefer-template
-                          className={'stability-label ' + (this.state.showMkr ? ' active' : ' inactive')}
+                          className={`stability-label ${showMkr ? 'active' : 'inactive'}`}
                           onClick={() => this.convertStabilityFee()}
                         >
                         MKR
                         </span>
                         <span className="divder"> | </span>
                         <span
-                          // eslint-disable-next-line prefer-template
-                          className={'stability-label ' + (this.state.showMkr ? ' inactive' : ' active')}
+                          className={`stability-label ${showMkr ? 'inactive' : 'active'}`}
                           onClick={() => this.convertStabilityFee()}
                         >
                         USD
                         </span>
                       </span>
+                    </div>
+
+                    <span className="value">
+                      <TooltipWrapper title={stabilityFee}>
+                        { formatStabilityFee(stabilityFee) }
+                      </TooltipWrapper>
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div className="main-subsection">
+              <div className="main-subsection chart">
                 <PieChart
                   values={[
                     { data: cdp.debtDai, color: '#61717E', label: 'Debt' },
