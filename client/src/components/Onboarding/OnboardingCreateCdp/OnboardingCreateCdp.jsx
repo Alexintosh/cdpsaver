@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { reduxForm } from 'redux-form';
+import { reduxForm, change } from 'redux-form';
 import { connect } from 'react-redux';
+import { Tooltip } from 'react-tippy';
 import OnboardingWizardCreateCdpForm from './OnboardingCreateCdpForm/OnboardingCreateCdpForm';
 
 import './OnboardingCreateCdp.scss';
@@ -22,17 +23,48 @@ let OnboardingCreateCdp = ({
         </div>
 
         <OnboardingWizardCreateCdpForm history={history} />
+
+        <div className="dots-wrapper">
+          <div
+            className="dot-wrapper"
+            onClick={() => { change('onboardingCreateCdpForm', 'daiAmount', 10); }}
+          >
+            <div className="dot green" />
+            <span>250%</span>
+          </div>
+
+          <div
+            className="dot-wrapper"
+            onClick={() => { change('onboardingCreateCdpForm', 'daiAmount', 10); }}
+          >
+            <div className="dot orange" />
+            <span>200%</span>
+          </div>
+
+          <div
+            className="dot-wrapper"
+            onClick={() => { change('onboardingCreateCdpForm', 'daiAmount', 10); }}
+          >
+            <div className="dot red" />
+            <span>150%</span>
+          </div>
+        </div>
       </div>
 
       <div className="bottom-controls width-container">
-        <button
-          type="submit"
-          disabled={pristine || invalid || submittingForm || ratio < 150}
-          className="button green uppercase"
-          form="onboarding-create-cdp-form"
+        <Tooltip
+          title="You can't buy your own CDP"
+          disabled={!ratio || ratio >= 150}
         >
-          { submittingForm ? 'Creating' : 'Create' }
-        </button>
+          <button
+            type="submit"
+            disabled={pristine || invalid || submittingForm || ratio < 150}
+            className="button green uppercase"
+            form="onboarding-create-cdp-form"
+          >
+            { submittingForm ? 'Creating' : 'Create' }
+          </button>
+        </Tooltip>
       </div>
     </div>
   </div>
