@@ -9,7 +9,7 @@ module.exports = {
   networks: {
     kovan: {
       provider: function() {
-        return new HDWalletProvider(mnemonic, `https://kovan.infura.io/`, 0, 10);
+        return new HDWalletProvider(mnemonic, process.env.INFURA_ENDPOINT, 0, 10);
       },
       network_id: '42',
       gasPrice: 3000000000,

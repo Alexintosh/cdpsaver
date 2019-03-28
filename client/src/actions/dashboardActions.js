@@ -494,10 +494,11 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
 
     if (type === 'boost') {
       const rate = await getDaiEthKyberExchangeRate(amount);
+
+      payload.afterCdp = await getUpdatedCdpInfo(depositedEth + (amount * rate), cdp.generatedDAI + amount, ethPrice);
       payload.afterCdp.debtDai = debtDai + amount;
       payload.afterCdp.depositedETH = depositedEth + (amount * rate);
 
-      payload.afterCdp = await getUpdatedCdpInfo(depositedEth + (amount * rate), cdp.generatedDAI + amount, ethPrice);
       dispatch(resetFields('managerPaybackForm', { paybackAmount: '', addCollateralAmount: '' }));
     }
 
