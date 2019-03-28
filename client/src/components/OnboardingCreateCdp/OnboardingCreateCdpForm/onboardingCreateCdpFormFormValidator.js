@@ -1,4 +1,4 @@
-import { MIN_ETH_COLLATERAL } from '../../../../constants/general';
+import { MIN_ETH_COLLATERAL } from '../../../constants/general';
 
 const onboardingCreateCdpFormFormValidator = ({ ethAmount, daiAmount }) => {
   const errors = {};

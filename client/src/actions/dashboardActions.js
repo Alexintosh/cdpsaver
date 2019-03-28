@@ -573,7 +573,7 @@ export const transferCdpAction = ({ toAddress }, history, closeModal) => async (
     closeModal();
     dispatch({ type: TRANSFER_CDP_SUCCESS, payload: { cdps: newCdps, cdp: newCdp } });
 
-    if (newCdp === null) history.push('/onboarding/create-cdp');
+    if (newCdp === null) history.push('/create-cdp');
     else history.push('/dashboard/manage');
   } catch (err) {
     console.log('err', err);
@@ -615,7 +615,7 @@ export const closeCdpAction = (closeModal, history) => async (dispatch, getState
     dispatch({ type: CLOSE_CDP_SUCCESS, payload: { cdps: newCdps, cdp: newCdp } });
     closeModal();
 
-    if (newCdp === null) history.push('/onboarding/create-cdp');
+    if (newCdp === null) history.push('/create-cdp');
     else history.push('/dashboard/manage');
   } catch (err) {
     dispatch({ type: CLOSE_CDP_FAILURE, payload: err.message });

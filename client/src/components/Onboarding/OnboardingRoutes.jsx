@@ -5,7 +5,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { resetOnboardingWizard } from '../../actions/onboardingActions';
 import OnboardingRedirect from './OnboardingRedirect';
 import SubHeaderRoutes from '../SubHeaderRoutes/SubHeaderRoutes';
-import OnboardingCreateCdp from './OnboardingCreateCdp/OnboardingCreateCdp';
+import OnboardingCreateCdp from '../OnboardingCreateCdp/OnboardingCreateCdp';
 import Loader from '../Loader/Loader';
 
 import './Onboarding.scss';

@@ -6,7 +6,7 @@ import { updateEthPriceInterval } from '../../actions/generalActions';
 import { silentLogin } from '../../actions/accountActions';
 import Header from '../Header/Header';
 import HomePage from '../HomePage/HomePage';
-import OnboardingRoutes from '../Onboarding/OnboardingRoutes';
+import CreateCdpRoute from '../OnboardingCreateCdp/CreateCdpRoute';
 import Page404 from '../Page404/Page404';
 import DashboardRoutes from '../Dashboard/DashboardRoutes';
 import ModalRoot from '../Modals/ModalRoot';
@@ -40,7 +40,7 @@ class RoutesWrapper extends Component {
             <Switch>
               <Route exact path="/" component={HomePage} />
               <Route path="/connect" component={Connect} />
-              <Route path="/onboarding" component={OnboardingRoutes} />
+              <Route path="/create-cdp" component={CreateCdpRoute} />
               <Route path="/marketplace" component={MarketplacePage} />
               <PrivateRoute path="/migrate" component={MigratePage} migratePage />
               <PrivateRoute path="/dashboard" component={DashboardRoutes} />

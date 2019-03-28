@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Field, formValueSelector, reduxForm } from 'redux-form';
 import onboardingCreateCdpFormFormValidator from './onboardingCreateCdpFormFormValidator';
-import InputComponent from '../../../Forms/InputComponent';
-import { createCdpAction, handleCreateCdpInputChange } from '../../../../actions/onboardingActions';
-import { formatNumber, getRainbowSliderValColor } from '../../../../utils/utils';
-import TooltipWrapper from '../../../TooltipWrapper/TooltipWrapper';
-import { MIN_ETH_COLLATERAL } from '../../../../constants/general';
+import InputComponent from '../../Forms/InputComponent';
+import { createCdpAction, handleCreateCdpInputChange } from '../../../actions/onboardingActions';
+import { formatNumber, getRainbowSliderValColor } from '../../../utils/utils';
+import TooltipWrapper from '../../TooltipWrapper/TooltipWrapper';
+import { MIN_ETH_COLLATERAL } from '../../../constants/general';
 
 class OnboardingCreateCdpForm extends Component {
   constructor(props) {

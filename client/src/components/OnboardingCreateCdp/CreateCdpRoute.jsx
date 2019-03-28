@@ -1,12 +1,14 @@
 import React from 'react';
+import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Route, Redirect, withRouter } from 'react-router-dom';
 import Loader from '../Loader/Loader';
+import OnboardingCreateCdp from './OnboardingCreateCdp';
 
-const PrivateRoute = ({
-  component: Component, account, match, connectingProvider, cdp,
-  gettingCdp, loggingIn, migratePage, ...rest
+import '../Onboarding/Onboarding.scss';
+
+const CreateCdpRoute = ({
+  match, account, connectingProvider, gettingCdp, loggingIn,
 }) => {
   const showloggingIn = loggingIn && (!connectingProvider && !gettingCdp);
   const showLoader = connectingProvider || gettingCdp || showloggingIn;
@@ -25,38 +27,38 @@ const PrivateRoute = ({
     );
   }
 
-  if (!loggingIn && !account) return (<Redirect to={{ pathname: '/connect', state: { to: rest.path } }} />);
-  if (!loggingIn && !cdp) return (<Redirect to="/create-cdp" />);
-  if (!loggingIn && cdp && !migratePage && cdp.owner === account) return (<Redirect to="/migrate" />);
+  if (!loggingIn && !account && !connectingProvider) {
+    return (<Redirect to={{ pathname: '/connect', state: { to: '/dashboard/manage' } }} />);
+  }
 
   return (
-    <Route {...rest} render={props => (<Component {...props} />)} />
+    <div className="onboarding-wrapper dashboard-page-wrapper">
+      <div className="sub-heading-wrapper">
+        <div className="width-container">
+          <div className="sub-title">Create CDP</div>
+        </div>
+      </div>
+
+      <React.Fragment>
+        <Route path={`${match.path}/`} component={OnboardingCreateCdp} />
+      </React.Fragment>
+    </div>
   );
 };
 
-PrivateRoute.defaultProps = {
-  account: '',
-  cdp: null,
-  migratePage: false,
-};
-
-PrivateRoute.propTypes = {
+CreateCdpRoute.propTypes = {
+  account: PropTypes.string.isRequired,
   match: PropTypes.object.isRequired,
-  component: PropTypes.func.isRequired,
   connectingProvider: PropTypes.bool.isRequired,
   gettingCdp: PropTypes.bool.isRequired,
   loggingIn: PropTypes.bool.isRequired,
-  migratePage: PropTypes.bool,
-  account: PropTypes.string,
-  cdp: PropTypes.object,
 };
 
 const mapStateToProps = ({ general }) => ({
   account: general.account,
   connectingProvider: general.connectingProvider,
-  cdp: general.cdp,
   gettingCdp: general.gettingCdp,
   loggingIn: general.loggingIn,
 });
 
-export default connect(mapStateToProps)(withRouter(PrivateRoute));
+export default connect(mapStateToProps)(CreateCdpRoute);

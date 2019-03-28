@@ -68,7 +68,7 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, onboardingFinished: payload };
 
     case RESET_ONBOARDING_WIZARD:
-      return { ...INITIAL_STATE, onboardingFinished: state.onboardingFinished };
+      return { ...INITIAL_STATE, onboardingFinished: !state.onboardingFinished };
 
     case SET_CREATE_CDP_CALC_VALUES:
       return {
