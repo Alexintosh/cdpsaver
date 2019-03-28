@@ -11,12 +11,6 @@ import ManagerBorrowForm from './ManagerBorrowForm/ManagerBorrowForm';
 import ManagerPaybackForm from './ManagerPaybackForm/ManagerPaybackForm';
 import CdpAfterVal from './CdpAfterVal';
 import { formatNumber, formatStabilityFee } from '../../utils/utils';
-import {
-  getMaxDaiAction,
-  getMaxEthWithdrawAction,
-  getMaxEthRepayAction,
-  getMaxDaiBoostAction,
-} from '../../actions/dashboardActions';
 import { openCloseCdpModal, openTransferCdpModal } from '../../actions/modalActions';
 import TooltipWrapper from '../TooltipWrapper/TooltipWrapper';
 
@@ -32,25 +26,8 @@ class ManagerPage extends Component {
       showEth: true,
     };
 
-    this.init = this.init.bind(this);
     this.convertStabilityFee = this.convertStabilityFee.bind(this);
     this.convertCollateral = this.convertCollateral.bind(this);
-  }
-
-  componentWillMount() {
-    this.init();
-  }
-
-  componentWillReceiveProps(newProps) {
-    if (newProps.cdp.id !== this.props.cdp.id) this.init();
-  }
-
-  init() {
-    // TODO optimize this by putting it borrow or payback
-    this.props.getMaxDaiAction();
-    this.props.getMaxEthWithdrawAction();
-    this.props.getMaxEthRepayAction();
-    this.props.getMaxDaiBoostAction();
   }
 
   convertStabilityFee() {
@@ -281,10 +258,6 @@ ManagerPage.propTypes = {
   cdp: PropTypes.object.isRequired,
   ethPrice: PropTypes.number.isRequired,
   gettingEthPrice: PropTypes.bool.isRequired,
-  getMaxDaiAction: PropTypes.func.isRequired,
-  getMaxEthRepayAction: PropTypes.func.isRequired,
-  getMaxDaiBoostAction: PropTypes.func.isRequired,
-  getMaxEthWithdrawAction: PropTypes.func.isRequired,
   gettingAfterCdp: PropTypes.bool.isRequired,
   afterCdp: PropTypes.object,
   afterType: PropTypes.string,
@@ -305,13 +278,6 @@ const mapStateToProps = ({ general, dashboard }) => ({
   network: general.network,
 });
 
-const mapDispatchToProps = {
-  getMaxDaiAction,
-  getMaxEthWithdrawAction,
-  openCloseCdpModal,
-  openTransferCdpModal,
-  getMaxEthRepayAction,
-  getMaxDaiBoostAction,
-};
+const mapDispatchToProps = { openCloseCdpModal, openTransferCdpModal };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManagerPage);

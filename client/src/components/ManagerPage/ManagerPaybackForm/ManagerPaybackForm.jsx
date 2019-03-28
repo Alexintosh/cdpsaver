@@ -4,12 +4,20 @@ import PropTypes from 'prop-types';
 import {
   change, formValueSelector, reduxForm,
 } from 'redux-form';
-import { addCollateralAction, setAfterValue } from '../../../actions/dashboardActions';
+import { addCollateralAction, setAfterValue, getPaybackFormMaxValues } from '../../../actions/dashboardActions';
 import { openBoostModal, openPaybackModal } from '../../../actions/modalActions';
 import { getManageActionErrorText } from '../../../utils/utils';
 import CdpAction from '../CdpAction/CdpAction';
 
 class ManagerPaybackForm extends Component {
+  componentWillMount() {
+    this.props.getPaybackFormMaxValues();
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.cdp.id !== this.props.cdp.id) this.props.getPaybackFormMaxValues();
+  }
+
   componentWillUnmount() {
     this.props.setAfterValue(0, 'clear');
   }
@@ -96,6 +104,7 @@ ManagerPaybackForm.propTypes = {
   formValues: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   setAfterValue: PropTypes.func.isRequired,
+  getPaybackFormMaxValues: PropTypes.func.isRequired,
 
   addCollateralAction: PropTypes.func.isRequired,
   addingCollateral: PropTypes.bool.isRequired,
@@ -132,7 +141,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  addCollateralAction, openPaybackModal, setAfterValue, openBoostModal,
+  addCollateralAction, openPaybackModal, setAfterValue, openBoostModal, getPaybackFormMaxValues,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManagerPaybackFormComp);

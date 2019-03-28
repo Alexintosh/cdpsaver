@@ -9,12 +9,21 @@ import {
   withdrawEthAction,
   repayDaiAction,
   setAfterValue,
+  getBorrowFormMaxValues,
 } from '../../../actions/dashboardActions';
 import { openRepayModal } from '../../../actions/modalActions';
 import { getManageActionErrorText } from '../../../utils/utils';
 import CdpAction from '../CdpAction/CdpAction';
 
 class ManagerBorrowForm extends Component {
+  componentWillMount() {
+    this.props.getBorrowFormMaxValues();
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.cdp.id !== this.props.cdp.id) this.props.getBorrowFormMaxValues();
+  }
+
   componentWillUnmount() {
     this.props.setAfterValue(0, 'clear');
   }
@@ -103,9 +112,11 @@ class ManagerBorrowForm extends Component {
 }
 
 ManagerBorrowForm.propTypes = {
+  cdp: PropTypes.object.isRequired,
   formValues: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   setAfterValue: PropTypes.func.isRequired,
+  getBorrowFormMaxValues: PropTypes.func.isRequired,
 
   generateDaiAction: PropTypes.func.isRequired,
   generatingDai: PropTypes.bool.isRequired,
@@ -128,6 +139,7 @@ const ManagerBorrowFormComp = reduxForm({ form: 'managerBorrowForm' })(ManagerBo
 const selector = formValueSelector('managerBorrowForm');
 
 const mapStateToProps = state => ({
+  cdp: state.general.cdp,
   formMeta: getFormMeta('managerBorrowForm')(state),
   formValues: {
     generateDaiAmount: selector(state, 'generateDaiAmount'),
@@ -148,7 +160,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  generateDaiAction, withdrawEthAction, repayDaiAction, setAfterValue, openRepayModal,
+  generateDaiAction, withdrawEthAction, repayDaiAction, setAfterValue, openRepayModal, getBorrowFormMaxValues,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManagerBorrowFormComp);
