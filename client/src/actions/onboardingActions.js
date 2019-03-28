@@ -59,9 +59,12 @@ export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dis
 
     const cdp = (cdpsData.cdps.filter(c => (cdps.findIndex(_c => c.id === _c.id)) === -1))[0];
 
+    addToLsState({ account, cdpId: cdp.id });
+
     dispatch({ type: CREATE_CDP_SUCCESS, payload: { ...cdp, ...newInfo } });
     dispatch({ type: ADD_CDP_TO_CDPS, payload: cdpsData.cdps });
     dispatch({ type: ADD_PROXY_ADDRESS, payload: proxyAddress });
+
     history.push('/dashboard/manage');
   } catch (err) {
     dispatch({ type: CREATE_CDP_ERROR, payload: err.message });
