@@ -13,7 +13,7 @@ module.exports = {
       },
       network_id: '42',
       gasPrice: 3000000000,
-      confirmations: 4
+      confirmations: 1
       },
     rinkeby: {
       provider: function() {
