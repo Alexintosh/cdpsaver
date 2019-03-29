@@ -134,6 +134,40 @@ export const createCdp = (sendTxFunc, from, ethAmount, _daiAmount, proxyAddress)
   }
 });
 
+export const paybackWithConversion = (sendTxFunc, from, _daiAmount, cdpId, proxyAddress, ethPrice) => new Promise(async (resolve, reject) => {
+  const tubAddress = tubInterfaceAddress;
+
+  try {
+    const contract = config.SaiSaverProxy;
+
+    const OTC_ADDRESS = '0x4A6bC4e803c62081ffEbCc8d227B5a87a58f1F8F';
+
+    const txParams = { from };
+    const daiAmount = window._web3.utils.toWei(_daiAmount.toString(), 'ether');
+
+    const proxyContract = new window._web3.eth.Contract(dsProxyContractJson.abi, proxyAddress);
+
+    const contractFunction = contract.abi.find(abi => abi.name === 'wipe');
+
+    const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
+
+    const data = window._web3.eth.abi.encodeFunctionCall(contractFunction,
+      [tubAddress, cdpIdBytes32, daiAmount, OTC_ADDRESS]);
+
+    const promise = proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send(txParams);
+
+    await sendTxFunc(promise);
+
+    const newCdp = await getCdpInfo(cdpId, false);
+    const newCdpInfo = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
+
+    resolve({ ...newCdp, ...newCdpInfo });
+  } catch (err) {
+    console.log(err);
+    reject(err);
+  }
+});
+
 /**
  * Calls the proxy contract and handles the action that is specified in the parameters
  *

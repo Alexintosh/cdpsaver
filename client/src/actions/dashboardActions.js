@@ -80,6 +80,7 @@ import {
   callSaverProxyContract,
   getMaxEthRepay,
   getMaxDaiBoost,
+  paybackWithConversion,
 } from '../services/ethService';
 import { getMaxDai, getMaxEthWithdraw, getUpdatedCdpInfo } from '../services/cdpService';
 import { MM_DENIED_TX_ERROR } from '../constants/general';
@@ -407,10 +408,18 @@ export const paybackDaiAction = (amountDai, closeModal) => async (dispatch, getS
   const proxySendHandler = (promise, amount) => sendTx(promise, `Payback ${amount} DAI`, dispatch, getState);
 
   try {
-    const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
-    const params = [proxySendHandler, amountDai.toString(), cdp.id, proxyAddress, account, 'wipe', ethPrice, false, true]; // eslint-disable-line
+    const { cdp, account, proxyAddress, ethPrice, enoughMkrToWipe } = getState().general; // eslint-disable-line
 
-    const payload = await callProxyContract(...params);
+
+    let payload = {};
+
+    if (enoughMkrToWipe) {
+      const params = [proxySendHandler, amountDai.toString(), cdp.id, proxyAddress, account, 'wipe', ethPrice, false, true]; // eslint-disable-line
+      payload = await callProxyContract(...params);
+    } else {
+      const params = [proxySendHandler, account, amountDai.toString(), cdp.id, proxyAddress, ethPrice];
+      payload = await paybackWithConversion(...params);
+    }
 
     dispatch({ type: PAYBACK_DAI_SUCCESS, payload });
     dispatch(change('managerPaybackForm', 'paybackAmount', null));
