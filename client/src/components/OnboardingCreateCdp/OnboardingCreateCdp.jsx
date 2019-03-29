@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { reduxForm, change } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { Tooltip } from 'react-tippy';
 import OnboardingWizardCreateCdpForm from './OnboardingCreateCdpForm/OnboardingCreateCdpForm';
@@ -25,26 +25,17 @@ let OnboardingCreateCdp = ({
         <OnboardingWizardCreateCdpForm history={history} />
 
         <div className="dots-wrapper">
-          <div
-            className="dot-wrapper"
-            onClick={() => { change('onboardingCreateCdpForm', 'daiAmount', 10); }}
-          >
+          <div className="dot-wrapper">
             <div className="dot green" />
             <span>250%</span>
           </div>
 
-          <div
-            className="dot-wrapper"
-            onClick={() => { change('onboardingCreateCdpForm', 'daiAmount', 10); }}
-          >
+          <div className="dot-wrapper">
             <div className="dot orange" />
             <span>200%</span>
           </div>
 
-          <div
-            className="dot-wrapper"
-            onClick={() => { change('onboardingCreateCdpForm', 'daiAmount', 10); }}
-          >
+          <div className="dot-wrapper">
             <div className="dot red" />
             <span>150%</span>
           </div>

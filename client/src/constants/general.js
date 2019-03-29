@@ -3,8 +3,8 @@ export const EMAIL_REGEX =  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)
 export const MARKETPLACE_SORT_OPTIONS = [
   { label: 'Liquidation price descending', value: 'liq-dsc' },
   { label: 'Liquidation price ascending', value: 'liq-asc' },
-  { label: 'Dai debt descending', value: 'liq-dsc' },
-  { label: 'Dai debt ascending', value: 'liq-dsc' },
+  { label: 'Dai debt descending', value: 'dai-dsc' },
+  { label: 'Dai debt ascending', value: 'dai-asc' },
 ];
 
 export const LS_ACCOUNT = 'Y2Rwc2F2ZXItYWNjb3VudC10eXBl';
