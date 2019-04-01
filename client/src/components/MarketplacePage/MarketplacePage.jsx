@@ -18,6 +18,7 @@ const MarketplacePage = ({
 }) => {
   const [mounted, setMounted] = useState(false);
   const [orderBy, setOrderBy] = useState(null);
+  const [filterId, setFilterId] = useState(null);
 
   useEffect(async () => {
     if (!mounted) {
@@ -25,6 +26,21 @@ const MarketplacePage = ({
 
       setMounted(true);
     }
+  });
+
+  const searchCdps = (val) => {
+    let id = parseInt(val, 10);
+
+    if (!val) id = null;
+    if (isNaN(id)) id = -1; // eslint-disable-line
+
+    setFilterId(id);
+  };
+
+  const cdpItems = cdps.filter(({ id }) => {
+    if (filterId === null) return cdps;
+
+    return id.toString().indexOf(filterId) > -1;
   });
 
   // Proxy cdps is put here because user owned cpds can't call
@@ -53,7 +69,7 @@ const MarketplacePage = ({
           <div className="filters-wrapper">
             <div className="filters">
               <div className="search-wrapper">
-                <input placeholder="Search by ID" />
+                <input placeholder="Search by ID" onChange={({ target }) => { searchCdps(target.value); }} />
 
                 <i className="icon-magnifying-glass" />
               </div>
@@ -112,19 +128,37 @@ const MarketplacePage = ({
           }
 
           {
-            !fetchingCdps && !fetchingCdpsError && cdps.length > 0 && (
-              <div className="cdp-list-wrapper">
-                { cdps.map(cdp => (<CdpBox data={cdp} key={cdp.id} />)) }
-              </div>
-            )
-          }
+            !fetchingCdps && !fetchingCdpsError && (
+              <React.Fragment>
+                {
+                  cdpItems.length > 0 && (
+                    <div className="cdp-list-wrapper">
+                      { cdpItems.map(cdp => (<CdpBox data={cdp} key={cdp.id} />)) }
+                    </div>
+                  )
+                }
 
-          {
-            !fetchingCdps && !fetchingCdpsError && cdps.length === 0 && (
-              <div className="empty-page-wrapper">
-                <i className="icon-empty" />
-                <span>Put your CDP on sale, while your cdp is on sale you are still in control of the CDP</span>
-              </div>
+                {
+                  cdpItems.length === 0 && (
+                    <div className="empty-page-wrapper">
+                      <i className="icon-empty" />
+                      <span>
+                        {
+                          cdps.length === 0 && (
+                            'Put your CDP on sale, while your cdp is on sale you are still in control of the CDP'
+                          )
+                        }
+
+                        {
+                          cdps.length > 0 && (
+                            'There are no matches the searched ID'
+                          )
+                        }
+                      </span>
+                    </div>
+                  )
+                }
+              </React.Fragment>
             )
           }
         </div>
