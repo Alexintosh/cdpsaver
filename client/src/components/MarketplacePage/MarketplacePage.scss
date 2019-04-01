@@ -60,6 +60,13 @@
         .select {
           margin-right: 11px;
 
+          .select__clear-indicator {
+            padding-right: 0;
+            position: relative;
+            right: -5px;
+            padding-left: 3px;
+          }
+
           .select__control {
             cursor: pointer;
             border-radius: 0;
@@ -87,6 +94,19 @@
 
             .select__indicator-separator {
               display: none;
+            }
+          }
+
+          .select__menu {
+            width: fit-content;
+            border-radius: 0;
+
+            .select__menu-list {
+              padding: 0;
+
+              .select__option {
+                white-space: nowrap;
+              }
             }
           }
         }

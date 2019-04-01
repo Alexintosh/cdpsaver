@@ -6,6 +6,7 @@ import Select from 'react-select';
 import { getMarketplaceCdpsData, sellCdpButtonTooltipText } from '../../actions/marketplaceActions';
 import { openSellCdpModal, openCancelSellCdplModal } from '../../actions/modalActions';
 import { MARKETPLACE_SORT_OPTIONS } from '../../constants/general';
+import { addToLsState, getLsExistingItemAndState } from '../../utils/utils';
 import CdpBox from './CdpBox/CdpBox';
 import Loader from '../Loader/Loader';
 
@@ -13,21 +14,33 @@ import './MarketplacePage.scss';
 
 const MarketplacePage = ({
   cdps, fetchingCdpsError, fetchingCdps, getMarketplaceCdpsData, openSellCdpModal,
-  loggingIn, gettingCdp, openCancelSellCdplModal, userCdps,
+  loggingIn, gettingCdp, openCancelSellCdplModal, userCdps, account,
   proxyAddress,
 }) => {
   const [mounted, setMounted] = useState(false);
+  const [hasAccount, setHasAccount] = useState(false);
   const [orderBy, setOrderBy] = useState(null);
   const [filterId, setFilterId] = useState(null);
 
   useEffect(async () => {
     if (!mounted) {
       getMarketplaceCdpsData();
-
       setMounted(true);
+    }
+
+    if (!hasAccount && account) {
+      const { existingItem } = getLsExistingItemAndState(account);
+      if (existingItem && existingItem.orderBy) setOrderBy(existingItem.orderBy);
+
+      setHasAccount(true);
     }
   });
 
+  /**
+   * Searches the loaded cdps by the search param
+   *
+   * @param val {String}
+   */
   const searchCdps = (val) => {
     let id = parseInt(val, 10);
 
@@ -37,11 +50,33 @@ const MarketplacePage = ({
     setFilterId(id);
   };
 
-  const cdpItems = cdps.filter(({ id }) => {
+  /**
+   * Saves se order by selected dropdown value
+   * to the local storage and in the component
+   *
+   * @param item {Object}
+   */
+  const changeAccountMarketplaceOrderBy = (item) => {
+    addToLsState({ account, orderBy: item });
+    setOrderBy(item);
+  };
+
+  let cdpItems = cdps.filter(({ id }) => {
     if (filterId === null) return cdps;
 
     return id.toString().indexOf(filterId) > -1;
   });
+
+  if (orderBy) {
+    cdpItems = cdpItems.sort((a, b) => {
+      const orderByArr = orderBy.value.split('-');
+      const [prop, ascOrDesc] = orderByArr;
+
+      if (ascOrDesc === 'desc') return b[prop] > a[prop] ? 1 : -1;
+
+      return a[prop] > b[prop] ? 1 : -1;
+    });
+  }
 
   // Proxy cdps is put here because user owned cpds can't call
   // our marketplace smart contract
@@ -81,8 +116,9 @@ const MarketplacePage = ({
                   className="select main-select main-select-small"
                   classNamePrefix="select"
                   value={orderBy}
-                  onChange={setOrderBy}
+                  onChange={changeAccountMarketplaceOrderBy}
                   options={MARKETPLACE_SORT_OPTIONS}
+                  isClearable
                 />
               </div>
             </div>
@@ -168,6 +204,7 @@ const MarketplacePage = ({
 };
 
 MarketplacePage.propTypes = {
+  account: PropTypes.string.isRequired,
   cdps: PropTypes.array.isRequired,
   userCdps: PropTypes.array.isRequired,
   proxyAddress: PropTypes.string.isRequired,
