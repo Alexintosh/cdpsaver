@@ -80,7 +80,8 @@ const MarketplacePage = ({
 
   // Proxy cdps is put here because user owned cpds can't call
   // our marketplace smart contract
-  const proxyCdps = userCdps.filter(_cdp => _cdp.owner === proxyAddress);
+  const debtCdps = userCdps.filter(_cdp => _cdp.debtDai > 0);
+  const proxyCdps = debtCdps.filter(_cdp => _cdp.owner === proxyAddress);
   const onSaleCdps = proxyCdps.filter(_cdp => _cdp.onSale);
   const notOnSaleCdps = proxyCdps.filter(_cdp => !_cdp.onSale);
 
