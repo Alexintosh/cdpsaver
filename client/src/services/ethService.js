@@ -67,6 +67,15 @@ export const nameOfNetwork = (networkId) => {
   return networks[networkId] || 'Unknown network';
 };
 
+// Helper function to verify if the contract has a permit method
+async function isContractDSGuard(authorityAddress) {
+  const code = await window._web3.eth.getCode(authorityAddress);
+
+  const hash = window._web3.eth.abi.encodeFunctionSignature('permit(bytes32,bytes32,bytes32)');
+
+  return code.indexOf(hash.substring(2)) !== -1;
+}
+
 /**
  * Checks if the user has approved to use MM as the provider
  *
@@ -429,7 +438,9 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
     const authorityAddress = await DSProxyContract.methods.authority().call();
     let params = [cdpIdBytes32, discount * 100, marketplaceAddress, proxyAddress];
 
-    if (!isEmptyBytes(authorityAddress)) {
+    const isContract = await isContractDSGuard(authorityAddress);
+
+    if (!isEmptyBytes(authorityAddress) && isContract) {
       const AuthContract = await new window._web3.eth.Contract(config.DSGuard.abi, authorityAddress);
 
       const isAuthorized = await AuthContract.methods.canCall(marketplaceAddress, proxyAddress, '0x1cff79cd').call();
@@ -448,8 +459,6 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
 
     const dsProxyContractAbi = dsProxyContractJson.abi;
     const proxyContract = new window._web3.eth.Contract(dsProxyContractAbi, proxyAddress);
-
-    console.log(contractFunctionName);
 
     const promise = proxyContract.methods['execute(address,bytes)'](marketplaceProxyAddress, data).send(txParams);
 
