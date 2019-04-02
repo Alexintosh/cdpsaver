@@ -27,24 +27,24 @@ let OnboardingCreateCdp = ({
         <div className="dots-wrapper">
           <div className="dot-wrapper">
             <div className="dot green" />
-            <span>250%</span>
+            <span>Safe</span>
           </div>
 
           <div className="dot-wrapper">
             <div className="dot orange" />
-            <span>200%</span>
+            <span>Risky</span>
           </div>
 
           <div className="dot-wrapper">
             <div className="dot red" />
-            <span>150%</span>
+            <span>Gambler</span>
           </div>
         </div>
       </div>
 
       <div className="bottom-controls width-container">
         <Tooltip
-          title="You can't buy your own CDP"
+          title="Your ratio must be over 150%"
           disabled={!ratio || ratio >= 150}
         >
           <button

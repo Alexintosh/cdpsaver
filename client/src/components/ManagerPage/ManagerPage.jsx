@@ -104,7 +104,7 @@ class ManagerPage extends Component {
                   <DaiIcon />
 
                   <div className="row-val-wrapper">
-                    <Tooltip>
+                    <Tooltip title="Amount of Dai generated for the CDP">
                       <span className="label">
                         <i className="icon icon-Info-circle" />
                         Debt
@@ -130,7 +130,7 @@ class ManagerPage extends Component {
 
                   <div className="row-val-wrapper">
                     <div className="label-wrapper">
-                      <Tooltip>
+                      <Tooltip title="Collateral for the CDP is stored as PETH">
                         <span className="label">
                           <i className="icon icon-Info-circle" />
                           Collateral in
@@ -174,7 +174,7 @@ class ManagerPage extends Component {
 
                   <div className="row-val-wrapper">
                     <div className="label-wrapper">
-                      <Tooltip>
+                      <Tooltip title="Stability fee is paid in MKR tokens">
                         <span className="label">
                           <i className="icon icon-Info-circle" />
                           Stability fee in
