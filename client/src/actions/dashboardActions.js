@@ -289,8 +289,6 @@ export const repayDaiAction = (amountEth, closeModal) => async (dispatch, getSta
     const { cdp, proxyAddress, account, ethPrice } = getState().general;  // eslint-disable-line
     const params = [proxySendHandler, amountEth.toString(), cdp.id, proxyAddress, account, 'repay', ethPrice, true]; // eslint-disable-line
 
-    console.log(amountEth.toString());
-
     const payload = await callSaverProxyContract(...params);
 
     dispatch({ type: REPAY_DAI_SUCCESS, payload });

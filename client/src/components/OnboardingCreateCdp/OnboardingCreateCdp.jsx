@@ -37,9 +37,14 @@ let OnboardingCreateCdp = ({
 
           <div className="dot-wrapper">
             <div className="dot red" />
-            <span>Gambler</span>
+            <span>Gamble</span>
           </div>
         </div>
+
+        <div className="ratio-explain-text">
+          Minimum accepted ratio is 150%, we recommend a ratio over 200% to keep the CDP safe from liquidation
+        </div>
+
       </div>
 
       <div className="bottom-controls width-container">
