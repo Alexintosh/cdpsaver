@@ -124,6 +124,7 @@ export const formatAcc = account => `${account.substring(0, 12)}...${account.sub
 
 export const formatAccType = (accType) => {
   if (accType === 'metamask') return 'MetaMask';
+  if (accType === 'trezor') return 'Trezor';
 };
 
 const countDecimals = (value) => {

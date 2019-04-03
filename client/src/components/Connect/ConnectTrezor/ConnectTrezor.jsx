@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { normalLogin } from '../../../actions/accountActions';
 import InputComponent from '../../Forms/InputComponent';
+import { DEFAULT_TREZOR_PATH } from '../../../constants/general';
 
 const ConnectTrezor = ({
   connectingProvider, history, to, formValue, handleSubmit, onSubmit, handleSwitch,
@@ -34,7 +35,7 @@ const ConnectTrezor = ({
           type="submit"
           className="button uppercase green"
         >
-          Connect Trezor
+          { connectingProvider ? 'Connecting' : 'Connect' } Trezor
         </button>
       </div>
     </form>
@@ -64,7 +65,7 @@ const selector = formValueSelector('connectTrezorForm');
 const mapStateToProps = state => ({
   connectingProvider: state.general.connectingProvider,
   initialValues: {
-    path: "m/44'/60'/0'/0/0",
+    path: DEFAULT_TREZOR_PATH,
   },
   formValue: selector(state, 'path'),
 });

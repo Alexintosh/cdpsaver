@@ -22,6 +22,7 @@ import config from '../config/config.json';
 import { isEmptyBytes, numStringToBytes32 } from '../utils/utils';
 import dsProxyContractJson from '../contracts/DSProxy.json';
 import { getCdpInfo, getUpdatedCdpInfo } from './cdpService';
+import callTx from './txService';
 
 export const getAccount = () => (
   new Promise(async (resolve, reject) => {
@@ -112,6 +113,8 @@ export const metamaskApprove = async () => {
 /**
  * Creates a cdp and a proxy address for the sender
  *
+ * @param accountType {String}
+ * @param path {String}
  * @param sendTxFunc {Function}
  * @param from {String}
  * @param ethAmount {String}
@@ -119,17 +122,17 @@ export const metamaskApprove = async () => {
  *
  * @return {Promise<any>}
  */
-export const createCdpAndProxy = (sendTxFunc, from, ethAmount, _daiAmount) => new Promise(async (resolve, reject) => {
-  const address1 = proxyRegistryInterfaceAddress;
-  const address2 = tubInterfaceAddress;
-
+export const createCdpAndProxy = (
+  accountType, path, sendTxFunc, from, ethAmount, _daiAmount,
+) => new Promise(async (resolve, reject) => {
   try {
     const contract = await SaiSaverProxyContract();
     const params = { from, value: window._web3.utils.toWei(ethAmount, 'ether') };
     const daiAmount = window._web3.utils.toWei(_daiAmount.toString(), 'ether');
 
-    const promise = contract.methods.createOpenLockAndDraw(address1, address2, daiAmount).send(params);
-    await sendTxFunc(promise);
+    const funcParams = [proxyRegistryInterfaceAddress, tubInterfaceAddress, daiAmount];
+
+    await callTx(accountType, path, sendTxFunc, contract, 'createOpenLockAndDraw', funcParams, params);
 
     resolve(true);
   } catch (err) {
@@ -140,6 +143,8 @@ export const createCdpAndProxy = (sendTxFunc, from, ethAmount, _daiAmount) => ne
 /**
  * Creates a cdp for a already created proxy address
  *
+ * @param accountType {String}
+ * @param path {String}
  * @param sendTxFunc {Function}
  * @param from {String}
  * @param ethAmount {String}
@@ -148,29 +153,30 @@ export const createCdpAndProxy = (sendTxFunc, from, ethAmount, _daiAmount) => ne
  *
  * @return {Promise<any>}
  */
-export const createCdp = (sendTxFunc, from, ethAmount, _daiAmount, proxyAddress) =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const contract = config.SaiSaverProxy;
+export const createCdp = (
+  accountType, path, sendTxFunc, from, ethAmount, _daiAmount, proxyAddress,
+) => new Promise(async (resolve, reject) => {
+  try {
+    const contract = config.SaiSaverProxy;
 
-      const txParams = { from, value: window._web3.utils.toWei(ethAmount, 'ether') };
-      const daiAmount = window._web3.utils.toWei(_daiAmount.toString(), 'ether');
+    const txParams = { from, value: window._web3.utils.toWei(ethAmount.toString(), 'ether') };
+    const daiAmount = window._web3.utils.toWei(_daiAmount.toString(), 'ether');
 
-      const proxyContract = new window._web3.eth.Contract(dsProxyContractJson.abi, proxyAddress);
+    const proxyContract = new window._web3.eth.Contract(dsProxyContractJson.abi, proxyAddress);
 
-      const contractFunction = contract.abi.reverse().find(abi => abi.name === 'lockAndDraw');
+    const contractFunction = contract.abi.reverse().find(abi => abi.name === 'lockAndDraw');
 
-      const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, [tubInterfaceAddress, daiAmount]);
+    const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, [tubInterfaceAddress, daiAmount]);
 
-      const promise = proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send(txParams);
+    const funcParams = [saiSaverProxyAddress, data];
 
-      await sendTxFunc(promise);
+    await callTx(accountType, path, sendTxFunc, proxyContract, 'execute(address,bytes)', funcParams, txParams);
 
-      resolve(true);
-    } catch (err) {
-      reject(err);
-    }
-  });
+    resolve(true);
+  } catch (err) {
+    reject(err);
+  }
+});
 
 export const paybackWithConversion = (sendTxFunc, from, _daiAmount, cdpId, proxyAddress, ethPrice) => new Promise(async (resolve, reject) => {
   const tubAddress = tubInterfaceAddress;

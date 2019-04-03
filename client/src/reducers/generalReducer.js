@@ -68,6 +68,7 @@ const INITIAL_STATE = {
   accountType: lsAccountType || '',
   balance: 0,
   network: 0,
+  path: '',
 
   proxyAddress: '',
 

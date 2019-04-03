@@ -46,7 +46,7 @@ export const loginTrezor = path => async (dispatch) => {
     dispatch({
       type: CONNECT_PROVIDER_SUCCESS,
       payload: {
-        account, accountType, balance, network,
+        account, accountType, balance, network, path,
       },
     });
 

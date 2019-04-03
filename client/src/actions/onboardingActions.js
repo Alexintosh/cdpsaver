@@ -46,12 +46,14 @@ export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dis
   const contractSendHandler = promise => sendTx(promise, 'Create CDP', dispatch, getState);
 
   try {
-    const { account, proxyAddress, cdps } = getState().general;
+    const {
+      account, proxyAddress, cdps, accountType, path,
+    } = getState().general;
 
     if (proxyAddress) {
-      await createCdp(contractSendHandler, account, ethAmount, parseFloat(daiAmount), proxyAddress);
+      await createCdp(accountType, path, contractSendHandler, account, ethAmount, daiAmount, proxyAddress);
     } else {
-      await createCdpAndProxy(contractSendHandler, account, ethAmount, parseFloat(daiAmount));
+      await createCdpAndProxy(accountType, path, contractSendHandler, account, ethAmount, daiAmount);
     }
 
     const cdpsData = await getAddressCdp(account);

@@ -1,11 +1,8 @@
 import Tx from 'ethereumjs-tx';
-import config from '../config/clientConfig.json';
+import clientConfig from '../config/clientConfig.json';
 import TrezorConnect from './trezor-connect';
 
 const trezor = TrezorConnect;
-
-const defaultPath = "m/44'/60'/0'/0/0";
-let trezorPath = defaultPath;
 
 let lastNonce = 0;
 
@@ -18,13 +15,13 @@ let currentlySendingLock = false;
  *
  * @return {Promise<String>}
  */
-export const trezorGetAccount = async (path = defaultPath) => new Promise(async (resolve, reject) => {
+export const trezorGetAccount = path => new Promise(async (resolve, reject) => {
   try {
-    trezorPath = path;
-
-    const response = await trezor.ethereumGetAddress({ path: trezorPath });
+    const response = await trezor.ethereumGetAddress({ path });
 
     if (!response.success) return reject(response.payload.error);
+
+    lastNonce = 0;
 
     resolve(response.payload.address.toLowerCase());
   } catch (e) {
@@ -32,6 +29,11 @@ export const trezorGetAccount = async (path = defaultPath) => new Promise(async 
   }
 });
 
+/**
+ * Regulates when multiple transactions are called
+ *
+ * @return {Promise<void>}
+ */
 const waitForLock = async () => {
   while (currentlySendingLock) await new Promise(res => setTimeout(res, 50)); // eslint-disable-line
   currentlySendingLock = true;
@@ -48,7 +50,9 @@ const waitForLock = async () => {
  *
  * @return {Promise<*>}
  */
-export const signAndSendTrezor = async (contract, action, args, value, address) => {
+export const signAndSendTrezor = (
+  contract, action, args, value, address, path,
+) => new Promise(async (resolve, reject) => {
   await waitForLock();
   try {
     const contractCall = contract.methods[action](...args);
@@ -76,14 +80,11 @@ export const signAndSendTrezor = async (contract, action, args, value, address) 
     const gasPrice = await window._web3.eth.getGasPrice();
     rawTx.gasPrice = window._web3.utils.numberToHex(gasPrice);
 
-    rawTx.chainId = config.network;
+    rawTx.chainId = clientConfig.network;
 
     console.log('TREZOR rawTx', rawTx);
 
-    const response = await trezor.ethereumSignTransaction({
-      path: "m/44'/60'/0'/0/0",
-      transaction: rawTx,
-    });
+    const response = await trezor.ethereumSignTransaction({ path, transaction: rawTx });
     console.log('response', response);
 
     if (!response.success) throw new Error(response.payload.error);
@@ -100,14 +101,10 @@ export const signAndSendTrezor = async (contract, action, args, value, address) 
     lastNonce += 1;
     console.log('TREZOR incrementing nonce');
 
-    return window._web3.eth.sendSignedTransaction(`0x${tx2.serialize().toString('hex')}`)
-      .on('transactionHash', (hash) => {
-        console.log('HASH', hash);
-      });
+    resolve(`0x${tx2.serialize().toString('hex')}`);
   } catch (err) {
-    console.log('ERROR', err);
+    reject(err);
   } finally {
-    console.log('TREZOR releasing lock');
     currentlySendingLock = false;
   }
-};
+});

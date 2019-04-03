@@ -26,3 +26,5 @@ export const MOCK_CDP = {
 };
 
 export const MIN_ETH_COLLATERAL = 0.005;
+
+export const DEFAULT_TREZOR_PATH = "m/44'/60'/0'/0/0";
