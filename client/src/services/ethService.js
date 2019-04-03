@@ -67,7 +67,13 @@ export const nameOfNetwork = (networkId) => {
   return networks[networkId] || 'Unknown network';
 };
 
-// Helper function to verify if the contract has a permit method
+/**
+ * Helper function to verify if the contract has a permit method
+ *
+ * @param authorityAddress {String}
+ *
+ * @return {Promise<boolean>}
+ */
 async function isContractDSGuard(authorityAddress) {
   const code = await window._web3.eth.getCode(authorityAddress);
 
@@ -90,6 +96,11 @@ export const isMetaMaskApproved = async () => {
   return !!acc.length;
 };
 
+/**
+ * If MetaMask privacy is on, opens MetaMask modal to whitelist it
+ *
+ * @return {Promise<*>}
+ */
 export const metamaskApprove = async () => {
   try {
     if (window.ethereum) return window.ethereum.enable();
@@ -98,6 +109,16 @@ export const metamaskApprove = async () => {
   }
 };
 
+/**
+ * Creates a cdp and a proxy address for the sender
+ *
+ * @param sendTxFunc {Function}
+ * @param from {String}
+ * @param ethAmount {String}
+ * @param _daiAmount {String}
+ *
+ * @return {Promise<any>}
+ */
 export const createCdpAndProxy = (sendTxFunc, from, ethAmount, _daiAmount) => new Promise(async (resolve, reject) => {
   const address1 = proxyRegistryInterfaceAddress;
   const address2 = tubInterfaceAddress;
@@ -116,32 +137,40 @@ export const createCdpAndProxy = (sendTxFunc, from, ethAmount, _daiAmount) => ne
   }
 });
 
-// eslint-disable-next-line max-len
-export const createCdp = (sendTxFunc, from, ethAmount, _daiAmount, proxyAddress) => new Promise(async (resolve, reject) => {
-  const tubAddress = tubInterfaceAddress;
+/**
+ * Creates a cdp for a already created proxy address
+ *
+ * @param sendTxFunc {Function}
+ * @param from {String}
+ * @param ethAmount {String}
+ * @param _daiAmount {String}
+ * @param proxyAddress {String}
+ *
+ * @return {Promise<any>}
+ */
+export const createCdp = (sendTxFunc, from, ethAmount, _daiAmount, proxyAddress) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const contract = config.SaiSaverProxy;
 
-  try {
-    const contract = config.SaiSaverProxy;
+      const txParams = { from, value: window._web3.utils.toWei(ethAmount, 'ether') };
+      const daiAmount = window._web3.utils.toWei(_daiAmount.toString(), 'ether');
 
-    const txParams = { from, value: window._web3.utils.toWei(ethAmount, 'ether') };
-    const daiAmount = window._web3.utils.toWei(_daiAmount.toString(), 'ether');
+      const proxyContract = new window._web3.eth.Contract(dsProxyContractJson.abi, proxyAddress);
 
-    const proxyContract = new window._web3.eth.Contract(dsProxyContractJson.abi, proxyAddress);
+      const contractFunction = contract.abi.reverse().find(abi => abi.name === 'lockAndDraw');
 
-    const contractFunction = contract.abi.reverse().find(abi => abi.name === 'lockAndDraw');
+      const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, [tubInterfaceAddress, daiAmount]);
 
-    const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, [tubAddress, daiAmount]);
+      const promise = proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send(txParams);
 
-    const promise = proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send(txParams);
+      await sendTxFunc(promise);
 
-    await sendTxFunc(promise);
-
-    resolve(true);
-  } catch (err) {
-    console.log(err);
-    reject(err);
-  }
-});
+      resolve(true);
+    } catch (err) {
+      reject(err);
+    }
+  });
 
 export const paybackWithConversion = (sendTxFunc, from, _daiAmount, cdpId, proxyAddress, ethPrice) => new Promise(async (resolve, reject) => {
   const tubAddress = tubInterfaceAddress;
@@ -172,7 +201,6 @@ export const paybackWithConversion = (sendTxFunc, from, _daiAmount, cdpId, proxy
 
     resolve({ ...newCdp, ...newCdpInfo });
   } catch (err) {
-    console.log(err);
     reject(err);
   }
 });
@@ -237,6 +265,8 @@ export const callProxyContract = (
  * Gets dai allowance for the users address from the dai erc20 contract
  *
  * @param address {String}
+ * @param proxyAddress {String}
+ *
  * @return {Promise<Number>}
  */
 export const getDaiAllowance = (address, proxyAddress) => new Promise(async (resolve, reject) => {
@@ -298,6 +328,8 @@ export const approveDai = (address, proxyAddress, sendTxFunc) => new Promise(asy
  * Gets maker allowance for the users address from the dai erc20 contract
  *
  * @param address {String}
+ * @param proxyAddress {String}
+ *
  * @return {Promise<Number>}
  */
 export const getMakerAllowance = (address, proxyAddress) => new Promise(async (resolve, reject) => {
@@ -523,8 +555,6 @@ export const buyCdp = (sendTxFunc, cdpId, account, proxyAddress) => new Promise(
     const txParams = { from: account, value: cdpValue[0].toString() };
 
     const newOwner = proxyAddress || account;
-
-    console.log(cdpIdBytes32, cdpValue[0].toString(), newOwner);
 
     const promise = contract.methods.buy(cdpIdBytes32, newOwner).send(txParams);
     await sendTxFunc(promise);
