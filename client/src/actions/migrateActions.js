@@ -26,21 +26,21 @@ export const resetMigrateCdp = () => (dispatch) => { dispatch({ type: MIGRATE_CD
  * @return {Function}
  */
 export const migrateCdpAction = cdp => async (dispatch, getState) => {
-  const createDSNotificationFunc = promise => sendTx(promise, 'Create DS Proxy', dispatch, getState);
-  const migrateCDPNotificationFunc = promise => sendTx(promise, 'Migrate CDP', dispatch, getState);
+  const createDSNotificationFunc = (promise, waitForSign) => sendTx(promise, 'Create DS Proxy', dispatch, getState, waitForSign); // eslint-disable-line
+  const migrateCDPNotificationFunc = (promise, waitForSign) => sendTx(promise, 'Migrate CDP', dispatch, getState, waitForSign);  // eslint-disable-line
 
-  const { account } = getState().general;
+  const { account, accountType, path } = getState().general;
   let { proxyAddress } = getState().general;
 
   dispatch({ type: MIGRATE_CDP_REQUEST });
 
   try {
     if (!proxyAddress) {
-      await createDSProxy(createDSNotificationFunc, account);
+      await createDSProxy(accountType, path, createDSNotificationFunc, account);
       proxyAddress = await proxyRegistryInterfaceContract().methods.proxies(account).call();
     }
 
-    await migrateCdp(migrateCDPNotificationFunc, cdp.id, proxyAddress, account);
+    await migrateCdp(accountType, path, migrateCDPNotificationFunc, cdp.id, proxyAddress, account);
 
     dispatch({ type: MIGRATE_CDP_SUCCESS });
     dispatch({ type: ADD_PROXY_ADDRESS, payload: proxyAddress });

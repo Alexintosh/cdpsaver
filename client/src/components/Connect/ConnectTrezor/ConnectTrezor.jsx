@@ -12,7 +12,7 @@ const ConnectTrezor = ({
   <div className="connect-login-wrapper trezor">
     <h2>This is a secure way to access your wallet</h2>
     <p>
-      Connect your Trezor, unlock it and open the Ethereum app to start trading on Trustless.
+      Connect your Trezor wallet, unlock it connect it to start managing your CDPS.
     </p>
 
     <form onSubmit={handleSubmit(() => { onSubmit('trezor', history, to, formValue); })} className="form-wrapper">

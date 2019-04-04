@@ -468,7 +468,7 @@ export const getItemsOnSale = () => new Promise(async (resolve, reject) => {
  * @return {Promise<Boolean>}
  */
 export const sellCdp = (
-  accountType, path, sendTxFunc, account, cdpId, discount, proxyAddress
+  accountType, path, sendTxFunc, account, cdpId, discount, proxyAddress,
 ) => new Promise(async (resolve, reject) => {
   try {
     let contractFunctionName = 'createAuthorizeAndSell';
@@ -524,7 +524,7 @@ export const sellCdp = (
  * @return {Promise<Boolean>}
  */
 export const cancelSellCdp = (
-  accountType, path, sendTxFunc, account, cdpId, proxyAddress
+  accountType, path, sendTxFunc, account, cdpId, proxyAddress,
 ) => new Promise(async (resolve, reject) => {
   try {
     const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
@@ -561,7 +561,7 @@ export const cancelSellCdp = (
  * @return {Promise<Boolean>}
  */
 export const buyCdp = (
-  accountType, path, sendTxFunc, cdpId, account, proxyAddress
+  accountType, path, sendTxFunc, cdpId, account, proxyAddress,
 ) => new Promise(async (resolve, reject) => {
   const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
 
@@ -584,16 +584,17 @@ export const buyCdp = (
 /**
  * Creates a DSProxy contract for a user that does not have one
  *
+ * @param accountType {String}
+ * @param path {String}
  * @param sendTxFunc {Function}
  * @param account {String}
  * @return {Promise<{String}>}
  */
-export const createDSProxy = (sendTxFunc, account) => new Promise(async (resolve, reject) => {
+export const createDSProxy = (accountType, path, sendTxFunc, account) => new Promise(async (resolve, reject) => {
   try {
     const contract = await proxyRegistryInterfaceContract();
 
-    const promise = contract.methods.build(account).send({ from: account });
-    await sendTxFunc(promise);
+    await callTx(accountType, path, sendTxFunc, contract, 'build', [account], { from: account });
 
     resolve(true);
   } catch (err) {
@@ -604,20 +605,23 @@ export const createDSProxy = (sendTxFunc, account) => new Promise(async (resolve
 /**
  * Transfers the cdp from the user to the proxyAddress
  *
+ * @param accountType {String}
+ * @param path {String}
  * @param sendTxFunc {Function}
  * @param cdpId {Number}
  * @param proxyAddress {String}
  * @param account {String}
  * @return {Promise<any>}
  */
-export const migrateCdp = (sendTxFunc, cdpId, proxyAddress, account) => new Promise(async (resolve, reject) => {
+export const migrateCdp = (
+  accountType, path, sendTxFunc, cdpId, proxyAddress, account,
+) => new Promise(async (resolve, reject) => {
   const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
 
   try {
     const contract = await TubInterfaceContract();
 
-    const promise = contract.methods.give(cdpIdBytes32, proxyAddress).send({ from: account });
-    await sendTxFunc(promise);
+    await callTx(accountType, path, sendTxFunc, contract, 'give', [cdpIdBytes32, proxyAddress], { from: account });
 
     resolve(true);
   } catch (err) {
