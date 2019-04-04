@@ -201,13 +201,18 @@ export const getPaybackFormMaxValues = () => (dispatch) => {
 export const generateDaiAction = amountDai => async (dispatch, getState) => {
   dispatch({ type: GENERATE_DAI_REQUEST });
 
-  const proxySendHandler = (promise, amount) => sendTx(promise, `Generate ${amount} DAI`, dispatch, getState);
+  const proxySendHandler = (promise, waitForSign) => {
+    const amount = formatNumber(parseFloat(amountDai), 2);
+    return sendTx(promise, `Generate ${amount} DAI`, dispatch, getState, waitForSign);
+  };
 
   try {
-    const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
+    const {
+      cdp, account, proxyAddress, ethPrice, accountType, path,
+    } = getState().general;
     const params = [proxySendHandler, amountDai.toString(), cdp.id, proxyAddress, account, 'draw', ethPrice];
 
-    const payload = await callProxyContract(...params);
+    const payload = await callProxyContract(accountType, path, ...params);
 
     dispatch({ type: GENERATE_DAI_SUCCESS, payload });
     dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });
@@ -229,13 +234,18 @@ export const generateDaiAction = amountDai => async (dispatch, getState) => {
 export const withdrawEthAction = amountEth => async (dispatch, getState) => {
   dispatch({ type: WITHDRAW_ETH_REQUEST });
 
-  const proxySendHandler = (promise, amount) => sendTx(promise, `Withdraw ${amount} ETH`, dispatch, getState);
+  const proxySendHandler = (promise, waitForSign) => {
+    const amount = formatNumber(parseFloat(amountEth), 2);
+    return sendTx(promise, `Withdraw ${amount} ETH`, dispatch, getState, waitForSign);
+  };
 
   try {
-    const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
+    const {
+      cdp, account, proxyAddress, ethPrice, accountType, path,
+    } = getState().general;
     const params = [proxySendHandler, amountEth.toString(), cdp.id, proxyAddress, account, 'free', ethPrice];
 
-    const payload = await callProxyContract(...params);
+    const payload = await callProxyContract(accountType, path, ...params);
 
     dispatch({ type: WITHDRAW_ETH_SUCCESS, payload });
     dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });
@@ -283,13 +293,18 @@ export const getRepayModalData = amount => async (dispatch, getState) => {
 export const repayDaiAction = (amountEth, closeModal) => async (dispatch, getState) => {
   dispatch({ type: REPAY_DAI_REQUEST });
 
-  const proxySendHandler = (promise, amount) => sendTx(promise, `Repay ${formatNumber(parseFloat(amount), 2)} ETH`, dispatch, getState); // eslint-disable-line
+  const proxySendHandler = (promise, waitForSign) => {
+    const amount = formatNumber(parseFloat(amountEth), 2);
+    return sendTx(promise, `Repay ${amount} ETH`, dispatch, getState, waitForSign);
+  };
 
   try {
-    const { cdp, proxyAddress, account, ethPrice } = getState().general;  // eslint-disable-line
+    const {
+      cdp, proxyAddress, account, ethPrice, accountType, path,
+    } = getState().general;
     const params = [proxySendHandler, amountEth.toString(), cdp.id, proxyAddress, account, 'repay', ethPrice, true]; // eslint-disable-line
 
-    const payload = await callSaverProxyContract(...params);
+    const payload = await callSaverProxyContract(accountType, path, ...params);
 
     dispatch({ type: REPAY_DAI_SUCCESS, payload });
     dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });
@@ -339,13 +354,18 @@ export const getBoostModalData = amount => async (dispatch) => {
 export const boostAction = (amountDai, closeModal) => async (dispatch, getState) => {
   dispatch({ type: BOOST_REQUEST });
 
-  const proxySendHandler = (promise, amount) => sendTx(promise, `Boost ${formatNumber(parseFloat(amount), 2)} DAI`, dispatch, getState); // eslint-disable-line
+  const proxySendHandler = (promise, waitForSign) => {
+    const amount = formatNumber(parseFloat(amountDai), 2);
+    return sendTx(promise, `Boost ${amount} DAI`, dispatch, getState, waitForSign);
+  };
 
   try {
-    const { cdp, proxyAddress, account, ethPrice } = getState().general; // eslint-disable-line
+    const {
+      cdp, proxyAddress, account, ethPrice, accountType, path,
+    } = getState().general;
     const params = [proxySendHandler, amountDai.toString(), cdp.id, proxyAddress, account, 'boost', ethPrice];
 
-    const payload = await callSaverProxyContract(...params);
+    const payload = await callSaverProxyContract(accountType, path, ...params);
 
     dispatch({ type: BOOST_SUCCESS, payload });
     dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });
@@ -375,13 +395,18 @@ export const resetBoostModal = () => (dispatch) => { dispatch({ type: RESET_BOOS
 export const addCollateralAction = amountEth => async (dispatch, getState) => {
   dispatch({ type: ADD_COLLATERAL_REQUEST });
 
-  const proxySendHandler = (promise, amount) => sendTx(promise, `Add collateral: ${amount} ETH`, dispatch, getState);
+  const proxySendHandler = (promise, waitForSign) => {
+    const amount = formatNumber(parseFloat(amountEth), 2);
+    return sendTx(promise, `Add collateral: ${amount} ETH`, dispatch, getState, waitForSign);
+  };
 
   try {
-    const { cdp, account, proxyAddress, ethPrice } = getState().general; // eslint-disable-line
+    const {
+      cdp, account, proxyAddress, ethPrice, accountType, path,
+    } = getState().general; // eslint-disable-line
     const params = [proxySendHandler, amountEth.toString(), cdp.id, proxyAddress, account, 'lock', ethPrice, true];
 
-    const payload = await callProxyContract(...params);
+    const payload = await callProxyContract(accountType, path, ...params);
 
     dispatch({ type: ADD_COLLATERAL_SUCCESS, payload });
     dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });
@@ -403,20 +428,24 @@ export const addCollateralAction = amountEth => async (dispatch, getState) => {
 export const paybackDaiAction = (amountDai, closeModal) => async (dispatch, getState) => {
   dispatch({ type: PAYBACK_DAI_REQUEST });
 
-  const proxySendHandler = (promise, amount) => sendTx(promise, `Payback ${amount} DAI`, dispatch, getState);
+  const proxySendHandler = (promise, waitForSign) => {
+    const amount = formatNumber(parseFloat(amountDai), 2);
+    return sendTx(promise, `Payback ${amount} DAI`, dispatch, getState, waitForSign);
+  };
 
   try {
-    const { cdp, account, proxyAddress, ethPrice, enoughMkrToWipe } = getState().general; // eslint-disable-line
-
+    const {
+      cdp, account, proxyAddress, ethPrice, enoughMkrToWipe, accountType, path,
+    } = getState().general;
 
     let payload = {};
 
     if (enoughMkrToWipe) {
       const params = [proxySendHandler, amountDai.toString(), cdp.id, proxyAddress, account, 'wipe', ethPrice, false, true]; // eslint-disable-line
-      payload = await callProxyContract(...params);
+      payload = await callProxyContract(accountType, path, ...params);
     } else {
       const params = [proxySendHandler, account, amountDai.toString(), cdp.id, proxyAddress, ethPrice];
-      payload = await paybackWithConversion(...params);
+      payload = await paybackWithConversion(accountType, path, ...params);
     }
 
     dispatch({ type: PAYBACK_DAI_SUCCESS, payload });
@@ -525,12 +554,12 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
 export const approveDaiAction = () => async (dispatch, getState) => {
   dispatch({ type: APPROVE_DAI_REQUEST });
 
-  const notificationPromise = promise => sendTx(promise, 'Approve DAI', dispatch, getState);
+  const notificationPromise = (promise, waitForSign) => sendTx(promise, 'Approve DAI', dispatch, getState, waitForSign);
 
   try {
-    const { account, proxyAddress } = getState().general;
+    const { account, proxyAddress, accountType, path } = getState().general; // eslint-disable-line
 
-    await approveDai(account, proxyAddress, notificationPromise);
+    await approveDai(accountType, path, account, proxyAddress, notificationPromise);
 
     dispatch({ type: APPROVE_DAI_SUCCESS });
   } catch (err) {
@@ -548,12 +577,12 @@ export const approveDaiAction = () => async (dispatch, getState) => {
 export const approveMakerAction = () => async (dispatch, getState) => {
   dispatch({ type: APPROVE_MAKER_REQUEST });
 
-  const notificationPromise = promise => sendTx(promise, 'Approve MKR', dispatch, getState);
+  const notificationPromise = (promise, waitForSign) => sendTx(promise, 'Approve MKR', dispatch, getState, waitForSign);
 
-  const { account, proxyAddress } = getState().general;
+  const { account, proxyAddress, accountType, path } = getState().general; // eslint-disable-line
 
   try {
-    await approveMaker(account, proxyAddress, notificationPromise);
+    await approveMaker(accountType, path, account, proxyAddress, notificationPromise);
 
     dispatch({ type: APPROVE_MAKER_SUCCESS });
   } catch (err) {
@@ -575,14 +604,14 @@ export const approveMakerAction = () => async (dispatch, getState) => {
 export const transferCdpAction = ({ toAddress }, history, closeModal) => async (dispatch, getState) => {
   dispatch({ type: TRANSFER_CDP_REQUEST });
 
-  const proxySendHandler = promise => sendTx(promise, 'Transfer CDP', dispatch, getState);
+  const proxySendHandler = (promise, waitForSign) => sendTx(promise, 'Transfer CDP', dispatch, getState, waitForSign);
 
   try {
     const {
-      account, cdp, cdps, proxyAddress,
+      account, cdp, cdps, proxyAddress, accountType, path,
     } = getState().general;
 
-    await transferCdp(proxySendHandler, account, toAddress, cdp.id, proxyAddress);
+    await transferCdp(accountType, path, proxySendHandler, account, toAddress, cdp.id, proxyAddress);
     await (() => new Promise((resolve) => { setTimeout(() => { resolve(true); }, 5000); }))();
 
     const newCdps = [...cdps];
@@ -599,7 +628,6 @@ export const transferCdpAction = ({ toAddress }, history, closeModal) => async (
     if (newCdp === null) history.push('/create-cdp');
     else history.push('/dashboard/manage');
   } catch (err) {
-    console.log('err', err);
     const payload = err.message.includes(MM_DENIED_TX_ERROR) ? '' : err.message;
 
     dispatch({ type: TRANSFER_CDP_FAILURE, payload });
@@ -617,15 +645,15 @@ export const transferCdpAction = ({ toAddress }, history, closeModal) => async (
 export const closeCdpAction = (closeModal, history) => async (dispatch, getState) => {
   dispatch({ type: CLOSE_CDP_REQUEST });
 
-  const proxySendHandler = promise => sendTx(promise, 'Close CDP', dispatch, getState);
+  const proxySendHandler = (promise, waitForSign) => sendTx(promise, 'Close CDP', dispatch, getState, waitForSign);
 
   try {
     const {
-      cdp, cdps, account, proxyAddress, ethPrice,
+      cdp, cdps, account, proxyAddress, ethPrice, accountType, path,
     } = getState().general;
     const params = [proxySendHandler, '0', cdp.id, proxyAddress, account, 'shut', ethPrice, true, true];
 
-    await callProxyContract(...params);
+    await callProxyContract(accountType, path, ...params);
 
     const newCdps = [...cdps];
     const closedCdpIndex = cdps.findIndex(_cdp => _cdp.id === cdp.id);

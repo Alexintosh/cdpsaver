@@ -178,9 +178,24 @@ export const createCdp = (
   }
 });
 
-export const paybackWithConversion = (sendTxFunc, from, _daiAmount, cdpId, proxyAddress, ethPrice) => new Promise(async (resolve, reject) => {
-  const tubAddress = tubInterfaceAddress;
-
+/**
+ * Calls the payback action on the smart contract but passes other parameters than the callProxyContract
+ * method
+ *
+ * @param accountType {String}
+ * @param path {String}
+ * @param sendTxFunc {Function}
+ * @param from {String}
+ * @param _daiAmount {String}
+ * @param cdpId {Number}
+ * @param proxyAddress {String}
+ * @param ethPrice {Number}
+ *
+ * @return {Promise<any>}
+ */
+export const paybackWithConversion = (
+  accountType, path, sendTxFunc, from, _daiAmount, cdpId, proxyAddress, ethPrice,
+) => new Promise(async (resolve, reject) => {
   try {
     const contract = config.SaiSaverProxy;
 
@@ -195,12 +210,11 @@ export const paybackWithConversion = (sendTxFunc, from, _daiAmount, cdpId, proxy
 
     const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
 
-    const data = window._web3.eth.abi.encodeFunctionCall(contractFunction,
-      [tubAddress, cdpIdBytes32, daiAmount, OTC_ADDRESS]);
+    const dataParams = [tubInterfaceAddress, cdpIdBytes32, daiAmount, OTC_ADDRESS];
+    const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, dataParams);
+    const funcParams = [saiSaverProxyAddress, data];
 
-    const promise = proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send(txParams);
-
-    await sendTxFunc(promise);
+    await callTx(accountType, path, sendTxFunc, proxyContract, 'execute(address,bytes)', funcParams, txParams);
 
     const newCdp = await getCdpInfo(cdpId, false);
     const newCdpInfo = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
@@ -214,6 +228,8 @@ export const paybackWithConversion = (sendTxFunc, from, _daiAmount, cdpId, proxy
 /**
  * Calls the proxy contract and handles the action that is specified in the parameters
  *
+ * @param accountType {String}
+ * @param path {String}
  * @param sendTxFunc {Function}
  * @param amount {String}
  * @param cdpId {Number}
@@ -227,7 +243,7 @@ export const paybackWithConversion = (sendTxFunc, from, _daiAmount, cdpId, proxy
  * @return {Promise<Object>}
  */
 export const callProxyContract = (
-  sendTxFunc,
+  accountType, path, sendTxFunc,
   amount, cdpId, proxyAddress, account, funcName, ethPrice, sendAsValue = false, sendEmptyAddress = false,
 ) => new Promise(async (resolve, reject) => {
   const web3 = window._web3;
@@ -254,9 +270,9 @@ export const callProxyContract = (
     if (sendEmptyAddress) params.push('0x0000000000000000000000000000000000000000');
 
     const data = web3.eth.abi.encodeFunctionCall(contractFunction, params);
+    const funcParams = [saiSaverProxyAddress, data];
 
-    const promise = proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send(txParams);
-    await sendTxFunc(promise, amount);
+    await callTx(accountType, path, sendTxFunc, proxyContract, 'execute(address,bytes)', funcParams, txParams);
 
     const newCdp = await getCdpInfo(cdpId, false);
     const newCdpInfo = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
@@ -308,21 +324,23 @@ export const getDaiBalance = address => new Promise(async (resolve, reject) => {
 /**
  * Approves that dai can be used for the users address on the dai erc20 contract
  *
+ * @param accountType {String}
+ * @param path {String}
  * @param address {String}
  * @param proxyAddress {String}
  * @param sendTxFunc {Function}
  *
  * @return {Promise<Boolean>}
  */
-export const approveDai = (address, proxyAddress, sendTxFunc) => new Promise(async (resolve, reject) => {
+export const approveDai = (
+  accountType, path, address, proxyAddress, sendTxFunc,
+) => new Promise(async (resolve, reject) => {
   const contract = await DaiErc20Contract();
 
   const num = ethToWei(Number.MAX_SAFE_INTEGER.toString());
 
   try {
-    const promise = contract.methods.approve(proxyAddress, num).send({ from: address });
-
-    await sendTxFunc(promise);
+    await callTx(accountType, path, sendTxFunc, contract, 'approve', [proxyAddress, num], { from: address });
 
     resolve(true);
   } catch (err) {
@@ -371,21 +389,23 @@ export const getMakerBalance = address => new Promise(async (resolve, reject) =>
 /**
  * Approves that maker can be used for the users address on the dai erc20 contract
  *
+ * @param accountType {String}
+ * @param path {String}
  * @param address {String}
  * @param proxyAddress {String}
  * @param sendTxFunc {Function}
  *
  * @return {Promise<Boolean>}
  */
-export const approveMaker = (address, proxyAddress, sendTxFunc) => new Promise(async (resolve, reject) => {
+export const approveMaker = (
+  accountType, path, address, proxyAddress, sendTxFunc,
+) => new Promise(async (resolve, reject) => {
   const contract = await MakerErc20Contract();
 
   const num = ethToWei(Number.MAX_SAFE_INTEGER.toString());
 
   try {
-    const promise = contract.methods.approve(proxyAddress, num).send({ from: address });
-
-    await sendTxFunc(promise);
+    await callTx(accountType, path, sendTxFunc, contract, 'approve', [proxyAddress, num], { from: address });
 
     resolve(true);
   } catch (err) {
@@ -396,6 +416,8 @@ export const approveMaker = (address, proxyAddress, sendTxFunc) => new Promise(a
 /**
  * Transfers the cdp from one address to another address
  *
+ * @param accountType {String}
+ * @param path {String}
  * @param sendTxFunc {Function}
  * @param fromAddress {String}
  * @param toAddress {String}
@@ -405,7 +427,7 @@ export const approveMaker = (address, proxyAddress, sendTxFunc) => new Promise(a
  * @return {Promise<Boolean>}
  */
 export const transferCdp = (
-  sendTxFunc, fromAddress, toAddress, cdpId, proxyAddress,
+  accountType, path, sendTxFunc, fromAddress, toAddress, cdpId, proxyAddress,
 ) => new Promise(async (resolve, reject) => {
   try {
     const contract = config.SaiSaverProxy;
@@ -418,10 +440,9 @@ export const transferCdp = (
 
     const params = [saiTubAddress, cdpIdBytes32, toAddress];
     const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, params);
+    const funcParams = [saiSaverProxyAddress, data];
 
-    const promise = proxyContract.methods['execute(address,bytes)'](saiSaverProxyAddress, data).send({ from: fromAddress }); // eslint-disable-line
-
-    await sendTxFunc(promise);
+    await callTx(accountType, path, sendTxFunc, proxyContract, 'execute(address,bytes)', funcParams, { from: address });
 
     resolve(true);
   } catch (err) {
