@@ -12,6 +12,7 @@ const Header = () => (
       </Link>
 
       <div className="links-wrapper">
+        <NavLink activeClassName="active" to="/connect">Connect wallet</NavLink>
         <NavLink activeClassName="active" to="/marketplace">Marketplace</NavLink>
         <NavLink activeClassName="active" to="/create-cdp">Create CDP</NavLink>
         <NavLink activeClassName="active" to="/dashboard">Dashboard</NavLink>

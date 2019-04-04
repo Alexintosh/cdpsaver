@@ -441,8 +441,9 @@ export const transferCdp = (
     const params = [saiTubAddress, cdpIdBytes32, toAddress];
     const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, params);
     const funcParams = [saiSaverProxyAddress, data];
+    const txParams = { from: fromAddress };
 
-    await callTx(accountType, path, sendTxFunc, proxyContract, 'execute(address,bytes)', funcParams, { from: address });
+    await callTx(accountType, path, sendTxFunc, proxyContract, 'execute(address,bytes)', funcParams, txParams);
 
     resolve(true);
   } catch (err) {
