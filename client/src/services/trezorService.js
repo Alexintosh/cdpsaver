@@ -47,6 +47,7 @@ const waitForLock = async () => {
  * @param args {Array}
  * @param value {Number}
  * @param address {String}
+ * @param path {String}
  *
  * @return {Promise<*>}
  */
@@ -87,7 +88,10 @@ export const signAndSendTrezor = (
     const response = await trezor.ethereumSignTransaction({ path, transaction: rawTx });
     console.log('response', response);
 
-    if (!response.success) throw new Error(response.payload.error);
+    if (!response.success) {
+      reject(response.payload.error);
+      return;
+    }
 
     const signedTx = response.payload;
     console.log('TREZOR signedTx', signedTx);

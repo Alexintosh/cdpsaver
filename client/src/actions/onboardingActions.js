@@ -14,6 +14,8 @@ import {
   SET_CREATE_CDP_CALC_VALUES,
 
   ADD_CDP_TO_CDPS,
+
+  RESET_CREATE_CDP_FORM,
 } from '../actionTypes/onboardingActionTypes';
 import { ADD_PROXY_ADDRESS } from '../actionTypes/generalActionTypes';
 import { subscribeToMonitoringApiRequest } from '../services/apiService';
@@ -43,7 +45,7 @@ export const resetOnboardingWizard = () => (dispatch) => {
 export const createCdpAction = ({ ethAmount, daiAmount }, history) => async (dispatch, getState) => {
   dispatch({ type: CREATE_CDP_REQUEST });
 
-  const contractSendHandler = promise => sendTx(promise, 'Create CDP', dispatch, getState);
+  const contractSendHandler = (promise, waitForSign) => sendTx(promise, 'Create CDP', dispatch, getState, waitForSign);
 
   try {
     const {
@@ -134,3 +136,9 @@ export const finishOnboarding = history => (dispatch, getState) => {
 
   history.push('/dashboard/manage');
 };
+
+/**
+ * Resets the state values for the create cdp form
+ * @return {Function}
+ */
+export const resetCreateCdpForm = () => (dispatch) => { dispatch({ type: RESET_CREATE_CDP_FORM }); };

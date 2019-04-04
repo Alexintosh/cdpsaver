@@ -49,23 +49,42 @@ export const changeNotification = (id, changes) => (dispatch, getState) => {
 /**
  * Handles a transactions status in the notification
  *
- * @param txPromise {Promise}
+ * @param _txPromise {Promise}
  * @param title {String}
  * @param dispatch {Function}
  * @param getState {Function}
+ * @param waitForSign {Boolean}
+ *
  * @return {Promise<any>}
  */
-export const sendTx = (txPromise, title, dispatch, getState) => new Promise(async (resolve, reject) => {
+export const sendTx = (
+  _txPromise, title, dispatch, getState, waitForSign = false,
+) => new Promise(async (resolve, reject) => {
   const id = getState().notifications.notifications.length;
+  let txPromise = _txPromise;
+
+  const formatTx = hash => `${hash.slice(0, 8)}...`;
+  const closeThisNotification = () => { setTimeout(() => { dispatch(closeNotification(id)); }, 3000); };
+  const handleError = (err) => {
+    let errorMessage = 'Error occurred';
+
+    if (err) {
+      if (err.message) errorMessage = err.message;
+      if (typeof err === 'string') errorMessage = err;
+    }
+
+    dispatch(changeNotification(id, { tx: '', type: 'error', description: errorMessage }));
+    closeThisNotification();
+
+    reject(err);
+  };
 
   dispatch(addNotification(id, 'loading', title, 'Waiting for transaction signature...'));
 
-  const formatTx = hash => `${hash.slice(0, 8)}...`;
-  const closeThisNotification = () => {
-    setTimeout(() => { dispatch(closeNotification(id)); }, 3000);
-  };
-
   try {
+    // This is here because trezor and ledger return the tx promise after the sign promise
+    if (waitForSign) txPromise = await txPromise;
+
     txPromise
       .on('transactionHash', (hash) => {
         const description = `Transaction ${formatTx(hash)} was created. Waiting for confirmation`;
@@ -81,14 +100,8 @@ export const sendTx = (txPromise, title, dispatch, getState) => new Promise(asyn
 
         resolve(receipt);
       })
-      .on('error', (err) => {
-        dispatch(changeNotification(id, { tx: '', type: 'error', description: err.message }));
-        closeThisNotification();
-
-        reject(err);
-      });
+      .on('error', handleError);
   } catch (err) {
-    closeThisNotification();
-    reject(err);
+    handleError(err);
   }
 });

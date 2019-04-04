@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Field, formValueSelector, reduxForm } from 'redux-form';
 import onboardingCreateCdpFormFormValidator from './onboardingCreateCdpFormFormValidator';
 import InputComponent from '../../Forms/InputComponent';
-import { createCdpAction, handleCreateCdpInputChange } from '../../../actions/onboardingActions';
+import { createCdpAction, handleCreateCdpInputChange, resetCreateCdpForm } from '../../../actions/onboardingActions';
 import { formatNumber, getRainbowSliderValColor } from '../../../utils/utils';
 import TooltipWrapper from '../../TooltipWrapper/TooltipWrapper';
 import { MIN_ETH_COLLATERAL } from '../../../constants/general';
@@ -30,6 +30,10 @@ class OnboardingCreateCdpForm extends Component {
     const { ethAmount, daiAmount } = formValues;
 
     if ((ethAmount && ethAmount > 0) && (daiAmount && daiAmount > 0)) this.handleSliderValChange(ratio);
+  }
+
+  componentWillUnmount() {
+    this.props.resetCreateCdpForm();
   }
 
   handleSliderValChange(_ratio) {
@@ -129,6 +133,7 @@ class OnboardingCreateCdpForm extends Component {
 OnboardingCreateCdpForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  resetCreateCdpForm: PropTypes.func.isRequired,
   handleCreateCdpInputChange: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   formValues: PropTypes.object.isRequired,
@@ -157,6 +162,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   onSubmit: createCdpAction,
   handleCreateCdpInputChange,
+  resetCreateCdpForm,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(OnboardingWizardCreateCdpFormComp);

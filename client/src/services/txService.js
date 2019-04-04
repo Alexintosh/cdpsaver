@@ -43,9 +43,9 @@ export const callTrezorTx = (
   try {
     const value = txParams.value || '0';
 
-    const tx = await signAndSendTrezor(contract, contractFunc, funcParams, value, txParams.from, path);
+    const txPromise = signAndSendTrezor(contract, contractFunc, funcParams, value, txParams.from, path);
 
-    await notificationFunc(window._web3.eth.sendSignedTransaction(tx));
+    await notificationFunc(txPromise, true);
 
     resolve(true);
   } catch (err) {

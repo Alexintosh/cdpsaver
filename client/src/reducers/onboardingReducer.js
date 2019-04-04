@@ -12,13 +12,15 @@ import {
   SET_ONBOARDING_FINISHED,
 
   SET_CREATE_CDP_CALC_VALUES,
+
+  RESET_CREATE_CDP_FORM,
 } from '../actionTypes/onboardingActionTypes';
 import { TRANSFER_CDP_SUCCESS } from '../actionTypes/dashboardActionTypes';
 import { SELL_CDP_SUCCESS } from '../actionTypes/marketplaceActionTypes';
 
 const INITIAL_STATE = {
   creatingCdp: false,
-  creatingCdpError: null,
+  creatingCdpError: '',
 
   newCdpLiquidationPrice: 0,
   newCdpRatio: 0,
@@ -80,6 +82,15 @@ export default (state = INITIAL_STATE, action) => {
     case TRANSFER_CDP_SUCCESS:
     case SELL_CDP_SUCCESS:
       return { ...INITIAL_STATE, onboardingFinished: false };
+
+    case RESET_CREATE_CDP_FORM:
+      return {
+        ...state,
+        creatingCdp: false,
+        creatingCdpError: '',
+        newCdpLiquidationPrice: 0,
+        newCdpRatio: 0,
+      };
 
     default:
       return state;
