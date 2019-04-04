@@ -83,7 +83,10 @@ export const sendTx = (
 
   try {
     // This is here because trezor and ledger return the tx promise after the sign promise
-    if (waitForSign) txPromise = await txPromise;
+    if (waitForSign) {
+      const transactionHash = await txPromise;
+      txPromise = window._web3.eth.sendSignedTransaction(transactionHash);
+    }
 
     txPromise
       .on('transactionHash', (hash) => {

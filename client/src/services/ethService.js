@@ -457,6 +457,8 @@ export const getItemsOnSale = () => new Promise(async (resolve, reject) => {
 /**
  * Calls our marketplace contract and lists it as on sale there
  *
+ * @param accountType {String}
+ * @param path {String}
  * @param sendTxFunc {Function}
  * @param account {String}
  * @param cdpId {Number}
@@ -465,7 +467,9 @@ export const getItemsOnSale = () => new Promise(async (resolve, reject) => {
  *
  * @return {Promise<Boolean>}
  */
-export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => new Promise(async (resolve, reject) => {
+export const sellCdp = (
+  accountType, path, sendTxFunc, account, cdpId, discount, proxyAddress
+) => new Promise(async (resolve, reject) => {
   try {
     let contractFunctionName = 'createAuthorizeAndSell';
     const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
@@ -497,10 +501,9 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
 
     const dsProxyContractAbi = dsProxyContractJson.abi;
     const proxyContract = new window._web3.eth.Contract(dsProxyContractAbi, proxyAddress);
+    const funcParams = [marketplaceProxyAddress, data];
 
-    const promise = proxyContract.methods['execute(address,bytes)'](marketplaceProxyAddress, data).send(txParams);
-
-    await sendTxFunc(promise);
+    await callTx(accountType, path, sendTxFunc, proxyContract, 'execute(address,bytes)', funcParams, txParams);
 
     resolve(true);
   } catch (err) {
@@ -511,6 +514,8 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
 /**
  * Calls our marketplace contract and cancels the listing of our cdp on it
  *
+ * @param accountType {String}
+ * @param path {String}
  * @param sendTxFunc {Function}
  * @param account {String}
  * @param cdpId {Number}
@@ -518,7 +523,9 @@ export const sellCdp = (sendTxFunc, account, cdpId, discount, proxyAddress) => n
  *
  * @return {Promise<Boolean>}
  */
-export const cancelSellCdp = (sendTxFunc, account, cdpId, proxyAddress) => new Promise(async (resolve, reject) => {
+export const cancelSellCdp = (
+  accountType, path, sendTxFunc, account, cdpId, proxyAddress
+) => new Promise(async (resolve, reject) => {
   try {
     const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
 
@@ -531,9 +538,9 @@ export const cancelSellCdp = (sendTxFunc, account, cdpId, proxyAddress) => new P
 
     const dsProxyContractAbi = dsProxyContractJson.abi;
     const proxyContract = new window._web3.eth.Contract(dsProxyContractAbi, proxyAddress);
+    const funcParams = [marketplaceProxyAddress, data];
 
-    const promise = proxyContract.methods['execute(address,bytes)'](marketplaceProxyAddress, data).send(txParams);
-    await sendTxFunc(promise);
+    await callTx(accountType, path, sendTxFunc, proxyContract, 'execute(address,bytes)', funcParams, txParams);
 
     resolve(true);
   } catch (err) {
@@ -544,6 +551,8 @@ export const cancelSellCdp = (sendTxFunc, account, cdpId, proxyAddress) => new P
 /**
  * Calls our marketplace contract and buys a cdp
  *
+ * @param accountType {String}
+ * @param path {String}
  * @param sendTxFunc {Function}
  * @param account {String}
  * @param cdpId {Number}
@@ -551,7 +560,9 @@ export const cancelSellCdp = (sendTxFunc, account, cdpId, proxyAddress) => new P
  *
  * @return {Promise<Boolean>}
  */
-export const buyCdp = (sendTxFunc, cdpId, account, proxyAddress) => new Promise(async (resolve, reject) => {
+export const buyCdp = (
+  accountType, path, sendTxFunc, cdpId, account, proxyAddress
+) => new Promise(async (resolve, reject) => {
   const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
 
   try {
@@ -562,8 +573,7 @@ export const buyCdp = (sendTxFunc, cdpId, account, proxyAddress) => new Promise(
 
     const newOwner = proxyAddress || account;
 
-    const promise = contract.methods.buy(cdpIdBytes32, newOwner).send(txParams);
-    await sendTxFunc(promise);
+    await callTx(accountType, path, sendTxFunc, contract, 'buy', [cdpIdBytes32, newOwner], txParams);
 
     resolve(true);
   } catch (err) {

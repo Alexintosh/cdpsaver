@@ -26,6 +26,7 @@ import { getEthPrice } from '../services/priceService';
 import { convertDaiToEth } from '../utils/utils';
 import { sendTx } from './notificationsActions';
 import { getCdp } from './accountActions';
+import callTx from '../services/txService';
 
 /**
  * Formats the cdps from the marketplace contract so that they contain all data that is
@@ -107,11 +108,13 @@ const changeCdpInCdps = cdp => (dispatch, getState) => {
 export const sellCdpAction = ({ discount }) => async (dispatch, getState) => {
   dispatch({ type: SELL_CDP_REQUEST });
 
-  const proxySendHandler = promise => sendTx(promise, 'Sell CDP', dispatch, getState);
-  const { proxyAddress, account, cdp } = getState().general;
+  const proxySendHandler = (promise, waitForSign) => sendTx(promise, 'Sell CDP', dispatch, getState, waitForSign);
+  const {
+    proxyAddress, account, cdp, accountType, path,
+  } = getState().general;
 
   try {
-    await sellCdp(proxySendHandler, account, cdp.id, discount, proxyAddress);
+    await sellCdp(accountType, path, proxySendHandler, account, cdp.id, discount, proxyAddress);
 
     const payload = { ...cdp, onSale: true };
 
@@ -149,11 +152,13 @@ export const resetCancelSellCdp = () => (dispatch) => {
 export const buyCdpAction = cdpId => async (dispatch, getState) => {
   dispatch({ type: BUY_CDP_REQUEST });
 
-  const proxySendHandler = promise => sendTx(promise, 'Buy CDP', dispatch, getState);
-  const { account, proxyAddress } = getState().general;
+  const proxySendHandler = (promise, waitForSign) => sendTx(promise, 'Buy CDP', dispatch, getState, waitForSign);
+  const {
+    account, proxyAddress, accountType, path,
+  } = getState().general;
 
   try {
-    const payload = await buyCdp(proxySendHandler, cdpId, account, proxyAddress);
+    const payload = await buyCdp(accountType, path, proxySendHandler, cdpId, account, proxyAddress);
 
     dispatch({ type: BUY_CDP_SUCCESS, payload });
     dispatch(getMarketplaceCdpsData());
@@ -186,11 +191,13 @@ export const sellCdpButtonTooltipText = (loggingIn, gettingCdp, cdp, allOnSale) 
 export const cancelSellCdpAction = () => async (dispatch, getState) => {
   dispatch({ type: CANCEL_SELL_CDP_REQUEST });
 
-  const proxySendHandler = promise => sendTx(promise, 'Cancel CDP sale', dispatch, getState);
-  const { proxyAddress, account, cdp } = getState().general;
+  const proxySendHandler = (promise, waitForSign) => sendTx(promise, 'Cancel CDP sale', dispatch, getState, waitForSign); // eslint-disable-line
+  const {
+    proxyAddress, account, cdp, accountType, path,
+  } = getState().general;
 
   try {
-    await cancelSellCdp(proxySendHandler, account, cdp.id, proxyAddress);
+    await cancelSellCdp(accountType, path, proxySendHandler, account, cdp.id, proxyAddress);
 
     const payload = { ...cdp, onSale: false };
 
