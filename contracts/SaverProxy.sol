@@ -47,7 +47,8 @@ contract SaverProxy is DSMath {
 
         free(tub, _cup, _amount);
 
-        uint daiAmount = wmul(_amount, uint(tub.pip().read())); // Amount of dai we can return
+        uint daiAmount = wmul(_amount, uint(tub.pip().read()));
+        uint daiDebt = daiAmount > getDebt(_cup, tub) ? getDebt(_cup, tub) : daiAmount;
 
         if (_buyMkr) {
             uint ethFee = feeInEth(tub, _cup, daiAmount);
@@ -63,10 +64,6 @@ contract SaverProxy is DSMath {
         daiAmount = ExchangeInterface(KYBER_WRAPPER).swapEtherToToken.
                             value(_amount)(_amount, DAI_ADDRESS);
         
-
-        uint daiDebt;
-        ( , , daiDebt, ) = tub.cups(_cup);
-
         if (daiAmount > daiDebt) {
             tub.wipe(_cup, daiDebt);
             ERC20(DAI_ADDRESS).transfer(_userAddr, sub(daiAmount, daiDebt));
@@ -191,5 +188,11 @@ contract SaverProxy is DSMath {
         
         _tub.exit(ink);
         _tub.gem().withdraw(_ethAmount);
+    }
+
+    function getDebt(bytes32 _cup, TubInterface _tub) internal returns (uint debt) {
+        ( , , debt, ) = _tub.cups(_cup);
+
+        return debt;
     }
 }

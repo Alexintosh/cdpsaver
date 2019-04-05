@@ -1,7 +1,16 @@
 var ethers = require('ethers')
 var Web3 = require('web3')
+const fs = require('fs');
+const path = require('path');
 
-const web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io"))
+const appDirectory = fs.realpathSync(process.cwd());
+const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+
+require('dotenv').config({path: `${resolveApp('../../')}/.env`});
+
+console.log(process.env.INFURA_ENDPOINT);
+
+const web3 = new Web3(new Web3.providers.HttpProvider(process.env.INFURA_ENDPOINT))
 var utils = web3.utils
 
 const ERC20ABI = [{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"supply","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"digits","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_owner","type":"address"},{"indexed":true,"name":"_spender","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Approval","type":"event"}]
@@ -10,13 +19,13 @@ const pipAbi = [{"constant":false,"inputs":[{"name":"owner_","type":"address"}],
 
 var kyberNetworkProxyContract = null
 
-const KYBER_NETWORK_PROXY_ADDRESS = "0x818E6FECD516Ecc3849DAf6845e3EC868087B755";
-const PIP_ADDRESS = "0x729D19f657BD0614b4985Cf1D82531c67569197B";
+const KYBER_NETWORK_PROXY_ADDRESS = "0x692f391bCc85cefCe8C237C01e1f636BbD70EA4D";
+const PIP_ADDRESS = "0xa944bd4b25c9f186a846fd5668941aa3d3b8425f";
 const ETH_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-const DAI_TOKEN_ADDRESS = "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"
+const DAI_TOKEN_ADDRESS = "0xC4375B7De8af5a38a93548eb8453a498222C4fF2"
 const DAI_DECIMALS = 18
 
-const PRODUCT_ETH_PRICE = '100'
+const PRODUCT_ETH_PRICE = '1'
 const PRODUCT_ETH_WEI_PRICE = utils.toWei(PRODUCT_ETH_PRICE)
 
 async function main() {
