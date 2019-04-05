@@ -698,6 +698,8 @@ export const getDaiEthKyberExchangeRate = daiAmount => new Promise(async (resolv
 /**
  * Calls the proxy contract and handles the action that is specified in the parameters
  *
+ * @param accountType {String}
+ * @param path {String}
  * @param sendTxFunc {Function}
  * @param amount {String}
  * @param cdpId {Number}
@@ -710,7 +712,7 @@ export const getDaiEthKyberExchangeRate = daiAmount => new Promise(async (resolv
  * @return {Promise<Object>}
  */
 export const callSaverProxyContract = (
-  sendTxFunc, amount, cdpId, proxyAddress, account, funcName, ethPrice, sendTrue = false,
+  accountType, path, sendTxFunc, amount, cdpId, proxyAddress, account, funcName, ethPrice, sendTrue = false,
 ) => new Promise(async (resolve, reject) => {
   const web3 = window._web3;
 
@@ -733,9 +735,9 @@ export const callSaverProxyContract = (
     }
 
     const data = web3.eth.abi.encodeFunctionCall(contractFunction, params);
+    const funcParams = [saverProxyAddress, data];
 
-    const promise = proxyContract.methods['execute(address,bytes)'](saverProxyAddress, data).send(txParams);
-    await sendTxFunc(promise, amount);
+    await callTx(accountType, path, sendTxFunc, proxyContract, 'execute(address,bytes)', funcParams, txParams);
 
     const newCdp = await getCdpInfo(cdpId, false);
     const newCdpInfo = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
