@@ -9,6 +9,9 @@ import { getEthPrice } from './priceService';
 
 export const maker = Maker.create('http', { url: clientConfig.provider });
 
+
+const compareAddresses = (addr1, addr2) => addr1.toLowerCase() === addr2.toLowerCase();
+
 /**
  * Calls the marketplace contract that checks if the cdp is for sale
  *
@@ -45,7 +48,7 @@ const findCDPs = async (contract, arr, address, type) => {
     try {
       const info = await contract.methods.cups(id).call();
 
-      resolve(info.lad === address ? window._web3.utils.hexToNumber(id) : null);
+      resolve(compareAddresses(info.lad, address) ? window._web3.utils.hexToNumber(id) : null);
     } catch (err) {
       reject(err);
     }
@@ -111,6 +114,8 @@ export const getCdpIdFromLogNote = (contract, proxyAddress) => new Promise(async
 
       if (res.length === 0) return resolve([]);
 
+      console.log(res.length);
+
       const cdpIds = await findCDPs(contract, res, proxyAddress, 'foo');
 
       console.log('Log note: ', cdpIds.length);
@@ -165,6 +170,8 @@ export const getAddressCdp = address => new Promise(async (resolve, reject) => {
     const proxyAddress = await proxyRegistryInterfaceContract().methods.proxies(address).call();
 
     const contract = await SaiTubContract();
+
+    console.log(`address: ${address} , proxyAddress: ${proxyAddress}`);
 
     const logCupAddressCdpIds = await getCdpIdFromLogNewCup(contract, address);
     const logNoteAddressCdpIds = await getCdpIdFromLogNote(contract, address);
