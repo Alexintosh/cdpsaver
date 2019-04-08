@@ -36,6 +36,12 @@ import {
   RESET_CONTACT_US,
 
   CHANGE_LEDGER_ACC_TYPE,
+
+  LIST_LEDGER_ACCOUNTS_REQUEST,
+  LIST_LEDGER_ACCOUNTS_SUCCESS,
+  LIST_LEDGER_ACCOUNTS_FAILURE,
+
+  SET_LEDGER_PATH,
 } from '../actionTypes/generalActionTypes';
 import { CREATE_CDP_SUCCESS, ADD_CDP_TO_CDPS } from '../actionTypes/onboardingActionTypes';
 import {
@@ -94,6 +100,9 @@ const INITIAL_STATE = {
   sendingContactUsError: '',
 
   ledgerAccType: LEDGER_ACC_TYPES[0],
+  ledgerAccounts: [],
+  listingLedgerAccounts: false,
+  listingLedgerAccountsError: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -268,6 +277,27 @@ export default (state = INITIAL_STATE, action) => {
 
     case CHANGE_LEDGER_ACC_TYPE:
       return { ...state, ledgerAccType: payload };
+
+    case LIST_LEDGER_ACCOUNTS_REQUEST:
+      return { ...state, listingLedgerAccounts: true, listingLedgerAccountsError: '' };
+
+    case LIST_LEDGER_ACCOUNTS_SUCCESS:
+      return {
+        ...state,
+        listingLedgerAccounts: false,
+        listingLedgerAccountsError: '',
+        ledgerAccounts: payload,
+      };
+
+    case LIST_LEDGER_ACCOUNTS_FAILURE:
+      return {
+        ...state,
+        listingLedgerAccounts: false,
+        listingLedgerAccountsError: payload,
+      };
+
+    case SET_LEDGER_PATH:
+      return { ...state, path: payload };
 
     default:
       return state;

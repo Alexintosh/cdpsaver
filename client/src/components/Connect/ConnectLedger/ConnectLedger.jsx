@@ -2,18 +2,27 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import Loader from '../../Loader/Loader';
 import { LEDGER_ACC_TYPES } from '../../../constants/general';
-import { changeLedgerAccType } from '../../../actions/generalActions';
+import { changeLedgerAccType, listLedgerAccounts, setLedgerDefaultPath } from '../../../actions/generalActions';
 
 import './ConnectLedger.scss';
 
 class ConnectLedger extends Component {
   componentWillMount() {
-    // get ledger acc list
+    this.props.listLedgerAccounts();
+    this.props.setLedgerDefaultPath();
+  }
+
+  componentWillUnmount() {
+    // TODO - reset state values here
   }
 
   render() {
-    const { ledgerAccType, changeLedgerAccType, handleSwitch } = this.props;
+    const {
+      ledgerAccType, changeLedgerAccType, handleSwitch, to, listingLedgerAccounts, listingLedgerAccountsError,
+      ledgerAccounts,
+    } = this.props;
 
     return (
       <div className="connect-login-wrapper ledger-wrapper">
@@ -34,6 +43,32 @@ class ConnectLedger extends Component {
           />
         </div>
 
+        <div className="list-wrapper">
+          {
+            listingLedgerAccounts && (<div className="loading-wrapper"><Loader /></div>)
+          }
+
+          {
+            !listingLedgerAccounts && listingLedgerAccountsError && (
+              <div className="error-wrapper">{ listingLedgerAccountsError }</div>
+            )
+          }
+
+          {
+            !listingLedgerAccounts && !listingLedgerAccountsError && (
+              <div className="list">
+                {
+                  ledgerAccounts.map(item => (
+                    <div className="single-acc" key={item.path}>
+                      { item.address }
+                    </div>
+                  ))
+                }
+              </div>
+            )
+          }
+        </div>
+
         <div className="buttons-wrapper">
           <div className="button uppercase gray" onClick={() => { handleSwitch('choose'); }}>
             Cancel
@@ -46,17 +81,26 @@ class ConnectLedger extends Component {
 
 ConnectLedger.propTypes = {
   to: PropTypes.string.isRequired,
-  ledgerAccType: PropTypes.string.isRequired,
+  ledgerAccType: PropTypes.object.isRequired,
   handleSwitch: PropTypes.func.isRequired,
   changeLedgerAccType: PropTypes.func.isRequired,
+  listLedgerAccounts: PropTypes.func.isRequired,
+  setLedgerDefaultPath: PropTypes.func.isRequired,
+  listingLedgerAccounts: PropTypes.bool.isRequired,
+  listingLedgerAccountsError: PropTypes.string.isRequired,
+  ledgerAccounts: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = ({ general }) => ({
   ledgerAccType: general.ledgerAccType,
+
+  listingLedgerAccounts: general.listingLedgerAccounts,
+  listingLedgerAccountsError: general.listingLedgerAccountsError,
+  ledgerAccounts: general.ledgerAccounts,
 });
 
 const mapDispatchToProps = {
-  changeLedgerAccType,
+  changeLedgerAccType, listLedgerAccounts, setLedgerDefaultPath,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConnectLedger);

@@ -5,11 +5,13 @@
   "repository": "https://github.com/yippee-ki-yay/cdpsaver.git",
   "private": true,
   "scripts": {
-    "dev": "NODE_OPTIONS=--max_old_space_size=4096 NODE_ENV=development webpack-dev-server --mode=development --history-api-fallback --compress --hot --config ./build/webpack.dev.config.js",
+    "dev": "NODE_OPTIONS=--max_old_space_size=4096 NODE_ENV=development webpack-dev-server --https --mode=development --history-api-fallback --compress --hot --config ./build/webpack.dev.config.js",
     "prod": "NODE_OPTIONS=--max_old_space_size=4096 NODE_ENV=production webpack --mode=production --config ./build/webpack.prod.config.js",
-    "prod-serve": "NODE_OPTIONS=--max_old_space_size=4096 NODE_ENV=production webpack-dev-server --mode=production --history-api-fallback --compress --hot --config ./build/webpack.prod.config.js"
+    "prod-serve": "NODE_OPTIONS=--max_old_space_size=4096 NODE_ENV=production webpack-dev-server --https --mode=production --history-api-fallback --compress --hot --config ./build/webpack.prod.config.js"
   },
   "dependencies": {
+    "@ledgerhq/hw-app-eth": "^4.48.0",
+    "@ledgerhq/hw-transport-u2f": "^4.48.0",
     "@makerdao/dai": "^0.9.10",
     "autoprefixer": "^8.6.3",
     "babel-core": "^6.26.3",

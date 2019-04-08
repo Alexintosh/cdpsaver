@@ -20,6 +20,12 @@ import {
   RESET_CONTACT_US,
 
   CHANGE_LEDGER_ACC_TYPE,
+
+  LIST_LEDGER_ACCOUNTS_REQUEST,
+  LIST_LEDGER_ACCOUNTS_SUCCESS,
+  LIST_LEDGER_ACCOUNTS_FAILURE,
+
+  SET_LEDGER_PATH,
 } from '../actionTypes/generalActionTypes';
 import { getUpdatedCdpInfo, maker } from '../services/cdpService';
 import { getEthPrice } from '../services/priceService';
@@ -28,6 +34,8 @@ import {
   getDaiAllowance, getDaiBalance, getMakerAllowance, getMakerBalance, weiToEth,
 } from '../services/ethService';
 import { addToLsState } from '../utils/utils';
+import * as ledgerService from '../services/ledgerService';
+import { DEFAULT_LEDGER_PATH } from '../constants/general';
 
 const { DAI } = Maker;
 
@@ -201,10 +209,38 @@ export const submitContactUs = (data, closeModal) => async (dispatch) => {
 export const resetContactUs = () => (dispatch) => { dispatch({ type: RESET_CONTACT_US }); };
 
 /**
+ * Lists all ledger accounts for a account type and path
+ *
+ * @return {Function}
+ */
+export const listLedgerAccounts = () => async (dispatch, getState) => {
+  dispatch({ type: LIST_LEDGER_ACCOUNTS_REQUEST });
+
+  const { ledgerAccType, path } = getState().general;
+
+  try {
+    const payload = await ledgerService.listAccounts(ledgerAccType.value, 0, 5, path);
+
+    dispatch({ type: LIST_LEDGER_ACCOUNTS_SUCCESS, payload });
+  } catch (e) {
+    dispatch({ type: LIST_LEDGER_ACCOUNTS_FAILURE, payload: e.message });
+  }
+};
+
+/**
  * Changes the connect page ledger account type select input value
  *
  * @param payload {Object}
  */
 export const changeLedgerAccType = payload => (dispatch) => {
   dispatch({ type: CHANGE_LEDGER_ACC_TYPE, payload });
+  dispatch(listLedgerAccounts());
+};
+
+/**
+ * Sets the general reducer path property to the ledger default path
+ * @return {Function}
+ */
+export const setLedgerDefaultPath = () => (dispatch) => {
+  dispatch({ type: SET_LEDGER_PATH, payload: DEFAULT_LEDGER_PATH });
 };

@@ -1,4 +1,5 @@
 @import "../../../common/colors";
+@import "../../../common/variables";
 
 .ledger-wrapper {
 
@@ -16,6 +17,18 @@
       width: 160px;
 
       .select__value-container { justify-content: flex-start; }
+    }
+  }
+
+  .list-wrapper {
+    margin: 50px 0;
+
+    .single-acc {
+      @include hover-transition;
+      cursor: pointer;
+      padding: 5px 0;
+
+      &:hover { color: $gray; }
     }
   }
 }
