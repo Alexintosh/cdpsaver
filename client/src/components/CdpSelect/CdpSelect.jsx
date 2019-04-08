@@ -18,7 +18,7 @@ const CdpSelect = ({
       <div className="label">{ labelText }</div>
 
       <Select
-        className="select main-select main-select-small"
+        className="select box"
         classNamePrefix="select"
         value={value}
         onChange={changeSelectedCdp}

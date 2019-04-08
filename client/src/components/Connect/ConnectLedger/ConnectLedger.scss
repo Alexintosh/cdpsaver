@@ -1,0 +1,21 @@
+@import "../../../common/colors";
+
+.ledger-wrapper {
+
+  .acc-select-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 300px;
+    margin: 0 auto;
+    width: 100%;
+
+    .label { color: $gray; }
+
+    .select .select__control {
+      width: 160px;
+
+      .select__value-container { justify-content: flex-start; }
+    }
+  }
+}

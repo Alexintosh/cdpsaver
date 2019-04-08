@@ -56,60 +56,6 @@
           color: $gray;
           font-size: $font-size-small + 0.1;
         }
-
-        .select {
-          margin-right: 11px;
-
-          .select__clear-indicator {
-            padding-right: 0;
-            position: relative;
-            right: -5px;
-            padding-left: 3px;
-          }
-
-          .select__control {
-            cursor: pointer;
-            border-radius: 0;
-            width: 180px;
-            border: none;
-            background: none;
-
-            .select__dropdown-indicator {
-              color: $gray;
-
-              &:hover {
-                color: lighten($gray, 20);
-              }
-            }
-
-            .select__placeholder {
-              font-size: $font-size-small + 0.1;
-              color: $gray
-            }
-
-            .select__single-value {
-              font-size: $font-size-small + 0.1;
-              color: white;
-            }
-
-            .select__indicator-separator {
-              display: none;
-            }
-          }
-
-          .select__menu {
-            width: fit-content;
-            border-radius: 0;
-
-            .select__menu-list {
-              padding: 0;
-
-              .select__option {
-                white-space: nowrap;
-              }
-            }
-          }
-        }
       }
     }
 

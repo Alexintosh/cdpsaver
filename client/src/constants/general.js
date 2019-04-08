@@ -28,3 +28,10 @@ export const MOCK_CDP = {
 export const MIN_ETH_COLLATERAL = 0.005;
 
 export const DEFAULT_TREZOR_PATH = "m/44'/60'/0'/0/0";
+export const DEFAULT_LEDGER_PATH = "44'/60'/0'/0";
+
+export const LEDGER_ACC_TYPES = [
+  { label: 'Legacy', value: 'legacy' },
+  { label: 'Live', value: 'live' },
+  { label: 'Custom type', value: 'custom' },
+];

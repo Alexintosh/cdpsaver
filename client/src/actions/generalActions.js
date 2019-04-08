@@ -18,6 +18,8 @@ import {
   SUBMIT_CONTACT_US_SUCCESS,
   SUBMIT_CONTACT_US_FAILURE,
   RESET_CONTACT_US,
+
+  CHANGE_LEDGER_ACC_TYPE,
 } from '../actionTypes/generalActionTypes';
 import { getUpdatedCdpInfo, maker } from '../services/cdpService';
 import { getEthPrice } from '../services/priceService';
@@ -197,3 +199,12 @@ export const submitContactUs = (data, closeModal) => async (dispatch) => {
  * Resets the subscribeComingSoon state in the reducer
  */
 export const resetContactUs = () => (dispatch) => { dispatch({ type: RESET_CONTACT_US }); };
+
+/**
+ * Changes the connect page ledger account type select input value
+ *
+ * @param payload {Object}
+ */
+export const changeLedgerAccType = payload => (dispatch) => {
+  dispatch({ type: CHANGE_LEDGER_ACC_TYPE, payload });
+};

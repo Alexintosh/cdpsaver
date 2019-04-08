@@ -114,7 +114,7 @@ const MarketplacePage = ({
                 <div className="select-label">Order by</div>
 
                 <Select
-                  className="select main-select main-select-small"
+                  className="select default"
                   classNamePrefix="select"
                   value={orderBy}
                   onChange={changeAccountMarketplaceOrderBy}

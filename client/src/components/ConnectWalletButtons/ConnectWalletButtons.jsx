@@ -22,7 +22,14 @@ const ConnectWalletButtons = ({ handleSwitch, accountType }) => (
       Trezor
     </button>
 
-    <button type="button" className="button green">Ledger</button>
+    <button
+      disabled={accountType === 'ledger'}
+      type="button"
+      className="button green"
+      onClick={() => { handleSwitch('ledger'); }}
+    >
+      Ledger
+    </button>
   </div>
 );
 

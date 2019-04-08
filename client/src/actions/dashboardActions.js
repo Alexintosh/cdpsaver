@@ -127,8 +127,12 @@ export const getMaxDaiAction = () => async (dispatch, getState) => {
 export const getMaxEthRepayAction = () => async (dispatch, getState) => {
   dispatch({ type: GET_MAX_ETH_REPAY_REQUEST });
 
+  const { cdp } = getState().general;
+
   try {
-    const payload = await getMaxEthRepay(getState().general.cdp.id);
+    let payload = await getMaxEthRepay(getState().general.cdp.id);
+
+    if (cdp.debtDai.toNumber() === 0) payload = 0;
 
     dispatch({ type: GET_MAX_ETH_REPAY_SUCCESS, payload });
   } catch (err) {
@@ -495,6 +499,11 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
       payload.afterCdp = await getUpdatedCdpInfo(depositedEth - amount, cdp.generatedDAI, ethPrice);
       payload.afterCdp.debtDai = debtDai;
       payload.afterCdp.depositedETH = depositedEth - amount;
+
+      if (debtDai === 0) {
+        payload.afterCdp.liquidationPrice = 0;
+        payload.afterCdp.ratio = 0;
+      }
 
       dispatch(resetFields('managerBorrowForm', { generateDaiAmount: '', repayDaiAmount: '' }));
     }

@@ -34,6 +34,8 @@ import {
   SUBMIT_CONTACT_US_SUCCESS,
   SUBMIT_CONTACT_US_FAILURE,
   RESET_CONTACT_US,
+
+  CHANGE_LEDGER_ACC_TYPE,
 } from '../actionTypes/generalActionTypes';
 import { CREATE_CDP_SUCCESS, ADD_CDP_TO_CDPS } from '../actionTypes/onboardingActionTypes';
 import {
@@ -48,7 +50,7 @@ import {
   BOOST_SUCCESS,
   CLOSE_CDP_SUCCESS,
 } from '../actionTypes/dashboardActionTypes';
-import { LS_ACCOUNT } from '../constants/general';
+import { LS_ACCOUNT, LEDGER_ACC_TYPES } from '../constants/general';
 import { CANCEL_SELL_CDP_SUCCESS, SELL_CDP_SUCCESS } from '../actionTypes/marketplaceActionTypes';
 
 const lsAccountType = localStorage.getItem(LS_ACCOUNT);
@@ -90,6 +92,8 @@ const INITIAL_STATE = {
 
   sendingContactUs: false,
   sendingContactUsError: '',
+
+  ledgerAccType: LEDGER_ACC_TYPES[0],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -261,6 +265,9 @@ export default (state = INITIAL_STATE, action) => {
     case CLOSE_CDP_SUCCESS:
     case TRANSFER_CDP_SUCCESS:
       return { ...state, cdps: payload.cdps, cdp: payload.cdp };
+
+    case CHANGE_LEDGER_ACC_TYPE:
+      return { ...state, ledgerAccType: payload };
 
     default:
       return state;
