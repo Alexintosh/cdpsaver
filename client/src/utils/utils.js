@@ -245,3 +245,5 @@ export const getManageActionErrorText = (executingAction, noValue, valueUnderZer
 
   return err;
 };
+
+export const compareAddresses = (addr1, addr2) => addr1.toLowerCase() === addr2.toLowerCase();

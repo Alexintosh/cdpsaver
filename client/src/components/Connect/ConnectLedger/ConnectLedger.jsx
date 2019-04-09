@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import { Tooltip } from 'react-tippy';
 import Loader from '../../Loader/Loader';
 import CustomLedgerPathForm from './CustomLedgerPathForm/CustomLedgerPathForm';
 import { LEDGER_ACC_TYPES } from '../../../constants/general';
@@ -9,6 +10,7 @@ import {
   changeLedgerAccType, listLedgerAccounts, setLedgerDefaultPath, ledgerListMoreAccounts, resetConnectLedger,
 } from '../../../actions/generalActions';
 import { normalLogin } from '../../../actions/accountActions';
+import { compareAddresses } from '../../../utils/utils';
 
 import './ConnectLedger.scss';
 
@@ -26,6 +28,7 @@ class ConnectLedger extends Component {
     const {
       ledgerAccType, changeLedgerAccType, handleSwitch, to, listingLedgerAccounts, listingLedgerAccountsError,
       ledgerListMoreAccounts, ledgerAccounts, listingMoreLedgerAccounts, history, connectingProvider, normalLogin,
+      account,
     } = this.props;
 
     const noClick = listingLedgerAccounts || listingMoreLedgerAccounts || connectingProvider;
@@ -68,19 +71,31 @@ class ConnectLedger extends Component {
               <div className="list">
                 <div className="accounts-wrapper">
                   {
-                    ledgerAccounts.map(item => (
-                      <div
-                        className={`single-acc ${noClick ? 'no-click' : 'can-click'}`}
-                        key={item.path}
-                        onClick={() => {
-                          if (noClick) return;
+                    ledgerAccounts.map((item) => {
+                      const connectedAddress = compareAddresses(item.address, account);
 
-                          normalLogin('ledger', history, to, item.path);
-                        }}
-                      >
-                        { item.address }
-                      </div>
-                    ))
+                      if (connectedAddress) {
+                        return (
+                          <Tooltip title="This account is currently connected">
+                            <div className="single-acc no-click" key={item.path}>{ item.address }</div>
+                          </Tooltip>
+                        );
+                      }
+
+                      return (
+                        <div
+                          className={`single-acc ${noClick ? 'no-click' : 'can-click'}`}
+                          key={item.path}
+                          onClick={() => {
+                            if (noClick) return;
+
+                            normalLogin('ledger', history, to, item.path);
+                          }}
+                        >
+                          { item.address }
+                        </div>
+                      );
+                    })
                   }
                 </div>
 
@@ -113,6 +128,7 @@ class ConnectLedger extends Component {
 
 ConnectLedger.propTypes = {
   to: PropTypes.string.isRequired,
+  account: PropTypes.string.isRequired,
   connectingProvider: PropTypes.bool.isRequired,
   ledgerAccType: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
@@ -130,6 +146,7 @@ ConnectLedger.propTypes = {
 };
 
 const mapStateToProps = ({ general }) => ({
+  account: general.account,
   connectingProvider: general.connectingProvider,
   ledgerAccType: general.ledgerAccType,
 

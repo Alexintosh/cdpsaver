@@ -23,7 +23,7 @@ import {
 } from '../services/ethService';
 import { setWeb3toMetamask, setupWeb3 } from '../services/web3Service';
 import { notify } from './noitificationActions';
-import { getLsExistingItemAndState, toDecimal } from '../utils/utils';
+import { addToLsState, getLsExistingItemAndState, toDecimal } from '../utils/utils';
 import { maker, getAddressCdp, getUpdatedCdpInfo } from '../services/cdpService';
 import { trezorGetAccount } from '../services/trezorService';
 import { listenToAccChange } from './generalActions';
@@ -56,6 +56,7 @@ export const loginLedger = path => async (dispatch) => {
     });
 
     localStorage.setItem(LS_ACCOUNT, 'ledger');
+    addToLsState({ account });
 
     notify(`Ledger account found ${account}`, 'success')(dispatch);
   } catch (err) {

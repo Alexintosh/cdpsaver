@@ -3,14 +3,11 @@ import config from '../config/config.json';
 import clientConfig from '../config/clientConfig.json';
 import { marketplaceContract, proxyRegistryInterfaceContract, SaiTubContract } from './contractRegistryService';
 import {
-  getLsExistingItemAndState, isEmptyBytes, numStringToBytes32, saiTubContractTools,
+  getLsExistingItemAndState, isEmptyBytes, numStringToBytes32, saiTubContractTools, compareAddresses,
 } from '../utils/utils';
 import { getEthPrice } from './priceService';
 
 export const maker = Maker.create('http', { url: clientConfig.provider });
-
-
-const compareAddresses = (addr1, addr2) => addr1.toLowerCase() === addr2.toLowerCase();
 
 /**
  * Calls the marketplace contract that checks if the cdp is for sale
