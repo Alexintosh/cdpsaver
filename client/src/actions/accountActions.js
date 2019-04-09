@@ -1,3 +1,5 @@
+import TransportU2F from '@ledgerhq/hw-transport-u2f/lib/TransportU2F';
+import Eth from '@ledgerhq/hw-app-eth/lib/Eth';
 import {
   CONNECT_PROVIDER,
   CONNECT_PROVIDER_SUCCESS,
@@ -25,6 +27,42 @@ import { getLsExistingItemAndState, toDecimal } from '../utils/utils';
 import { maker, getAddressCdp, getUpdatedCdpInfo } from '../services/cdpService';
 import { trezorGetAccount } from '../services/trezorService';
 import { listenToAccChange } from './generalActions';
+
+/**
+ * Tries to connect to the connected ledger hardwallet
+ *
+ * @param path
+ * @return {Function}
+ */
+export const loginLedger = path => async (dispatch) => {
+  dispatch({ type: CONNECT_PROVIDER });
+  const accountType = 'ledger';
+
+  setupWeb3();
+
+  try {
+    const _transport = await TransportU2F.create();
+    const eth = new Eth(_transport);
+
+    const network = await getNetwork();
+    const account = (await eth.getAddress(path)).address;
+    const balance = toDecimal(await getBalance(account));
+
+    dispatch({
+      type: CONNECT_PROVIDER_SUCCESS,
+      payload: {
+        account, accountType, balance, network, path,
+      },
+    });
+
+    localStorage.setItem(LS_ACCOUNT, 'ledger');
+
+    notify(`Ledger account found ${account}`, 'success')(dispatch);
+  } catch (err) {
+    setupWeb3();
+    dispatch({ type: CONNECT_PROVIDER_FAILURE, payload: err.message });
+  }
+};
 
 /**
  * Tries to connect to the connected trezor hardwallet
@@ -218,6 +256,12 @@ export const normalLogin = (accountType, history, to, path = '') => async (dispa
 
       case 'trezor': {
         await dispatch(loginTrezor(path));
+        history.push(to);
+        break;
+      }
+
+      case 'ledger': {
+        await dispatch(loginLedger(path));
         history.push(to);
         break;
       }

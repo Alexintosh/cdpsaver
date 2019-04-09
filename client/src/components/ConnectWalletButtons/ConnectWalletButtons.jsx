@@ -23,7 +23,6 @@ const ConnectWalletButtons = ({ handleSwitch, accountType }) => (
     </button>
 
     <button
-      disabled={accountType === 'ledger'}
       type="button"
       className="button green"
       onClick={() => { handleSwitch('ledger'); }}

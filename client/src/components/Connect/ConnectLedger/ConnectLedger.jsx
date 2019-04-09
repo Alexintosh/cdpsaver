@@ -8,6 +8,7 @@ import { LEDGER_ACC_TYPES } from '../../../constants/general';
 import {
   changeLedgerAccType, listLedgerAccounts, setLedgerDefaultPath, ledgerListMoreAccounts, resetConnectLedger,
 } from '../../../actions/generalActions';
+import { normalLogin } from '../../../actions/accountActions';
 
 import './ConnectLedger.scss';
 
@@ -24,10 +25,10 @@ class ConnectLedger extends Component {
   render() {
     const {
       ledgerAccType, changeLedgerAccType, handleSwitch, to, listingLedgerAccounts, listingLedgerAccountsError,
-      ledgerListMoreAccounts, ledgerAccounts, listingMoreLedgerAccounts,
+      ledgerListMoreAccounts, ledgerAccounts, listingMoreLedgerAccounts, history, connectingProvider, normalLogin,
     } = this.props;
 
-    const noClick = listingLedgerAccounts || listingMoreLedgerAccounts;
+    const noClick = listingLedgerAccounts || listingMoreLedgerAccounts || connectingProvider;
 
     return (
       <div className="connect-login-wrapper ledger-wrapper">
@@ -74,7 +75,7 @@ class ConnectLedger extends Component {
                         onClick={() => {
                           if (noClick) return;
 
-                          console.log('pass click');
+                          normalLogin('ledger', history, to, item.path);
                         }}
                       >
                         { item.address }
@@ -112,13 +113,16 @@ class ConnectLedger extends Component {
 
 ConnectLedger.propTypes = {
   to: PropTypes.string.isRequired,
+  connectingProvider: PropTypes.bool.isRequired,
   ledgerAccType: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
   handleSwitch: PropTypes.func.isRequired,
   changeLedgerAccType: PropTypes.func.isRequired,
   listLedgerAccounts: PropTypes.func.isRequired,
   ledgerListMoreAccounts: PropTypes.func.isRequired,
   setLedgerDefaultPath: PropTypes.func.isRequired,
   resetConnectLedger: PropTypes.func.isRequired,
+  normalLogin: PropTypes.func.isRequired,
   listingLedgerAccounts: PropTypes.bool.isRequired,
   listingLedgerAccountsError: PropTypes.string.isRequired,
   ledgerAccounts: PropTypes.array.isRequired,
@@ -126,6 +130,7 @@ ConnectLedger.propTypes = {
 };
 
 const mapStateToProps = ({ general }) => ({
+  connectingProvider: general.connectingProvider,
   ledgerAccType: general.ledgerAccType,
 
   listingLedgerAccounts: general.listingLedgerAccounts,
@@ -136,7 +141,12 @@ const mapStateToProps = ({ general }) => ({
 });
 
 const mapDispatchToProps = {
-  changeLedgerAccType, listLedgerAccounts, setLedgerDefaultPath, ledgerListMoreAccounts, resetConnectLedger,
+  changeLedgerAccType,
+  listLedgerAccounts,
+  setLedgerDefaultPath,
+  ledgerListMoreAccounts,
+  resetConnectLedger,
+  normalLogin,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConnectLedger);
