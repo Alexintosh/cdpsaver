@@ -120,8 +120,6 @@ export const loginMetaMask = silent => async (dispatch, getState) => {
 
     setWeb3toMetamask();
 
-    await maker.addAccount('metamask', { type: 'browser' });
-
     const network = await getNetwork();
 
     if (clientConfig.network !== network) {
