@@ -10,9 +10,7 @@ contract KyberWrapper is ExchangeInterface {
     address constant KYBER_INTERFACE = 0x692f391bCc85cefCe8C237C01e1f636BbD70EA4D;
     address constant ETHER_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
-    //TODO: watch out for gas price limits
     function swapEtherToToken (uint _ethAmount, address _tokenAddress) external payable returns(uint) {
-
         uint minRate;
         ERC20 ETH_TOKEN_ADDRESS = ERC20(ETHER_ADDRESS);
         ERC20 token = ERC20(_tokenAddress);
@@ -50,9 +48,6 @@ contract KyberWrapper is ExchangeInterface {
         return destAmount;
     }
 
-    function() payable external {
-    }
-
     function swapTokenToToken (address _srcAddr, address _destAddr, uint srcQty) external returns(uint) {
         uint minRate;
         ERC20 srcToken = ERC20(_srcAddr);
@@ -71,5 +66,12 @@ contract KyberWrapper is ExchangeInterface {
         destToken.transfer(msg.sender, destAmount);
 
         return destAmount;
+    }
+
+    function getExpectedRate(address _src, address _dest, uint _srcQty) public returns (uint, uint) {
+        return KyberNetworkProxyInterface(KYBER_INTERFACE).getExpectedRate(ERC20(_src), ERC20(_dest), _srcQty);
+    }
+
+    function() payable external {
     }
 }
