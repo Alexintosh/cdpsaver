@@ -22,7 +22,7 @@
   }
 
   .list-wrapper {
-    margin: 50px 0;
+    margin: 30px 0;
 
     .error-wrapper {
       max-width: 380px;
@@ -32,14 +32,47 @@
       text-align: center;
     }
 
+    .accounts-wrapper {
+      max-height: 140px;
+      overflow: auto;
+    }
+
     .single-acc {
       @include hover-transition;
       cursor: pointer;
       padding: 5px 0;
 
       &:hover { color: $gray; }
+
+      &.no-click {
+        user-select: none;
+        cursor: not-allowed;
+
+        &:hover { color: white; }
+      }
+    }
+
+    .more {
+      border: none;
+      color: $gray;
+      cursor: pointer;
+      text-decoration: underline;
+      display: inline-block;
+      margin-top: 20px;
+      padding: 0;
+      background: none;
+      font-size: $font-size-regular;
+      @include hover-transition;
+
+      &:hover { opacity: 0.7; }
+
+      &:disabled {
+        cursor: not-allowed;
+
+        &:hover { opacity: 1; }
+      }
     }
   }
 
-  .buttons-wrapper .cancel { margin: 0; }
+  #cancel { margin: 0; }
 }

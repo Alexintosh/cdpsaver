@@ -42,6 +42,10 @@ import {
   LIST_LEDGER_ACCOUNTS_FAILURE,
 
   SET_LEDGER_PATH,
+
+  LEDGER_LIST_MORE_ACCOUNTS_REQUEST,
+  LEDGER_LIST_MORE_ACCOUNTS_SUCCESS,
+  LEDGER_LIST_MORE_ACCOUNTS_FAILURE,
 } from '../actionTypes/generalActionTypes';
 import { CREATE_CDP_SUCCESS, ADD_CDP_TO_CDPS } from '../actionTypes/onboardingActionTypes';
 import {
@@ -103,6 +107,9 @@ const INITIAL_STATE = {
   ledgerAccounts: [],
   listingLedgerAccounts: false,
   listingLedgerAccountsError: '',
+
+  listingMoreLedgerAccounts: false,
+  listingMoreLedgerAccountsError: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -298,6 +305,24 @@ export default (state = INITIAL_STATE, action) => {
 
     case SET_LEDGER_PATH:
       return { ...state, path: payload };
+
+    case LEDGER_LIST_MORE_ACCOUNTS_REQUEST:
+      return { ...state, listingMoreLedgerAccounts: true, listingMoreLedgerAccountsError: '' };
+
+    case LEDGER_LIST_MORE_ACCOUNTS_SUCCESS:
+      return {
+        ...state,
+        listingMoreLedgerAccounts: false,
+        listingMoreLedgerAccountsError: '',
+        ledgerAccounts: payload,
+      };
+
+    case LEDGER_LIST_MORE_ACCOUNTS_FAILURE:
+      return {
+        ...state,
+        listingMoreLedgerAccounts: false,
+        listingMoreLedgerAccountsError: payload,
+      };
 
     default:
       return state;

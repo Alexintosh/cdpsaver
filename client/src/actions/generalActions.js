@@ -26,6 +26,10 @@ import {
   LIST_LEDGER_ACCOUNTS_FAILURE,
 
   SET_LEDGER_PATH,
+
+  LEDGER_LIST_MORE_ACCOUNTS_REQUEST,
+  LEDGER_LIST_MORE_ACCOUNTS_SUCCESS,
+  LEDGER_LIST_MORE_ACCOUNTS_FAILURE,
 } from '../actionTypes/generalActionTypes';
 import { getUpdatedCdpInfo, maker } from '../services/cdpService';
 import { getEthPrice } from '../services/priceService';
@@ -36,6 +40,7 @@ import {
 import { addToLsState } from '../utils/utils';
 import * as ledgerService from '../services/ledgerService';
 import { DEFAULT_LEDGER_PATH } from '../constants/general';
+import { notify } from './noitificationActions';
 
 const { DAI } = Maker;
 
@@ -244,3 +249,26 @@ export const changeLedgerAccType = payload => (dispatch) => {
 export const setLedgerDefaultPath = () => (dispatch) => {
   dispatch({ type: SET_LEDGER_PATH, payload: DEFAULT_LEDGER_PATH });
 };
+
+/**
+ * Adds new accounts to the ledger connect list of accounts
+ *
+ * @return {Function}
+ */
+export const ledgerListMoreAccounts = () => async (dispatch, getState) => {
+  dispatch({ type: LEDGER_LIST_MORE_ACCOUNTS_REQUEST });
+
+  try {
+    const { ledgerAccType, path, ledgerAccounts } = getState().general;
+
+    let payload = await ledgerService.listAccounts(ledgerAccType.value, ledgerAccounts.length, 5, path);
+
+    payload = [...ledgerAccounts, ...payload];
+
+    dispatch({ type: LEDGER_LIST_MORE_ACCOUNTS_SUCCESS, payload });
+  } catch (err) {
+    dispatch({ type: LEDGER_LIST_MORE_ACCOUNTS_FAILURE });
+    notify(err.message, 'error')(dispatch);
+  }
+};
+
