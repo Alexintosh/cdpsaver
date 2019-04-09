@@ -30,6 +30,8 @@ import {
   LEDGER_LIST_MORE_ACCOUNTS_REQUEST,
   LEDGER_LIST_MORE_ACCOUNTS_SUCCESS,
   LEDGER_LIST_MORE_ACCOUNTS_FAILURE,
+
+  RESET_CONNECT_LEDGER,
 } from '../actionTypes/generalActionTypes';
 import { getUpdatedCdpInfo, maker } from '../services/cdpService';
 import { getEthPrice } from '../services/priceService';
@@ -283,3 +285,9 @@ export const ledgerListMoreAccounts = () => async (dispatch, getState) => {
   }
 };
 
+/**
+ * Resets the state for the connect ledger wallet section
+ *
+ * @return {Function}
+ */
+export const resetConnectLedger = () => (dispatch) => { dispatch({ type: RESET_CONNECT_LEDGER }); };

@@ -6,7 +6,7 @@ import Loader from '../../Loader/Loader';
 import CustomLedgerPathForm from './CustomLedgerPathForm/CustomLedgerPathForm';
 import { LEDGER_ACC_TYPES } from '../../../constants/general';
 import {
-  changeLedgerAccType, listLedgerAccounts, setLedgerDefaultPath, ledgerListMoreAccounts,
+  changeLedgerAccType, listLedgerAccounts, setLedgerDefaultPath, ledgerListMoreAccounts, resetConnectLedger,
 } from '../../../actions/generalActions';
 
 import './ConnectLedger.scss';
@@ -18,7 +18,7 @@ class ConnectLedger extends Component {
   }
 
   componentWillUnmount() {
-    // TODO - reset state values here
+    this.props.resetConnectLedger();
   }
 
   render() {
@@ -118,6 +118,7 @@ ConnectLedger.propTypes = {
   listLedgerAccounts: PropTypes.func.isRequired,
   ledgerListMoreAccounts: PropTypes.func.isRequired,
   setLedgerDefaultPath: PropTypes.func.isRequired,
+  resetConnectLedger: PropTypes.func.isRequired,
   listingLedgerAccounts: PropTypes.bool.isRequired,
   listingLedgerAccountsError: PropTypes.string.isRequired,
   ledgerAccounts: PropTypes.array.isRequired,
@@ -135,7 +136,7 @@ const mapStateToProps = ({ general }) => ({
 });
 
 const mapDispatchToProps = {
-  changeLedgerAccType, listLedgerAccounts, setLedgerDefaultPath, ledgerListMoreAccounts,
+  changeLedgerAccType, listLedgerAccounts, setLedgerDefaultPath, ledgerListMoreAccounts, resetConnectLedger,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConnectLedger);

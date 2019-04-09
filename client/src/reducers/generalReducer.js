@@ -46,6 +46,8 @@ import {
   LEDGER_LIST_MORE_ACCOUNTS_REQUEST,
   LEDGER_LIST_MORE_ACCOUNTS_SUCCESS,
   LEDGER_LIST_MORE_ACCOUNTS_FAILURE,
+
+  RESET_CONNECT_LEDGER,
 } from '../actionTypes/generalActionTypes';
 import { CREATE_CDP_SUCCESS, ADD_CDP_TO_CDPS } from '../actionTypes/onboardingActionTypes';
 import {
@@ -322,6 +324,16 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         listingMoreLedgerAccounts: false,
         listingMoreLedgerAccountsError: payload,
+      };
+
+    case RESET_CONNECT_LEDGER:
+      return {
+        ...state,
+        ledgerAccounts: [],
+        listingLedgerAccounts: false,
+        listingLedgerAccountsError: '',
+        listingMoreLedgerAccounts: false,
+        listingMoreLedgerAccountsError: '',
       };
 
     default:
