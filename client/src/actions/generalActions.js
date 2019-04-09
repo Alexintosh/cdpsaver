@@ -243,7 +243,18 @@ export const changeLedgerAccType = payload => (dispatch) => {
 };
 
 /**
+ * Sets the general reducer path property to the input value and gets accounts for that path
+ *
+ * @return {Function}
+ */
+export const setLedgerPath = path => (dispatch) => {
+  dispatch({ type: SET_LEDGER_PATH, payload: path });
+  dispatch(listLedgerAccounts());
+};
+
+/**
  * Sets the general reducer path property to the ledger default path
+ *
  * @return {Function}
  */
 export const setLedgerDefaultPath = () => (dispatch) => {

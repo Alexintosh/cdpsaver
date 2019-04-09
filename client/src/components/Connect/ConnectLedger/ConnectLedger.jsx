@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import Loader from '../../Loader/Loader';
+import CustomLedgerPathForm from './CustomLedgerPathForm/CustomLedgerPathForm';
 import { LEDGER_ACC_TYPES } from '../../../constants/general';
 import {
   changeLedgerAccType, listLedgerAccounts, setLedgerDefaultPath, ledgerListMoreAccounts,
@@ -12,8 +13,8 @@ import './ConnectLedger.scss';
 
 class ConnectLedger extends Component {
   componentWillMount() {
-    this.props.listLedgerAccounts();
     this.props.setLedgerDefaultPath();
+    this.props.listLedgerAccounts();
   }
 
   componentWillUnmount() {
@@ -47,6 +48,8 @@ class ConnectLedger extends Component {
             options={LEDGER_ACC_TYPES}
           />
         </div>
+
+        { ledgerAccType && ledgerAccType.value === 'custom' && (<CustomLedgerPathForm />) }
 
         <div className="list-wrapper">
           {
