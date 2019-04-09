@@ -1,5 +1,6 @@
 @import "../../../common/colors";
 @import "../../../common/variables";
+@import "../../../common/text";
 
 .ledger-wrapper {
 
@@ -23,6 +24,14 @@
   .list-wrapper {
     margin: 50px 0;
 
+    .error-wrapper {
+      max-width: 380px;
+      color: $dark-red;
+      margin: 0 auto;
+      font-size: $font-size-medium;
+      text-align: center;
+    }
+
     .single-acc {
       @include hover-transition;
       cursor: pointer;
@@ -31,4 +40,6 @@
       &:hover { color: $gray; }
     }
   }
+
+  .buttons-wrapper .cancel { margin: 0; }
 }

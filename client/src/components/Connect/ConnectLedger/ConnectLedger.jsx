@@ -70,7 +70,7 @@ class ConnectLedger extends Component {
         </div>
 
         <div className="buttons-wrapper">
-          <div className="button uppercase gray" onClick={() => { handleSwitch('choose'); }}>
+          <div className="button uppercase gray cancel" onClick={() => { handleSwitch('choose'); }}>
             Cancel
           </div>
         </div>
