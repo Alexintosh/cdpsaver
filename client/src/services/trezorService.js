@@ -40,7 +40,7 @@ const waitForLock = async () => {
 };
 
 /**
- * Formats abd executes the transaction for the trezor wallet
+ * Formats and executes the transaction for the trezor wallet
  *
  * @param contract
  * @param action {String}
@@ -57,24 +57,19 @@ export const signAndSendTrezor = (
   await waitForLock();
   try {
     const contractCall = contract.methods[action](...args);
-
     const encodedAbi = contractCall.encodeABI();
-    console.log(`TREZOR encodedAbi ${encodedAbi}`);
 
     const currentNonce = await window._web3.eth.getTransactionCount(address);
     if (currentNonce > lastNonce) lastNonce = currentNonce;
-    const nonce = lastNonce;
-    console.log(`TREZOR nonce ${nonce}`);
 
     const rawTx = {
-      nonce: window._web3.utils.numberToHex(nonce),
+      nonce: window._web3.utils.numberToHex(lastNonce),
       from: address,
       to: contractCall._parent._address,
       data: encodedAbi,
       value: window._web3.utils.numberToHex(value),
     };
 
-    console.log('rawTx', rawTx);
     const gasLimit = await window._web3.eth.estimateGas(rawTx);
     rawTx.gasLimit = window._web3.utils.numberToHex(gasLimit + 20000);
 
@@ -83,10 +78,7 @@ export const signAndSendTrezor = (
 
     rawTx.chainId = clientConfig.network;
 
-    console.log('TREZOR rawTx', rawTx);
-
     const response = await trezor.ethereumSignTransaction({ path, transaction: rawTx });
-    console.log('response', response);
 
     if (!response.success) {
       reject(response.payload.error);
@@ -94,16 +86,13 @@ export const signAndSendTrezor = (
     }
 
     const signedTx = response.payload;
-    console.log('TREZOR signedTx', signedTx);
 
     const tx2 = new Tx({
       ...rawTx,
       ...signedTx,
     });
-    console.log('TREZOR tx2', tx2);
 
     lastNonce += 1;
-    console.log('TREZOR incrementing nonce');
 
     resolve(`0x${tx2.serialize().toString('hex')}`);
   } catch (err) {
