@@ -16,7 +16,7 @@ import {
   GET_CDPS_SUCCESS,
 } from '../actionTypes/generalActionTypes';
 import { SET_ONBOARDING_FINISHED } from '../actionTypes/onboardingActionTypes';
-import { LS_ACCOUNT } from '../constants/general';
+import { LS_ACCOUNT, LS_CDP_SAVER_STATE } from '../constants/general';
 import clientConfig from '../config/clientConfig.json';
 import {
   isMetaMaskApproved, getBalance, getAccount, nameOfNetwork, getNetwork, metamaskApprove,
@@ -29,13 +29,51 @@ import { trezorGetAccount } from '../services/trezorService';
 import { listenToAccChange } from './generalActions';
 
 /**
+ * Sets that all ledger accounts in local storage lastUsed property is false
+ */
+const resetLsLedgerAccountsLastUsed = () => {
+  let lsState = localStorage.getItem(LS_CDP_SAVER_STATE);
+
+  if (!lsState) return;
+
+  lsState = JSON.parse(lsState);
+
+  lsState = lsState.map((_item) => {
+    const item = { ..._item };
+    if (item.ledgerPath) item.lastUsed = false;
+    return item;
+  });
+
+  localStorage.setItem(LS_CDP_SAVER_STATE, JSON.stringify(lsState));
+};
+
+/**
+ * Fetches the last saved lastUsed ledger account from ls
+ */
+const getLedgerLastUsedPath = () => {
+  let lsState = localStorage.getItem(LS_CDP_SAVER_STATE);
+  if (!lsState) throw new Error('There is no local storage state');
+
+  lsState = JSON.parse(lsState);
+
+  const itemIndex = lsState.findIndex(item => item.lastUsed && item.ledgerPath);
+  if (itemIndex === -1) throw new Error('There is no last used ledger item');
+
+  return lsState[itemIndex].ledgerPath;
+};
+
+/**
  * Tries to connect to the connected ledger hardwallet
  *
- * @param path
+ * @param _path {String}
+ * @param silent {Boolean}
+ *
  * @return {Function}
  */
-export const loginLedger = path => async (dispatch) => {
+export const loginLedger = (_path, silent) => async (dispatch) => {
   dispatch({ type: CONNECT_PROVIDER });
+
+  let path = _path;
   const accountType = 'ledger';
 
   setupWeb3();
@@ -43,6 +81,9 @@ export const loginLedger = path => async (dispatch) => {
   try {
     const _transport = await TransportU2F.create();
     const eth = new Eth(_transport);
+
+    // If the path is missing that means it is a silent login
+    if (silent) path = getLedgerLastUsedPath();
 
     const network = await getNetwork();
     const account = (await eth.getAddress(path)).address;
@@ -55,13 +96,16 @@ export const loginLedger = path => async (dispatch) => {
       },
     });
 
+    resetLsLedgerAccountsLastUsed();
     localStorage.setItem(LS_ACCOUNT, 'ledger');
-    addToLsState({ account });
+    addToLsState({ account, ledgerPath: path, lastUsed: true });
 
-    notify(`Ledger account found ${account}`, 'success')(dispatch);
+    if (!silent) notify(`Ledger account found ${account}`, 'success')(dispatch);
   } catch (err) {
     setupWeb3();
     dispatch({ type: CONNECT_PROVIDER_FAILURE, payload: err.message });
+
+    if (!silent) notify(err.message, 'error')(dispatch);
   }
 };
 
@@ -214,6 +258,11 @@ export const silentLogin = () => async (dispatch, getState) => {
     switch (accountType) {
       case 'metamask': {
         await dispatch(loginMetaMask(true));
+        break;
+      }
+
+      case 'ledger': {
+        await dispatch(loginLedger('', true));
         break;
       }
 

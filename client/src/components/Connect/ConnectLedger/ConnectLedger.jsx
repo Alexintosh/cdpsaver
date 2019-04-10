@@ -76,8 +76,8 @@ class ConnectLedger extends Component {
 
                       if (connectedAddress) {
                         return (
-                          <Tooltip title="This account is currently connected">
-                            <div className="single-acc no-click" key={item.path}>{ item.address }</div>
+                          <Tooltip title="This account is currently connected" key={item.path}>
+                            <div className="single-acc no-click">{ item.address }</div>
                           </Tooltip>
                         );
                       }
