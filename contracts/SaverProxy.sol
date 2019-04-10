@@ -19,13 +19,6 @@ contract SaverProxy is DSMath {
     event Repay(address indexed owner, uint collateralAmount, uint daiAmount);
     event Boost(address indexed owner, uint daiAmount, uint collateralAmount);
 
-    constructor() public {
-        // ERC20(DAI_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        // ERC20(MKR_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        // ERC20(PETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        // ERC20(WETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-    }
-
     /// @notice Withdraws Eth collateral, swaps Eth -> Dai with Kyber, and pays back the debt in Dai
     /// @dev If _buyMkr is false user needs to have MKR tokens and approve his DSProxy
     /// @param _cup Id of the CDP
@@ -49,7 +42,7 @@ contract SaverProxy is DSMath {
         withdrawEth(tub, _cup, _amount);
 
         uint daiAmount = wmul(_amount, estimatedDaiPrice(_amount));
-        uint daiDebt = daiAmount > getDebt(_cup, tub) ? getDebt(_cup, tub) : daiAmount;
+        uint daiDebt = daiAmount > getDebt(tub, _cup) ? getDebt(tub, _cup) : daiAmount;
 
         if (_buyMkr) {
             uint ethFee = stabilityFeeInEth(tub, _cup, daiDebt);
@@ -191,11 +184,16 @@ contract SaverProxy is DSMath {
         _tub.gem().withdraw(_ethAmount);
     }
 
+    /// @notice Returns expected rate for Eth -> Dai conversion
+    /// @param _amount Amount of Dai to be bought
     function estimatedDaiPrice(uint _amount) internal returns (uint expectedRate) {
         ( , expectedRate) = ExchangeInterface(KYBER_WRAPPER).getExpectedRate(ETHER_ADDRESS, DAI_ADDRESS, _amount);
     }
 
-    function getDebt(bytes32 _cup, TubInterface _tub) internal returns (uint debt) {
+    /// @notice Returns current Dai debt of the CDP
+    /// @param _tub Tub interface
+    /// @param _cup Id of the CDP
+    function getDebt(TubInterface _tub, bytes32 _cup) internal returns (uint debt) {
         ( , , debt, ) = _tub.cups(_cup);
     }
 }

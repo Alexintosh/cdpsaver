@@ -45,7 +45,7 @@ export const getBalance = async (_account) => {
   return balanceEth;
 };
 
-export const weiToEth = weiVal => window._web3.utils.fromWei(new window._web3.utils.BN(`${weiVal}`));
+export const weiToEth = weiVal => window._web3.utils.fromWei(window._web3.utils.toBN(`${weiVal}`));
 
 export const ethToWei = ethVal => window._web3.utils.toWei(`${ethVal}`);
 
