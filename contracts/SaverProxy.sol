@@ -12,17 +12,18 @@ contract SaverProxy is DSMath {
     address public constant MKR_ADDRESS = 0xAaF64BFCC32d0F15873a02163e7E500671a4ffcD;
     address public constant VOX_ADDRESS = 0xBb4339c0aB5B1d9f14Bd6e3426444A1e9d86A1d9;
     address public constant PETH_ADDRESS = 0xf4d791139cE033Ad35DB2B2201435fAd668B1b64;
-    address public constant KYBER_WRAPPER = 0x6F95865D93eD781AddC7576901842ee3B689E0f1;
+    address public constant KYBER_WRAPPER = 0x82CD6436c58A65E2D4263259EcA5843d3d7e0e65;
     address public constant TUB_ADDRESS = 0xa71937147b55Deb8a530C7229C442Fd3F31b7db2;
+    address public constant ETHER_ADDRESS = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
     event Repay(address indexed owner, uint collateralAmount, uint daiAmount);
     event Boost(address indexed owner, uint daiAmount, uint collateralAmount);
 
     constructor() public {
-        ERC20(DAI_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        ERC20(MKR_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        ERC20(PETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
-        ERC20(WETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        // ERC20(DAI_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        // ERC20(MKR_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        // ERC20(PETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        // ERC20(WETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
     }
 
     /// @notice Withdraws Eth collateral, swaps Eth -> Dai with Kyber, and pays back the debt in Dai
@@ -45,19 +46,19 @@ contract SaverProxy is DSMath {
             _amount = maxFreeCollateral(tub, _cup);
         }
 
-        free(tub, _cup, _amount);
+        withdrawEth(tub, _cup, _amount);
 
-        uint daiAmount = wmul(_amount, uint(tub.pip().read()));
+        uint daiAmount = wmul(_amount, estimatedDaiPrice(_amount));
         uint daiDebt = daiAmount > getDebt(_cup, tub) ? getDebt(_cup, tub) : daiAmount;
 
         if (_buyMkr) {
-            uint ethFee = feeInEth(tub, _cup, daiAmount);
+            uint ethFee = stabilityFeeInEth(tub, _cup, daiDebt);
             ExchangeInterface(KYBER_WRAPPER).swapEtherToToken.
                             value(ethFee)(ethFee, MKR_ADDRESS);
 
             _amount = sub(_amount, ethFee);
         } else {
-            uint mkrAmount = feeInMkr(tub, _cup, daiAmount);
+            uint mkrAmount = stabilityFeeInMkr(tub, _cup, daiDebt);
             ERC20(MKR_ADDRESS).transferFrom(msg.sender, address(this), mkrAmount);
         }
 
@@ -120,7 +121,7 @@ contract SaverProxy is DSMath {
     /// @param _tub Tub interface
     /// @param _cup Id of the CDP
     /// @param _daiRepay Amount of dai we are repaying
-    function feeInEth(TubInterface _tub, bytes32 _cup, uint _daiRepay) public returns (uint) {
+    function stabilityFeeInEth(TubInterface _tub, bytes32 _cup, uint _daiRepay) public returns (uint) {
         uint feeInDai = rmul(_daiRepay, rdiv(_tub.rap(_cup), _tub.tab(_cup)));
 
         bytes32 ethPrice = _tub.pip().read();
@@ -132,7 +133,7 @@ contract SaverProxy is DSMath {
     /// @param _tub Tub interface
     /// @param _cup Id of the CDP
     /// @param _daiRepay Amount of dai we are repaying
-    function feeInMkr(TubInterface _tub, bytes32 _cup, uint _daiRepay) public returns (uint) {
+    function stabilityFeeInMkr(TubInterface _tub, bytes32 _cup, uint _daiRepay) public returns (uint) {
         bytes32 mkrPrice;
         bool ok;
 
@@ -182,7 +183,7 @@ contract SaverProxy is DSMath {
     /// @param _tub Tub interface
     /// @param _cup Id of the CDP
     /// @param _ethAmount Amount of Eth to withdraw
-    function free(TubInterface _tub, bytes32 _cup, uint _ethAmount) internal {
+    function withdrawEth(TubInterface _tub, bytes32 _cup, uint _ethAmount) internal {
         uint ink = rdiv(_ethAmount, _tub.per());
         _tub.free(_cup, ink);
         
@@ -190,9 +191,11 @@ contract SaverProxy is DSMath {
         _tub.gem().withdraw(_ethAmount);
     }
 
+    function estimatedDaiPrice(uint _amount) internal returns (uint expectedRate) {
+        ( , expectedRate) = ExchangeInterface(KYBER_WRAPPER).getExpectedRate(ETHER_ADDRESS, DAI_ADDRESS, _amount);
+    }
+
     function getDebt(bytes32 _cup, TubInterface _tub) internal returns (uint debt) {
         ( , , debt, ) = _tub.cups(_cup);
-
-        return debt;
     }
 }

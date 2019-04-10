@@ -8,6 +8,6 @@ interface ExchangeInterface {
     function swapTokenToEther (address _tokenAddress, uint _amount) external returns(uint);
     function swapTokenToToken (address _srcAddr, address _destAddr, uint srcQty) external returns(uint);
 
-    function getExpectedRate(ERC20 src, ERC20 dest, uint srcQty) external view
+    function getExpectedRate(address src, address dest, uint srcQty) external
         returns (uint expectedRate, uint slippageRate);
 }
