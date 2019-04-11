@@ -84,13 +84,13 @@ export const signAndSendLedger = (
     const rawTx = {
       nonce: window._web3.utils.numberToHex(lastNonce),
       from: address,
-      to: contractCall._parent._address,
+      to: contract.address,
       data: encodedAbi,
       value: window._web3.utils.numberToHex(value),
     };
 
     const gasLimit = await window._web3.eth.estimateGas(rawTx);
-    rawTx.gasLimit = window._web3.utils.numberToHex(gasLimit);
+    rawTx.gasLimit = window._web3.utils.numberToHex(gasLimit + 20000);
 
     const gasPrice = await window._web3.eth.getGasPrice();
     rawTx.gasPrice = window._web3.utils.numberToHex(gasPrice);

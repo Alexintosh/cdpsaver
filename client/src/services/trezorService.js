@@ -65,7 +65,7 @@ export const signAndSendTrezor = (
     const rawTx = {
       nonce: window._web3.utils.numberToHex(lastNonce),
       from: address,
-      to: contractCall._parent._address,
+      to: contract.address,
       data: encodedAbi,
       value: window._web3.utils.numberToHex(value),
     };

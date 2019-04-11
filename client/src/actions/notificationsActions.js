@@ -62,6 +62,7 @@ export const sendTx = (
 ) => new Promise(async (resolve, reject) => {
   const id = getState().notifications.notifications.length;
   let txPromise = _txPromise;
+  let confirmed = false;
 
   const formatTx = hash => `${hash.slice(0, 8)}...`;
   const closeThisNotification = () => { setTimeout(() => { dispatch(closeNotification(id)); }, 3000); };
@@ -94,14 +95,18 @@ export const sendTx = (
 
         dispatch(changeNotification(id, { tx: hash, description }));
       })
-      .on('receipt', (receipt) => {
-        const { transactionHash } = receipt;
-        const description = `Transaction ${formatTx(transactionHash)} was confirmed`;
+      .on('confirmation', (transactionNum, receipt) => { // TODO check if web3 fixes on.('receipt')
+        if (!confirmed) {
+          confirmed = true;
 
-        dispatch(changeNotification(id, { type: 'success', description }));
-        closeThisNotification();
+          const { transactionHash } = receipt;
+          const description = `Transaction ${formatTx(transactionHash)} was confirmed`;
 
-        resolve(receipt);
+          dispatch(changeNotification(id, { type: 'success', description }));
+          closeThisNotification();
+
+          resolve(receipt);
+        }
       })
       .on('error', handleError);
   } catch (err) {
