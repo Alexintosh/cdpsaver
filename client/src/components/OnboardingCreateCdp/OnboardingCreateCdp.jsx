@@ -49,7 +49,7 @@ let OnboardingCreateCdp = ({
 
       <div className="bottom-controls width-container">
         <Tooltip
-          title="Your ratio must be over 150%"
+          title={ratio && ratio <= 150 ? 'Your ratio must be over 150%' : ''}
           disabled={!ratio || ratio >= 150}
         >
           <button
