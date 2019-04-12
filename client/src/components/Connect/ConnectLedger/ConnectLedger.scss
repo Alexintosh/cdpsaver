@@ -8,21 +8,47 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 300px;
+    max-width: 275px;
     margin: 0 auto;
     width: 100%;
 
     .label { color: $gray; }
 
-    .select .select__control {
-      width: 160px;
+    .select {
+      background: $green;
 
-      .select__value-container { justify-content: flex-start; }
+      &.select--is-disabled {
+        background: rgba(#61717E, 0.2);
+        cursor: not-allowed;
+        user-select: none;
+      }
+
+      .select__control {
+        width: 160px;
+
+        .select__value-container { justify-content: flex-start; }
+      }
     }
   }
 
   .list-wrapper {
-    margin: 30px 0;
+    margin: 35px 0;
+
+    .loader-wrapper {
+      display: flex;
+      justify-content: center;
+
+      .loader {
+        width: 21px;
+        height: 21px;
+        margin: 0 13px 0 0;
+      }
+
+      .message-wrapper {
+        margin: 0;
+        font-size: $font-size-regular;
+      }
+    }
 
     .error-wrapper {
       max-width: 380px;
@@ -38,17 +64,21 @@
     }
 
     .single-acc {
+      width: 470px;
+      margin: 0 auto;
       @include hover-transition;
       cursor: pointer;
       padding: 5px 0;
 
-      &:hover { color: $gray; }
+      &:hover:not(.no-click) {
+        background: rgba(#37B06F, 0.2);
+      }
 
       &.no-click {
+        background: rgba(#61717E, 0.2);
+        color: #939DA7;
         user-select: none;
         cursor: not-allowed;
-
-        &:hover { color: white; }
       }
     }
 

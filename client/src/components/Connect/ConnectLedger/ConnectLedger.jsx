@@ -57,7 +57,11 @@ class ConnectLedger extends Component {
 
         <div className="list-wrapper">
           {
-            listingLedgerAccounts && (<div className="loading-wrapper"><Loader /></div>)
+            listingLedgerAccounts && (
+              <div className="loading-wrapper">
+                <Loader showDefaultMessage={false} message="Loading..." />
+              </div>
+            )
           }
 
           {
