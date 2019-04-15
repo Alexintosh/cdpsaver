@@ -85,9 +85,11 @@ class OnboardingCreateCdpForm extends Component {
             <div className="value">
               {
                 ethAmount && ethPrice ?
-                  <TooltipWrapper title={ethPrice * ethAmount}>
-                    { formatNumber(ethPrice * ethAmount, 2) }$
-                  </TooltipWrapper>
+                  (
+                    <TooltipWrapper title={ethPrice * ethAmount}>
+                      { formatNumber(ethPrice * ethAmount, 2) }$
+                    </TooltipWrapper>
+                  )
                   :
                   '-'
               }
