@@ -26,7 +26,7 @@
       width: 85px;
     }
 
-    .form-item-wrapper:nth-child(2) {
+    .form-item-wrapper {
       margin-bottom: 0;
     }
 
@@ -34,6 +34,8 @@
       border: 1px solid $gray-7;
       border-top: 0;
       padding: 20px 20px 15px 20px;
+
+      &.margin { margin-bottom: 20px; }
 
       .stat-wrapper {
         display: flex;
