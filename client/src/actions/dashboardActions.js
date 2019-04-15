@@ -184,7 +184,7 @@ export const getMaxEthWithdrawAction = () => async (dispatch, getState) => {
 export const getBorrowFormMaxValues = () => (dispatch) => {
   dispatch(getMaxDaiAction());
   dispatch(getMaxEthWithdrawAction());
-  dispatch(getMaxEthRepayAction());
+  dispatch(getMaxDaiBoostAction());
 };
 
 /**
@@ -193,7 +193,7 @@ export const getBorrowFormMaxValues = () => (dispatch) => {
  * @return {Function}
  */
 export const getPaybackFormMaxValues = () => (dispatch) => {
-  dispatch(getMaxDaiBoostAction());
+  dispatch(getMaxEthRepayAction());
 };
 
 /**
@@ -313,7 +313,7 @@ export const repayDaiAction = (amountEth, closeModal) => async (dispatch, getSta
     dispatch({ type: REPAY_DAI_SUCCESS, payload });
     dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });
 
-    dispatch(change('managerBorrowForm', 'repayDaiAmount', null));
+    dispatch(change('managerPaybackForm', 'repayDaiAmount', null));
     dispatch(closeModal());
     dispatch(getBorrowFormMaxValues());
   } catch (err) {
@@ -374,7 +374,7 @@ export const boostAction = (amountDai, closeModal) => async (dispatch, getState)
     dispatch({ type: BOOST_SUCCESS, payload });
     dispatch({ type: GET_AFTER_CDP_SUCCESS, payload: { afterCdp: null } });
 
-    dispatch(change('managerPaybackForm', 'boostAmount', null));
+    dispatch(change('managerBorrowForm', 'boostAmount', null));
     dispatch(closeModal());
     dispatch(getPaybackFormMaxValues());
   } catch (err) {
@@ -516,7 +516,7 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
       payload.afterCdp.debtDai = debtDai - daiAmount;
       payload.afterCdp.depositedETH = depositedEth - amount;
 
-      dispatch(resetFields('managerBorrowForm', { generateDaiAmount: '', withdrawEthAmount: '' }));
+      dispatch(resetFields('managerPaybackForm', { paybackAmount: '', addCollateralAmount: '' }));
     }
 
     // PAYBACK FORM
@@ -544,7 +544,7 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
       payload.afterCdp.debtDai = debtDai + amount;
       payload.afterCdp.depositedETH = depositedEth + (amount * rate);
 
-      dispatch(resetFields('managerPaybackForm', { paybackAmount: '', addCollateralAmount: '' }));
+      dispatch(resetFields('managerBorrowForm', { generateDaiAmount: '', withdrawEthAmount: '' }));
     }
 
     if (type === 'clear') payload.afterCdp = null;

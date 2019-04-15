@@ -11,7 +11,7 @@ import {
   setAfterValue,
   getBorrowFormMaxValues,
 } from '../../../actions/dashboardActions';
-import { openRepayModal } from '../../../actions/modalActions';
+import { openBoostModal } from '../../../actions/modalActions';
 import { getManageActionErrorText } from '../../../utils/utils';
 import CdpAction from '../CdpAction/CdpAction';
 
@@ -32,10 +32,10 @@ class ManagerBorrowForm extends Component {
     const {
       generatingDai, generateDaiAction, formValues, maxDai, gettingMaxDai, dispatch,
       withdrawingEth, withdrawEthAction, maxEthWithdraw, gettingMaxEthWithdraw,
-      setAfterValue, repayingDai, openRepayModal, maxEthRepay, gettingMaxEthRepay,
+      setAfterValue, boosting, maxDaiBoost, gettingMaxDaiBoost, openBoostModal,
     } = this.props;
 
-    const { generateDaiAmount, withdrawEthAmount, repayDaiAmount } = formValues;
+    const { generateDaiAmount, withdrawEthAmount, boostAmount } = formValues;
 
     return (
       <form className="action-items-wrapper form-wrapper" onSubmit={() => {}}>
@@ -46,7 +46,7 @@ class ManagerBorrowForm extends Component {
             setAfterValue(maxDai, 'generate');
             dispatch(change('managerBorrowForm', 'generateDaiAmount', maxDai));
             dispatch(change('managerBorrowForm', 'withdrawEthAmount', ''));
-            dispatch(change('managerBorrowForm', 'repayDaiAmount', ''));
+            dispatch(change('managerBorrowForm', 'boostAmount', ''));
           }}
           maxVal={maxDai}
           gettingMaxVal={gettingMaxDai}
@@ -70,7 +70,7 @@ class ManagerBorrowForm extends Component {
             setAfterValue(maxEthWithdraw, 'withdraw');
             dispatch(change('managerBorrowForm', 'withdrawEthAmount', maxEthWithdraw));
             dispatch(change('managerBorrowForm', 'generateDaiAmount', ''));
-            dispatch(change('managerBorrowForm', 'repayDaiAmount', ''));
+            dispatch(change('managerBorrowForm', 'boostAmount', ''));
           }}
           maxVal={maxEthWithdraw}
           gettingMaxVal={gettingMaxEthWithdraw}
@@ -86,25 +86,25 @@ class ManagerBorrowForm extends Component {
         />
 
         <CdpAction
-          disabled={repayingDai || !repayDaiAmount || (repayDaiAmount <= 0) || (repayDaiAmount > maxEthRepay)}
-          actionExecuting={repayingDai}
+          disabled={boosting || !boostAmount || (boostAmount <= 0) || (boostAmount > maxDaiBoost)}
+          actionExecuting={boosting}
           setValToMax={() => {
-            setAfterValue(maxEthRepay, 'repay');
+            setAfterValue(maxDaiBoost, 'boost');
             dispatch(change('managerBorrowForm', 'withdrawEthAmount', ''));
             dispatch(change('managerBorrowForm', 'generateDaiAmount', ''));
-            dispatch(change('managerBorrowForm', 'repayDaiAmount', maxEthRepay));
+            dispatch(change('managerBorrowForm', 'boostAmount', maxDaiBoost));
           }}
-          maxVal={maxEthRepay}
-          gettingMaxVal={gettingMaxEthRepay}
-          type="repay"
-          executingLabel="Repaying"
-          toExecuteLabel="Repay"
-          info="Repay will draw ETH from CDP and payback the debt, lowering the liquidation price"
-          name="repayDaiAmount"
-          id="manager-repay-input"
-          symbol="ETH"
-          errorText={getManageActionErrorText(repayingDai, !repayDaiAmount, repayDaiAmount <= 0, repayDaiAmount > maxEthRepay)}  // eslint-disable-line
-          executeAction={() => { openRepayModal(parseFloat(repayDaiAmount)); }}
+          maxVal={maxDaiBoost}
+          gettingMaxVal={gettingMaxDaiBoost}
+          type="boost"
+          executingLabel="Boosting"
+          toExecuteLabel="Boost"
+          info="Boost will draw DAI and buy ETH, increasing the amount ETH in the CDP"
+          name="boostAmount"
+          id="manager-boost-input"
+          symbol="DAI"
+          errorText={getManageActionErrorText(boosting, !boostAmount, boostAmount <= 0, boostAmount > maxDaiBoost)} // eslint-disable-line
+          executeAction={() => { openBoostModal(parseFloat(boostAmount)); }}
         />
       </form>
     );
@@ -128,10 +128,10 @@ ManagerBorrowForm.propTypes = {
   maxEthWithdraw: PropTypes.number.isRequired,
   gettingMaxEthWithdraw: PropTypes.bool.isRequired,
 
-  repayingDai: PropTypes.bool.isRequired,
-  maxEthRepay: PropTypes.number.isRequired,
-  gettingMaxEthRepay: PropTypes.bool.isRequired,
-  openRepayModal: PropTypes.func.isRequired,
+  openBoostModal: PropTypes.func.isRequired,
+  maxDaiBoost: PropTypes.number.isRequired,
+  gettingMaxDaiBoost: PropTypes.bool.isRequired,
+  boosting: PropTypes.bool.isRequired,
 };
 
 const ManagerBorrowFormComp = reduxForm({ form: 'managerBorrowForm' })(ManagerBorrowForm);
@@ -144,7 +144,7 @@ const mapStateToProps = state => ({
   formValues: {
     generateDaiAmount: selector(state, 'generateDaiAmount'),
     withdrawEthAmount: selector(state, 'withdrawEthAmount'),
-    repayDaiAmount: selector(state, 'repayDaiAmount'),
+    boostAmount: selector(state, 'boostAmount'),
   },
   generatingDai: state.dashboard.generatingDai,
   maxDai: state.dashboard.maxDai,
@@ -154,13 +154,13 @@ const mapStateToProps = state => ({
   maxEthWithdraw: state.dashboard.maxEthWithdraw,
   gettingMaxEthWithdraw: state.dashboard.gettingMaxEthWithdraw,
 
-  repayingDai: state.dashboard.repayingDai,
-  maxEthRepay: state.dashboard.maxEthRepay,
-  gettingMaxEthRepay: state.dashboard.gettingMaxEthRepay,
+  maxDaiBoost: state.dashboard.maxDaiBoost,
+  gettingMaxDaiBoost: state.dashboard.gettingMaxDaiBoost,
+  boosting: state.dashboard.boosting,
 });
 
 const mapDispatchToProps = {
-  generateDaiAction, withdrawEthAction, repayDaiAction, setAfterValue, openRepayModal, getBorrowFormMaxValues,
+  generateDaiAction, withdrawEthAction, repayDaiAction, setAfterValue, openBoostModal, getBorrowFormMaxValues,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManagerBorrowFormComp);

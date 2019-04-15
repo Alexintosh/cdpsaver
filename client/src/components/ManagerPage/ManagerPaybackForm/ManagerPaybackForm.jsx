@@ -5,7 +5,7 @@ import {
   change, formValueSelector, reduxForm,
 } from 'redux-form';
 import { addCollateralAction, setAfterValue, getPaybackFormMaxValues } from '../../../actions/dashboardActions';
-import { openBoostModal, openPaybackModal } from '../../../actions/modalActions';
+import { openPaybackModal, openRepayModal } from '../../../actions/modalActions';
 import { getManageActionErrorText } from '../../../utils/utils';
 import CdpAction from '../CdpAction/CdpAction';
 
@@ -25,11 +25,10 @@ class ManagerPaybackForm extends Component {
   render() {
     const {
       formValues, addingCollateral, addCollateralAction, setAfterValue,
-      openPaybackModal, payingBackDai, dispatch, boosting, maxDaiBoost, gettingMaxDaiBoost,
-      openBoostModal, cdp,
+      openPaybackModal, payingBackDai, dispatch, repayingDai, openRepayModal, maxEthRepay, gettingMaxEthRepay, cdp,
     } = this.props;
 
-    const { paybackAmount, addCollateralAmount, boostAmount } = formValues;
+    const { paybackAmount, addCollateralAmount, repayDaiAmount } = formValues;
     const { debtDai } = cdp;
 
     return (
@@ -41,7 +40,7 @@ class ManagerPaybackForm extends Component {
             setAfterValue(debtDai, 'payback');
             dispatch(change('managerPaybackForm', 'paybackAmount', debtDai));
             dispatch(change('managerPaybackForm', 'addCollateralAmount', ''));
-            dispatch(change('managerPaybackForm', 'boostAmount', ''));
+            dispatch(change('managerPaybackForm', 'repayDaiAmount', ''));
           }}
           maxVal={debtDai.toNumber()}
           gettingMaxVal={false}
@@ -75,25 +74,25 @@ class ManagerPaybackForm extends Component {
         />
 
         <CdpAction
-          disabled={boosting || !boostAmount || (boostAmount <= 0) || (boostAmount > maxDaiBoost)}
-          actionExecuting={payingBackDai}
+          disabled={repayingDai || !repayDaiAmount || (repayDaiAmount <= 0) || (repayDaiAmount > maxEthRepay)}
+          actionExecuting={repayingDai}
           setValToMax={() => {
-            setAfterValue(maxDaiBoost, 'boost');
+            setAfterValue(maxEthRepay, 'repay');
             dispatch(change('managerPaybackForm', 'paybackAmount', ''));
             dispatch(change('managerPaybackForm', 'addCollateralAmount', ''));
-            dispatch(change('managerPaybackForm', 'boostAmount', maxDaiBoost));
+            dispatch(change('managerPaybackForm', 'repayDaiAmount', maxEthRepay));
           }}
-          maxVal={maxDaiBoost}
-          gettingMaxVal={gettingMaxDaiBoost}
-          type="boost"
-          executingLabel="Boosting"
-          toExecuteLabel="Boost"
-          info="Boost will draw DAI and buy ETH, increasing the amount ETH in the CDP"
-          name="boostAmount"
-          id="manager-boost-input"
-          symbol="DAI"
-          errorText={getManageActionErrorText(boosting, !boostAmount, boostAmount <= 0, boostAmount > maxDaiBoost)} // eslint-disable-line
-          executeAction={() => { openBoostModal(parseFloat(boostAmount)); }}
+          maxVal={maxEthRepay}
+          gettingMaxVal={gettingMaxEthRepay}
+          type="repay"
+          executingLabel="Repaying"
+          toExecuteLabel="Repay"
+          info="Repay will draw ETH from CDP and payback the debt, lowering the liquidation price"
+          name="repayDaiAmount"
+          id="manager-repay-input"
+          symbol="ETH"
+          errorText={getManageActionErrorText(repayingDai, !repayDaiAmount, repayDaiAmount <= 0, repayDaiAmount > maxEthRepay)}  // eslint-disable-line
+          executeAction={() => { openRepayModal(parseFloat(repayDaiAmount)); }}
         />
       </form>
     );
@@ -112,10 +111,10 @@ ManagerPaybackForm.propTypes = {
   openPaybackModal: PropTypes.func.isRequired,
   payingBackDai: PropTypes.bool.isRequired,
 
-  openBoostModal: PropTypes.func.isRequired,
-  maxDaiBoost: PropTypes.number.isRequired,
-  gettingMaxDaiBoost: PropTypes.bool.isRequired,
-  boosting: PropTypes.bool.isRequired,
+  repayingDai: PropTypes.bool.isRequired,
+  maxEthRepay: PropTypes.number.isRequired,
+  gettingMaxEthRepay: PropTypes.bool.isRequired,
+  openRepayModal: PropTypes.func.isRequired,
 
   cdp: PropTypes.object.isRequired,
 };
@@ -128,20 +127,20 @@ const mapStateToProps = state => ({
   formValues: {
     paybackAmount: selector(state, 'paybackAmount'),
     addCollateralAmount: selector(state, 'addCollateralAmount'),
-    boostAmount: selector(state, 'boostAmount'),
+    repayDaiAmount: selector(state, 'repayDaiAmount'),
   },
   addingCollateral: state.dashboard.addingCollateral,
   payingBackDai: state.dashboard.payingBackDai,
 
-  maxDaiBoost: state.dashboard.maxDaiBoost,
-  gettingMaxDaiBoost: state.dashboard.gettingMaxDaiBoost,
-  boosting: state.dashboard.boosting,
+  repayingDai: state.dashboard.repayingDai,
+  maxEthRepay: state.dashboard.maxEthRepay,
+  gettingMaxEthRepay: state.dashboard.gettingMaxEthRepay,
 
   cdp: state.general.cdp,
 });
 
 const mapDispatchToProps = {
-  addCollateralAction, openPaybackModal, setAfterValue, openBoostModal, getPaybackFormMaxValues,
+  addCollateralAction, openPaybackModal, setAfterValue, openRepayModal, getPaybackFormMaxValues,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManagerPaybackFormComp);
