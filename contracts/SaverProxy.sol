@@ -185,9 +185,9 @@ contract SaverProxy is DSMath {
     }
 
     /// @notice Returns expected rate for Eth -> Dai conversion
-    /// @param _amount Amount of Dai to be bought
+    /// @param _amount Amount of Ether
     function estimatedDaiPrice(uint _amount) internal returns (uint expectedRate) {
-        ( , expectedRate) = ExchangeInterface(KYBER_WRAPPER).getExpectedRate(ETHER_ADDRESS, DAI_ADDRESS, _amount);
+        (expectedRate, ) = ExchangeInterface(KYBER_WRAPPER).getExpectedRate(ETHER_ADDRESS, DAI_ADDRESS, _amount);
     }
 
     /// @notice Returns current Dai debt of the CDP
