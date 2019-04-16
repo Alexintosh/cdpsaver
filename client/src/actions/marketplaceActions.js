@@ -26,7 +26,6 @@ import { getEthPrice } from '../services/priceService';
 import { convertDaiToEth } from '../utils/utils';
 import { sendTx } from './notificationsActions';
 import { getCdp } from './accountActions';
-import callTx from '../services/txService';
 
 /**
  * Formats the cdps from the marketplace contract so that they contain all data that is

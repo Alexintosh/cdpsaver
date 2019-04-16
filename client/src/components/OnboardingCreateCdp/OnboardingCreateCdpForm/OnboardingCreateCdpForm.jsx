@@ -72,20 +72,37 @@ class OnboardingCreateCdpForm extends Component {
           placeholder="0"
           type="number"
           additional={{ min: MIN_ETH_COLLATERAL }}
-          labelText="Add collateral:"
+          labelText="Amount of ETH:"
           onChange={(e) => { handleCreateCdpInputChange(e.target.value, daiAmount, ethPrice); }}
           secondLabelText="ETH"
           component={InputComponent}
           showErrorText
           focus
         />
+        <div className="new-stats-wrapper margin">
+          <div className="stat-wrapper">
+            <div className="label">ETH amount in USD:</div>
+            <div className="value">
+              {
+                ethAmount && ethPrice ?
+                  (
+                    <TooltipWrapper title={ethPrice * ethAmount}>
+                      { formatNumber(ethPrice * ethAmount, 2) }$
+                    </TooltipWrapper>
+                  )
+                  :
+                  '-'
+              }
+            </div>
+          </div>
+        </div>
 
         <Field
           id="onboarding-create-cdp-dai-amount"
           name="daiAmount"
           placeholder="0"
           type="number"
-          labelText="Generate DAI:"
+          labelText="Amount of DAI:"
           secondLabelText="DAI"
           onChange={(e) => { handleCreateCdpInputChange(ethAmount, e.target.value, ethPrice); }}
           component={InputComponent}

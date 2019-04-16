@@ -7,7 +7,7 @@ import { formatAcc, formatAccType } from '../../utils/utils';
 import CdpSelect from '../CdpSelect/CdpSelect';
 
 const DashboardSubHeader = ({
-  cdp, accountType, account, network,
+  accountType, account, network,
 }) => (
   <div className="sub-heading-wrapper">
     <div className="width-container">
@@ -41,14 +41,12 @@ const DashboardSubHeader = ({
 );
 
 DashboardSubHeader.propTypes = {
-  cdp: PropTypes.object.isRequired,
   accountType: PropTypes.string.isRequired,
   account: PropTypes.string.isRequired,
   network: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = ({ general }) => ({
-  cdp: general.cdp,
   accountType: general.accountType,
   account: general.account,
   network: general.network,

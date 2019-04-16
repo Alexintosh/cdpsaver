@@ -57,7 +57,11 @@ class ConnectLedger extends Component {
 
         <div className="list-wrapper">
           {
-            listingLedgerAccounts && (<div className="loading-wrapper"><Loader /></div>)
+            listingLedgerAccounts && (
+              <div className="loading-wrapper">
+                <Loader showDefaultMessage={false} message="Loading..." />
+              </div>
+            )
           }
 
           {
@@ -76,8 +80,8 @@ class ConnectLedger extends Component {
 
                       if (connectedAddress) {
                         return (
-                          <Tooltip title="This account is currently connected">
-                            <div className="single-acc no-click" key={item.path}>{ item.address }</div>
+                          <Tooltip title="This account is currently connected" key={item.path}>
+                            <div className="single-acc no-click">{ item.address }</div>
                           </Tooltip>
                         );
                       }

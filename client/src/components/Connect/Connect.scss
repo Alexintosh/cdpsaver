@@ -19,12 +19,20 @@
     margin: 0 auto;
     border-top: 1px solid $green;
 
+    &.trezor-wrapper, &.ledger-wrapper {
+      .form-wrapper .form-item-wrapper {
+        max-width: 327px;
+        margin: 0 auto 35px;
+      }
+    }
+
     h2 {
-      margin: 35px 0;
+      margin: 20px 0;
+      font-size: $font-size-regular;
     }
 
     p {
-      line-height: 26px;
+      line-height: 17px;
       margin: 0 0 35px 0;
     }
 

@@ -27,6 +27,8 @@ const PieChart = ({ values }) => {
 
   return (
     <div className="pie-chart-wrapper chart-item">
+      <div className="border" />
+
       <div className="pie-wrapper">
         <Pie data={data} options={options} />
       </div>

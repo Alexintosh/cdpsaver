@@ -9,7 +9,7 @@ import { DEFAULT_TREZOR_PATH } from '../../../constants/general';
 const ConnectTrezor = ({
   connectingProvider, history, to, formValue, handleSubmit, onSubmit, handleSwitch,
 }) => (
-  <div className="connect-login-wrapper trezor">
+  <div className="connect-login-wrapper trezor-wrapper">
     <h2>This is a secure way to access your wallet</h2>
     <p>
       Connect your Trezor wallet, unlock it connect it to start managing your CDPS.

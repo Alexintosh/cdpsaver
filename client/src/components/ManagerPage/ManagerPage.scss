@@ -6,6 +6,7 @@
 
   .main-section-wrapper {
     display: flex;
+    justify-content: space-between;
     background: linear-gradient(180deg, #2B3943 0%, rgba(43, 57, 67, 0.46) 92.86%);
     border-bottom: 1px solid $green;
 
@@ -17,16 +18,17 @@
 
     .main-subsection {
       flex-grow: 1;
-      padding: 37px 48px 44px 32px;
+      padding: 26px 57px 34px 35px;
 
       &.chart {
         display: flex;
         align-items: center;
+        flex-grow: 0;
       }
 
       .info-wrapper-main {
         display: flex;
-        margin-bottom: 93px;
+        margin-bottom: 73px;
 
         .item {
           position: relative;
@@ -39,6 +41,9 @@
           .value {
             font-size: 42px;
             color: white;
+
+            max-width: 220px;
+            @include ellipsis;
           }
 
           .after-value {
@@ -144,6 +149,14 @@
           margin-left: 3px;
           color: white;
           font-size: $font-size-giant + 0.3;
+
+          @include ellipsis;
+          max-width: 175px;
+
+          & > div {
+            @include ellipsis;
+            max-width: 175px;
+          }
         }
       }
     }
