@@ -107,7 +107,7 @@ contract SaverProxy is DSMath {
     /// @param _tub Tub interface
     /// @param _cup Id of the CDP
     function maxFreeDai(TubInterface _tub, bytes32 _cup) public returns (uint) {
-        return (sub(wdiv(rmul(_tub.ink(_cup), _tub.tag()), rmul(_tub.mat(), WAD)), _tub.tab(_cup))) - 1;
+        return sub(wdiv(rmul(_tub.ink(_cup), _tub.tag()), rmul(_tub.mat(), WAD)), _tub.tab(_cup));
     }
 
     /// @notice Stability fee amount in Eth

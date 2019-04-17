@@ -130,7 +130,7 @@ export const getMaxEthRepayAction = () => async (dispatch, getState) => {
   const { cdp } = getState().general;
 
   try {
-    let payload = await getMaxEthRepay(getState().general.cdp.id);
+    let payload = await getMaxEthRepay(cdp.id, cdp.depositedETH.toNumber());
 
     if (cdp.debtDai.toNumber() === 0) payload = 0;
 
@@ -662,6 +662,9 @@ export const closeCdpAction = (closeModal, history) => async (dispatch, getState
       cdp, cdps, account, proxyAddress, ethPrice, accountType, path,
     } = getState().general;
     const params = [proxySendHandler, '0', cdp.id, proxyAddress, account, 'shut', ethPrice, true, true];
+    // sendTxFunc, from, cdpId, proxyAddress, ethPrice
+    // const params = [proxySendHandler, account, cdp.id, proxyAddress, ethPrice];
+    // await paybackWithConversion(accountType, path, ...params);
 
     await callProxyContract(accountType, path, ...params);
 

@@ -225,6 +225,41 @@ export const paybackWithConversion = (
   }
 });
 
+
+export const closeWithConversion = (
+  accountType, path, sendTxFunc, from, cdpId, proxyAddress, ethPrice,
+) => new Promise(async (resolve, reject) => {
+  try {
+    const contract = config.SaiSaverProxy;
+
+    const OTC_ADDRESS = '0x4A6bC4e803c62081ffEbCc8d227B5a87a58f1F8F';
+
+    const txParams = { from };
+
+    const proxyContract = new window._web3.eth.Contract(dsProxyContractJson.abi, proxyAddress);
+
+    // shut(address tub_, bytes32 cup, address otc_)
+    const contractFunction = contract.abi.find(abi => abi.name === 'shut');
+
+    console.log(contractFunction);
+
+    const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
+
+    const dataParams = [tubInterfaceAddress, cdpIdBytes32, OTC_ADDRESS];
+    const data = window._web3.eth.abi.encodeFunctionCall(contractFunction, dataParams);
+    const funcParams = [saiSaverProxyAddress, data];
+
+    await callTx(accountType, path, sendTxFunc, proxyContract, 'execute(address,bytes)', funcParams, txParams);
+
+    const newCdp = await getCdpInfo(cdpId, false);
+    const newCdpInfo = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
+
+    resolve({ ...newCdp, ...newCdpInfo });
+  } catch (err) {
+    reject(err);
+  }
+});
+
 /**
  * Calls the proxy contract and handles the action that is specified in the parameters
  *
@@ -255,7 +290,7 @@ export const callProxyContract = (
     const dsProxyContractAbi = dsProxyContractJson.abi;
     const proxyContract = new window._web3.eth.Contract(dsProxyContractAbi, proxyAddress);
 
-    const amountParam = web3.utils.toWei(parseFloat(amount).toString(), 'ether');
+    const amountParam = web3.utils.toWei(window._web3.utils.toBN(amount, 'ether'));
     const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
 
     const params = [saiTubAddress, cdpIdBytes32];
@@ -735,6 +770,8 @@ export const callSaverProxyContract = (
       params.push(account);
     }
 
+    console.log(params);
+
     const data = web3.eth.abi.encodeFunctionCall(contractFunction, params);
     const funcParams = [saverProxyAddress, data];
 
@@ -756,17 +793,22 @@ export const callSaverProxyContract = (
  *
  * @return {Promise<void>}
  */
-export const getMaxEthRepay = async (cdpId) => {
+export const getMaxEthRepay = async (cdpId, collateral) => {
   try {
     const contract = await SaverProxyContract();
     const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
 
     const data = await contract.methods.maxFreeCollateral(tubInterfaceAddress, cdpIdBytes32).call();
 
-    const maxRepay = parseFloat(weiToEth(data));
+    let maxRepay = parseFloat(weiToEth(data));
+
+    if ((collateral - maxRepay) <= 0.005) {
+      maxRepay = collateral - 0.005001;
+    }
 
     return maxRepay;
   } catch (err) {
+    console.log(err);
     throw new Error(err);
   }
 };

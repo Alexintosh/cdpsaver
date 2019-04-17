@@ -300,7 +300,12 @@ export const getMaxEthWithdraw = async (daiDebt, collateral, _ethPrice) => {
 
     const peth2wethRatio = await price.getWethToPethRatio();
 
-    const maxEth = collateral - (((150.1 / 100) * daiDebt) / (ethPrice * peth2wethRatio));
+    let maxEth = collateral - (((150.1 / 100) * daiDebt) / (ethPrice * peth2wethRatio));
+
+    // Handle edge case if collateral goes under the minimum limit
+    if ((collateral - maxEth) <= 0.005) {
+      maxEth = collateral - 0.005001;
+    }
 
     return maxEth;
   } catch (err) {
