@@ -81,6 +81,7 @@ import {
   getMaxEthRepay,
   getMaxDaiBoost,
   paybackWithConversion,
+  closeWithConversion,
 } from '../services/ethService';
 import { getMaxDai, getMaxEthWithdraw, getUpdatedCdpInfo } from '../services/cdpService';
 import { MM_DENIED_TX_ERROR } from '../constants/general';
@@ -661,12 +662,16 @@ export const closeCdpAction = (closeModal, history) => async (dispatch, getState
     const {
       cdp, cdps, account, proxyAddress, ethPrice, accountType, path,
     } = getState().general;
-    const params = [proxySendHandler, '0', cdp.id, proxyAddress, account, 'shut', ethPrice, true, true];
-    // sendTxFunc, from, cdpId, proxyAddress, ethPrice
-    // const params = [proxySendHandler, account, cdp.id, proxyAddress, ethPrice];
-    // await paybackWithConversion(accountType, path, ...params);
 
-    await callProxyContract(accountType, path, ...params);
+    const hasMkr = false; // TODO: boolean representing if the user has enough Mkr tokens
+
+    if (hasMkr) {
+      const params = [proxySendHandler, '0', cdp.id, proxyAddress, account, 'shut', ethPrice, true, true];
+      await callProxyContract(accountType, path, ...params);
+    } else {
+      const params = [proxySendHandler, account, cdp.id, proxyAddress, ethPrice];
+      await closeWithConversion(accountType, path, ...params);
+    }
 
     const newCdps = [...cdps];
     const closedCdpIndex = cdps.findIndex(_cdp => _cdp.id === cdp.id);
