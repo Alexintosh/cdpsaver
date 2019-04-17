@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
+import { formValueSelector } from 'redux-form';
 import { getCloseDataAction } from '../../../actions/generalActions';
 import { closeCdpAction } from '../../../actions/dashboardActions';
 import ModalHeader from '../ModalHeader';
 import LockUnlockInterface from '../../LockUnlockInterface/LockUnlockInterface';
+import PayStabilityFeeDaiForm from '../../PayStabilityFeeDaiForm/PayStabilityFeeDaiForm';
+import Loader from '../../Loader/Loader';
 
 import './CloseCdpModal.scss';
-import Loader from '../../Loader/Loader';
 
 class CloseCdpModal extends Component {
   componentWillMount() {
@@ -17,7 +19,7 @@ class CloseCdpModal extends Component {
   render() {
     const {
       closeModal, enoughMkrToWipe, enoughDaiToWipe, daiUnlocked, makerUnlocked, gettingCloseData,
-      gettingCloseDataError, cdpId, closeCdpAction, history, closingCdp,
+      gettingCloseDataError, cdpId, closeCdpAction, history, closingCdp, payWithDai,
     } = this.props;
 
     const cantClose = !daiUnlocked || !makerUnlocked;
@@ -60,23 +62,35 @@ class CloseCdpModal extends Component {
                 <div className="contrainer">
                   <div className="description">
                     <div className="text">
-                    Closing your CDP requires paying back all of your Dai and MKR debt.
-                    By closing the CDP you will no longer be able to interact with it.
+                      Closing your CDP requires paying back all of your Dai and MKR debt.
+                      By closing the CDP you will no longer be able to interact with it.
                     </div>
                   </div>
                 </div>
 
                 {
-                  enoughMkrToWipe && (
+                  enoughDaiToWipe && (
                     <div>
                       { cantClose && (<div className="container"><LockUnlockInterface /></div>) }
 
+                      {
+                        !cantClose && !enoughMkrToWipe && (
+                          <div className="container pay-with-dai-wrapper">
+                            <div className="mkr-error-wrapper">You don’t have Mkr tokens to pay stability fee</div>
+
+                            <PayStabilityFeeDaiForm />
+                          </div>
+                        )
+                      }
+
                       <div className="modal-controls">
                         <button
-                          disabled={cantClose || closingCdp}
+                          disabled={cantClose || closingCdp || (!enoughMkrToWipe && !payWithDai)}
                           type="button"
                           onClick={() => { closeCdpAction(closeModal, history); }}
-                          className={`button ${cantClose ? 'gray' : 'green'} uppercase`}
+                          className={`
+                            button ${cantClose || (!enoughMkrToWipe && !payWithDai) ? 'gray' : 'green'} uppercase
+                          `}
                         >
                           Close cdp
                         </button>
@@ -89,7 +103,7 @@ class CloseCdpModal extends Component {
                   !enoughDaiToWipe && (
                     <div className="container">
                       <div className="no-close">
-                        You do not have enough tokens to close your CDP at this moment.
+                        You do not have enough Dai to close your CDP at this moment.
                       </div>
                     </div>
                   )
@@ -104,6 +118,7 @@ class CloseCdpModal extends Component {
 }
 
 CloseCdpModal.defaultProps = {
+  payWithDai: false,
 };
 
 CloseCdpModal.propTypes = {
@@ -119,20 +134,20 @@ CloseCdpModal.propTypes = {
   gettingCloseDataError: PropTypes.string.isRequired,
   cdpId: PropTypes.number.isRequired,
   history: PropTypes.object.isRequired,
-  payWithDai: PropTypes.bool.isRequired,
+  payWithDai: PropTypes.bool,
 };
 
 const selector = formValueSelector('payStabilityFeeDaiForm');
 
-const mapStateToProps = ({ general, dashboard }) => ({
-  enoughMkrToWipe: general.enoughMkrToWipe,
-  enoughDaiToWipe: general.enoughDaiToWipe,
-  daiUnlocked: general.daiUnlocked,
-  makerUnlocked: general.makerUnlocked,
-  gettingCloseData: general.gettingCloseData,
-  gettingCloseDataError: general.gettingCloseDataError,
-  closingCdp: dashboard.closingCdp,
-  cdpId: general.cdp.id,
+const mapStateToProps = state => ({
+  enoughMkrToWipe: state.general.enoughMkrToWipe,
+  enoughDaiToWipe: state.general.enoughDaiToWipe,
+  daiUnlocked: state.general.daiUnlocked,
+  makerUnlocked: state.general.makerUnlocked,
+  gettingCloseData: state.general.gettingCloseData,
+  gettingCloseDataError: state.general.gettingCloseDataError,
+  closingCdp: state.dashboard.closingCdp,
+  cdpId: state.general.cdp.id,
   payWithDai: selector(state, 'payWithDai'),
 });
 

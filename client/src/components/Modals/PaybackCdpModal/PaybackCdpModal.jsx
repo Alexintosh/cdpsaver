@@ -103,7 +103,7 @@ class PaybackCdpModal extends Component {
                   !enoughDaiToWipe && (
                     <div className="container">
                       <div className="no-close">
-                        You do not have enough tokens to payback your CDP at this moment.
+                        You do not have enough Dai to payback your CDP at this moment.
                       </div>
                     </div>
                   )
