@@ -82,6 +82,8 @@ import {
   getMaxDaiBoost,
   paybackWithConversion,
   closeWithConversion,
+  getEnoughMkrToWipe,
+  getMakerAllowance,
 } from '../services/ethService';
 import { getMaxDai, getMaxEthWithdraw, getUpdatedCdpInfo } from '../services/cdpService';
 import { MM_DENIED_TX_ERROR } from '../constants/general';
@@ -291,11 +293,12 @@ export const getRepayModalData = amount => async (dispatch, getState) => {
  * Handles redux actions for the repay dai from cdp smart contract call
  *
  * @param amountEth {Number}
+ * @param amountDai {Number}
  * @param closeModal {Function}
  *
  * @return {Function}
  */
-export const repayDaiAction = (amountEth, closeModal) => async (dispatch, getState) => {
+export const repayDaiAction = (amountEth, amountDai, closeModal) => async (dispatch, getState) => {
   dispatch({ type: REPAY_DAI_REQUEST });
 
   const proxySendHandler = (promise, waitForSign) => {
@@ -308,7 +311,15 @@ export const repayDaiAction = (amountEth, closeModal) => async (dispatch, getSta
       cdp, proxyAddress, account, ethPrice, accountType, path,
     } = getState().general;
 
-    const params = [proxySendHandler, amountEth.toString(), cdp.id, proxyAddress, account, 'repay', ethPrice, true]; // eslint-disable-line
+    const enoughMkrToWipe = await getEnoughMkrToWipe(account, cdp.id, amountDai.toString());
+    const makerAllowance = await getMakerAllowance(account, proxyAddress);
+    const governanceFee = (await cdp.cdpInstance.getGovernanceFee())._amount;
+    const makerUnlocked = makerAllowance > governanceFee;
+
+    // TODO show unlock maker form in the future
+    const buyMkr = !(enoughMkrToWipe && makerUnlocked);
+
+    const params = [proxySendHandler, amountEth.toString(), cdp.id, proxyAddress, account, 'repay', ethPrice, buyMkr]; // eslint-disable-line
 
     const payload = await callSaverProxyContract(accountType, path, ...params);
 
