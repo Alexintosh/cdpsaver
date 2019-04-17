@@ -743,12 +743,12 @@ export const getDaiEthKyberExchangeRate = daiAmount => new Promise(async (resolv
  * @param account {String}
  * @param funcName {String}
  * @param ethPrice {Number}
- * @param sendTrue {Boolean}
+ * @param buyMkr {Boolean}
  *
  * @return {Promise<Object>}
  */
 export const callSaverProxyContract = (
-  accountType, path, sendTxFunc, amount, cdpId, proxyAddress, account, funcName, ethPrice, sendTrue = false,
+  accountType, path, sendTxFunc, amount, cdpId, proxyAddress, account, funcName, ethPrice, buyMkr = false,
 ) => new Promise(async (resolve, reject) => {
   const web3 = window._web3;
 
@@ -766,7 +766,7 @@ export const callSaverProxyContract = (
     const txParams = { from: account };
 
     if (funcName === 'repay') {
-      params.push(sendTrue);
+      params.push(buyMkr);
       params.push(account);
     }
 

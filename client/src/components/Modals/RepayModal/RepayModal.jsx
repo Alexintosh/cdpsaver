@@ -93,7 +93,7 @@ class RepayModal extends Component {
             form="sell-cdp-form"
             type="button"
             disabled={repayingDai}
-            onClick={() => { repayDaiAction(ethAmount, closeModal); }}
+            onClick={() => { repayDaiAction(ethAmount, repayDaiAmount, closeModal); }}
             className="button green uppercase"
           >
             { repayingDai ? 'Repaying' : 'Repay' }
