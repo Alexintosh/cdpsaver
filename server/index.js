@@ -18,4 +18,4 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use('/api', routes);
 
-app.listen(9999, () => console.log('Server listening on port 9999'));
+app.listen(process.argv[2], () => console.log('Server listening on port ' + process.argv[2]));
