@@ -792,3 +792,29 @@ export const getMaxDaiBoost = async (cdpId) => {
     throw new Error(err);
   }
 };
+
+/**
+ * Calculates if you have enough mkr to pay the calculated fee
+ *
+ * @param account {String}
+ * @param cdpId {Number}
+ * @param _amount {String}
+ *
+ * @return {Promise<Boolean>}
+ */
+export const getEnoughMkrToWipe = (account, cdpId, _amount) => new Promise(async (resolve, reject) => {
+  try {
+    const contract = await SaverProxyContract();
+
+    const mkrBalance = await getMakerBalance(account);
+    const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
+
+    const amount = ethToWei(_amount);
+
+    const feeInMkr = await contract.methods.stabilityFeeInMkr(tubInterfaceAddress, cdpIdBytes32, amount).call();
+
+    resolve(mkrBalance >= parseFloat(weiToEth(feeInMkr.toString())));
+  } catch (err) {
+    reject(err);
+  }
+});
