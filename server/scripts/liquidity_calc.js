@@ -1,9 +1,9 @@
 
 const fs = require('fs');
 
-const PETH_ETH_RATIO = 1.0403682783072323; //await price.getWethToPethRatio();
+const PETH_ETH_RATIO = 1; //await price.getWethToPethRatio();
 const LIQUIDATION_RATIO = 1.5;
-const ETH_PRICE = 115.3125; // await price.getEthPrice();
+const ETH_PRICE = 166.54; // await price.getEthPrice();
 
 function getLiquidationPrice(daiDebt, collateral) {
     return (daiDebt * LIQUIDATION_RATIO) / (collateral * PETH_ETH_RATIO);
@@ -14,7 +14,7 @@ function getRatio(daiDebt, collateral) {
 }
 
 function getMaxCollateral(daiDebt, collateral) {
-    return collateral - (((150/100)*daiDebt) / (ETH_PRICE * PETH_ETH_RATIO));
+    return collateral - ((LIQUIDATION_RATIO * daiDebt) / (ETH_PRICE * PETH_ETH_RATIO));
 }
 
 function getMaxDai(daiDebt, collateral) {
@@ -77,7 +77,11 @@ function getRatiosAfterRepay() {
 
 //console.log('getMaxDai: ', getMaxDai(0, 1));
 
-getRatiosAfterRepay();
+console.log(getRatio(0.416853661522540849, 0.005000782116139281));
+
+console.log(getMaxCollateral(0.416853661522540849, 0.006064592417692078));
+
+//getRatiosAfterRepay();
 
 // cdpInfo(79.9, 1);
 // console.log("   ");
