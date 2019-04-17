@@ -290,7 +290,7 @@ export const callProxyContract = (
     const dsProxyContractAbi = dsProxyContractJson.abi;
     const proxyContract = new window._web3.eth.Contract(dsProxyContractAbi, proxyAddress);
 
-    const amountParam = web3.utils.toWei(window._web3.utils.toBN(amount, 'ether'));
+    const amountParam = web3.utils.toWei(amount.toString());
     const cdpIdBytes32 = numStringToBytes32(cdpId.toString());
 
     const params = [saiTubAddress, cdpIdBytes32];
