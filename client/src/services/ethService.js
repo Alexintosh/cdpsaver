@@ -853,9 +853,12 @@ export const getEnoughMkrToWipe = (account, cdpId, _amount) => new Promise(async
 
     const amount = ethToWei(_amount);
 
-    const feeInMkr = await contract.methods.stabilityFeeInMkr(tubInterfaceAddress, cdpIdBytes32, amount).call();
-
-    resolve(mkrBalance >= parseFloat(weiToEth(feeInMkr.toString())));
+    if (amount === '0') {
+      resolve(true);
+    } else {
+      const feeInMkr = await contract.methods.stabilityFeeInMkr(tubInterfaceAddress, cdpIdBytes32, amount).call();
+      resolve(mkrBalance >= parseFloat(weiToEth(feeInMkr.toString())));
+    }
   } catch (err) {
     reject(err);
   }
