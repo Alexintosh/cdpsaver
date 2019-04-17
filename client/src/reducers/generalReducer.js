@@ -95,6 +95,7 @@ const INITIAL_STATE = {
   daiUnlocked: false,
   makerUnlocked: false,
   enoughEthToWipe: false,
+  enoughDaiToWipe: false,
   gettingCloseData: false,
   gettingCloseDataError: '',
 

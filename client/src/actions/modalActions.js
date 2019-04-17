@@ -93,7 +93,7 @@ export const openBoostModal = boostAmount => async (dispatch) => {
  *
  */
 export const openPaybackModal = paybackAmount => async (dispatch) => {
-  dispatch(toggleModal(PAYBACK_CDP_MODAL, { width: 481, paybackAmount }, true));
+  dispatch(toggleModal(PAYBACK_CDP_MODAL, { width: 481, paybackAmount: paybackAmount.toString() }, true));
 };
 
 /**

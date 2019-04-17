@@ -16,7 +16,7 @@ class CloseCdpModal extends Component {
 
   render() {
     const {
-      closeModal, enoughMkrToWipe, enoughEthToWipe, daiUnlocked, makerUnlocked, gettingCloseData,
+      closeModal, enoughMkrToWipe, enoughDaiToWipe, daiUnlocked, makerUnlocked, gettingCloseData,
       gettingCloseDataError, cdpId, closeCdpAction, history, closingCdp,
     } = this.props;
 
@@ -49,7 +49,7 @@ class CloseCdpModal extends Component {
           {
             !gettingCloseData && gettingCloseDataError && (
               <div className="container">
-                <div className="error-wrapper">{gettingCloseDataError}</div>
+                <div className="error-wrapper main-error">{gettingCloseDataError}</div>
               </div>
             )
           }
@@ -86,7 +86,7 @@ class CloseCdpModal extends Component {
                 }
 
                 {
-                  !enoughMkrToWipe && !enoughEthToWipe && (
+                  !enoughDaiToWipe && (
                     <div className="container">
                       <div className="no-close">
                         You do not have enough tokens to close your CDP at this moment.
@@ -111,7 +111,7 @@ CloseCdpModal.propTypes = {
   getCloseDataAction: PropTypes.func.isRequired,
   closeCdpAction: PropTypes.func.isRequired,
   enoughMkrToWipe: PropTypes.bool.isRequired,
-  enoughEthToWipe: PropTypes.bool.isRequired,
+  enoughDaiToWipe: PropTypes.bool.isRequired,
   daiUnlocked: PropTypes.bool.isRequired,
   makerUnlocked: PropTypes.bool.isRequired,
   gettingCloseData: PropTypes.bool.isRequired,
@@ -119,17 +119,21 @@ CloseCdpModal.propTypes = {
   gettingCloseDataError: PropTypes.string.isRequired,
   cdpId: PropTypes.number.isRequired,
   history: PropTypes.object.isRequired,
+  payWithDai: PropTypes.bool.isRequired,
 };
+
+const selector = formValueSelector('payStabilityFeeDaiForm');
 
 const mapStateToProps = ({ general, dashboard }) => ({
   enoughMkrToWipe: general.enoughMkrToWipe,
-  enoughEthToWipe: general.enoughEthToWipe,
+  enoughDaiToWipe: general.enoughDaiToWipe,
   daiUnlocked: general.daiUnlocked,
   makerUnlocked: general.makerUnlocked,
   gettingCloseData: general.gettingCloseData,
   gettingCloseDataError: general.gettingCloseDataError,
   closingCdp: dashboard.closingCdp,
   cdpId: general.cdp.id,
+  payWithDai: selector(state, 'payWithDai'),
 });
 
 const mapDispatchToProps = {

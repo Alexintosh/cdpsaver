@@ -1,4 +1,3 @@
-import Maker from '@makerdao/dai';
 import {
   GET_ETH_PRICE_REQUEST,
   GET_ETH_PRICE_SUCCESS,
@@ -37,14 +36,17 @@ import { getUpdatedCdpInfo, maker } from '../services/cdpService';
 import { getEthPrice } from '../services/priceService';
 import { subscribeComingSoonApiCall, contactUsApiCall } from '../services/apiService';
 import {
-  getDaiAllowance, getDaiBalance, getMakerAllowance, getMakerBalance, weiToEth,
+  getDaiAllowance,
+  getDaiBalance,
+  getMakerAllowance,
+  getMakerBalance,
+  weiToEth,
+  getEnoughMkrToWipe,
 } from '../services/ethService';
 import { addToLsState } from '../utils/utils';
 import * as ledgerService from '../services/ledgerService';
 import { DEFAULT_LEDGER_PATH } from '../constants/general';
 import { notify } from './noitificationActions';
-
-const { DAI } = Maker;
 
 /**
  * Checks the price of Ether and updates it in the state
@@ -98,10 +100,11 @@ export const listenToAccChange = () => (dispatch, getState) => {
  * Handles fetching of all the data needed to close a cdp
  *
  * @params paybackData {Boolean}
+ * @params paybackAmount {Number}
  *
  * @return {Function}
  */
-export const getCloseDataAction = (paybackData = false) => async (dispatch, getState) => {
+export const getCloseDataAction = (paybackData = false, paybackAmount) => async (dispatch, getState) => {
   dispatch({ type: GET_CLOSE_DATA_REQUEST });
 
   const { cdp, account, proxyAddress } = getState().general;
@@ -110,14 +113,14 @@ export const getCloseDataAction = (paybackData = false) => async (dispatch, getS
   try {
     const daiBalance = await getDaiBalance(account);
 
-    if (paybackData) {
-      payload.enoughMkrToWipe = (await getMakerBalance(account)) > 0;
-    } else {
-      payload.enoughMkrToWipe = await cdp.cdpInstance.enoughMkrToWipe(daiBalance, DAI.wei);
-    }
+    const wipeAmount = paybackData ? paybackAmount : cdp.debtDai;
+    payload.enoughMkrToWipe = await getEnoughMkrToWipe(account, cdp.id, wipeAmount);
+
+    const daiBalanceEth = parseFloat(weiToEth(daiBalance));
+    payload.enoughDaiToWipe = paybackData ? daiBalanceEth > paybackAmount : daiBalanceEth > cdp.debtDai;
 
     // If he has enough dai and maker tokens to pay check if they are unlocked
-    if (payload.enoughMkrToWipe) {
+    if (payload.enoughDaiToWipe) {
       const daiAllowance = await getDaiAllowance(account, proxyAddress);
       const makerAllowance = await getMakerAllowance(account, proxyAddress);
 

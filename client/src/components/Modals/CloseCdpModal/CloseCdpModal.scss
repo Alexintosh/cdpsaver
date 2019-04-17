@@ -62,4 +62,22 @@
     padding: 20px 0 40px 0;
     font-weight: normal;
   }
+
+  .error-wrapper.main-error { padding-top: 40px; }
+
+  .pay-with-dai-wrapper {
+    padding-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+
+    .mkr-error-wrapper {
+      color: $dark-red;
+      margin-bottom: 20px;
+    }
+
+    .form-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+  }
 }
