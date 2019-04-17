@@ -660,12 +660,10 @@ export const closeCdpAction = (closeModal, history) => async (dispatch, getState
 
   try {
     const {
-      cdp, cdps, account, proxyAddress, ethPrice, accountType, path,
+      cdp, cdps, account, proxyAddress, ethPrice, accountType, path, enoughMkrToWipe,
     } = getState().general;
 
-    const hasMkr = false; // TODO: boolean representing if the user has enough Mkr tokens
-
-    if (hasMkr) {
+    if (enoughMkrToWipe) {
       const params = [proxySendHandler, '0', cdp.id, proxyAddress, account, 'shut', ethPrice, true, true];
       await callProxyContract(accountType, path, ...params);
     } else {
