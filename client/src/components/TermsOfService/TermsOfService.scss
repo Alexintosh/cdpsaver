@@ -1,0 +1,50 @@
+@import "../../common/text";
+@import "../../common/colors";
+
+.terms-of-service-wrapper {
+  background: $very-dark-gray;
+
+  .first-section {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    padding-top: 149px;
+    padding-bottom: 55px;
+    background: linear-gradient(180deg, rgba(55, 176, 111, 0.2) 1.28%, rgba(41, 76, 115, 0.2) 100%);
+
+    .jumbotron-heading {
+      font-size: $font-size-title;
+      color: white;
+      margin-bottom: 5px;
+    }
+
+    .jumbotron-sub-heading {
+      color: $gray;
+    }
+  }
+
+  .points-wrapper {
+    padding: 67px 20px 152px 20px;
+    max-width: 676px;
+    margin: 0 auto;
+
+    .point {
+      &:not(:last-child) { margin-bottom: 67px; }
+
+      .point-header {
+        color: #fff;
+        font-size: $font-size-title;
+        margin-bottom: 22px;
+      }
+
+      .point-text {
+        color: $gray;
+        line-height: 24px;
+
+        &:not(:last-child) { margin-bottom: 26px; }
+      }
+    }
+  }
+}

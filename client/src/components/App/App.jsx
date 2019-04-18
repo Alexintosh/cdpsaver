@@ -16,6 +16,7 @@ import Notifications from '../Notifications/Notifications';
 import Connect from '../Connect/Connect';
 import TxNotifications from '../TxNotifications/TxNotifications';
 import MigratePage from '../MigratePage/MigratePage';
+import TermsOfService from '../TermsOfService/TermsOfService';
 
 import './App.scss';
 import '../../common/icons/icons.scss';
@@ -39,6 +40,7 @@ class RoutesWrapper extends Component {
 
             <Switch>
               <Route exact path="/" component={HomePage} />
+              <Route path="/terms-of-service" component={TermsOfService} />
               <Route path="/connect" component={Connect} />
               <Route path="/create-cdp" component={CreateCdpRoute} />
               <Route path="/marketplace" component={MarketplacePage} />

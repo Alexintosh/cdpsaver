@@ -10,7 +10,7 @@ const Footer = ({ openContactUsModal }) => (
   <div className="footer-wrapper">
     <div className="developed">
       <div className="label">Developed by</div>
-      <div className="row">@ 2019 Decenter. <br/> All rights reserved.</div>
+      <div className="row">@ 2019 Decenter. <br /> All rights reserved.</div>
     </div>
 
     <a target="_blank" rel="noopener noreferrer" href="https://decenter.com/">
