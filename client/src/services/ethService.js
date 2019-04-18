@@ -695,7 +695,7 @@ export const migrateCdp = (
  * @return {Promise<Number>}
  */
 export const getEthDaiKyberExchangeRate = ethAmount => new Promise(async (resolve, reject) => {
-  const wei = ethToWei(ethAmount);
+  const wei = ethToWei(parseFloat(ethAmount).toFixed(18));
 
   try {
     const params = [ethTokenAddress, daiTokenAddress, wei];
