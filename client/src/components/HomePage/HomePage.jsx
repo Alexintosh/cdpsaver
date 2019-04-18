@@ -1,13 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { openContactUsModal } from '../../actions/modalActions';
+import Footer from '../Footer/Footer';
 
 import './HomePage.scss';
 import sectionBg from './sectionBg.png';
 
-const HomePage = ({ openContactUsModal }) => (
+const HomePage = () => (
   <div className="homepage-wrapper">
 
     <div className="section first-section">
@@ -70,25 +68,8 @@ const HomePage = ({ openContactUsModal }) => (
       </div>
     </div>
 
-    <div className="footer">
-      <div className="decenter-wrapper">
-        <div>Developed by</div>
-        <a target="_blank" rel="noopener noreferrer" href="https://decenter.com/">
-          <div className="logo" />
-        </a>
-        <div>© 2019 Decenter</div>
-        <div>All rights reserved</div>
-      </div>
-
-      <div className="contact-link" onClick={openContactUsModal}>Contact us</div>
-    </div>
+    <Footer />
   </div>
 );
 
-HomePage.propTypes = {
-  openContactUsModal: PropTypes.func.isRequired,
-};
-
-const mapDispatchToProps = { openContactUsModal };
-
-export default connect(null, mapDispatchToProps)(HomePage);
+export default HomePage;

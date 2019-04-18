@@ -1,0 +1,56 @@
+@import "../../common/colors";
+@import "../../common/variables";
+@import "../../common/text";
+
+.footer-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: $font-size-small + 0.1;
+  padding-bottom: 65px;
+
+  .developed {
+    text-align: right;
+    color: $gray-9;
+    font-size: $font-size-small - 0.1;
+
+    .label {
+      font-size: $font-size-small + 0.1;
+      color: white;
+      margin-bottom: 3px;
+    }
+
+    .row {
+      line-height: 11px;
+    }
+  }
+
+  .logo {
+    width: 66px;
+    height: 74px;
+    margin: 0 41px;
+    background: url("./decenter-logo.png") no-repeat center center;
+    background-size: 166%;
+    @include hover-transition;
+    cursor: pointer;
+
+    &:hover { opacity: 0.7; }
+  }
+
+  .links-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    .link {
+      color: white;
+      @include hover-transition;
+      cursor: pointer;
+      text-decoration: underline;
+
+      &:first-child { margin-bottom: 10px; }
+
+      &:hover { opacity: 0.7; }
+    }
+  }
+}
