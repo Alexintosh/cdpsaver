@@ -5,7 +5,7 @@ import './Header.scss';
 import logo from './logo.svg';
 
 const Header = () => (
-  <div className="header-wrapper">
+  <div className={`header-wrapper ${window.location.pathname === '/' && 'homepage-header'}`}>
     <div className="width-container">
       <Link className="logo-wrapper" to="/"><img src={logo} alt="logo" /></Link>
 
