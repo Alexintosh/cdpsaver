@@ -22,12 +22,15 @@
   }
 
   .logo-wrapper {
-    font-size: $font-size-extra-large;
+    display: flex;
 
-    span {
-      text-transform: uppercase;
-      font-weight: $font-weight-bold;
-      margin-right: 2px;
+    img {
+      @include hover-transition;
+      margin-right: 7px;
+
+      &:hover {
+        opacity: 0.85;
+      }
     }
   }
 }
