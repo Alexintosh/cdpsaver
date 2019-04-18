@@ -676,7 +676,7 @@ export const closeCdpAction = (closeModal, history) => async (dispatch, getState
     } = getState().general;
 
     if (enoughMkrToWipe) {
-      const params = [proxySendHandler, '0', cdp.id, proxyAddress, account, 'shut', ethPrice, true, true];
+      const params = [proxySendHandler, '0', cdp.id, proxyAddress, account, 'shut', ethPrice, true, false];
       await callProxyContract(accountType, path, ...params);
     } else {
       const params = [proxySendHandler, account, cdp.id, proxyAddress, ethPrice];
