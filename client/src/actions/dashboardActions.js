@@ -645,10 +645,11 @@ export const transferCdpAction = ({ toAddress }, history, closeModal) => async (
     addToLsState({ account, onboardingFinished: false, cdpId: newCdp ? newCdp.id : -1 });
 
     closeModal();
-    dispatch({ type: TRANSFER_CDP_SUCCESS, payload: { cdps: newCdps, cdp: newCdp } });
 
     if (newCdp === null) history.push('/create-cdp');
     else history.push('/dashboard/manage');
+
+    dispatch({ type: TRANSFER_CDP_SUCCESS, payload: { cdps: newCdps, cdp: newCdp } });
   } catch (err) {
     const payload = err.message.includes(MM_DENIED_TX_ERROR) ? '' : err.message;
 
@@ -690,11 +691,12 @@ export const closeCdpAction = (closeModal, history) => async (dispatch, getState
 
     addToLsState({ account, onboardingFinished: false, cdpId: newCdp ? newCdp.id : -1 });
 
-    dispatch({ type: CLOSE_CDP_SUCCESS, payload: { cdps: newCdps, cdp: newCdp } });
     closeModal();
 
     if (newCdp === null) history.push('/create-cdp');
     else history.push('/dashboard/manage');
+
+    dispatch({ type: CLOSE_CDP_SUCCESS, payload: { cdps: newCdps, cdp: newCdp } });
   } catch (err) {
     dispatch({ type: CLOSE_CDP_FAILURE, payload: err.message });
   }

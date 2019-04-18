@@ -239,7 +239,7 @@ export const closeWithConversion = (
     const proxyContract = new window._web3.eth.Contract(dsProxyContractJson.abi, proxyAddress);
 
     // shut(address tub_, bytes32 cup, address otc_)
-    const contractFunction = contract.abi.find(abi => abi.name === 'shut');
+    const contractFunction = contract.abi.find(abi => abi.name === 'shut' && abi.inputs.length === 3);
 
     console.log(contractFunction);
 
@@ -251,10 +251,7 @@ export const closeWithConversion = (
 
     await callTx(accountType, path, sendTxFunc, proxyContract, 'execute(address,bytes)', funcParams, txParams);
 
-    const newCdp = await getCdpInfo(cdpId, false);
-    const newCdpInfo = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
-
-    resolve({ ...newCdp, ...newCdpInfo });
+    resolve(true);
   } catch (err) {
     reject(err);
   }
@@ -285,7 +282,13 @@ export const callProxyContract = (
 
   try {
     const contract = config.SaiSaverProxy;
-    const contractFunction = contract.abi.find(abi => abi.name === funcName);
+    let contractFunction = null;
+
+    if (funcName === 'shut') {
+      contractFunction = contract.abi.find(abi => abi.name === funcName && abi.inputs.length === 2);
+    } else {
+      contractFunction = contract.abi.find(abi => abi.name === funcName);
+    }
 
     const dsProxyContractAbi = dsProxyContractJson.abi;
     const proxyContract = new window._web3.eth.Contract(dsProxyContractAbi, proxyAddress);
@@ -309,10 +312,14 @@ export const callProxyContract = (
 
     await callTx(accountType, path, sendTxFunc, proxyContract, 'execute(address,bytes)', funcParams, txParams);
 
-    const newCdp = await getCdpInfo(cdpId, false);
-    const newCdpInfo = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
+    if (funcName === 'shut') {
+      resolve(true);
+    } else {
+      const newCdp = await getCdpInfo(cdpId, false);
+      const newCdpInfo = await getUpdatedCdpInfo(newCdp.depositedETH.toNumber(), newCdp.debtDai.toNumber(), ethPrice);
 
-    resolve({ ...newCdp, ...newCdpInfo });
+      resolve({ ...newCdp, ...newCdpInfo });
+    }
   } catch (err) {
     console.log(err);
     reject(err.message);

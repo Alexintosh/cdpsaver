@@ -92,7 +92,7 @@ class CloseCdpModal extends Component {
                             button ${cantClose || (!enoughMkrToWipe && !payWithDai) ? 'gray' : 'green'} uppercase
                           `}
                         >
-                          Close cdp
+                          { closingCdp ? 'Closing' : 'Close' } cdp
                         </button>
                       </div>
                     </div>
