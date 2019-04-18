@@ -74,6 +74,7 @@ class SellCdpModal extends Component {
 
                 <SellCdpForm />
 
+                <div className="form-under-label">There is a 1% fee when a CDP is sold.</div>
                 <div className="form-under-label">After applied discount</div>
 
                 <div className="current-sale-price-wrapper">
