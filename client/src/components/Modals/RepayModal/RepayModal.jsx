@@ -20,8 +20,10 @@ class RepayModal extends Component {
   render() {
     const {
       closeModal, repayDaiAmount, repayDaiAction, gettingRepayModalData, ethAmount,
-      gettingRepayModalDataError, repayStabilityFee, repayingDai, repayExchangeRate,
+      gettingRepayModalDataError, repayStabilityFee, repayingDai, repayExchangeRate, afterCdp,
     } = this.props;
+
+    const debtDai = afterCdp === null ? false : afterCdp.debtDai;
 
     return (
       <div className="action-modal-wrapper repay-modal-wrapper">
@@ -70,6 +72,14 @@ class RepayModal extends Component {
                     <div className="value">{repayStabilityFee} MKR</div>
                   </div>
 
+                  {
+                    debtDai === 0 && (
+                    <div className="data-item">
+                      <div className="label">All the debt will be repayed, extra Dai will be sent back to you</div>
+                    </div>
+                    )
+                  }
+
                   <div className="data-item desc">
                     <div className="label">
                       *Disclaimer: This is an estimate based on current exchange rates.
@@ -116,6 +126,7 @@ RepayModal.propTypes = {
   gettingRepayModalDataError: PropTypes.string.isRequired,
   repayStabilityFee: PropTypes.number.isRequired,
   repayingDai: PropTypes.bool.isRequired,
+  afterCdp: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = ({ dashboard }) => ({
@@ -125,6 +136,7 @@ const mapStateToProps = ({ dashboard }) => ({
   repayingDai: dashboard.repayingDai,
   repayDaiAmount: dashboard.repayDaiAmount,
   repayExchangeRate: dashboard.repayExchangeRate,
+  afterCdp: dashboard.afterCdp,
 });
 
 const mapDispatchToProps = {
