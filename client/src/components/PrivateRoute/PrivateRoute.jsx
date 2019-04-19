@@ -3,11 +3,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, Redirect, withRouter } from 'react-router-dom';
 import Loader from '../Loader/Loader';
+import SwitchToDesktop from '../SwitchToDesktop/SwitchToDesktop';
+import { isMobileDevice } from '../../utils/utils';
 
 const PrivateRoute = ({
   component: Component, account, match, connectingProvider, cdp,
   gettingCdp, loggingIn, migratePage, ...rest
 }) => {
+  if (isMobileDevice()) return (<SwitchToDesktop />);
+
   const showloggingIn = loggingIn && (!connectingProvider && !gettingCdp);
   const showLoader = connectingProvider || gettingCdp || showloggingIn;
 

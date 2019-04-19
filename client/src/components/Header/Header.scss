@@ -20,10 +20,14 @@
         padding: 0;
       }
 
-      .logo-wrapper img {
-        width: 220px;
-        height: 50px;
-        margin: 0 0 20px 0;
+      .logo-wrapper {
+        margin-bottom: 20px;
+        
+        img {
+          width: 220px;
+          height: 50px;
+          margin: 0;
+        }
       }
 
       .links-wrapper {

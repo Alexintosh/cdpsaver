@@ -4,12 +4,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Loader from '../Loader/Loader';
 import OnboardingCreateCdp from './OnboardingCreateCdp';
+import SwitchToDesktop from '../SwitchToDesktop/SwitchToDesktop';
+import { isMobileDevice } from '../../utils/utils';
 
 import '../Onboarding/Onboarding.scss';
 
 const CreateCdpRoute = ({
   match, account, connectingProvider, gettingCdp, loggingIn,
 }) => {
+  if (isMobileDevice()) return (<SwitchToDesktop />);
+
   const showloggingIn = loggingIn && (!connectingProvider && !gettingCdp);
   const showLoader = connectingProvider || gettingCdp || showloggingIn;
 

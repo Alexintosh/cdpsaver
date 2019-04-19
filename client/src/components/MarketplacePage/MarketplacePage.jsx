@@ -6,7 +6,8 @@ import Select from 'react-select';
 import { getMarketplaceCdpsData, sellCdpButtonTooltipText } from '../../actions/marketplaceActions';
 import { openSellCdpModal, openCancelSellCdplModal } from '../../actions/modalActions';
 import { MARKETPLACE_SORT_OPTIONS } from '../../constants/general';
-import { addToLsState, getLsExistingItemAndState } from '../../utils/utils';
+import { addToLsState, getLsExistingItemAndState, isMobileDevice } from '../../utils/utils';
+import SwitchToDesktop from '../SwitchToDesktop/SwitchToDesktop';
 import CdpBox from './CdpBox/CdpBox';
 import Loader from '../Loader/Loader';
 
@@ -17,6 +18,8 @@ const MarketplacePage = ({
   loggingIn, gettingCdp, openCancelSellCdplModal, userCdps, account,
   proxyAddress,
 }) => {
+  if (isMobileDevice()) return (<SwitchToDesktop />);
+
   const [mounted, setMounted] = useState(false);
   const [hasAccount, setHasAccount] = useState(false);
   const [orderBy, setOrderBy] = useState(null);

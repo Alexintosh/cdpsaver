@@ -6,7 +6,9 @@ import ConnectWalletButtons from '../ConnectWalletButtons/ConnectWalletButtons';
 import ConnectTrezor from './ConnectTrezor/ConnectTrezor';
 import ConnectLedger from './ConnectLedger/ConnectLedger';
 import ConnectMetaMask from './ConnectMetaMask/ConnectMetaMask';
+import SwitchToDesktop from '../SwitchToDesktop/SwitchToDesktop';
 import { normalLogin } from '../../actions/accountActions';
+import { isMobileDevice } from '../../utils/utils';
 
 import './Connect.scss';
 
@@ -22,6 +24,8 @@ class Connect extends Component {
   switch(slug) { this.setState({ shown: slug }); }
 
   render() {
+    if (isMobileDevice()) return (<SwitchToDesktop />);
+
     const { location, history, accountType } = this.props;
     const { shown } = this.state;
     const to = location.state ? location.state.to : '/dashboard/manage';
