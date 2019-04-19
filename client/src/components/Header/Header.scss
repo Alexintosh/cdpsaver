@@ -12,6 +12,39 @@
     position: absolute;
     width: 100%;
     z-index: 2;
+
+    @include for-sm-screen {
+
+      .width-container {
+        flex-direction: column;
+        padding: 0;
+      }
+
+      .logo-wrapper img {
+        width: 220px;
+        height: 50px;
+        margin: 0 0 20px 0;
+      }
+
+      .links-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+
+        a { margin-right: 0 }
+      }
+    }
+
+    @include for-iphone {
+      .links-wrapper {
+        flex-direction: column;
+        align-items: center;
+
+        a:not(:last-child) {
+          margin-bottom: 10px;
+        }
+      }
+    }
   }
 
   .width-container {

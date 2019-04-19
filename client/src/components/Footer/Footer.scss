@@ -53,4 +53,13 @@
       &:hover { opacity: 0.7; }
     }
   }
+
+  @include for-iphone {
+    flex-direction: column;
+    text-align: center;
+
+    .developed, .logo {
+      margin-bottom: 15px;
+    }
+  }
 }

@@ -54,11 +54,17 @@
       .section-title {
         margin-top: 175px;
         margin-bottom: 19px;
+
+        @include for-sm-screen { margin-top: 225px; }
       }
 
       .section-text {
         max-width: 534px;
         margin-bottom: 55px;
+
+        @include for-sm-screen {
+          padding: 10px;
+        }
       }
 
       .button {
@@ -69,6 +75,19 @@
     &.features-section {
       background: linear-gradient(180deg, #202931 78.63%, rgba(32, 41, 49, 0) 100%);
       height: 600px;
+
+      @include for-ipad {
+        height: auto;
+
+        .width-container {
+          justify-content: center;
+          flex-direction: column;
+        }
+
+        .section-box {
+          margin-bottom: 50px;
+        }
+      }
 
       .width-container {
         @include flex-center;

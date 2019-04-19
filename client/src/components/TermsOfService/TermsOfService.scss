@@ -1,5 +1,6 @@
 @import "../../common/text";
 @import "../../common/colors";
+@import "../../common/variables";
 
 .terms-of-service-wrapper {
   background: $very-dark-gray;
@@ -13,6 +14,10 @@
     padding-top: 149px;
     padding-bottom: 55px;
     background: linear-gradient(180deg, rgba(55, 176, 111, 0.2) 1.28%, rgba(41, 76, 115, 0.2) 100%);
+
+    @include for-iphone {
+      padding-top: 225px;
+    }
 
     .jumbotron-heading {
       font-size: $font-size-title;

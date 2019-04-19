@@ -33,6 +33,11 @@
     .modal {
       transform: translateY(120px);
       opacity: 1;
+
+      @include for-sm-screen {
+        padding: 0 15px;
+        transform: translateY(40px);
+      }
     }
   }
 
