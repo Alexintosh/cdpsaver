@@ -147,7 +147,7 @@ const mapStateToProps = state => ({
   gettingCloseData: state.general.gettingCloseData,
   gettingCloseDataError: state.general.gettingCloseDataError,
   closingCdp: state.dashboard.closingCdp,
-  cdpId: state.general.cdp.id,
+  cdpId: state.general.cdp ? state.general.cdp.id : 0,
   payWithDai: selector(state, 'payWithDai'),
 });
 
