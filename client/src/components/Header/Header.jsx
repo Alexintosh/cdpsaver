@@ -7,7 +7,8 @@ import logo from './logo.svg';
 
 const Header = () => {
   const absoluteHeader = window.location.pathname === '/' || window.location.pathname === '/terms-of-service';
-  const mobileAbsolute = !absoluteHeader && isMobileDevice();
+  const isMobile = isMobileDevice();
+  const mobileAbsolute = !absoluteHeader && isMobile;
 
   return (
     <div className={`header-wrapper ${(absoluteHeader || mobileAbsolute) && 'absolute-header'}`}>
@@ -15,7 +16,7 @@ const Header = () => {
         <Link className="logo-wrapper" to="/"><img src={logo} alt="logo" /></Link>
 
         {
-          absoluteHeader && (
+          ((isMobile && absoluteHeader) || !isMobile) && (
             <div className="links-wrapper">
               <NavLink activeClassName="active" to="/connect">Connect wallet</NavLink>
               <NavLink activeClassName="active" to="/marketplace">Marketplace</NavLink>
