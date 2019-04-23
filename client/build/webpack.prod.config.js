@@ -5,8 +5,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const { favicon, appManifest, entry, resolve } = require('./webpack.shared');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   entry,
@@ -93,37 +93,24 @@ module.exports = {
     new ImageminPlugin({ test: /\.(jpe?g|png|gif|svg)$/i })
   ],
   optimization: {
-    minimize: true,
-    mangleWasmImports: true,
     minimizer: [
-      new UglifyJsPlugin({
-        cache: true,
-        cacheKeys(defaultCacheKeys) {
-          delete defaultCacheKeys['uglify-js'];
-
-          return Object.assign(
-            {},
-            defaultCacheKeys,
-            { 'uglify-js': require('uglify-js/package.json').version },
-          );
+      new TerserPlugin({
+        terserOptions: {
+          ecma: undefined,
+          warnings: false,
+          parse: {},
+          compress: {},
+          mangle: false, // Note `mangle.properties` is `false` by default.
+          module: false,
+          output: null,
+          toplevel: false,
+          nameCache: null,
+          ie8: false,
+          keep_classnames: undefined,
+          keep_fnames: false,
+          safari10: false,
         },
-        minify(file, sourceMap) {
-          // https://github.com/mishoo/UglifyJS2#minify-options
-          const uglifyJsOptions = {
-            compress: {
-              drop_console: true,
-            },
-          };
-
-          if (sourceMap) {
-            uglifyJsOptions.sourceMap = {
-              content: sourceMap,
-            };
-          }
-
-          return require('terser').minify(file, uglifyJsOptions);
-        },
-      })
-    ]
+      }),
+    ],
   },
 };

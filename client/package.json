@@ -66,6 +66,7 @@
     "webpack-dev-server": "^3.1.4"
   },
   "devDependencies": {
+    "terser-webpack-plugin": "^1.2.3",
     "webpack-pwa-manifest": "^3.7.1"
   }
 }
