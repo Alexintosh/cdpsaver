@@ -131,9 +131,18 @@ contract Marketplace is DSAuth, DSMath {
     }
 
     /// @notice Used by front to fetch what is on sale
-    /// @return Returns all CDP ids that are on sale
-    function getItemsOnSale() public view returns(bytes32[] memory) {
-        return itemsArr;
+    /// @return Returns all CDP ids that are on sale and are not closed
+    function getItemsOnSale() public view returns(bytes32[] memory arr) {
+        uint n = 0;
+
+        arr = new bytes32[](itemsArr.length);
+        for (uint i = 0; i < itemsArr.length; ++i) {
+            if (tub.lad(itemsArr[i]) != address(0)) {
+                arr[n] = itemsArr[i];
+                n++;
+            }
+        }
+
     }
 
     /// @notice Helper method to check if a CDP is on sale

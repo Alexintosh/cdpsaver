@@ -58,7 +58,7 @@
     "networks": {
       "42": {
         "createdBlock": 10450559,
-        "address": "0xcFcc87e3F3549bE5259737e805108179a7d7fA9f"
+        "address": "0x9A02d7cEeF4121Ac5bbAB194c364D233455e1EC9"
       }
     }
   },
@@ -67,7 +67,7 @@
     "networks": {
       "42": {
         "createdBlock": 10450558,
-        "address": "0x368F3Dd18D6979cBD0938Db85F8e475AbD940D31"
+        "address": "0x7b5460346A0272d2CA9626728d1106996132b873"
       }
     }
   },

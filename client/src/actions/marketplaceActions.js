@@ -70,12 +70,14 @@ export const getMarketplaceCdpsData = () => async (dispatch, getState) => {
     if (!ethPrice) ethPrice = parseFloat(await getEthPrice());
 
     const marketplaceCdps = await getItemsOnSale();
-    let payload = await getCdpInfos(marketplaceCdps.map(c => c.id));
+
+    let payload = await getCdpInfos(marketplaceCdps.map(c => c.id).filter(Number));
 
     payload = formatMarketplaceCdps(payload, marketplaceCdps, ethPrice);
 
     dispatch({ type: GET_MARKETPLACE_CDP_DATA_SUCCESS, payload });
   } catch (err) {
+    console.log(err);
     dispatch({ type: GET_MARKETPLACE_CDP_DATA_FAILURE, payload: err.message });
   }
 };
