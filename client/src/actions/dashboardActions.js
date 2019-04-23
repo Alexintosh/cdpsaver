@@ -328,7 +328,7 @@ export const repayDaiAction = (amountEth, amountDai, closeModal) => async (dispa
 
     dispatch(change('managerPaybackForm', 'repayDaiAmount', null));
     dispatch(closeModal());
-    dispatch(getBorrowFormMaxValues());
+    dispatch(getPaybackFormMaxValues());
   } catch (err) {
     dispatch({ type: REPAY_DAI_FAILURE, payload: err.message });
   }
@@ -389,7 +389,7 @@ export const boostAction = (amountDai, closeModal) => async (dispatch, getState)
 
     dispatch(change('managerBorrowForm', 'boostAmount', null));
     dispatch(closeModal());
-    dispatch(getPaybackFormMaxValues());
+    dispatch(getBorrowFormMaxValues());
   } catch (err) {
     dispatch({ type: BOOST_FAILURE, payload: err.message });
   }
