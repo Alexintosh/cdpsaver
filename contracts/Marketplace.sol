@@ -43,7 +43,7 @@ contract Marketplace is DSAuth, DSMath {
     /// @param _discount Discount of the original value, goes from 0 - 99% with 2 decimal percision
     function putOnSale(bytes32 _cup, uint _discount) public {
         require(isOwner(msg.sender, _cup), "msg.sender must be proxy which owns the cup");
-        require(_discount < 10000, "can't have 100% discount");
+        require(_discount < 10000 && _discount > 100, "can't have 100% discount and must be over 1%");
         require(tub.ink(_cup) > 0 && tub.tab(_cup) > 0, "must have collateral and debt to put on sale");
         require(!isOnSale(_cup), "can't put a cdp on sale twice");
 
