@@ -79,6 +79,7 @@ contract SaverProxy is DSMath {
 
         ERC20(WETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
         ERC20(PETH_ADDRESS).approve(TUB_ADDRESS, uint(-1));
+        ERC20(DAI_ADDRESS).approve(TUB_ADDRESS, uint(-1));
         
         if (_amount == 0) {
             _amount = maxFreeDai(tub, _cup);
