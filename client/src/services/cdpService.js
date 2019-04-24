@@ -86,7 +86,8 @@ export const getCdpInfo = (id, useAuth = true) => new Promise(async (resolve, re
       governanceFeeInUsd: (await cdp.getGovernanceFee(Maker.USD))._amount,
     });
   } catch (err) {
-    reject(err);
+    console.log(err);
+    resolve(err);
   }
 });
 
@@ -244,13 +245,14 @@ export const getCdpInfos = ids => new Promise(async (resolve, reject) => {
 
         resolve2({ ...cdp, ...newInfo });
       } catch (err) {
-        reject2(err);
+        console.log(err);
       }
     })));
 
     resolve(res);
   } catch (err) {
-    reject(err);
+    // reject(err);
+    console.log(err);
   }
 });
 
