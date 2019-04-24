@@ -45,9 +45,15 @@ export const getBalance = async (_account) => {
   return balanceEth;
 };
 
-export const weiToEth = weiVal => window._web3.utils.fromWei(window._web3.utils.toBN(`${weiVal}`));
+export const weiToEth = (_weiVal) => {
+  const weiVal = _weiVal.length > 21 ? _weiVal.substring(0, 20) : _weiVal;
+  return window._web3.utils.fromWei(window._web3.utils.toBN(`${weiVal}`));
+};
 
-export const ethToWei = ethVal => window._web3.utils.toWei(`${ethVal}`);
+export const ethToWei = (_ethVal) => {
+  const ethVal = _ethVal.length > 21 ? _ethVal.substring(0, 20) : _ethVal;
+  return window._web3.utils.toWei(`${ethVal}`);
+};
 
 export const getBlockNumber = () => window._web3.eth.getBlockNumber();
 
