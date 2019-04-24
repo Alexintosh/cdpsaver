@@ -233,7 +233,7 @@ export const paybackWithConversion = (
 
 
 export const closeWithConversion = (
-  accountType, path, sendTxFunc, from, cdpId, proxyAddress, ethPrice,
+  accountType, path, sendTxFunc, from, cdpId, proxyAddress,
 ) => new Promise(async (resolve, reject) => {
   try {
     const contract = config.SaiSaverProxy;

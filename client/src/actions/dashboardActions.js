@@ -292,24 +292,23 @@ export const getRepayModalData = amount => async (dispatch, getState) => {
 /**
  * Handles redux actions for the repay dai from cdp smart contract call
  *
- * @param amountEth {Number}
+ * @param _amountEth {Number}
  * @param amountDai {Number}
  * @param closeModal {Function}
  *
  * @return {Function}
  */
-export const repayDaiAction = (amountEth, amountDai, closeModal) => async (dispatch, getState) => {
+export const repayDaiAction = (_amountEth, amountDai, closeModal) => async (dispatch, getState) => {
   dispatch({ type: REPAY_DAI_REQUEST });
 
   const proxySendHandler = (promise, waitForSign) => {
-    const amount = formatNumber(parseFloat(amountEth), 2);
+    const amount = formatNumber(parseFloat(_amountEth), 2);
     return sendTx(promise, `Repay ${amount} ETH`, dispatch, getState, waitForSign);
   };
 
   try {
-    const {
-      cdp, proxyAddress, account, ethPrice, accountType, path,
-    } = getState().general;
+    const { cdp, proxyAddress, account, ethPrice, accountType, path } = getState().general; // eslint-disable-line
+    const { maxEthRepay } = getState().dashboard;
 
     const enoughMkrToWipe = await getEnoughMkrToWipe(account, cdp.id, amountDai.toString());
     const makerAllowance = await getMakerAllowance(account, proxyAddress);
@@ -318,6 +317,8 @@ export const repayDaiAction = (amountEth, amountDai, closeModal) => async (dispa
 
     // TODO show unlock maker form in the future
     const buyMkr = !(enoughMkrToWipe && makerUnlocked);
+
+    const amountEth = _amountEth === maxEthRepay ? 0 : _amountEth;
 
     const params = [proxySendHandler, amountEth.toString(), cdp.id, proxyAddress, account, 'repay', ethPrice, buyMkr]; // eslint-disable-line
 
@@ -363,23 +364,25 @@ export const getBoostModalData = amount => async (dispatch) => {
 /**
  * Handles redux actions for the repay dai from cdp smart contract call
  *
- * @param amountDai {Number}
+ * @param _amountDai {Number}
  * @param closeModal {Function}
  *
  * @return {Function}
  */
-export const boostAction = (amountDai, closeModal) => async (dispatch, getState) => {
+export const boostAction = (_amountDai, closeModal) => async (dispatch, getState) => {
   dispatch({ type: BOOST_REQUEST });
 
   const proxySendHandler = (promise, waitForSign) => {
-    const amount = formatNumber(parseFloat(amountDai), 2);
+    const amount = formatNumber(parseFloat(_amountDai), 2);
     return sendTx(promise, `Boost ${amount} DAI`, dispatch, getState, waitForSign);
   };
 
   try {
-    const {
-      cdp, proxyAddress, account, ethPrice, accountType, path,
-    } = getState().general;
+    const { cdp, proxyAddress, account, ethPrice, accountType, path } = getState().general; // eslint-disable-line
+    const { maxDaiBoost } = getState().dashboard;
+
+    const amountDai = _amountDai === maxDaiBoost ? 0 : _amountDai;
+
     const params = [proxySendHandler, amountDai.toString(), cdp.id, proxyAddress, account, 'boost', ethPrice];
 
     const payload = await callSaverProxyContract(accountType, path, ...params);
