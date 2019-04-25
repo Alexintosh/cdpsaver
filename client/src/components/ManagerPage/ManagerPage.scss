@@ -18,7 +18,7 @@
 
     .main-subsection {
       flex-grow: 1;
-      padding: 26px 57px 34px 35px;
+      padding: 37px 57px 34px 32px;
 
       &.chart {
         display: flex;
@@ -28,7 +28,7 @@
 
       .info-wrapper-main {
         display: flex;
-        margin-bottom: 73px;
+        margin-bottom: 50px;
 
         .item {
           position: relative;
@@ -135,9 +135,11 @@
           }
 
           .label-wrapper {
-            position: absolute;
-            width: 120px;
-            bottom: 32px;
+            position: relative;
+            width: 114px;
+            bottom: 3px;
+
+            &:first-child { width: 98px; }
           }
 
           .divder {
