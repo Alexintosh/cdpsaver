@@ -100,109 +100,111 @@ class ManagerPage extends Component {
                   </div>
                 </div>
 
-                <div className="row-item-wrapper">
-                  <DaiIcon />
+                <div className="row-items-wrapper">
+                  <div className="row-item-wrapper">
+                    <DaiIcon />
 
-                  <div className="row-val-wrapper">
-                    <Tooltip title="Amount of Dai generated for the CDP">
-                      <span className="label">
-                        <i className="icon icon-Info-circle" />
-                        Debt
-                      </span>
-                    </Tooltip>
-                    <span className="value">
-                      <TooltipWrapper title={cdp.debtDai}>
-                        { formatNumber(cdp.debtDai, 2) } Dai
-                      </TooltipWrapper>
-                    </span>
-
-                    <CdpAfterVal
-                      type={afterType}
-                      loading={gettingAfterCdp}
-                      cdp={afterCdp}
-                      cdpProp="debtDai"
-                    />
-                  </div>
-                </div>
-
-                <div className="row-item-wrapper with-switch">
-                  <EthIcon />
-
-                  <div className="row-val-wrapper">
-                    <div className="label-wrapper">
-                      <Tooltip title="Collateral for the CDP is stored as PETH">
+                    <div className="row-val-wrapper">
+                      <Tooltip title="Amount of Dai generated for the CDP">
                         <span className="label">
                           <i className="icon icon-Info-circle" />
-                          Collateral in
+                          Debt
                         </span>
                       </Tooltip>
-
-                      <span className="stability-label-group">
-                        <span
-                          className={`stability-label ${showEth ? 'active' : 'inactive'}`}
-                          onClick={() => this.convertCollateral()}
-                        >
-                          ETH
-                        </span>
-                        <span className="divder"> | </span>
-                        <span
-                          className={`stability-label ${showEth ? 'inactive' : 'active'}`}
-                          onClick={() => this.convertCollateral()}
-                        >
-                          PETH
-                        </span>
+                      <span className="value">
+                        <TooltipWrapper title={cdp.debtDai}>
+                          { formatNumber(cdp.debtDai, 2) } Dai
+                        </TooltipWrapper>
                       </span>
+
+                      <CdpAfterVal
+                        type={afterType}
+                        loading={gettingAfterCdp}
+                        cdp={afterCdp}
+                        cdpProp="debtDai"
+                      />
                     </div>
-
-                    <span className="value">
-                      <TooltipWrapper title={collateral}>
-                        { formatNumber(collateral, 2) }
-                      </TooltipWrapper>
-                    </span>
-
-                    <CdpAfterVal
-                      type={afterType}
-                      loading={gettingAfterCdp}
-                      cdp={afterCdp}
-                      cdpProp="depositedETH"
-                    />
                   </div>
-                </div>
 
-                <div className="row-item-wrapper  with-switch">
-                  <MkrIcon />
+                  <div className="row-item-wrapper with-switch">
+                    <EthIcon />
 
-                  <div className="row-val-wrapper">
-                    <div className="label-wrapper">
-                      <Tooltip title="Stability fee is paid in MKR tokens">
-                        <span className="label">
-                          <i className="icon icon-Info-circle" />
-                          Stability fee in
-                        </span>
-                      </Tooltip>
+                    <div className="row-val-wrapper">
+                      <div className="label-wrapper small">
+                        <Tooltip title="Collateral for the CDP is stored as PETH">
+                          <span className="label">
+                            <i className="icon icon-Info-circle" />
+                            Collateral in
+                          </span>
+                        </Tooltip>
 
-                      <span className="stability-label-group">
-                        <span
-                          className={`stability-label ${showMkr ? 'active' : 'inactive'}`}
-                          onClick={() => this.convertStabilityFee()}
-                        >
-                        MKR
+                        <span className="stability-label-group">
+                          <span
+                            className={`stability-label ${showEth ? 'active' : 'inactive'}`}
+                            onClick={() => this.convertCollateral()}
+                          >
+                            ETH
+                          </span>
+                          <span className="divder"> | </span>
+                          <span
+                            className={`stability-label ${showEth ? 'inactive' : 'active'}`}
+                            onClick={() => this.convertCollateral()}
+                          >
+                            PETH
+                          </span>
                         </span>
-                        <span className="divder"> | </span>
-                        <span
-                          className={`stability-label ${showMkr ? 'inactive' : 'active'}`}
-                          onClick={() => this.convertStabilityFee()}
-                        >
-                        USD
+                      </div>
+
+                      <span className="value">
+                        <TooltipWrapper title={collateral}>
+                          { formatNumber(collateral, 2) }
+                        </TooltipWrapper>
+                      </span>
+
+                      <CdpAfterVal
+                        type={afterType}
+                        loading={gettingAfterCdp}
+                        cdp={afterCdp}
+                        cdpProp="depositedETH"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="row-item-wrapper  with-switch">
+                    <MkrIcon />
+
+                    <div className="row-val-wrapper">
+                      <div className="label-wrapper">
+                        <Tooltip title="Stability fee is paid in MKR tokens">
+                          <span className="label">
+                            <i className="icon icon-Info-circle" />
+                            Stability fee in
+                          </span>
+                        </Tooltip>
+
+                        <span className="stability-label-group">
+                          <span
+                            className={`stability-label ${showMkr ? 'active' : 'inactive'}`}
+                            onClick={() => this.convertStabilityFee()}
+                          >
+                          MKR
+                          </span>
+                          <span className="divder"> | </span>
+                          <span
+                            className={`stability-label ${showMkr ? 'inactive' : 'active'}`}
+                            onClick={() => this.convertStabilityFee()}
+                          >
+                          USD
+                          </span>
                         </span>
+                      </div>
+
+                      <span className="value">
+                        <TooltipWrapper title={stabilityFee}>
+                          { formatStabilityFee(stabilityFee) }
+                        </TooltipWrapper>
                       </span>
                     </div>
-
-                    <span className="value">
-                      <TooltipWrapper title={stabilityFee}>
-                        { formatStabilityFee(stabilityFee) }
-                      </TooltipWrapper>
-                    </span>
                   </div>
                 </div>
               </div>

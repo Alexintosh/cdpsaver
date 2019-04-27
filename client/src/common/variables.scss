@@ -22,6 +22,10 @@
   @media only screen and (max-width: 768px) { @content; }
 }
 
+@mixin manager-break {
+  @media only screen and (max-width: 1060px) { @content; }
+}
+
 @mixin hover-transition {
   transition: all 420ms cubic-bezier(.165,.84,.44,1);
 }

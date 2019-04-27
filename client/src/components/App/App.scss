@@ -42,6 +42,7 @@ a {
   height: 66px;
 
   .width-container {
+    padding: 0 10px;
     border-top: 1px solid $green;
     display: flex;
     justify-content: space-between;
@@ -140,4 +141,8 @@ a {
       color: white;
     }
   }
+}
+
+input:invalid {
+  box-shadow: none;
 }

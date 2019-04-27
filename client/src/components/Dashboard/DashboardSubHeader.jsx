@@ -7,40 +7,45 @@ import { formatAcc, formatAccType } from '../../utils/utils';
 import CdpSelect from '../CdpSelect/CdpSelect';
 
 const DashboardSubHeader = ({
-  accountType, account, network,
-}) => (
-  <div className="sub-heading-wrapper">
-    <div className="width-container">
-      <div className="left links-wrapper">
-        <NavLink activeClassName="active" to="/dashboard/manage">Manage</NavLink>
-        <NavLink activeClassName="active" to="/dashboard/saver">Saver</NavLink>
-        <NavLink activeClassName="active" to="/dashboard/monitoring">Monitoring</NavLink>
-      </div>
+  accountType, account, network, location,
+}) => {
+  const lastPath = location.pathname.substr(location.pathname.lastIndexOf('/') + 1);
 
-      <div className="right">
-        <div className="account-wrapper">
-          <div className="acc-type">{ formatAccType(accountType) }</div>
-          <div className="connected">Connected:</div>
-
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            className="acc"
-            href={`https://${network === 42 ? 'kovan.' : ''}etherscan.io/address/${account}`}
-          >
-            <Tooltip title={account}>
-              { formatAcc(account) }
-            </Tooltip>
-          </a>
+  return (
+    <div className={`sub-heading-wrapper ${lastPath}`}>
+      <div className="width-container">
+        <div className="left links-wrapper">
+          <NavLink activeClassName="active" to="/dashboard/manage">Manage</NavLink>
+          <NavLink activeClassName="active" to="/dashboard/saver">Saver</NavLink>
+          <NavLink activeClassName="active" to="/dashboard/monitoring">Monitoring</NavLink>
         </div>
 
-        <CdpSelect />
+        <div className="right">
+          <div className="account-wrapper">
+            <div className="acc-type">{ formatAccType(accountType) }</div>
+            <div className="connected">Connected:</div>
+
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              className="acc"
+              href={`https://${network === 42 ? 'kovan.' : ''}etherscan.io/address/${account}`}
+            >
+              <Tooltip title={account}>
+                { formatAcc(account) }
+              </Tooltip>
+            </a>
+          </div>
+
+          <CdpSelect />
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 DashboardSubHeader.propTypes = {
+  location: PropTypes.object.isRequired,
   accountType: PropTypes.string.isRequired,
   account: PropTypes.string.isRequired,
   network: PropTypes.number.isRequired,

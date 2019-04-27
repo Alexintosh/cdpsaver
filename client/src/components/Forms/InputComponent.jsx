@@ -5,13 +5,13 @@ import '../../common/forms.scss';
 
 const InputComponent = ({
   input, placeholder, wrapperClassName, inputClassName, errorClassName, showErrorText,
-  type, id, labelText, labelClass, meta: { touched, error }, focus, additional, icon, disabled,
+  type, id, labelText, labelClass, meta: { touched, error }, focus, additional, disabled,
   secondLabelText,
 }) => (
   <div className={`${wrapperClassName} ${touched && error ? 'wrapper-error' : ''}`}>
     <div className="input-values">
       {labelText && <label className={labelClass} htmlFor={id || ''}>{ labelText }</label>}
-      { icon && <span className={`${touched && error ? 'icon-error' : ''} input-icon`}>{icon}</span> }
+      {/* { icon && <span className={`${touched && error ? 'icon-error' : ''} input-icon`}>{icon}</span> } */}
       <input
         {...input}
         {...additional}
@@ -43,7 +43,7 @@ InputComponent.defaultProps = {
   wrapperClassName: 'form-item-wrapper',
   inputClassName: 'form-item',
   errorClassName: 'form-item-error',
-  icon: <div />,
+  // icon: <div />,
 };
 
 InputComponent.propTypes = {
@@ -62,7 +62,7 @@ InputComponent.propTypes = {
   focus: PropTypes.bool,
   disabled: PropTypes.bool,
   additional: PropTypes.object,
-  icon: PropTypes.node,
+  // icon: PropTypes.node,
 };
 
 export default InputComponent;

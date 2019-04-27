@@ -4,6 +4,53 @@
 
 .manager-page-wrapper {
 
+  @include manager-break {
+    .content-wrapper {
+      padding: 0 20px 32px 20px;
+
+      .main-section-wrapper {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .border { display: none; }
+
+        .main-subsection {
+          width: 100%;
+
+          &:first-child { padding-bottom: 0; }
+          &.chart {
+            padding-top: 0;
+            justify-content: center;
+          }
+
+          .info-wrapper-main {
+            margin-bottom: 0;
+          }
+
+          .row-items-wrapper, .info-wrapper-main {
+            display: flex;
+            justify-content: space-evenly;
+            flex-wrap: wrap;
+
+            .row-item-wrapper, .item {
+              margin-bottom: 50px;
+
+              &:not(:last-child) {
+                margin-right: 0;
+              }
+
+              &:nth-child(2) {
+                margin-left: 20px;
+                margin-right: 20px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   .main-section-wrapper {
     display: flex;
     justify-content: space-between;
@@ -19,6 +66,8 @@
     .main-subsection {
       flex-grow: 1;
       padding: 37px 57px 34px 32px;
+
+      &:first-child { padding-right: 30px; }
 
       &.chart {
         display: flex;
@@ -139,7 +188,7 @@
             width: 114px;
             bottom: 3px;
 
-            &:first-child { width: 98px; }
+            &.small { width: 98px; }
           }
 
           .divder {
@@ -191,6 +240,32 @@
 
   .actions-section-wrapper {
 
+    @include manager-break {
+
+      .tabs-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .tabs-list {
+          display: flex;
+          justify-content: space-between;
+
+          .tabs-list-item {
+            padding: 15px 74px;
+
+            &:first-child { margin-right: 0 }
+          }
+        }
+      }
+
+      .tab-content .action-items-wrapper {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
     .tab-content {
       padding: 60px 60px 17px 60px;
 
@@ -198,6 +273,10 @@
         display: flex;
         justify-content: space-between;
         margin-bottom: 22px;
+
+        .item:not(:last-child) {
+          margin-bottom: 50px;
+        }
       }
     }
   }
