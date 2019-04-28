@@ -1,5 +1,5 @@
 {
-  "network": 42,
-  "provider": "https://kovan.infura.io/v3/45c943e42efa4cf2b73f4b4670da2ccb",
-  "proxyServer": "https://sai-kovan.makerfoundation.com/v1"
+  "network": "1",
+  "provider": "https://mainnet.infura.io/v3/45c943e42efa4cf2b73f4b4670da2ccb",
+  "proxyServer": "https://sai-mainnet.makerfoundation.com/v1"
 }

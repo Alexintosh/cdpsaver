@@ -5,6 +5,10 @@
       "42": {
         "createdBlock": 7726702,
         "address": "0x64a436ae831c1672ae81f674cab8b6775df3475c"
+      },
+      "1": {
+        "createdBlock": 5834629,
+        "address": "0x4678f0a6958e4D2Bc4F1BAF7Bc52E8F3564f3fE4"
       }
     }
   },
@@ -14,6 +18,10 @@
       "42": {
         "createdBlock": 5216601,
         "address": "0xa71937147b55Deb8a530C7229C442Fd3F31b7db2"
+      },
+      "1": {
+        "createdBlock": 4752011,
+        "address": "0x448a5065aeBB8E423F0896E6c5D525C040f59af3"
       }
     }
   },
@@ -23,6 +31,10 @@
       "42": {
         "createdBlock": 8766436,
         "address": "0xadb7c74bce932fc6c27dda3ac2344707d2fbb0e6"
+      },
+      "1": {
+        "createdBlock": 6352785,
+        "address": "0x190c2CFC69E68A8e8D5e2b9e2B9Cc3332CafF77B"
       }
     }
   },
@@ -32,6 +44,10 @@
       "42": {
         "createdBlock": 5216587,
         "address": "0xa71937147b55deb8a530c7229c442fd3f31b7db2"
+      },
+      "1": {
+        "createdBlock": 4752011,
+        "address": "0x448a5065aeBB8E423F0896E6c5D525C040f59af3"
       }
     }
   },
@@ -41,6 +57,10 @@
       "42": {
         "createdBlock": 5216599,
         "address": "0xC4375B7De8af5a38a93548eb8453a498222C4fF2"
+      },
+      "1": {
+        "createdBlock": 4752008,
+        "address": "0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359"
       }
     }
   },
@@ -50,6 +70,10 @@
       "42": {
         "createdBlock": 5216304,
         "address": "0xAaF64BFCC32d0F15873a02163e7E500671a4ffcD"
+      },
+      "1": {
+        "createdBlock": 4620855,
+        "address": "0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2"
       }
     }
   },
@@ -59,6 +83,10 @@
       "42": {
         "createdBlock": 10450559,
         "address": "0x9A02d7cEeF4121Ac5bbAB194c364D233455e1EC9"
+      },
+      "1": {
+        "createdBlock": 7657074,
+        "address": "0xA1A445d1d8F97cBf380E98759230FcC0f2E23fc1"
       }
     }
   },
@@ -68,6 +96,10 @@
       "42": {
         "createdBlock": 10450558,
         "address": "0x7b5460346A0272d2CA9626728d1106996132b873"
+      },
+      "1": {
+        "createdBlock": 7656422,
+        "address": "0xB64dB2153861ddDE62c8038C6A3c6199FCfBD094"
       }
     }
   },
@@ -83,12 +115,19 @@
       "42": {
         "createdBlock": 10401171,
         "address": "0x692f391bCc85cefCe8C237C01e1f636BbD70EA4D"
+      },
+      "1": {
+        "createdBlock": 5911438,
+        "address": "0x818E6FECD516Ecc3849DAf6845e3EC868087B755"
       }
     }
   },
   "EthToken": {
     "networks": {
       "42": {
+        "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      },
+      "1": {
         "address": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
       }
     }
@@ -98,6 +137,10 @@
       "42": {
         "createdBlock": 5216599,
         "address": "0xC4375B7De8af5a38a93548eb8453a498222C4fF2"
+      },
+      "1": {
+        "createdBlock": 4752008,
+        "address": "0x89d24A6b4CcB1B6fAA2625fE562bDD9a23260359"
       }
     }
   },
@@ -107,6 +150,10 @@
       "42": {
         "createdBlock": 10457620,
         "address": "0x2731Ba4d552952834d0ACE8F98a570BE6A4112d7"
+      },
+      "1": {
+        "createdBlock": 7656399,
+        "address": "0xc19d0F1E2b38AA283E226Ca4044766A43aA7B02b"
       }
     }
   },
@@ -116,6 +163,10 @@
       "42": {
         "createdBlock": 10450637,
         "address": "0xa5aA4e07F5255E14F02B385b1f04b35cC50bdb66"
+      },
+      "1": {
+        "createdBlock": 3684349,
+        "address": "0x729D19f657BD0614b4985Cf1D82531c67569197B"
       }
     }
   }

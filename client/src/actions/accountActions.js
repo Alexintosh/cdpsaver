@@ -166,7 +166,9 @@ export const loginMetaMask = silent => async (dispatch, getState) => {
 
     const network = await getNetwork();
 
-    if (clientConfig.network !== network) {
+    console.log(typeof clientConfig.network, typeof network);
+
+    if (clientConfig.network !== network.toString()) {
       throw new Error(`Wrong network - please set MetaMask to ${nameOfNetwork(clientConfig.network)}`);
     }
 
