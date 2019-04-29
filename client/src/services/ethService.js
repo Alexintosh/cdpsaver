@@ -640,6 +640,12 @@ export const buyCdp = (
     const contract = await marketplaceContract();
     const cdpValue = await contract.methods.getCdpPrice(cdpIdBytes32).call();
 
+    console.log(cdpValue[0].toString());
+
+    cdpValue[0] = cdpValue[0].add(Math.round(parseFloat(cdpValue[0]) / 100));
+
+    console.log(cdpValue[0].toString());
+
     const txParams = { from: account, value: cdpValue[0].toString() };
 
     const newOwner = proxyAddress || account;
@@ -814,6 +820,8 @@ export const getMaxEthRepay = async (cdpId, collateral) => {
     const data = await contract.methods.maxFreeCollateral(tubInterfaceAddress, cdpIdBytes32).call();
 
     let maxRepay = parseFloat(weiToEth(data));
+
+    console.log(maxRepay, collateral);
 
     if ((collateral - maxRepay) <= 0.005) {
       maxRepay = collateral - 0.005001;

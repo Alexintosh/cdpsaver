@@ -86,6 +86,8 @@ contract Marketplace is DSAuth, DSMath {
 
         item.owner.transfer(sub(cdpPrice, feeAmount)); // transfer money to the seller
 
+        msg.sender.transfer(sub(msg.value, cdpPrice));
+
         emit Bought(_cup, msg.sender, item.proxy, item.owner, item.discount);
 
         removeItem(_cup);
