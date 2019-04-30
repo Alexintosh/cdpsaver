@@ -269,16 +269,10 @@ export const getCdpInfos = ids => new Promise(async (resolve, reject) => {
  */
 export const getMaxDai = async (daiDebt, collateral, _ethPrice) => {
   try {
-    const price = maker.service('price');
-
     let ethPrice = _ethPrice;
     if (!ethPrice) ethPrice = parseFloat(await getEthPrice());
 
-    const peth2wethRatio = await price.getWethToPethRatio();
-
-    const maxDai = (((collateral * ethPrice) * peth2wethRatio) / (150.1 / 100)) - daiDebt;
-
-    console.log(maxDai);
+    const maxDai = (((collateral * ethPrice)) / (150.1 / 100)) - daiDebt;
 
     return maxDai;
   } catch (err) {
