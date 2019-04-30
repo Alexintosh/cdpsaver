@@ -526,11 +526,18 @@ export const setAfterValue = (_amount, type) => async (dispatch, getState) => {
 
     if (type === 'repay') {
       const rate = await getEthDaiKyberExchangeRate(amount);
-      const daiAmount = (rate * amount) > cdp.generatedDAI ? debtDai : cdp.generatedDAI - (rate * amount);
 
-      payload.afterCdp = await getUpdatedCdpInfo(depositedEth - amount, daiAmount, ethPrice);
-      payload.afterCdp.debtDai = debtDai - daiAmount;
+      const daiAmount = (rate * amount) > cdp.generatedDAI ? 0 : cdp.generatedDAI - (rate * amount);
+
+      payload.afterCdp = {};
+      payload.afterCdp.debtDai = daiAmount;
       payload.afterCdp.depositedETH = depositedEth - amount;
+
+      // eslint-disable-next-line max-len
+      const { liquidationPrice, ratio } = await getUpdatedCdpInfo(payload.afterCdp.depositedETH, payload.afterCdp.debtDai, ethPrice);
+
+      payload.afterCdp.liquidationPrice = liquidationPrice;
+      payload.afterCdp.ratio = ratio;
 
       dispatch(resetFields('managerPaybackForm', { paybackAmount: '', addCollateralAmount: '' }));
     }

@@ -291,14 +291,10 @@ export const getMaxDai = async (daiDebt, collateral, _ethPrice) => {
  */
 export const getMaxEthWithdraw = async (daiDebt, collateral, _ethPrice) => {
   try {
-    const price = maker.service('price');
-
     let ethPrice = _ethPrice;
     if (!ethPrice) ethPrice = parseFloat(await getEthPrice());
 
-    const peth2wethRatio = await price.getWethToPethRatio();
-
-    let maxEth = collateral - (((150.1 / 100) * daiDebt) / (ethPrice * peth2wethRatio));
+    let maxEth = collateral - (((150.1 / 100) * daiDebt) / (ethPrice));
 
     // Handle edge case if collateral goes under the minimum limit
     if ((collateral - maxEth) <= 0.005) {
