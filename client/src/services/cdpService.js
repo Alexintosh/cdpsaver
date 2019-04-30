@@ -68,6 +68,10 @@ export const getCdpInfo = (id, useAuth = true) => new Promise(async (resolve, re
     const cdp = await maker.getCdp(id);
     const info = await cdp.getInfo();
 
+    const rr = (await cdp.getLiquidationPrice())._amount;
+
+    console.log('Liq: ', rr.toString());
+
     resolve({
       id,
       owner: info[0],
@@ -208,15 +212,13 @@ export const getAddressCdp = address => new Promise(async (resolve, reject) => {
 export const getUpdatedCdpInfo = async (ethAmount, daiAmount, _ethPrice = false) => {
   try {
     const liqRatio = 1.5;
-    const price = maker.service('price');
 
     let ethPrice = _ethPrice;
     if (!ethPrice) ethPrice = parseFloat(await getEthPrice());
 
-    const peth2wethRatio = await price.getWethToPethRatio();
+    const liquidationPrice = (parseFloat(daiAmount) * liqRatio) / (parseFloat(ethAmount));
 
-    const liquidationPrice = (parseFloat(daiAmount) * liqRatio) / (parseFloat(ethAmount) * peth2wethRatio);
-    const ratio = ((parseFloat(ethAmount) * ethPrice * peth2wethRatio) / parseFloat(daiAmount)) * 100;
+    const ratio = ((parseFloat(ethAmount) * ethPrice) / parseFloat(daiAmount)) * 100;
 
     return {
       liquidationPrice,
