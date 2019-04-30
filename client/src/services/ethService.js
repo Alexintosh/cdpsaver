@@ -205,7 +205,7 @@ export const paybackWithConversion = (
   try {
     const contract = config.SaiSaverProxy;
 
-    const OTC_ADDRESS = '0x4A6bC4e803c62081ffEbCc8d227B5a87a58f1F8F';
+    const OTC_ADDRESS = '0x39755357759cE0d7f32dC8dC45414CCa409AE24e';
 
     const txParams = { from };
     const daiAmount = window._web3.utils.toWei(_daiAmount.toString(), 'ether');
@@ -238,7 +238,7 @@ export const closeWithConversion = (
   try {
     const contract = config.SaiSaverProxy;
 
-    const OTC_ADDRESS = '0x4A6bC4e803c62081ffEbCc8d227B5a87a58f1F8F';
+    const OTC_ADDRESS = '0x39755357759cE0d7f32dC8dC45414CCa409AE24e';
 
     const txParams = { from };
 
